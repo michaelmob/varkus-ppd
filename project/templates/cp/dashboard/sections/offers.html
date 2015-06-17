@@ -1,0 +1,39 @@
+{% load currency %}
+
+<div class="s box">
+	<div class="title">
+		<i class="tags icon"></i>
+		Newest Offers
+	</div>
+	<div class="content">
+		<table class="ui table">
+			<thead>
+				<tr>
+					<th>Offer</th>
+					<th></th>
+					<th>Payout</th>
+					<th>EPC</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% if offers|length < 1 %}
+					<tr>
+						<td colspan="5">There are no offers...</td>
+					</tr>
+				{% else %}
+					{% for offer in offers %}
+						<tr>
+							<td><a href="{% url "offers-manage" offer.pk %}">{{ offer.name|truncatechars:"30" }}</a></td>
+							<td><i class="{{ offer.country|lower }} flag"></i></td>
+							<td>${{ offer.payout|cut_percent:cut_amount|currency }}</td>
+							<td>${{ offer.earnings_per_click|currency }}</td>
+							<td>{{ offer.date }}</td>
+						</tr>
+					{% endfor %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,64 @@
+/* Text */
+.cb.wrap > h3:after {
+	content: "Complete one of the offers below to continue";
+}
+
+.cb.wrap > h3 {
+	display: block;
+	text-align: center;
+	margin: 0 0 0.8rem 0;
+	padding: 0;
+}
+
+/* Progress Indicator */
+.progress.indicator {
+	display: none;
+	background: url(/static/img/progress.gif) no-repeat;
+	background-position: center;
+	height: 20px;
+	margin: -10px 0 5px 0;
+}
+
+/* Offer */
+.cb.wrap > a {
+	display: block;
+	padding: 0.4rem;
+	text-decoration: none;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+.cb.wrap > a:hover {
+	background-color: #E0FFCA;
+}
+
+.cb.wrap > .dark {
+	background-color: #F9F9F9;	
+}
+
+.cb.wrap > .light {
+	background-color: #FFFFFF;
+}
+
+/* Offer Anchor */
+.cb.wrap > a > .anchor {
+	padding-left: 0.5rem;
+}
+
+.cb.wrap > a > .icon,
+.cb.wrap > a > .icon ~ .anchor {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* Offer Category Icon */
+.cb.wrap > a > .icon {
+	font-size: 1.5rem;
+	padding: 0.3rem;
+	width: 2rem;
+}
+
+/* Gold Star Icon */
+.cb.wrap > a > .gold {
+	color: gold;
+	text-shadow: 0 0 1px #333;
+}

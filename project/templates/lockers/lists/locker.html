@@ -1,0 +1,41 @@
+{% extends "lockers/base.html" %}
+{% load static %}
+
+
+{% block title %}Unlock {{ item.item_name|title }} from {{ item.name }}{% endblock %}
+
+{# ################################# #}
+
+{% block locker %}list or one of its items{% endblock %}
+
+{# ################################# #}
+
+{% block button_text %}
+	Unlock {{ item.item_name|title }} from {{ item.name }}
+{% endblock %}
+
+{# ################################# #}
+
+{% block information %}
+<h3 class="ui header">
+	<i class="quote left icon"></i>
+	<div class="content">
+		Name
+		<p class="sub header">{{ item.name }}</p>
+	</div>
+</h3>
+<h3 class="ui header">
+	<i class="calendar icon"></i>
+	<div class="content">
+		Created on
+		<p class="sub header">{{ item.date_time }}</p>
+	</div>
+</h3>
+<h3 class="ui header">
+	<i class="unlock icon"></i>
+	<div class="content">
+		{{ item.item_name|title }}s remaining
+		<p class="sub header">{{ item.remaining }}</p>
+	</div>
+</h3>
+{% endblock %}

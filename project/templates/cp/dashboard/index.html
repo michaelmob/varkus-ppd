@@ -1,0 +1,56 @@
+{% extends "cp.html" %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui grid">
+				<div class="eight wide column">
+					{% include "cp/dashboard/sections/earnings.html" %}
+				</div>
+
+				<div class="eight wide column">
+					{% include "cp/dashboard/sections/referral.html" %}
+				</div>
+			</div>
+		</div>
+		
+		<div class="column">
+			{% include "cp/common/line_chart.html" %}
+		</div>
+
+		{% with cut_amount=user.profile.party.cut_amount %}
+			<div class="ten wide column">
+				<div class="ui one column grid">
+					{% if leads|length > 0 %}
+					<div class="column">
+						{% include "cp/dashboard/sections/leads.html" %}
+					</div>
+					{% endif %}
+
+					<div class="column">
+						{% include "cp/dashboard/sections/offers.html" %}
+					</div>
+				</div>
+			</div>
+		{% endwith %}
+
+		<div class="six wide column">
+			{% include "cp/common/map_chart.html" %}
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static "js/pages/charts.js" %}"></script>
+<script>
+$(window).resize(function() {
+	draw_line_chart($(".line.chart.container"), [{{ hour_chart|safe }}]);
+	draw_map_chart($(".map.chart.container"), [{{ map_chart|safe }}]);
+});
+</script>
+{% endblock %}

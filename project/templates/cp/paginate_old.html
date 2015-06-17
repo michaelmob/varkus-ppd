@@ -1,0 +1,33 @@
+{% load pagination %}
+
+{% spaceless %}
+
+	{% if items.paginator.num_pages > 1 %}
+
+		{% with num=items.paginator.page_range|paginate:items.number %}
+			<div class="ui pagination fluid inverted primary menu">
+				<a class="icon left item" href="{% url uri 1 %}">
+					<i class="angle double left icon"></i>
+				</a>
+
+				<a class="icon right item" href="{% url uri items.paginator.num_pages %}">
+					<i class="angle double right icon"></i>
+				</a>
+
+				{% if not 1 in num %}
+					<a class="item" href="{% url uri num|first|add:"-1" %}">...</a>
+				{% endif %}
+
+				{% for page in num %}
+					<a class="{% if page == items.number %}active {% endif %}item" href="{% url uri page %}">{{ page }}</a>
+				{% endfor %}
+
+				{% if not items.paginator.num_pages in num %}
+					<a class="item" href="{% url uri num|last|add:"1" %}">...</a>
+				{% endif %}
+			</div>
+		{% endwith %}
+
+	{% endif %}
+
+{% endspaceless %}

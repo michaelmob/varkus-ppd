@@ -1,0 +1,50 @@
+{% extends "cp.html" %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Link Locker{% endblock %}
+
+{% block tab %}links{% endblock %}
+
+{% block content %}
+{% include "lockers/links/manage/sections/modals.html" %}
+
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui one column grid">
+				<div class="column">
+					{% include "lockers/links/manage/sections/info.html" %}
+				</div>
+				<div class="column">
+					<div class="ui two column grid">
+						<div class="column">
+							{% include "lockers/common/earnings.html" %}
+						</div>
+
+						<div class="column">
+							{% include "lockers/common/locker_info.html" %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui one column grid">
+				<div class="column">
+					{% include "cp/common/line_chart.html" %}
+				</div>
+				<div class="column">
+					{% include "cp/common/leads.html" %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static "js/pages/charts.js" %}"></script>
+<script>$(window).resize(function(){draw_line_chart($(".line.chart.container"),[{{ chart|safe }}]);});</script>
+<script src="{% static "js/forms/links-manage.js" %}"></script>
+{% endblock %}

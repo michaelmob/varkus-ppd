@@ -1,0 +1,51 @@
+{% load billing %}
+{% load cache %}
+
+{% with method=user.billing.method freq=user.billing.frequency %}
+
+	<div class="item">
+		{{ method|payment_icon|safe }}
+		<div class="content">
+			<div class="header">Payment Method</div>
+			{% if method == "none" %}
+				None, set up your payment method now to recieve payouts!
+			{% else %}
+				{{ method|payment_method }}
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="item">
+		<i class="calendar outline icon"></i>
+		<div class="content">
+			<div class="header">Payment Frequency</div>
+			<p>
+				{{ freq }} days after billing period ends (Net {{ freq }})
+			</p>
+		</div>
+	</div>
+
+	<div class="item">
+		<i class="calendar icon"></i>
+		<div class="content">
+			<div class="header">Next Payment Date</div>
+			{% cache 900 freq %}
+				{{ freq|payment_next_date }}
+			{% endcache %}
+		</div>
+	</div>
+
+	{% if method == "paypal" %}
+		{% include "billing/information/paypal.html" %}
+
+	{% elif method == "check" %}
+		{% include "billing/information/check.html" %}
+
+	{% elif method == "wire" %}
+		{% include "billing/information/wire.html" %}
+
+	{% elif method == "direct" %}
+		{% include "billing/information/direct.html" %}
+	{% endif %}
+
+{% endwith %}

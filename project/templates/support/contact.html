@@ -1,0 +1,75 @@
+{% extends "frontend.html" %}
+{% load static %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+
+<div class="ui stackable grid page">
+	<div class="ten wide column">
+		<h2><i class="chat icon"></i> Contact</h2>
+		<form class="ui form segment" method="POST" action="{% url "contact" %}">
+			{% csrf_token %}
+
+			<div class="ui error message"></div>
+
+			<div class="field">
+				<label>Name</label>
+				<div class="ui input">
+					{{ form.name }}
+				</div>
+			</div>
+
+			<div class="field">
+				<label>E-mail</label>
+				<div class="ui input">
+					{{ form.email }}
+				</div>
+			</div>
+
+			<div class="field">
+				<label>Subject</label>
+				<div class="ui input">
+					{{ form.subject }}
+				</div>
+			</div>
+
+			<div class="field">
+				<label>Message</label>
+				<div class="ui input">
+					{{ form.message }}
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="ui stackable grid">
+					<div class="three wide column"></div>
+					<div class="ten wide column">{{ form.captcha }}</div>
+				</div>
+			</div>
+
+			<div class="ui fluid primary submit button">Send Message</div>
+		</form>
+	</div>
+
+	<div class="six wide column">
+
+		<h2><i class="bullhorn icon"></i> We want to hear you!</h2>
+		<div class="ui segment">
+			<p>
+				Using this form you can contact us. We love feedback. Tell us what you like about us or tell us what you think we're doing wrong! If it's a message that warrants a response, we will reply within a 48 hour window to the e-mail address you provide here. However, if it is an invalid e-mail address we cannot get in touch with you!
+			</p>
+		</div>
+
+		<h2><i class="legal icon"></i> Report Abuse</h2>
+		<div class="ui segment">
+			<p>
+				To report abuse you should use our <a href="{% url "report" %}">Abuse Report Form</a>. Please do not use this form to report abusive actions of our users. If one of our users is violating our <a href="{% url "terms" %}">Terms and Conditions</a> they will be dealt with swiftly.
+			</p>
+
+		</div>
+	</div>
+</div>
+
+<script src="{% static "js/forms/contact.js" %}"></script>
+{% endblock %}

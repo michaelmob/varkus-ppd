@@ -1,0 +1,68 @@
+{% extends "cp.html" %}
+{% load static %}
+{% load pagination %}
+
+{% block title %}Tickets{% endblock %}
+
+{% block tab %}staff-tickets{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+
+	{% if user.is_staff %}
+	<div class="ui grid stackable">
+		<div class="column">
+			<div class="box">
+				<div class="title">
+					<i class="ticket icon"></i>
+					Staff Tickets
+				</div>
+				<div class="content">
+					{% include "cp/paginate.html" with items=threads uri="staff-tickets-page" %}
+
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Subject</th>
+								<th>User</th>
+								<th>Priority</th>
+								<th>Type</th>
+								<th>Date</th>
+								<th>Last Replier</th>
+								<th>Last Reply</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for thread in threads %}
+								<tr {% if thread.last_reply_user and not thread.staff_closed and not thread.closed and thread.last_reply_user != thread.user %}class="warning"{% endif %}>
+									<td>
+										<a class="block" href="{% url "tickets-thread" thread.pk %}">
+											{{ thread.subject }}
+										</a>
+									</td>
+									<td>{{ thread.user }}</td>
+									<td>{{ thread.priority_human }}</td>
+									<td>{{ thread.type_human }}</td>
+									<td>{{ thread.date_time }}</td>
+									<td>{{ thread.last_reply_user }}</td>
+									<td>{{ thread.last_reply_date_time|timesince }}</td>
+									{% if thread.closed %}
+										<td class="negative">Closed</td>
+									{% else %}
+										<td class="positive">Open</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+<script src="{% static "js/forms/tickets.js" %}"></script>
+{% endblock %}

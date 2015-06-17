@@ -1,0 +1,9 @@
+*.pyc
+*.pyo
+*.sqlite3
+*.mmdb
+env/
+__pycache__/
+migrations/
+media/
+private/

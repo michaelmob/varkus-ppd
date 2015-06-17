@@ -1,0 +1,17 @@
+{% extends "frontend.html" %}
+{% load static %}
+
+{% block title %}Locked out{% endblock %}
+
+{% block content %}
+
+<div class="ui stackable grid page">
+	<div class=" column">
+		<h2><i class="cancel icon"></i> Locked out</h2>
+
+		<div class="ui segment">
+			Due to too many failed log in attempts, you must wait 15 minutes before attempting to log in again.
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% include "cp/paginate.html" with items=invoices uri="billing-page" %}
+
+<table class="ui table">
+	<thead>
+		<tr>
+			<th>Creation Date</th>
+			<th>Billing Period</th>
+			<th>Total Amount</th>
+			<th>Due Date</th>
+			<th style="width:2rem"></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% if invoices|length < 1 %}
+			<tr><td colspan="5">There are no invoices associated with your account.</td></tr>
+		{% else %}
+			{% for invoice in invoices %}
+				<tr>
+					<td>{{ invoice.creation_date }}</td>
+					<td>{{ invoice.billing_start_date }} - {{ invoice.billing_end_date }}</td>
+					<td>${{ invoice.total_amount }}</td>
+					<td>{{ invoice.due_date }}</td>
+					<td>
+						{% if invoice.paid %}
+							<span class="ui mini green label">Paid</span>
+						{% else %}
+							<span class="ui mini red label">Unpaid</span>
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+	</tbody>
+</table>

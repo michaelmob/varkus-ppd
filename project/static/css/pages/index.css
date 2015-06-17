@@ -1,0 +1,64 @@
+.banner {
+	position:relative;
+	overflow: auto;
+	box-shadow: 1px 1px 10px #000;
+}
+
+.banner li {
+	float: left;
+	height: 350px;
+	text-align: center;
+	padding: 10px 0px;
+	color: #FEFEFE;
+	background-color: #b5d8c4;
+	text-shadow: 2px 2px 1px #333;
+}
+
+.banner li i {
+	color: black;
+	text-shadow: none;
+}
+
+.transparent.background {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.slideshow.frame {
+	color: #000;
+	font-size: 2rem;
+	text-align: center;
+	position: absolute;
+	z-index: 1;
+	height: 100%;
+	line-height: 368px;
+	width: 50px;
+	cursor: pointer;
+}
+
+.slideshow.frame:hover {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.next.slideshow.frame {
+	right: 0;
+}
+
+.first.slide {
+	background: url("/static/img/slideshow/ocean.jpg") no-repeat;
+}
+
+.second.slide {
+	background: url("/static/img/slideshow/rock.jpg") no-repeat;
+}
+
+.third.slide {
+	background: url("/static/img/slideshow/river.jpg") no-repeat;
+}
+
+.first.slide, .second.slide, .third.slide {
+	background-size: cover;
+}
+
+.menu.push {
+	height: 2.5rem !important;
+}

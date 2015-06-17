@@ -1,0 +1,105 @@
+{% extends "cp.html" %}
+{% load static %}
+{% load pagination %}
+{% load currency %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui one column grid stackable">
+		<div class="column">
+			<div class="box">
+				<div class="ui padded content no min height stackable grid">
+					<form class="ui form ten wide column" method="GET">
+						<div class="field">
+							<div class="ui action input">
+								<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search...">
+								<div class="ui submit basic button">
+									<i class="search icon"></i>
+								</div>
+							</div>
+						</div>
+					</form>
+
+					<div class="six wide column">
+						<a href="{% url "offers-priority" %}" class="ui fluid primary button">Edit Prioritized and Blocked Offers</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="box">
+				<div class="title">
+					<i class="tags icon"></i>
+					Offers
+				</div>
+
+				<div class="content">
+					{% include "offers/paginate.html" with items=offers uri="offers-page-sort" %}
+
+					<table class="ui sortable table">
+						<thead>
+							<tr>
+								<th data-sort="name" class="link name sort">Name</a></th>
+								<th data-sort="cat" class="link cat two wide">Category</th>
+								<th data-sort="ctry" class="link ctry one wide">Country</th>
+								<th data-sort="ua" 	class="link ua two wide">User Agent</th>
+								<th data-sort="epc" class="link epc one wide">EPC</th>
+								<th data-sort="pay" class="link pay one wide">Payout</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% if offers|length < 1 %}
+								<tr>
+									<td colspan="5">There are no offers...</td>
+								</tr>
+							{% else %}
+								{% with cut_amount=user.profile.party.cut_amount %}
+									{% for offer in offers %}
+										<tr>
+											<td><a href="{% url "offers-manage" offer.pk %}">{{ offer.name }}</a></td>
+											<td>{{ offer.category }}</td>
+											<td>
+												{% if offer.flag != "intl" %}
+													<i class="{{ offer.flag|lower }} flag"></i>
+												{% else %}
+													<i class="world icon"></i>
+												{% endif %}
+												
+												{% with e=offer.country_count|add:"-1" %}
+													{% if e > 1 %}
+														<small>{{ e }} more</small>
+													{% endif %}
+												{% endwith %}
+											</td>
+											<td>{{ offer.user_agent|default:"" }}</td>
+											<td>${{ offer.earnings_per_click|currency }}</td>
+											<td>${{ offer.payout|cut_percent:cut_amount|currency }}</td>
+										</tr>
+									{% endfor %}
+								{% endwith %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(".ui.form").form();
+$(".link.{{ column }}").addClass("{{ order }}ending");
+
+$(".link").click(function() {
+	url = "{% url 'offers-page' offers.number %}" + $(this).attr("data-sort");
+	direction = $(this).hasClass("descending") ? "/asc/" : "/desc/";
+	window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};
+});
+</script>
+{% endblock %}

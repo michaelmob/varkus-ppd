@@ -1,0 +1,9 @@
+{% with i=user.billing %}
+	<div class="item">
+		<i class="at icon"></i>
+		<div class="content">
+			<div class="header">Paypal E-mail</div>
+			{{ i.paypal_email }}
+		</div>
+	</div>
+{% endwith %}

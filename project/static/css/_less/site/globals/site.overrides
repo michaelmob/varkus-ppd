@@ -1,0 +1,328 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+/* Text Colors */
+.ui.primary.text {
+	color: @lightPrimaryColor;
+}
+.ui.secondary.text {
+	color: @lightSecondaryColor;
+}
+.ui.blue.text {
+	color: @blueTextColor;
+}
+.ui.green.text {
+	color: @greenTextColor;
+}
+.ui.orange.text {
+	color: @orangeTextColor;
+}
+.ui.pink.text {
+	color: @pinkTextColor;
+}
+.ui.purple.text {
+	color: @purpleTextColor;
+}
+.ui.red.text {
+	color: @redTextColor;
+}
+.ui.teal.text {
+	color: @tealTextColor;
+}
+.ui.yellow.text {
+	color: @yellowTextColor;
+}
+
+
+/* Body */
+html, body {
+	height: 100%;
+	font-size: 16px;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Roboto", "Arial", sans-serif;
+
+	background: #EEE url("/static/img/pattern-bg.png");
+}
+
+.wrapper {
+	margin-left: 0;
+}
+
+/* Media */
+@media only screen and (min-width:992px) {
+	.wrapper {
+		margin-left: 15rem;
+	}
+}
+
+.wrapper {
+	overflow: hidden;
+}
+
+/* Boxes */
+.wrapper > .ui.grid {
+	margin: 0 !important;
+}
+
+.wrapper .ui.grid > .column,
+.wrapper .ui.grid > .column > .ui.grid {
+	padding: 0.5rem !important;
+}
+
+.wrapper > .ui.grid > .row.column {
+	padding: 0 !important;
+}
+
+.wrapper .ui.grid > .row > .column {
+	padding: 0 .5rem 1rem 0.5rem
+}
+
+.wrapper .ui.grid > .row {
+	padding: 0.5rem 0 0 0;
+}
+
+.column > .box {
+	padding: 0;
+	margin: 0;
+	background-color: #FEFEFE;
+	border: 1px solid #CCC;
+	box-shadow: 1px 1px 5px #DDD;
+}
+
+.column > .box > .content > .ui.table thead th {
+	border-radius: 0 !important;
+}
+
+.column > .box > .content {
+	min-height: 10rem;
+}
+
+.column > .box > .content.no.min.height {
+	min-height: 0;
+}
+
+.column > .box > .content,
+.column > .box > .title {
+	display: block;
+	position: relative;
+	overflow: hidden;
+}
+
+.column > .box > .content.overflow {
+	overflow-y: auto;
+}
+
+.column > .box > .padded.content {
+	padding: 0.7rem;
+}
+
+.column > .box > .side.padded.content {
+	padding: 0 0.7rem;
+}
+
+.column > .box > .content > .statistics {
+	min-height: 0;
+	height: 6rem;
+	overflow: hidden;
+}
+
+.column > .box > .content > .ui.statistics > .statistic {
+	max-width: 100rem !important;
+}
+
+.column > .box > .title {
+	line-height: 1.5rem;
+	color: #FFF;
+	overflow: hidden;
+	padding: 0.5rem;
+	padding-left: 3.3rem;
+}
+
+.column > .box > .title > .icon {
+	top: 0em;
+	left: 0em;
+	position: absolute;
+	min-width: 2.75em;
+	padding: 0.75rem 1rem 0 1rem;
+	opacity: 1;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.05);
+	text-align: center;
+	line-height: 1;
+	-webkit-box-shadow: -1px 0px 0px 0px rgba(0, 0, 0, 0.05) inset;
+	box-shadow: -1px 0px 0px 0px rgba(0, 0, 0, 0.05) inset;
+}
+
+.column > .box > .content > .menu {
+	border-radius: 0;
+}
+
+.column > .box > .content > .table {
+	margin: 0;
+	border: 0;
+}
+
+/*.column > .box > .content > .pagination {
+	position: relative;
+	padding: 0 3rem;
+}
+
+.column > .box > .content > .pagination > .left.item,
+.column > .box > .content > .pagination > .right.item {
+	min-width: 3em;
+}
+
+.column > .box > .content > .pagination > .left.item {
+	position: absolute;
+	left: 0;
+}
+
+.column > .box > .content > .pagination > .right.item {
+	position: absolute;
+	right: 0;
+}
+
+.column > .box > .content > .table,
+.column > .box > .content > .pagination {
+	border-radius: 0;
+	-webkit-box-shadow: 0;
+	box-shadow: 0;
+}*/
+
+/* Menus/Navigation */
+.main.menu {
+	z-index: 1000 !important;
+	height: 2.5rem;
+	line-height: 2.5rem;
+}
+
+.main.menu > .logo.header {
+	font-size: 1.5rem;
+	padding: 0.5rem 1rem;
+	background-color: transparent !important;
+}
+
+.main.menu > .logo.header:hover {
+	background-color: @primaryColor !important;
+	_text-shadow: 0 0 0.3rem #000;
+}
+
+.main.menu > .item,
+.main.menu > .menu > .item {
+	margin-top: -1px;
+	min-height: 2.5rem;
+}
+
+.main.menu > .menu > .wide.item {
+	min-width: 6rem;
+	text-align: center;
+}
+
+.menu.push {
+	height: 4rem;
+}
+
+.side.menu {
+	top: auto !important;
+	overflow-y: auto;
+	height: 100%;
+}
+
+/* Footer */
+.footer .icon {
+	font-size: 1.5rem;
+	color: #666;
+}
+
+.footer a {
+	font-size: 1rem;
+}
+
+.footer a:hover, .footer .icon:hover {
+	color: #999 !important;
+	text-decoration: none;
+}
+
+/* Links */
+a, i, .logo.header {
+	-webkit-transition: color 0.2s ease, background-color 0.2s ease, text-shadow 0.2s ease;
+	-moz-transition: color 0.2s ease, background-color 0.2s ease, text-shadow 0.2s ease;
+	transition: color 0.2s ease, background-color 0.2s ease, text-shadow 0.2s ease;
+}
+
+/* Margin */
+.message.margin {
+	margin: 0.45rem 0.4rem 0 0.4rem;
+}
+
+.no.margin {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+/* Typography */
+.large.text {
+	font-size: 4.5rem;
+	line-height: 4rem;
+}
+
+.green.text {
+	color: #1CB842;
+}
+
+.orange.text {
+	color: #e07b53;
+}
+
+/* Semantic-UI Overrides */
+.ui.grid {
+	position: relative;
+}
+
+.sortable.table > thead > tr > th > a {
+	display: block;
+	color: inherit;
+}
+
+i.icon {
+	font-size: inherit !important;
+}
+
+i.circular.icon, .ui.segment {
+	background-color: #FEFEFE;
+}
+
+.ui.list .list > a.item:hover, .ui.list > a.item:hover {
+	color: #1CB842;
+}
+.ui.comments {
+	max-width: 100% !important;
+}
+.ui.inverted.menu {
+	background-color: #222;
+}
+
+.column > .box > .title,
+.ui.inverted.side.menu .active.item,
+.ui.button.toggle.active {
+	background-color: @primaryColor !important;
+}
+
+.ui.inverted.side.menu .active.item:hover,
+.ui.button.toggle.active:hover {
+	background-color: @primaryColorHover !important;
+}
+
+.ui.inverted.side.menu .active.item:active,
+.ui.button.toggle.active:active {
+	background-color: @primaryColorActive !important;
+}

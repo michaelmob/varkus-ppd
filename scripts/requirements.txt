@@ -1,0 +1,10 @@
+django
+django-recaptcha
+django-storages
+django-axes
+django-celery
+pillow
+django-countries
+filemagic
+geoip2
+git+https://github.com/thetarkus/anora

@@ -1,0 +1,66 @@
+{% load offers %}
+{% load static %}
+{% load future %}
+
+{% if not inline %}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static "css/widget/icons/icon.min.css" %}" />
+
+	{% if custom_css %}
+		<link rel="stylesheet" type="text/css" href="{{ custom_css }}">
+	{% endif %}
+{% else %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/widget/default.css" %}" />
+{% endif %}
+
+<div class="cb wrap">
+	<h3></h3>
+
+	<div class="progress indicator"></div>
+
+	{% for offer in offers %}
+		<a class="{% cycle "dark" "light" %}" target="_blank" href="{% url "offers-redirect" offer.pk token %}">
+			{{ offer.category|category_icon|safe }}
+			{% if offer.priority %}
+				<i class="gold star icon"></i>
+			{% endif %}
+			<div class="anchor">
+				{{ offer.anchor }}
+			</div>
+		</a>
+	{% endfor %}
+</div>
+
+{% if user.is_staff %}
+<div>
+	<h3></h3>
+	<input type="button" class="ui mini fluid toggle button" value="Staff" />
+	<div class="staff postback" style="display:none">
+		<h3></h3>
+		<form action="{% url "postback-send" %}" method="GET" target="_blank">
+			{% csrf_token %}
+			<input type="hidden" name="token" value="{{ token }}" />
+			<select name="offer">
+				{% for offer in offers %}
+					<option value="{{ offer.pk }}">{{ offer.pk }}: {{ offer.anchor }}</option>
+				{% endfor %}
+			</select>
+			<select name="typeof">
+				<option value="staff">Staff</option>
+				<option value="paid">Paid</option>
+				<option value="lead">Lead (Do not use)</option>
+			</select>
+			<input type="submit" class="ui mini primary button" value="Send Postback" />
+		</form>
+	</div>
+
+	<script>
+	$(".toggle.button").click(function() {
+		$(".staff.postback").toggle();
+	});
+	</script>
+</div>
+{% endif %}
+
+<script src="{% static "js/comp/request.js" %}"></script>
+<script>$(".cb.wrap>a").click(function(){_cb_request_start("{% url "request-access" token %}");});</script>

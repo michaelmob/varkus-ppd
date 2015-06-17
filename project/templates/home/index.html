@@ -1,0 +1,111 @@
+{% extends "frontend.html" %}
+{% load static %}
+
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static "css/pages/index.css" %}" />
+	<script src="{% static "js/comp/unslider.min.js" %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="banner" style="width:100% !important">
+	<a class="next slideshow frame"><i class="right angle icon"></i></a>
+	<a class="prev slideshow frame"><i class="left angle icon"></i></a>
+
+	<ul class="no margin">
+
+		<li class="first slide">
+			<div class="ui page grid">
+				<div class="column">
+					<div class="computer only">
+						<h1 class="large text no margin">{% site_name %}</h1>
+						<h2 class="no margin">Amplify your profits with our Leading Monetization Solutions</h2>
+					</div>
+					<h1 class="no margin mobile tablet only">
+						Leading Monetization Solutions
+					</h1>
+					<br/>
+					<div class="ui two column stackable grid">
+						<div class="column">
+							<p><i class="circular download disk icon"></i> File Locking</p>
+							<p><i class="circular linkify icon"></i> Link Locking</p>
+							<p><i class="circular list layout icon"></i> List Locking</p>
+							<p><i class="circular file image outline icon"></i> Widgets</p>
+						</div>
+
+						<div class="column ui bottom aligned right aligned">
+							<a class="ui button" href="{% url "signup" %}">Get Started</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+
+		<li class="second slide">
+			<div class="ui page grid column">
+				<div class="column">
+					<div class="computer only">
+						<h1 class="large text no margin">{% site_name %}</h1>
+					</div>
+					<h2 class="no margin">Maximize your cash flow with our Breakthrough Lockers</h2>
+					<br/>
+					<div class="ui two column stackable grid">
+						<div class="column">
+							<p><i class="circular mobile icon"></i> Optimized for Mobile</p>
+							<p><i class="circular globe icon"></i> Geo Targeted</p>
+							<p><i class="circular code icon"></i> CSS customization</p>
+							<p><i class="circular exchange icon"></i> Extensive API</p>
+						</div>
+
+						<div class="column ui bottom aligned right aligned">
+							<a class="ui primary button" href="{% url "signup" %}">Get Started</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+
+<div class="ui green inverted vertical segment">
+	<div class="ui page three column center aligned stackable divided grid">
+
+		<div class="column">
+			<div class="ui icon header">
+				<i class="upload icon"></i>
+				Upload
+			</div>
+
+			<p>Uploading is easy using our speedy uploader. As soon as you register you can start uploading your files right away!</p>
+
+			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
+		</div>
+
+		<div class="column">
+			<h1 class="ui icon header">
+				<i class="share icon"></i>
+				Share
+			</h1>
+
+			<p>After, you can immediately start sharing them anywhere you want. Your files download links are short and easy to share.</p>
+
+			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
+		</div>
+
+		<div class="column">
+			<div class="ui circular icon header">
+				<i class="currency icon"></i>
+				Earn
+			</div>
+
+			<p>Start watching the money roll in as people start downloading your file by the dozen! Easy cash straight to you!</p>
+
+			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
+		</div>
+
+	</div>
+</div>
+
+<script src="{% static "js/pages/index.js" %}"></script>
+{% endblock %}

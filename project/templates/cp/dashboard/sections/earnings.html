@@ -1,0 +1,30 @@
+{% load currency %}
+
+<div class="s box">
+	<div class="title">
+		<i class="money icon"></i>
+		Earnings
+	</div>
+	<div class="content">
+		<table class="ui table">
+			<tr>
+				<td>Today</td>
+				<td>${{ user.earnings.today|currency }}</td>
+			</tr>
+			<tr>
+				<td>Month</td>
+				<td>${{ user.earnings.month|currency }}</td>
+			</tr>
+			<tr>
+				<td>Year</td>
+				<td>${{ user.earnings.year|currency }}</td>
+			</tr>
+			<tr>
+				<td>Total</td>
+				<td>${{ user.earnings.total|currency }}</td>
+			</tr>
+		</table>
+
+		<a class="ui button attached bottom">More</a>
+	</div>
+</div>
