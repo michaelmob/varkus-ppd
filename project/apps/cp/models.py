@@ -48,6 +48,7 @@ class Earnings_Base(models.Model):
 	real_today 	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	real_month	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	
 
 	def reset_today(self):
 		print("Reset Today")
@@ -105,13 +106,16 @@ class Earnings_Base(models.Model):
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
 
-	def get_leads(self, date_range=[date.today(), date.today() + timedelta(days=1)]):
+	def get_leads(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=2147483647, all=False):
 		args = {}
 
 		typeof = str(type(self.obj).__name__).lower()
 
+		# User
 		if typeof in apps.leads.models.Lead._meta.get_all_field_names():
 			args[typeof] = self.obj
+		
+		# Locker
 		else:
 			args["locker"] = typeof.upper()
 			args["locker_id"] = self.obj.pk
@@ -119,8 +123,14 @@ class Earnings_Base(models.Model):
 
 		if date_range:
 			args["date_time__range"] = date_range
+
+		if not all:
+			args["lead_blocked"] = False
 			
-		return apps.leads.models.Lead.objects.filter(**args).order_by("-date_time")
+		return apps.leads.models.Lead.objects.filter(**args).order_by("-date_time")[:count]
+
+	def get_most_recent_leads(self, count=25):
+		return self.get_leads(None, count)
 
 	class Meta:
 		abstract = True

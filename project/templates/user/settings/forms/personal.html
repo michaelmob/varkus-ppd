@@ -1,4 +1,4 @@
-<form class="ui modal personal" method="POST" action="{% url "user-settings-modify" "personal" %}">
+<form class="ui modal personal" method="POST" action="{% url 'user-settings-modify' 'personal' %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Modify Personal Details
@@ -21,7 +21,7 @@
 
 			<div class="field">
 				<label>Country</label>
-				{% include "cp/countries.html" with code=user.profile.country %}
+				{% include 'cp/countries.html' with code=user.profile.country %}
 			</div>
 
 			<div class="field">

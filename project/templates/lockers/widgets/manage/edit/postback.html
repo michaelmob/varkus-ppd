@@ -1,0 +1,149 @@
+{% extends 'cp.html' %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Widget Locker{% endblock %}
+
+{% block tab %}widgets{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="resize horizontal icon"></i>
+					Postback
+				</div>
+				<div class="padded content" style="overflow:hidden">
+					<form class="ui form" action="{% url 'widgets-edit-postback' obj.code %}" method="POST">
+						{% csrf_token %}
+						<div class="field">
+							<label>Postback URL</label>
+							<input type="url" name="postback" value="{{ url }}" placeholder="http://example.com/postback/?offer_name={offer_name}&ip={ip}&payout={payout}&approved={approved}&datetime={datetime}" />
+						</div>
+						<div class="field">
+							<div class="ui fluid buttons">
+								<button class="ui primary submit button">
+									Set Postback URL
+								</button>
+								<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+									Cancel
+								</a>
+							</div>
+						</div>
+					</form>
+
+					<div class="ui header">GET Values</div>
+
+					<table class="ui very basic celled table" style="overflow:hidden">
+						<thead>
+							<tr>
+								<th>Value</th>
+								<th>Description</th>
+								<th>Example</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{offer_id}</td>
+								<td>ID of Offer</td>
+								<td>56</td>
+							</tr>
+							<tr>
+								<td>{offer_name}</td>
+								<td>Offer's name (url encoded)</td>
+								<td>Survey+Sample+Savings+-+Bur...</td>
+							</tr>
+							<tr>
+								<td>{ip}</td>
+								<td>Client's IP address</td>
+								<td>173.49.23.39</td>
+							</tr>
+							<tr>
+								<td>{user_agent}</td>
+								<td>Client's user agent (url encoded)</td>
+								<td>Mozilla%2F5.0...</td>
+							</tr>
+							<tr>
+								<td>{token}</td>
+								<td>Token of client's session</td>
+								<td>o6roooedfxg0aw1w8za6e9o8kmct205j</td>
+							</tr>
+							<tr>
+								<td>{widget}</td>
+								<td>Widget's code</td>
+								<td>{{ obj.code }}</td>
+							</tr>
+							<tr>
+								<td>{payout}</td>
+								<td>Lead's payout</td>
+								<td>3.98</td>
+							</tr>
+							<tr>
+								<td>{approved}</td>
+								<td>True or False if lead is approved</td>
+								<td>True</td>
+							</tr>
+							<tr>
+								<td>{date}</td>
+								<td>Date in YY-MM-DD format</td>
+								<td>{% now "Y-m-d" %}</td>
+							</tr>
+							<tr>
+								<td>{time}</td>
+								<td>Time in HH:MM:SS format</td>
+								<td>{% now "H:i:s" %}</td>
+							</tr>
+							<tr>
+								<td>{datetime}</td>
+								<td>Date and time in YY-MM-DD HH:MM:SS format</td>
+								<td>{% now "Y-m-d H:i:s" %}</td>
+							</tr>
+							<tr>
+								<td>{rand}</td>
+								<td>Random number from 1-1000000</td>
+								<td>59382</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="info circle icon"></i>
+					Information
+				</div>
+				<div class="padded content">
+					<div class="ui header">Postbacks</div>
+
+					<p>
+						Postbacks are what makes standalone widgets useful.
+						To notify you and your server that one of your clients
+						has completed an offer so that you can take action. The
+						request contains a bunch of useful information that you
+						can use to identify specific clients.
+					</p>
+
+					<p>
+						Our postbacks aren't necessarily postbacks, per se, but
+						instead could be called a "getback" due to the fact that
+						a GET request is sent back instead of a POST request.
+					</p>
+
+					<p>
+						In the previous panel there are many GET values you can use
+						to aid yourself with information on the lead. A request is
+						sent to your postback URL replacing the values with the 
+						proper information.
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

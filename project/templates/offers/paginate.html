@@ -7,10 +7,10 @@
 
 				{% if items.paginator.num_pages > 6 %}
 
-					<div class="ui item floating dropdown">
+					<div class="ui item selection dropdown button">
 						<i class="ellipsis vertical icon"></i>
-						<span class="text">Select Page</span>
-						<div class="max height menu">
+						<span class="text" style="color:white">Select Page</span>
+						<div class="menu">
 							{% for page in num %}
 								<a class="{% if page == items.number %}active {% endif %}item" href="{% url uri page column order %}">
 									{{ page }}

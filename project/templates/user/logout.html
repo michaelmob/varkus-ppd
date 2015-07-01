@@ -1,4 +1,4 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 {% block title %}Logged out{% endblock %}
@@ -14,7 +14,7 @@
 			</p>
 
 			<p>
-				<a href="{% url "login" %}" class="ui primary button">Log in again</a>
+				<a href="{% url 'login' %}" class="ui primary button">Log in again</a>
 			</p>
 		</div>
 	</div>

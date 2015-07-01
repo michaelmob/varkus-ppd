@@ -23,7 +23,7 @@ def index(request):
 	offers = cache2.get("newest_offers", lambda: Offer.objects.order_by('-date')[:5])
 
 	# Cache Most Recent Leads
-	leads = cache2.get("recent__user_%s" % request.user.id, lambda: Lead.objects.filter(user=request.user).order_by("-date_time")[:5])
+	leads = cache2.get("recent__user_%s" % request.user.id, lambda: Lead.objects.filter(lead_blocked=False, user=request.user).order_by("-date_time")[:5])
 
 	return render(request, "cp/dashboard/index.html", {
 		"hour_chart": chart[0],

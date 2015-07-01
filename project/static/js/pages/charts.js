@@ -45,10 +45,10 @@ var draw_line_chart_ex = function(container, rows, data) {
 		{
 			pointSize: 5,
 			chartArea: {
-				left: 40,
-				top: 20,
-				width: container.width() - 51,
-				height: "85%"
+				left: 45,
+				top: 35,
+				width: container.width() - 70,
+				height: container.parent().height() - 60
 			},
 			vAxis: {viewWindowMode: "explicit", viewWindow: {min: 0}},
 			legend: {position: "none"},
@@ -71,7 +71,7 @@ var draw_line_chart = function(container, rows) {
 	formatter.format(data, 1);
 
 	draw_line_chart_ex(container, rows, data);
-}
+};
 
 var draw_line_chart_leads = function(container, rows) {
 	// Create Columns
@@ -81,4 +81,4 @@ var draw_line_chart_leads = function(container, rows) {
 	data.addRows(rows);
 
 	draw_line_chart_ex(container, rows, data);
-}
+};

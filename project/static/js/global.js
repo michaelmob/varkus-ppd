@@ -12,13 +12,8 @@ $(function() {
 		$(this).closest(".message").slideUp(100);
 	});
 
+	
 	$(".app.button").click(function() {
 		$(".sidebar").sidebar("toggle");
 	});
-
-	$(window).resize(function() {
-		$(".side.menu").height($(window).height() - $(".main.menu").height());
-	});
-
-	$(window).resize();
 });

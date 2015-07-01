@@ -10,7 +10,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 
 from ..models import Lead, Token, Deposit
-from ...offers.models import Offer
+from apps.offers.models import Offer
+
+from apps.api.views.postback import post
 
 
 @staff_member_required
@@ -18,6 +20,7 @@ def send(request):
 	offer = request.GET.get("offer")
 	token = request.GET.get("token")
 	typeof = request.GET.get("typeof")
+	approved = request.GET.get("approved", "off").lower() == "on"
 
 	try:
 		token = Token.objects.get(unique=token)
@@ -29,7 +32,8 @@ def send(request):
 	except:
 		return HttpResponse("Offer does not exist.")
 
-	
+	print(token.locker_object())
+
 	password = Deposit.get_by_user_id(token.locker_object().user.pk).password
 
 	url = "https://" if request.is_secure() else "http://"
@@ -41,7 +45,8 @@ def send(request):
 		"payout": offer.payout,
 		"ip": request.META.get("REMOTE_ADDR"),
 		"token": token.unique,
-		"typeof": typeof
+		"typeof": typeof,
+		"approved": 0 if approved else 1
 	}
 
 	data = urllib.parse.urlencode(values)
@@ -62,6 +67,7 @@ def receive(request, password=None):
 	user_ip_address = request.GET.get("ip")
 	token			= request.GET.get("token")
 	typeof			= request.GET.get("typeof", "lead").lower()
+	approved 		= request.GET.get("approved", "1") == "0"
 
 	user			= None
 	locker_obj		= None
@@ -112,42 +118,49 @@ def receive(request, password=None):
 
 		cut_amount = 0
 
+		# If locker object exists and if user exists
 		if locker_obj:
-			if offer:
-				if offer.flag in locker_obj.country_block:
-					lead_blocked = True
-					response["debug"] = "Country block."
-
-			if locker_obj.lead_block > 0:
-				if randint(0, 100) <= (locker_obj.lead_block * 100):
-					lead_blocked = True
-					response["debug"] = "Lead block."
-
-			if not lead_blocked:
+			try:
 				user = locker_obj.user
-				cut_amount = user.profile.party.cut_amount
+			except:
+				user = None
 
-				# Locker Object
-				locker_obj.earnings.add(payout, cut_amount)
+			if user and approved:
+				if offer:
+					if offer.flag in locker_obj.country_block:
+						lead_blocked = True
+						response["debug"] = "Country block."
 
-				# Add Earnings to User
-				user_payout = user.earnings.add(payout, cut_amount)
+				if locker_obj.lead_block > 0:
+					if randint(0, 100) <= (locker_obj.lead_block * 100):
+						lead_blocked = True
+						response["debug"] = "Lead block."
 
-				# Referral User Object
-				if user.profile.referrer:
-					referral_payout = user.profile.referrer.referral_earnings.difference(
-						user_payout, user.profile.party.referral_cut_amount, False
-					)
+				if not lead_blocked and typeof == "lead":
+					cut_amount = user.profile.party.cut_amount
+
+					# Locker Object
+					locker_obj.earnings.add(payout, cut_amount, True)
+
+					# Add Earnings to User
+					user_payout = user.earnings.add(payout, cut_amount, True)
+
+					# Referral User Object
+					if user.profile.referrer:
+						referral_payout = user.profile.referrer.referral_earnings.difference(
+							user_payout, user.profile.party.referral_cut_amount, False
+						)
 
 			# Add earnings to offer
 			if offer:
-				offer.earnings.add(payout, cut_amount)
+				offer.earnings.add(payout, cut_amount, typeof == "lead")
 			elif settings.DEBUG:
 				response["debug"] = "Offer does not exist."
 
 		# Set token as a lead
 		if typeof == "staff":
 			token.staff = True
+			lead_blocked = True
 		elif typeof == "paid":
 			token.paid = True
 		else:
@@ -156,7 +169,7 @@ def receive(request, password=None):
 		token.save()
 
 	# Create Lead
-	Lead.create(
+	lead = Lead.create(
 		offer				= offer,
 		token				= token,
 		user				= user,
@@ -168,10 +181,12 @@ def receive(request, password=None):
 		user_payout 		= user_payout,
 		referral_payout 	= referral_payout,
 		lead_blocked		= lead_blocked,
-		deposit 			= deposit.code
+		deposit 			= deposit.code,
+		approved 			= approved
 	)
 
 	response["error"] = False
+	response["approved"] = approved
 	response["type"] = typeof
 	response["message"] = "Received."
 
@@ -187,12 +202,18 @@ def receive(request, password=None):
 			"leads__%s_%s" % locker_reference
 		])
 	except:
-		response["user"] = None
+		pass
 
 	# Clear Caches
 	cache.delete_many([
 		"charts__offer_%s" % offer.id,
 		"token__%s" % token.unique,
 	])
+
+	# if not lead_blocked:
+	# Send Postback if Widget
+	if locker_obj.get_name() == "Widget":
+		if len(locker_obj.postback_url) > 20:
+			post(lead, locker_obj, token)
 
 	return JsonResponse(response)

@@ -1,0 +1,121 @@
+{% extends 'cp.html' %}
+
+{% block title %}Widget Locker{% endblock %}
+
+{% block tab %}widgets{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="lock icon"></i>
+					Select Locker
+				</div>
+				<div class="padded content">
+					<div class="ui header">Standalone</div>
+					<form class="ui form" action="{% url 'widgets-edit-locker' obj.code %}" method="POST">
+						{% csrf_token %}
+						<div class="field">
+							<div class="ui radio checkbox slider">
+								<input type="radio" name="locker" value="standalone" tabindex="0">
+								<label>I want this widget to not be associated with any locker</label>
+							</div>
+						</div>
+
+						<div class="field">
+							<label>Redirect URL <em>(standalone only)</em></label>
+							<input type="url" name="redirect" value="{{ obj.standalone_redirect }}" />
+						</div>
+
+						<div class="ui header">Files</div>
+						{% for o in files %}
+							<div class="field">
+								<div class="ui radio checkbox slider">
+									<input type="radio" name="locker" value="file,{{ o.code }}" tabindex="0">
+									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
+								</div>
+							</div>
+						{% endfor %}
+
+						<div class="ui header">Links</div>
+						{% for o in links %}
+							<div class="field">
+								<div class="ui radio checkbox slider">
+									<input type="radio" name="locker" value="link,{{ o.code }}" tabindex="0">
+									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
+								</div>
+							</div>
+						{% endfor %}
+
+						<div class="ui header">Lists</div>
+						{% for o in lists %}
+							<div class="field">
+								<div class="ui radio checkbox slider">
+									<input type="radio" name="locker" value="list,{{ o.code }}" tabindex="0">
+									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
+								</div>
+							</div>
+						{% endfor %}
+
+						<div class="ui fluid buttons">
+							<button class="ui primary submit button">
+								Set Locker
+							</button>
+							<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+								Cancel
+							</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="info circle icon"></i>
+					Information
+				</div>
+				<div class="padded content">
+					<div class="ui header">Standalone Widget</div>
+					<p>
+						Standalone widgets are usually combined with postbacks
+						allowing a user to add a widget to their website and
+						be notified, via postback, that their widget has gotten
+						a lead. Once the client has completed the survey they
+						will be redirected to the URL provided by the user.
+						This is the most flexible and dynamic option.
+					</p>
+
+					<div class="ui header">Locker Association</div>
+					<p>
+						Locker associated widgets are different than standalone.
+						While they can still be used with postbacks, the user's client
+						will be served the result of the locker that the user has selected.
+					</p>
+
+					<p>
+						Understand that the earnings that the locker item makes will not
+						be added to it, but will be added to the widget.
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(".ui.accordion").accordion();
+	
+	{% with lo=obj.locker_object %}
+		var obj = "{{ lo.get_name|lower }},{{ lo.code }}";
+	{% endwith %}
+
+	$("input[value='" + (obj == "," ? "standalone" : obj) + "']").checkbox("set checked");
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
-<div class="box">
+<div class="ui segment box">
 	<div class="title">
 		<i class="list layout icon"></i>
-		Link: <em>{{ item.name }}</em>
+		Link: <em>{{ obj.name }}</em>
 	</div>
 	<div class="side padded content">
 
@@ -10,14 +10,14 @@
 				<i class="quote left icon"></i>
 				<div class="content">
 					<div class="header">Name</div>
-					{{ item.name }}
+					{{ obj.name }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="ellipsis horizontal icon"></i>
 				<div class="content">
 					<div class="header">Description</div>
-					{{ item.description|default:"<i>None</i>" }}
+					{{ obj.description|default:'<i>None</i>' }}
 				</div>
 			</div>
 			<div class="item">
@@ -26,7 +26,7 @@
 					<div class="header">URL</div>
 					<div class="ui mini basic show button">Show URL</div>
 					<span class="hidden url" style="display:none">
-						<a target="_blank" href="{{ item.url }}">{{ item.url }}</a>
+						<a target="_blank" href="{{ obj.url }}">{{ obj.url }}</a>
 					</span>
 				</div>
 			</div>

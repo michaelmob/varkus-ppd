@@ -1,4 +1,4 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 {% block title %}Report Abuse{% endblock %}
@@ -8,7 +8,7 @@
 	<div class="ten wide column">
 		<h2><i class="legal icon"></i> Report Abuse</h2>
 
-		<form class="ui form segment" method="POST" enctype="multipart/form-data" action="{% url "report" %}">
+		<form class="ui form segment" method="POST" enctype="multipart/form-data" action="{% url 'report' %}">
 			{% csrf_token %}
 
 			<div class="ui error message"></div>
@@ -66,7 +66,7 @@
 
 			<div class="field">
 				<p>
-					By submitting this Abuse Report, you declare under penalty of perjury that the report abuse is true and correct. You also state that you believe the reported content is illegal under U.S. or International law and/or violates our <a href="{% url "terms" %}">Terms and Conditions</a>.
+					By submitting this Abuse Report, you declare under penalty of perjury that the report abuse is true and correct. You also state that you believe the reported content is illegal under U.S. or International law and/or violates our <a href="{% url 'terms' %}">Terms and Conditions</a>.
 				</p>
 			</div>
 
@@ -82,7 +82,7 @@
 			</p>
 
 			<p>
-				You can view what we deem as Rule Breaking Content in the <a target="_blank" href="{% url "terms" %}#general-prohibitions">General Prohibitions</a> section of our <a target="_blank" href="{% url "terms" %}#general-prohibitions">Terms and Conditions</a>.
+				You can view what we deem as Rule Breaking Content in the <a target="_blank" href="{% url 'terms' %}#general-prohibitions">General Prohibitions</a> section of our <a target="_blank" href="{% url 'terms' %}#general-prohibitions">Terms and Conditions</a>.
 			</p>
 		</div>
 
@@ -110,5 +110,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/forms/report.js" %}"></script>
+<script src="{% static 'js/forms/report.js' %}"></script>
 {% endblock %}

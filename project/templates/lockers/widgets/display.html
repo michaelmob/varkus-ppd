@@ -1,0 +1,123 @@
+{% extends 'cp.html' %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Widget Locker{% endblock %}
+
+{% block tab %}widgets{% endblock %}
+
+{% block content %}
+<form class="ui modal" method="POST" action="{% url 'widgets' %}">
+	<i class="close icon"></i>
+	<div class="header">
+		Create Widget
+	</div>
+	<div class="content">
+		<div class="ui form">
+			{% csrf_token %}
+
+			<div class="field">
+				<label>Name</label>
+				{{ form.name }}
+			</div>
+
+			<div class="field">
+				<label>Description <small><i>Optional</i></small></label>
+				{{ form.description }}
+			</div>
+		</div>
+
+		<p>
+			Widget can be further customized after creation.
+		</p>
+
+	</div>
+	<div class="actions">
+		<div class="ui black button">
+			Cancel
+		</div>
+		<div class="ui left labeled icon positive primary submit button">
+			Create
+			<i class="checkmark icon"></i>
+		</div>
+	</div>
+</form>
+
+<div class="wrapper">
+	<div class="ui grid stackable">
+		<div class="ten wide column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="file image outline icon"></i>
+					Widgets
+				</div>
+				<div class="content">
+
+					{% include 'cp/paginate.html' with items=widgets uri='widgets-page' %}
+
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Leads</th>
+								<th>Month</th>
+								<th>Total</th>
+								<th>Date</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% if widgets|length < 1 %}
+								<td colspan="5">You have not created any widgets, yet.</td></tr>
+							{% else %}
+								{% for widget in widgets %}
+									<tr>
+										<td><a href="{% url 'widgets-manage' widget.code %}">{{ widget.name }}</a></td>
+										<td>{{ widget.earnings.leads|default:'0' }}</td>
+										<td>${{ widget.earnings.month|currency }}</td>
+										<td>${{ widget.earnings.total|currency }}</td>
+										<td>{{ widget.date_time }}</td>
+									</tr>
+								{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="six wide column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="add square icon"></i>
+					Create
+				</div>
+				<div class="padded content">
+
+					<div class="ui left labeled icon fluid basic create button{% if widgets|length >= MAX_WIDGETS %} disabled{% endif %}">
+						<i class="plus icon"></i>
+						Create Widget
+					</div>
+
+					<br/>
+
+					<p>You have created {{ widgets|length }} widget(s) out of your maximum widget limit of {{ MAX_LINKS }}.</p>
+
+					<div class="ui header">Widget Lockers</div>
+					<p>
+						The widgets locker is the generic locker of the other three.
+						It is dynamic and can be used for multiple purposes than
+						just a single, specific thing.
+					</p>
+
+					<p>
+						More importantly, widgets are the only lockers that are
+						able to send postbacks when a lead goes through.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/forms/widgets.js' %}"></script>
+{% endblock %}

@@ -5,7 +5,9 @@ from django.conf import settings
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
+
 from utils import strings
+from geoip import lookup
 
 from ..lockers.utils import Locker
 
@@ -14,13 +16,11 @@ class Token(models.Model):
 	unique 		= models.CharField(max_length=32)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
 
-	locker		= models.CharField(max_length=10, choices=settings.LOCKERS,
-									default=None, blank=True, null=True)
-
+	locker		= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
 	locker_id	= models.IntegerField(default=None, blank=True, null=True)
 	locker_code	= models.CharField(max_length=10, default=None, blank=True, null=True)
 
-	user_agent 	= models.CharField(max_length=200)
+	user_agent 	= models.CharField(max_length=300)
 	ip_address 	= models.GenericIPAddressField()
 	date_time	= models.DateTimeField()
 
@@ -135,15 +135,26 @@ class Lead(models.Model):
 	sender_ip_address	= models.GenericIPAddressField(blank=True, null=True)
 	user_ip_address		= models.GenericIPAddressField(blank=True, null=True)
 
+	user_user_agent		= models.CharField(max_length=300, default=None, blank=True, null=True)
+
 	payout				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	dev_payout			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	user_payout			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	referral_payout		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 
 	lead_blocked		= models.BooleanField(default=False)
+	approved			= models.BooleanField(default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
 	date_time			= models.DateTimeField()
+
+
+	def locker_object(self):
+		try:
+			return Locker(self.locker).objects.get(id=self.locker_id)
+		except:
+			return None
+
 
 	def create(
 		offer,
@@ -157,39 +168,47 @@ class Lead(models.Model):
 		user_payout,
 		referral_payout,
 		deposit="DEFAULT_DEPOSIT",
-		lead_blocked=False
+		lead_blocked=False,
+		approved=True
 	):
 		locker = str(type(locker_obj).__name__).upper()
-		extra = {}
 
+		args = {
+			"offer" 			: offer,
+			"offer_name"		: offer.name,
+
+			"token" 			: token,
+			"user"				: user,
+			"locker"			: locker,
+
+			"sender_ip_address"	: sender_ip_address,
+			"user_ip_address"	: user_ip_address,
+
+			"user_user_agent" 	: token.user_agent,
+
+			"payout"			: payout,
+			"dev_payout"		: dev_payout,
+			"user_payout"		: user_payout,
+			"referral_payout"	: referral_payout,
+
+			"lead_blocked"		: lead_blocked,
+			"approved"			: approved,
+
+			"deposit"			: deposit,
+			"date_time"			: datetime.now(),
+		}
+
+		# locker_obj may not exist
 		try:
-			extra["locker_id"] = locker_obj.id
-			extra["locker_code"] = locker_obj.code
+			args["locker_id"] = locker_obj.id
+			args["locker_code"] = locker_obj.code
 		except:
 			pass
 
-		return Lead.objects.create(
-			offer 				= offer,
-			offer_name			= offer.name,
-			country 			= offer.flag,
-			token 				= token,
-			user 				= user,
+		# Lookup throws error if inexistant
+		try:
+			args["country"] = lookup.country(user_ip_address)
+		except:
+			args["country"] = offer.flag
 
-			locker 				= locker,
-
-			sender_ip_address 	= sender_ip_address,
-			user_ip_address 	= user_ip_address,
-
-			payout 				= payout,
-			dev_payout 			= dev_payout,
-			user_payout 		= user_payout,
-			referral_payout 	= referral_payout,
-
-			lead_blocked 		= lead_blocked,
-
-			deposit 			= deposit,
-			date_time 			= datetime.now(),
-
-			# Add Locker info if valid
-			**extra
-		)
+		return Lead.objects.create(**args)

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
+from django.core.validators import URLValidator
 from ..models import File
 from ....leads.models import Token
 from ....offers.models import Offer
@@ -26,20 +27,21 @@ def locker(request, code=None):
 		request,
 		"lockers/files/locker.html",
 		{
-			"item": obj,
+			"obj": obj,
 			"offers": combo.offers,
 			"token": combo.token
 		}
 	)
 
 
-def unlock(request, code=None):
+def unlock(request, code=None, token=None):
 	obj = get_object(code)
 
 	if not obj:
 		return redirect("locker-404")
 
-	token = Token.get_or_create_request(request, obj)
+	if not token:
+		token = Token.get_or_create_request(request, obj)
 
 	# Give access
 	if not token.access():
@@ -49,19 +51,20 @@ def unlock(request, code=None):
 		request,
 		"lockers/files/unlock.html",
 		{
-			"item": obj,
+			"obj": obj,
 			"data": token.data
 		}
 	)
 
 
-def download(request, code=None):
+def download(request, code=None, token=None):
 	obj = get_object(code)
 
 	if not obj:
 		return redirect("locker-404")
 
-	token = Token.get_or_create_request(request, obj)
+	if not token:
+		token = Token.get_or_create_request(request, obj)
 
 	# Give access
 	if not token.access():

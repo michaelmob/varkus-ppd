@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
 
@@ -7,7 +7,7 @@
 {% block tab %}links{% endblock %}
 
 {% block content %}
-<form class="ui modal" method="POST" action="{% url "links" %}">
+<form class="ui modal" method="POST" action="{% url 'links' %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Create Link
@@ -47,35 +47,39 @@
 <div class="wrapper">
 	<div class="ui grid stackable">
 		<div class="ten wide column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="linkify icon"></i>
 					Links
 				</div>
 				<div class="content">
 
-					{% include "cp/paginate.html" with items=links uri="links-page" %}
+					{% include 'cp/paginate.html' with items=links uri='links-page' %}
 
 					<table class="ui table">
 						<thead>
 							<tr>
 								<th>Name</th>
 								<th>Leads</th>
+								<th>Month</th>
 								<th>Total</th>
+								<th>Date</th>
 							</tr>
 						</thead>
 
 						<tbody>
 							{% if links|length < 1 %}
-							<td colspan="5">You have not created any links, yet.</td></tr>
+								<td colspan="5">You have not created any links, yet.</td></tr>
 							{% else %}
-							{% for link in links %}
-							<tr>
-								<td><a href="{% url "links-manage" link.code %}">{{ link.name }}</a></td>
-								<td>{{ link.earnings.leads|default:"0" }}</td>
-								<td>${{ link.earnings.total|currency }}</td>
-							</tr>
-							{% endfor %}
+								{% for link in links %}
+									<tr>
+										<td><a href="{% url 'links-manage' link.code %}">{{ link.name }}</a></td>
+										<td>{{ link.earnings.leads|default:'0' }}</td>
+										<td>${{ link.earnings.month|currency }}</td>
+										<td>${{ link.earnings.total|currency }}</td>
+										<td>{{ link.date_time }}</td>
+									</tr>
+								{% endfor %}
 							{% endif %}
 						</tbody>
 					</table>
@@ -83,7 +87,7 @@
 			</div>
 		</div>
 		<div class="six wide column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="add square icon"></i>
 					Create
@@ -114,6 +118,6 @@
 	</div>
 </div>
 
-<script>var items = {{ item.items|safe }};</script>
-<script src="{% static "js/forms/links.js" %}"></script>
+<script>var items = {{ obj.items|safe }};</script>
+<script src="{% static 'js/forms/links.js' %}"></script>
 {% endblock %}

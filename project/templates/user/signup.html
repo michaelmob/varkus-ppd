@@ -1,4 +1,4 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 {% block title %}Sign up{% endblock %}
@@ -9,7 +9,7 @@
 	<div class="column">
 		<h2><i class="signup icon"></i> Sign up for {% site_name %}</h2>
 	
-		<form class="ui form segment" method="POST" action="{% url "signup" %}">
+		<form class="ui form segment" method="POST" action="{% url 'signup' %}">
 			{% csrf_token %}
 			{{ form.referrer }}
 
@@ -101,7 +101,7 @@
 			</div>
 
 			<div class="inline field center aligned">
-				By creating a {% site_name %} account, you hereby agree to our <a target="_blank" href="{% url "terms" %}">Terms and Conditions</a>.
+				By creating a {% site_name %} account, you hereby agree to our <a target="_blank" href="{% url 'terms' %}">Terms and Conditions</a>.
 			</div>
 
 			<div class="ui stackable grid">
@@ -115,7 +115,7 @@
 				</div>
 
 				<div class="six wide column">
-					<a class="ui fluid animated fade button" href="{% url "login" %}">
+					<a class="ui fluid animated fade button" href="{% url 'login' %}">
 						<div class="visible content">Already have an account?</div>
 						<div class="hidden content">
 							Log in
@@ -128,5 +128,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/forms/sign-up.js" %}"></script>
+<script src="{% static 'js/forms/sign-up.js' %}"></script>
 {% endblock %}

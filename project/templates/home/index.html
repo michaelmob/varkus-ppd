@@ -1,10 +1,10 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 
 {% block head %}
-	<link rel="stylesheet" type="text/css" href="{% static "css/pages/index.css" %}" />
-	<script src="{% static "js/comp/unslider.min.js" %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/pages/index.css' %}" />
+	<script src="{% static 'js/comp/unslider.min.js' %}"></script>
 {% endblock %}
 
 
@@ -35,7 +35,7 @@
 						</div>
 
 						<div class="column ui bottom aligned right aligned">
-							<a class="ui button" href="{% url "signup" %}">Get Started</a>
+							<a class="ui button" href="{% url 'signup' %}">Get Started</a>
 						</div>
 					</div>
 				</div>
@@ -59,7 +59,7 @@
 						</div>
 
 						<div class="column ui bottom aligned right aligned">
-							<a class="ui primary button" href="{% url "signup" %}">Get Started</a>
+							<a class="ui primary button" href="{% url 'signup' %}">Get Started</a>
 						</div>
 					</div>
 				</div>
@@ -107,5 +107,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/pages/index.js" %}"></script>
+<script src="{% static 'js/pages/index.js' %}"></script>
 {% endblock %}

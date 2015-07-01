@@ -18,6 +18,9 @@ urlpatterns = patterns("",
 	# Leads
 	url(r"^leads/", include("apps.leads.urls")),
 
+	# API
+	url(r"^api/", include("apps.api.urls")),
+
 	# Offers
 	url(r"^offers/", include("apps.offers.urls")),
 

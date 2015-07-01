@@ -1,4 +1,4 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 {% block title %}Contact{% endblock %}
@@ -8,7 +8,7 @@
 <div class="ui stackable grid page">
 	<div class="ten wide column">
 		<h2><i class="chat icon"></i> Contact</h2>
-		<form class="ui form segment" method="POST" action="{% url "contact" %}">
+		<form class="ui form segment" method="POST" action="{% url 'contact' %}">
 			{% csrf_token %}
 
 			<div class="ui error message"></div>
@@ -64,12 +64,12 @@
 		<h2><i class="legal icon"></i> Report Abuse</h2>
 		<div class="ui segment">
 			<p>
-				To report abuse you should use our <a href="{% url "report" %}">Abuse Report Form</a>. Please do not use this form to report abusive actions of our users. If one of our users is violating our <a href="{% url "terms" %}">Terms and Conditions</a> they will be dealt with swiftly.
+				To report abuse you should use our <a href="{% url 'report' %}">Abuse Report Form</a>. Please do not use this form to report abusive actions of our users. If one of our users is violating our <a href="{% url 'terms' %}">Terms and Conditions</a> they will be dealt with swiftly.
 			</p>
 
 		</div>
 	</div>
 </div>
 
-<script src="{% static "js/forms/contact.js" %}"></script>
+<script src="{% static 'js/forms/contact.js' %}"></script>
 {% endblock %}

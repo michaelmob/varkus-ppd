@@ -1,0 +1,11 @@
+{% load static %}
+
+{% if custom_css %}
+	<link rel="stylesheet" type="text/css" href="{{ custom_css }}">
+{% else %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/default.css' %}" />
+{% endif %}
+
+<div class="s wrap">
+	<h2>You have completed an offer!</h2>
+</div>

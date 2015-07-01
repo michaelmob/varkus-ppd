@@ -1,0 +1,74 @@
+{% extends 'cp.html' %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Widget Locker{% endblock %}
+
+{% block tab %}widgets{% endblock %}
+
+{% block content %}
+{% include 'lockers/widgets/manage/sections/modals.html' %}
+
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui one column grid">
+				<div class="column">
+					{% include 'lockers/widgets/manage/sections/info.html' %}
+				</div>
+				<div class="column">
+					<div class="ui two column grid">
+						<div class="column">
+							{% include 'lockers/common/earnings.html' %}
+						</div>
+
+						<div class="column">
+							<div class="ui segment box">
+								<div class="title">
+									<i class="lock icon"></i>
+									Locker
+								</div>
+								<div class="side padded content no min height">
+									<div class="ui divided relaxed list">
+										<div class="item">
+											<i class="unlock alternate icon"></i>
+											<div class="content">
+												<div class="header">Times Unlocked</div>
+												{{ obj.earnings.leads }}
+											</div>
+										</div>
+
+										<div class="item">
+											<i class="linkify icon"></i>
+											<div class="content">
+												<div class="header">Widget Link</div>
+												<a href="{{ url }}" target="_blank">{{ url }}</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui one column grid">
+				<div class="column">
+					{% include 'cp/common/line_chart.html' %}
+				</div>
+				<div class="column">
+					{% include 'cp/common/leads.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static 'js/pages/charts.js' %}"></script>
+<script>$(window).resize(function(){draw_line_chart($(".line.chart.container"),[{{ chart|safe }}]);});</script>
+<script src="{% static 'js/forms/widgets-manage.js' %}"></script>
+{% endblock %}

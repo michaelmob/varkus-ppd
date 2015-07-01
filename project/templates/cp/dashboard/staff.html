@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 
 {% block title %}Staff{% endblock %}
@@ -9,7 +9,7 @@
 <div class="wrapper">
 	<div class="ui two column grid stackable no margin">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="user icon"></i>
 					Users
@@ -19,15 +19,15 @@
 						<div class="item">
 							<strong>Auth</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}auth/user/" target="_blank" class="item">User</a>
-								<a href="{% url "admin:index" %}user/party/" target="_blank" class="item">Party</a>
+								<a href="{% url 'admin:index' %}auth/user/" target="_blank" class="item">User</a>
+								<a href="{% url 'admin:index' %}user/party/" target="_blank" class="item">Party</a>
 							</div>
 						</div>
 						<div class="item">
 							<strong>Axes</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}axes/accessattempt/" target="_blank" class="item">Attempts</a>
-								<a href="{% url "admin:index" %}axes/accesslog/" target="_blank" class="item">Logs</a>
+								<a href="{% url 'admin:index' %}axes/accessattempt/" target="_blank" class="item">Attempts</a>
+								<a href="{% url 'admin:index' %}axes/accesslog/" target="_blank" class="item">Logs</a>
 							</div>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 		</div>
 		
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="ticket icon"></i>
 					Support
@@ -46,15 +46,21 @@
 						<div class="item">
 							<strong>Support</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}support/abuse_report/" target="_blank" class="item">Abuse Reports</a>
-								<a href="{% url "admin:index" %}support/contact_message/" target="_blank" class="item">Contact Messages</a>
+								<a href="{% url 'admin:index' %}support/abuse_report/" target="_blank" class="item">Abuse Reports</a>
+								<a href="{% url 'admin:index' %}support/contact_message/" target="_blank" class="item">Contact Messages</a>
 							</div>
 						</div>
 						<div class="item">
 							<strong>Tickets (Admin)</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}tickets/thread/" target="_blank" class="item">Threads</a>
-								<a href="{% url "admin:index" %}tickets/post/" target="_blank" class="item">Posts</a>
+								<a href="{% url 'admin:index' %}tickets/thread/" target="_blank" class="item">Threads</a>
+								<a href="{% url 'admin:index' %}tickets/post/" target="_blank" class="item">Posts</a>
+							</div>
+						</div>
+						<div class="item">
+							<strong>Billing</strong>
+							<div class="list">
+								<a href="{% url 'admin:index' %}billing/invoice/" target="_blank" class="item">Invoice</a>
 							</div>
 						</div>
 					</div>
@@ -63,7 +69,7 @@
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="lock icon"></i>
 					Lockers
@@ -73,8 +79,10 @@
 						<div class="item">
 							<strong>Lockers</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}files/file/" target="_blank" class="item">Files</a>
-								<a href="{% url "admin:index" %}lists/list/" target="_blank" class="item">Lists</a>
+								<a href="{% url 'admin:index' %}widgets/widget/" target="_blank" class="item">Widget</a>
+								<a href="{% url 'admin:index' %}files/file/" target="_blank" class="item">Files</a>
+								<a href="{% url 'admin:index' %}links/link/" target="_blank" class="item">Links</a>
+								<a href="{% url 'admin:index' %}lists/list/" target="_blank" class="item">Lists</a>
 							</div>
 						</div>
 					</div>
@@ -83,7 +91,7 @@
 		</div>
 		
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="tags icon"></i>
 					Leads and Offers
@@ -93,9 +101,9 @@
 						<div class="item">
 							<strong>Leads and Offers</strong>
 							<div class="list">
-								<a href="{% url "admin:index" %}leads/lead/" target="_blank" class="item">Leads</a>
-								<a href="{% url "admin:index" %}leads/token/" target="_blank" class="item">Tokens</a>
-								<a href="{% url "admin:index" %}offers/offer/" target="_blank" class="item">Offers</a>
+								<a href="{% url 'admin:index' %}leads/lead/" target="_blank" class="item">Leads</a>
+								<a href="{% url 'admin:index' %}leads/token/" target="_blank" class="item">Tokens</a>
+								<a href="{% url 'admin:index' %}offers/offer/" target="_blank" class="item">Offers</a>
 							</div>
 						</div>
 					</div>

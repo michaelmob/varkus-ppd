@@ -1,7 +1,7 @@
-<div class="box">
+<div class="ui segment box">
 	<div class="title">
 		<i class="list layout icon"></i>
-		List: <em>{{ item.name }}</em>
+		List: <em>{{ obj.name }}</em>
 	</div>
 	<div class="side padded content">
 
@@ -10,42 +10,42 @@
 				<i class="quote left icon"></i>
 				<div class="content">
 					<div class="header">Name</div>
-					{{ item.name }}
+					{{ obj.name }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="ellipsis horizontal icon"></i>
 				<div class="content">
 					<div class="header">Description</div>
-					{{ item.description|default:"<i>None</i>" }}
+					{{ obj.description|default:'<i>None</i>' }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="block layout icon"></i>
 				<div class="content">
 					<div class="header">Item Name</div>
-					{{ item.item_name }}
+					{{ obj.item_name }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="sort content ascending icon"></i>
 				<div class="content">
 					<div class="header">Distribution Order</div>
-					{{ item.order|title }}
+					{{ obj.order|title }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="repeat icon"></i>
 				<div class="content">
 					<div class="header">Reuse Items</div>
-					{{ item.reuse|yesno:"Yes,No" }}
+					{{ obj.reuse|yesno:'Yes,No' }}
 				</div>
 			</div>
 			<div class="item">
 				<i class="calendar icon"></i>
 				<div class="content">
 					<div class="header">Created on</div>
-					{{ item.date_time }}
+					{{ obj.date_time }}
 				</div>
 			</div>
 		</div>

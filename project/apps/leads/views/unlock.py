@@ -1,11 +1,10 @@
 from django.conf import settings
-from django.shortcuts import HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.core.urlresolvers import reverse as url_reverse
 from ..models import Token
 
 
-def request_access(request, token=None):
+def poll(request, token=None):
 	try:
 		token = Token.objects.get(unique=token)
 
@@ -25,4 +24,4 @@ def request_access(request, token=None):
 			)
 		)
 	else:
-		return HttpResponse("0")
+		return HttpResponseForbidden("0")

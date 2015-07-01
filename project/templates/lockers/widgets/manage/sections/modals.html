@@ -1,0 +1,52 @@
+<form class="ui modal delete" method="POST" action="{% url 'widgets-manage-delete' obj.code %}">
+	<i class="close icon"></i>
+	<div class="header">
+		Confirm
+	</div>
+	<div class="content">
+		{% csrf_token %}
+		<p>Are you sure you want to delete this widget?</p>
+	</div>
+	<div class="actions">
+		<div class="ui black button">
+			No
+		</div>
+		<div class="ui left labeled icon primary submit button">
+			<i class="delete icon"></i>
+			Yes
+		</div>
+	</div>
+</form>
+
+<form class="ui modal edit" method="POST" action="{% url 'widgets-manage' obj.code %}">
+	<i class="close icon"></i>
+	<div class="header">
+		Edit Widget
+	</div>
+	<div class="content">
+		<div class="ui form">
+			{% csrf_token %}
+			<div class="field">
+				<label>Name</label>
+				{{ form.name }}
+			</div>
+			<div class="field">
+				<label>Description <small><i>Optional</i></small></label>
+				{{ form.description }}
+			</div>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui left labeled icon negative delete button">
+			<i class="delete icon"></i>
+			Delete
+		</div>
+		<div class="ui black button">
+			Cancel
+		</div>
+		<div class="ui left labeled icon positive submit button">
+			<i class="checkmark icon"></i>
+			Save
+		</div>
+	</div>
+</form>

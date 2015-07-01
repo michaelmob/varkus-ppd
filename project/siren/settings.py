@@ -24,6 +24,26 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 #   django-countries
 #   anora
 
+
+# The Green Roots - Wait a Million Years
+# The Green Roots - Sooner or Later
+# Quicksilver - Pride of Man
+# 3 Dog Night - Joy to The world
+
+# TODO:
+#######
+# Front Page /// 0%
+# Widgets along with example code // 50%
+# Postbacks /// 80%
+# Postbacks Page telling user to create postback with widget /// 50%
+# Tickets unread variable and badge on icon /// 0%
+# Staff section rework /// 0%
+# -- Leads
+# -- Deposits
+# -- Tickets
+# Fix maps /// 0%
+# In all lockers rename variable "item" to "obj" /// 100%
+
 import os
 from datetime import timedelta
 
@@ -64,7 +84,10 @@ INSTALLED_APPS = (
 	"apps.leads",
 	"apps.billing",
 
+	"apps.api",
+
 	"apps.lockers",
+	"apps.lockers.widgets",
 	"apps.lockers.lists",
 	"apps.lockers.files",
 	"apps.lockers.links",
@@ -169,6 +192,9 @@ LOCKERS = (
 	("LINK", "Link"),
 	("LIST", "List"),
 )
+
+# Widgets Locker
+MAX_WIDGETS = 10
 
 # Files Locker
 MAX_FILES = 10

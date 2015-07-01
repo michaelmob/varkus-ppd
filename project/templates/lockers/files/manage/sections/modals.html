@@ -1,4 +1,4 @@
-<form class="ui modal delete" method="POST" action="{% url "files-manage-delete" item.code %}">
+<form class="ui modal delete" method="POST" action="{% url 'files-manage-delete' obj.code %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Confirm
@@ -18,7 +18,7 @@
 	</div>
 </form>
 
-<form class="ui modal edit" method="POST" action="{% url "files-manage" item.code %}">
+<form class="ui modal edit" method="POST" action="{% url 'files-manage' obj.code %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Edit File

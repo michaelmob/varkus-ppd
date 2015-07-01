@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 {% load pagination %}
 {% load currency %}
@@ -11,7 +11,7 @@
 <div class="wrapper">
 	<div class="ui one column grid stackable">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="ui padded content no min height stackable grid">
 					<form class="ui form ten wide column" method="GET">
 						<div class="field">
@@ -25,21 +25,21 @@
 					</form>
 
 					<div class="six wide column">
-						<a href="{% url "offers-priority" %}" class="ui fluid primary button">Edit Prioritized and Blocked Offers</a>
+						<a href="{% url 'offers-priority' %}" class="ui fluid primary button">Edit Prioritized and Blocked Offers</a>
 					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="tags icon"></i>
 					Offers
 				</div>
 
 				<div class="content">
-					{% include "offers/paginate.html" with items=offers uri="offers-page-sort" %}
+					{% include 'offers/paginate.html' with items=offers uri='offers-page-sort' %}
 
 					<table class="ui sortable table">
 						<thead>
@@ -62,22 +62,22 @@
 								{% with cut_amount=user.profile.party.cut_amount %}
 									{% for offer in offers %}
 										<tr>
-											<td><a href="{% url "offers-manage" offer.pk %}">{{ offer.name }}</a></td>
+											<td><a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a></td>
 											<td>{{ offer.category }}</td>
 											<td>
-												{% if offer.flag != "intl" %}
+												{% if offer.flag != 'intl' %}
 													<i class="{{ offer.flag|lower }} flag"></i>
 												{% else %}
 													<i class="world icon"></i>
 												{% endif %}
 												
-												{% with e=offer.country_count|add:"-1" %}
+												{% with e=offer.country_count|add:'-1' %}
 													{% if e > 1 %}
 														<small>{{ e }} more</small>
 													{% endif %}
 												{% endwith %}
 											</td>
-											<td>{{ offer.user_agent|default:"" }}</td>
+											<td>{{ offer.user_agent|default:'' }}</td>
 											<td>${{ offer.earnings_per_click|currency }}</td>
 											<td>${{ offer.payout|cut_percent:cut_amount|currency }}</td>
 										</tr>
@@ -92,14 +92,14 @@
 	</div>
 </div>
 
-<script>
-$(".ui.form").form();
-$(".link.{{ column }}").addClass("{{ order }}ending");
+<script type="text/javascript">
+	$(".ui.form").form();
+	$(".link.{{ column }}").addClass("sorted {{ order }}ending");
 
-$(".link").click(function() {
-	url = "{% url 'offers-page' offers.number %}" + $(this).attr("data-sort");
-	direction = $(this).hasClass("descending") ? "/asc/" : "/desc/";
-	window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};
-});
+	$(".link").click(function() {
+		url = '{% url 'offers-page' offers.number %}" + $(this).attr("data-sort");
+		direction = $(this).hasClass("descending") ? "/asc/" : "/desc/";
+		window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};
+	});
 </script>
 {% endblock %}

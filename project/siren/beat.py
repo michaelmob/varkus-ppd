@@ -20,6 +20,9 @@ CELERYBEAT_SCHEDULE = {
 	# Offer Sync
 	"offer-sync"		: 	{	"task": "apps.offers.tasks.sync", 			"schedule": half	},
 
+	# Invoice Creation
+	"user-reset-month"	: 	{	"task": "apps.billing.tasks.generate", 		"schedule": month	},
+
 	###
 	# Keep all resets on bottom!
 	###

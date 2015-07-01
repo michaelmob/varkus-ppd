@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 {% load pagination %}
 
@@ -12,13 +12,13 @@
 	{% if user.is_staff %}
 	<div class="ui grid stackable">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="ticket icon"></i>
 					Staff Tickets
 				</div>
 				<div class="content">
-					{% include "cp/paginate.html" with items=threads uri="staff-tickets-page" %}
+					{% include 'cp/paginate.html' with items=threads uri='staff-tickets-page' %}
 
 					<table class="ui table">
 						<thead>
@@ -38,7 +38,7 @@
 							{% for thread in threads %}
 								<tr {% if thread.last_reply_user and not thread.staff_closed and not thread.closed and thread.last_reply_user != thread.user %}class="warning"{% endif %}>
 									<td>
-										<a class="block" href="{% url "tickets-thread" thread.pk %}">
+										<a class="block" href="{% url 'tickets-thread' thread.pk %}">
 											{{ thread.subject }}
 										</a>
 									</td>
@@ -64,5 +64,5 @@
 	{% endif %}
 </div>
 
-<script src="{% static "js/forms/tickets.js" %}"></script>
+<script src="{% static 'js/forms/tickets.js' %}"></script>
 {% endblock %}

@@ -1,7 +1,9 @@
 from django.conf import settings
-from ..lockers.lists.models import List
-from ..lockers.files.models import File
-from ..lockers.links.models import Link
+
+from apps.lockers.lists.models 		import List
+from apps.lockers.files.models 		import File
+from apps.lockers.links.models 		import Link
+from apps.lockers.widgets.models 	import Widget
 
 
 def Locker(locker):
@@ -14,9 +16,15 @@ def Locker(locker):
 		return None
 
 
-def Locker_Item(locker, code):
+def Locker_Item(locker, code, user=None):
+	if not locker or not code:
+		return None
+
+	args = {"code": code}
+	if user: args["user"] = user
+
 	try:
-		return Locker(locker).objects.get(code=code)
+		return Locker(locker).objects.get(**args)
 	except:
 		return None
 

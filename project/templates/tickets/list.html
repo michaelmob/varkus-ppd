@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 
 {% block title %}Tickets{% endblock %}
@@ -10,13 +10,13 @@
 
 	<div class="ui two column grid stackable no margin">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="ticket icon"></i>
 					Create Ticket
 				</div>
 				<div class="padded content">
-					<form class="ui divided relaxed form" method="POST" enctype="multipart/form-data" action="{% url "tickets" %}">
+					<form class="ui divided relaxed form" method="POST" enctype="multipart/form-data" action="{% url 'tickets' %}">
 						{% csrf_token %}
 						<div class="ui error message"></div>
 
@@ -72,7 +72,7 @@
 						</div>
 
 						<div class="field no margin">
-							<div class="ui fluid vertical labeled icon buttons">
+							<div class="ui fluid labeled icon buttons">
 								<div class="ui submit primary button">
 									<i class="add icon"></i>
 									Submit Ticket
@@ -86,14 +86,14 @@
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="list layout icon"></i>
 					Tickets
 				</div>
 				<div class="content">
 
-					{% include "cp/paginate.html" with items=threads uri="tickets-page" %}
+					{% include 'cp/paginate.html' with items=threads uri='tickets-page' %}
 
 					<table class="ui table">
 						<thead>
@@ -110,8 +110,8 @@
 							{% for thread in threads %}
 							<tr {% if thread.last_reply_user and not thread.staff_closed and not thread.closed and thread.last_reply_user != thread.user %}class="warning"{% endif %}>
 								<td>
-									<a class="block" href="{% url "tickets-thread" thread.pk %}">
-										{{ thread.subject|truncatechars:"30" }}
+									<a class="block" href="{% url 'tickets-thread' thread.pk %}">
+										{{ thread.subject|truncatechars:'30' }}
 									</a>
 								</td>
 								<td>{{ thread.date_time }}</td>
@@ -136,5 +136,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/forms/tickets.js" %}"></script>
+<script src="{% static 'js/forms/tickets.js' %}"></script>
 {% endblock %}

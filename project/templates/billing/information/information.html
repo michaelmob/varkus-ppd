@@ -7,7 +7,7 @@
 		{{ method|payment_icon|safe }}
 		<div class="content">
 			<div class="header">Payment Method</div>
-			{% if method == "none" %}
+			{% if method == 'none' %}
 				None, set up your payment method now to recieve payouts!
 			{% else %}
 				{{ method|payment_method }}
@@ -35,17 +35,17 @@
 		</div>
 	</div>
 
-	{% if method == "paypal" %}
-		{% include "billing/information/paypal.html" %}
+	{% if method == 'paypal' %}
+		{% include 'billing/information/paypal.html' %}
 
-	{% elif method == "check" %}
-		{% include "billing/information/check.html" %}
+	{% elif method == 'check' %}
+		{% include 'billing/information/check.html' %}
 
-	{% elif method == "wire" %}
-		{% include "billing/information/wire.html" %}
+	{% elif method == 'wire' %}
+		{% include 'billing/information/wire.html' %}
 
-	{% elif method == "direct" %}
-		{% include "billing/information/direct.html" %}
+	{% elif method == 'direct' %}
+		{% include 'billing/information/direct.html' %}
 	{% endif %}
 
 {% endwith %}

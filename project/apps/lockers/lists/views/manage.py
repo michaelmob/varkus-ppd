@@ -69,36 +69,36 @@ def manage(request, code=None):
 		return redirect("lists")
 
 	try:
-		item = List.objects.get(user=request.user, code=code)
+		obj = List.objects.get(user=request.user, code=code)
 	except List.DoesNotExist:
 		return redirect("lists")
 
 	form = List_Edit(
 		request.POST or None,
 		initial={
-			"name": item.name,
-			"description": item.description,
-			"order": item.order,
-			"reuse": item.reuse,
-			"item_name": item.item_name
+			"name": obj.name,
+			"description": obj.description,
+			"order": obj.order,
+			"reuse": obj.reuse,
+			"item_name": obj.item_name
 		}
 	)
 
 	# Save List Edits
 	if request.POST:
 		if form.is_valid():
-			item.name = form.cleaned_data["name"]
-			item.description = form.cleaned_data["description"]
-			item.order	= form.cleaned_data["order"]
-			item.reuse = form.cleaned_data["reuse"]
-			item.item_name = form.cleaned_data["item_name"]
-			item.save()
+			obj.name = form.cleaned_data["name"]
+			obj.description = form.cleaned_data["description"]
+			obj.order	= form.cleaned_data["order"]
+			obj.reuse = form.cleaned_data["reuse"]
+			obj.item_name = form.cleaned_data["item_name"]
+			obj.save()
 
 	# Cache
-	leads = cache2.get("leads__list_%s" % item.pk, lambda: item.earnings.get_leads(None))
-	chart = cache2.get("charts__list_%s" % item.pk, lambda: Charts.hour_chart(item.earnings.get_leads()))
+	leads = cache2.get("leads__list_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
+	chart = cache2.get("charts__list_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
-	url = request.build_absolute_uri(reverse("lists-locker", args=[item.code]))
+	url = request.build_absolute_uri(reverse("lists-locker", args=[obj.code]))
 
 	return render(
 		request,
@@ -106,7 +106,7 @@ def manage(request, code=None):
 		{
 			"form": form,
 			"leads": leads,
-			"item": item,
+			"obj": obj,
 			"chart": chart,
 			"url": url
 		}

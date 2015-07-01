@@ -1,4 +1,4 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 {% load static %}
 
 {% block title %}Log in{% endblock %}
@@ -21,7 +21,7 @@
 		<div class="column">
 			<h2><i class="sign in icon"></i> Login</h2>
 
-			<form class="ui form segment" method="POST" action="{% url "login" %}">
+			<form class="ui form segment" method="POST" action="{% url 'login' %}">
 				{% csrf_token %}
 
 				<input type="hidden" name="next" value="{{ next }}" />
@@ -52,12 +52,12 @@
 
 		<div class="column">
 			<h2><i class="key icon"></i> Forgot Password?</h2>
-			<a class="ui massive fluid button" href="{% url "password-reset" %}" >Reset your Password</a>
+			<a class="ui massive fluid button" href="{% url 'password-reset' %}" >Reset your Password</a>
 			<h2><i class="signup icon"></i> Not Registered Yet?</h2>
-			<a class="ui massive fluid button" href="{% url "signup" %}" >Sign up</a>
+			<a class="ui massive fluid button" href="{% url 'signup' %}" >Sign up</a>
 		</div>
 	</div>
 </div>
 
-<script src="{% static "js/forms/log-in.js" %}"></script>
+<script src="{% static 'js/forms/log-in.js' %}"></script>
 {% endblock %}

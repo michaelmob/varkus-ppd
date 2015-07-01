@@ -1,8 +1,8 @@
-{% extends "lockers/base.html" %}
+{% extends 'lockers/base.html' %}
 {% load static %}
 
 
-{% block title %}Download {{ item.name }}{% endblock %}
+{% block title %}Download {{ obj.name }}{% endblock %}
 
 {# ################################# #}
 
@@ -11,7 +11,7 @@
 {# ################################# #}
 
 {% block button_text %}
-	Download {{ item.name }}
+	Download {{ obj.name }}
 {% endblock %}
 
 {# ################################# #}
@@ -21,28 +21,28 @@
 	<i class="quote left icon"></i>
 	<div class="content">
 		Name
-		<p class="sub header">{{ item.file_name }}</p>
+		<p class="sub header">{{ obj.file_name }}</p>
 	</div>
 </h3>
 <h3 class="ui header">
 	<i class="disk outline icon"></i>
 	<div class="content">
 		Size
-		<p class="sub header">{{ item.file_size|filesizeformat }}</p>
+		<p class="sub header">{{ obj.file_size|filesizeformat }}</p>
 	</div>
 </h3>
 <h3 class="ui header">
 	<i class="calendar icon"></i>
 	<div class="content">
 		Created on
-		<p class="sub header">{{ item.date_time }}</p>
+		<p class="sub header">{{ obj.date_time }}</p>
 	</div>
 </h3>
 <h3 class="ui header">
 	<i class="download icon"></i>
 	<div class="content">
 		Downloads
-		<div class="sub header">{{ item.earnings.leads }}</div>
+		<div class="sub header">{{ obj.earnings.leads }}</div>
 	</div>
 </h3>
 {% endblock %}

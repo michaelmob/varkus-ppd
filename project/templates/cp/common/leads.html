@@ -1,6 +1,6 @@
 {% load currency %}
 
-<div class="box">
+<div class="ui segment box">
 	<div class="title">
 		<i class="lightning icon"></i>
 		Leads
@@ -23,7 +23,7 @@
 					{% for lead in leads %}
 						<tr>
 							<td>
-								<a href="{% url "offers-manage" lead.offer.pk %}">
+								<a href="{% url 'offers-manage' lead.offer.pk %}">
 									{{ lead.offer.name|truncatechars:25 }}
 								</a>
 							</td>

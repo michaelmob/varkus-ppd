@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 
 {% block title %}Files{% endblock %}
@@ -24,7 +24,7 @@
 		<a class="ui negative button">
 			Cancel Upload
 		</a>
-		<a href="{% url "files-upload" %}" class="ui left labeled icon positive button disabled">
+		<a href="{% url 'files-upload' %}" class="ui left labeled icon positive button disabled">
 			<i class="right arrow icon"></i>
 			Continue
 		</a>
@@ -34,7 +34,7 @@
 <div class="wrapper">
 	<div class="ui two column grid stackable no margin">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="upload icon"></i>
 					Upload File
@@ -63,7 +63,7 @@
 
 					<p>
 						By uploading a file you agree to our
-						<a href="{% url "terms" %}">Terms and Conditions</a>
+						<a href="{% url 'terms' %}">Terms and Conditions</a>
 						and that your file does not violate any of our
 						Uploaders' Rules.
 					</p>
@@ -71,7 +71,7 @@
 			</div>
 		</div>
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="info circle icon"></i>
 					Uploaders' Rules
@@ -109,9 +109,9 @@
 	</div>
 </div>
 
-<script src="{% static "js/upload/vendor/jquery.ui.widget.js" %}"></script>
-<script src="{% static "js/upload/jquery.iframe-transport.js" %}"></script>
-<script src="{% static "js/upload/jquery.fileupload.js" %}"></script>
+<script src="{% static 'js/upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/upload/jquery.fileupload.js' %}"></script>
 <script>
 	var jqXHR = null;
 
@@ -144,7 +144,7 @@
 	};
 
 	$(".file.upload.input").fileupload({
-		url: "{% url "files-process" %}",
+		url: "{% url 'files-process' %}",
 		dataType: "json",
 		maxNumberOfFiles: 1,
 		add: function (e, data) {

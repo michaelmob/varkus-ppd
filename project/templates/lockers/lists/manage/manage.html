@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
 
@@ -7,23 +7,23 @@
 {% block tab %}lists{% endblock %}
 
 {% block content %}
-{% include "lockers/lists/manage/sections/modals.html" %}
+{% include 'lockers/lists/manage/sections/modals.html' %}
 
 <div class="wrapper">
 	<div class="ui two column grid stackable">
 		<div class="column">
 			<div class="ui one column grid">
 				<div class="column">
-					{% include "lockers/lists/manage/sections/info.html" %}
+					{% include 'lockers/lists/manage/sections/info.html' %}
 				</div>
 				<div class="column">
 					<div class="ui two column grid">
 						<div class="column">
-							{% include "lockers/common/earnings.html" %}
+							{% include 'lockers/common/earnings.html' %}
 						</div>
 
 						<div class="column">
-							{% include "lockers/common/locker_info.html" %}
+							{% include 'lockers/common/locker_info.html' %}
 						</div>
 					</div>
 				</div>
@@ -33,10 +33,10 @@
 		<div class="column">
 			<div class="ui one column grid">
 				<div class="column">
-					{% include "cp/common/line_chart.html" %}
+					{% include 'cp/common/line_chart.html' %}
 				</div>
 				<div class="column">
-					{% include "cp/common/leads.html" %}
+					{% include 'cp/common/leads.html' %}
 				</div>
 			</div>
 		</div>
@@ -44,7 +44,7 @@
 </div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="{% static "js/pages/charts.js" %}"></script>
+<script type="text/javascript" src="{% static 'js/pages/charts.js' %}"></script>
 <script>$(window).resize(function(){draw_line_chart($(".line.chart.container"),[{{ chart|safe }}]);});</script>
-<script src="{% static "js/forms/lists-manage.js" %}"></script>
+<script src="{% static 'js/forms/lists-manage.js' %}"></script>
 {% endblock %}

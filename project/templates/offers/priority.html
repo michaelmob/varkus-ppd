@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 {% load pagination %}
 {% load currency %}
@@ -11,7 +11,7 @@
 <div class="wrapper">
 	<div class="ui two column grid stackable">
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="checkmark icon"></i>
 					Priority Offers
@@ -35,10 +35,10 @@
 									{% for offer in offers %}
 										<tr>
 											<td>
-												<a href="{% url "offers-manage" offer.pk %}">{{ offer.name }}</a>
+												<a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a>
 											</td>
 											<td>
-												<a href="{% url "offers-priority" %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
+												<a href="{% url 'offers-priority' %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
 											</td>
 										</tr>
 									{% endfor %}
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="cancel icon"></i>
 					Block Offers
@@ -74,10 +74,10 @@
 									{% for offer in offers %}
 										<tr>
 											<td>
-												<a href="{% url "offers-manage" offer.pk %}">{{ offer.name }}</a>
+												<a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a>
 											</td>
 											<td>
-												<a href="{% url "offers-priority" %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
+												<a href="{% url 'offers-priority' %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
 											</td>
 										</tr>
 									{% endfor %}

@@ -35,7 +35,6 @@ def delete(request, code=None):
 
 
 def create(request):
-
 	count = Link.objects.filter(user=request.user).count()
 
 	if(count >= settings.MAX_LINKS):
@@ -66,30 +65,30 @@ def manage(request, code=None):
 		return redirect("links")
 
 	try:
-		item = Link.objects.get(user=request.user, code=code)
+		obj = Link.objects.get(user=request.user, code=code)
 	except Link.DoesNotExist:
 		return redirect("links")
 
 	form = Link_Edit(
 		request.POST or None,
 		initial={
-			"name": item.name,
-			"description": item.description,
+			"name": obj.name,
+			"description": obj.description,
 		}
 	)
 
 	# Save Link Edits
 	if request.POST:
 		if form.is_valid():
-			item.name = form.cleaned_data["name"]
-			item.description = form.cleaned_data["description"]
-			item.save()
+			obj.name = form.cleaned_data["name"]
+			obj.description = form.cleaned_data["description"]
+			obj.save()
 
 	# Cache
-	leads = cache2.get("leads__link_%s" % item.pk, lambda: item.earnings.get_leads(None))
-	chart = cache2.get("charts__link_%s" % item.pk, lambda: Charts.hour_chart(item.earnings.get_leads()))
+	leads = cache2.get("leads__link_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
+	chart = cache2.get("charts__link_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
-	url = request.build_absolute_uri(reverse("links-locker", args=[item.code]))
+	url = request.build_absolute_uri(reverse("links-locker", args=[obj.code]))
 
 	return render(
 		request,
@@ -97,7 +96,7 @@ def manage(request, code=None):
 		{
 			"form": form,
 			"leads": leads,
-			"item": item,
+			"obj": obj,
 			"chart": chart,
 			"url": url
 		}

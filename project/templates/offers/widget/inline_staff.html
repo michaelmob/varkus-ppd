@@ -1,6 +1,6 @@
 {% load offers %}
 {% with offers_token=request|offers_token:args %}
 	{% for offer in offers_token|first %}
-		<a target="_blank" href="{% url "offers-redirect" offer.pk offers_token|last %}">{{ offer.anchor }}</a><br/>
+		<a target="_blank" href="{% url 'offers-redirect' offer.pk offers_token|last %}">{{ offer.anchor }}</a><br/>
 	{% endfor %}
 {% endwith %}

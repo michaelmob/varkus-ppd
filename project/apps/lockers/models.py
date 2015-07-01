@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.urlresolvers import reverse
 from ..cp.models import Earnings_Base
 from utils import strings
 
 
+''' Base for Lockers '''
 class Locker_Base(models.Model):
 	user 		= models.ForeignKey(User)
 	code 		= models.CharField(max_length=10)
@@ -30,6 +32,18 @@ class Locker_Base(models.Model):
 		null 			= True,
 		help_text 		= "ISO 3166-1 alpha-2 (example: \"US,FR,\")"
 	)
+
+	def get_name(self):
+		return str(self.__class__.__name__)
+
+	def get_link(self, loc):
+		return reverse(self.get_name().lower() + "s-%s" % loc, args=(self.code,))
+
+	def get_manage_url(self):
+		return self.get_link("manage")
+
+	def get_locker_url(self):
+		return self.get_link("locker")
 
 	def generate_code(self, length=5):
 		runs = 0

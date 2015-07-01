@@ -35,11 +35,8 @@ def delete(request, code=None):
 
 def upload(request):
 	return render(
-		request,
-		"lockers/files/upload.html",
-		{
-			"MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE
-		}
+		request, "lockers/files/upload.html",
+		{ "MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE }
 	)
 
 
@@ -48,37 +45,37 @@ def manage(request, code=None):
 		return redirect("files")
 
 	try:
-		item = File.objects.get(user=request.user, code=code)
+		obj = File.objects.get(user=request.user, code=code)
 	except File.DoesNotExist:
 		return redirect("files")
 
 	form = File_Edit(
 		request.POST or None,
 		initial={
-			"name": item.name,
-			"description": item.description
+			"name": obj.name,
+			"description": obj.description
 		}
 	)
 
 	# Save List Edits
 	if request.POST:
 		if form.is_valid():
-			item.name = form.cleaned_data["name"]
-			item.description = form.cleaned_data["description"]
-			item.save()
+			obj.name = form.cleaned_data["name"]
+			obj.description = form.cleaned_data["description"]
+			obj.save()
 
 	# Cache
-	leads = cache2.get("leads__file_%s" % item.pk, lambda: item.earnings.get_leads(None))
-	chart = cache2.get("charts__file_%s" % item.pk, lambda: Charts.hour_chart(item.earnings.get_leads()))
+	leads = cache2.get("leads__file_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
+	chart = cache2.get("charts__file_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
-	url = request.build_absolute_uri(reverse("files-locker", args=[item.code]))
+	url = request.build_absolute_uri(reverse("files-locker", args=[obj.code]))
 
 	return render(
 		request,
 		"lockers/files/manage/manage.html",
 		{
 			"form": form,
-			"item": item,
+			"obj": obj,
 			"leads": leads,
 			"chart": chart,
 			"url": url
@@ -88,52 +85,55 @@ def manage(request, code=None):
 
 @require_POST
 def process(request):
-	success = False
-	value = ""
-	errors = 0
-
-	count = File.objects.filter(user=request.user).count()
-
-	if(count >= settings.MAX_FILES):
-		return JsonResponse({
-			"success": False,
-			"value": "You have reached your maximum item limit."
-		})
-
-	disallowed_exts = ["exe", "bat", "com", "cmd", "vbs", "vbscript"]
-
-	# File Exists
 	try:
-		item = Django_File(request.FILES["file"])
-	except:
-		value = "No item was delivered"
-		errors += 1
+		success = False
+		value = ""
+		errors = 0
 
-	# File Type
-	if errors < 1:
-		ext = str(item.name).lower().split('.')[-1]
+		count = File.objects.filter(user=request.user).count()
 
-		if(ext in disallowed_exts):
-			value = "Disallowed item type"
+		if(count >= settings.MAX_FILES):
+			return JsonResponse({
+				"success": False,
+				"value": "You have reached your maximum file limit."
+			})
+
+		disallowed_exts = ["exe", "bat", "com", "cmd", "vbs", "vbscript"]
+
+		# File Exists
+		try:
+			_file = Django_File(request.FILES["file"])
+		except:
+			value = "No file was delivered"
 			errors += 1
 
-	# File Size
-	if errors < 1:
-		if(item.size > settings.MAX_UPLOAD_SIZE):
-			value = "File too large"
-			errors += 1
+		# File Type
+		if errors < 1:
+			ext = str(_file.name).lower().split('.')[-1]
 
-	# Create File
-	if errors < 1:
-		obj = File.create(
-			user=request.user,
-			file=item
-		)
+			if(ext in disallowed_exts):
+				value = "Disallowed file type"
+				errors += 1
 
-		success = True
-		value = reverse("files-manage", args=[obj.code])
+		# File Size
+		if errors < 1:
+			if(_file.size > settings.MAX_UPLOAD_SIZE):
+				value = "File too large"
+				errors += 1
 
-	return JsonResponse({
-		"success": success,
-		"value": value
-	})
+		# Create File
+		if errors < 1:
+			obj = File.create(
+				user=request.user,
+				file=_file
+			)
+
+			success = True
+			value = reverse("files-manage", args=[obj.code])
+
+		return JsonResponse({
+			"success": success,
+			"value": value
+		})
+	except Exception as err:
+		print(err)

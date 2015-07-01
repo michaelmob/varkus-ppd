@@ -1,12 +1,12 @@
 {% load currency %}
 
-<div class="s box">
+<div class="ui segment box">
 	<div class="title">
 		<i class="group icon"></i>
 		Referral
 	</div>
 	<div class="content">
-		<table class="ui table">
+		<table class="ui definition two column table">
 			<tr>
 				<td>Today</td>
 				<td>${{ user.referral_earnings.today|currency }}</td>
@@ -25,6 +25,8 @@
 			</tr>
 		</table>
 
-		<a class="ui button attached bottom">More</a>
+		<a href="{% url 'user-settings' %}" class="ui button attached bottom">
+			View Referrals
+		</a>
 	</div>
 </div>

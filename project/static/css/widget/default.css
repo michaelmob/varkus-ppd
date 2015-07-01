@@ -1,9 +1,9 @@
 /* Text */
-.cb.wrap > h3:after {
+.s.wrap > h3:after {
 	content: "Complete one of the offers below to continue";
 }
 
-.cb.wrap > h3 {
+.s.wrap > h3 {
 	display: block;
 	text-align: center;
 	margin: 0 0 0.8rem 0;
@@ -20,45 +20,46 @@
 }
 
 /* Offer */
-.cb.wrap > a {
+.s.wrap > a {
 	display: block;
 	padding: 0.4rem;
 	text-decoration: none;
 	color: rgba(0, 0, 0, 0.8);
 }
 
-.cb.wrap > a:hover {
-	background-color: #E0FFCA;
-}
-
-.cb.wrap > .dark {
-	background-color: #F9F9F9;	
-}
-
-.cb.wrap > .light {
+.s.wrap > a:nth-child(even) {
 	background-color: #FFFFFF;
 }
 
+.s.wrap > a:nth-child(odd) {
+	background-color: #F9F9F9;	
+}
+
+.s.wrap > a:hover {
+	background-color: #F44336;
+    color: white;
+}
+
 /* Offer Anchor */
-.cb.wrap > a > .anchor {
+.s.wrap > a > .anchor {
 	padding-left: 0.5rem;
 }
 
-.cb.wrap > a > .icon,
-.cb.wrap > a > .icon ~ .anchor {
+.s.wrap > a > .icon,
+.s.wrap > a > .icon ~ .anchor {
 	display: table-cell;
 	vertical-align: middle;
 }
 
 /* Offer Category Icon */
-.cb.wrap > a > .icon {
+.s.wrap > a > .icon {
 	font-size: 1.5rem;
 	padding: 0.3rem;
 	width: 2rem;
 }
 
 /* Gold Star Icon */
-.cb.wrap > a > .gold {
+.s.wrap > a > .gold {
 	color: gold;
 	text-shadow: 0 0 1px #333;
 }

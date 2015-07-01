@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 
 {% load static %}
 {% load cache %}
@@ -10,15 +10,15 @@
 
 {% block content %}
 
-{% include "user/settings/forms/personal.html" with form=form_personal %}
-{% include "user/settings/forms/account.html" with form=form_account %}
+{% include 'user/settings/forms/personal.html' with form=form_personal %}
+{% include 'user/settings/forms/account.html' with form=form_account %}
 
 <div class="wrapper">
 
 	<div class="ui two column grid stackable no margin">
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="privacy icon"></i>
 					Personal Details
@@ -44,14 +44,14 @@
 							<div class="content">
 								<label class="header">Country</label>
 								<i class="{{ user.profile.country }} flag"></i
-								>{{ user.profile.country|country|default:"<em>Not Specified</em>" }}
+								>{{ user.profile.country|country|default:'<em>Not Specified</em>' }}
 							</div>
 						</div>
 						<div class="item">
 							<i class="linkify icon"></i>
 							<div class="content">
 								<label class="header">Website</label>
-								{{ user.profile.website|default:"<em>Not Specified</em>" }}
+								{{ user.profile.website|default:'<em>Not Specified</em>' }}
 							</div>
 						</div>
 					</div>
@@ -62,7 +62,7 @@
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="setting icon"></i>
 					Account Details
@@ -105,7 +105,7 @@
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="users icon"></i>
 					Referrals
@@ -145,7 +145,7 @@
 		</div>
 
 		<div class="column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="help circle icon"></i>
 					Referral Guide
@@ -172,8 +172,8 @@
 							<i class="share alternate icon"></i>
 							<div class="content">
 								<label class="header">Your Referral Link</label>
-								<a href="{{ full_url }}{% url "signup-referral-short" user.pk %}">
-									{{ full_url }}{% url "signup-referral-short" user.pk %}/
+								<a href="{{ full_url }}{% url 'signup-referral-short' user.pk %}">
+									{{ full_url }}{% url 'signup-referral-short' user.pk %}/
 								</a>
 							</div>
 						</div>
@@ -185,5 +185,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/forms/settings.js" %}"></script>
+<script src="{% static 'js/forms/settings.js' %}"></script>
 {% endblock %}

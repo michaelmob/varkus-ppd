@@ -10,6 +10,7 @@ from ..cp.models import Earnings_Base
 
 from apps.billing.models import Billing
 
+
 class Party(models.Model):
 	name = models.CharField(max_length=50)
 

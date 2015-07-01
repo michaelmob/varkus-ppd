@@ -1,6 +1,6 @@
 {% load billing %}
 
-<form class="ui modal edit" method="POST" action="{% url "billing" %}">
+<form class="ui modal edit" method="POST" action="{% url 'billing' %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Modify Billing Information
@@ -30,10 +30,10 @@
 				</div>
 			</div>
 
-			{% include "billing/forms/paypal.html" %}
-			{% include "billing/forms/check.html" %}
-			{% include "billing/forms/wire.html" %}
-			{% include "billing/forms/direct.html" %}
+			{% include 'billing/forms/paypal.html' %}
+			{% include 'billing/forms/check.html' %}
+			{% include 'billing/forms/wire.html' %}
+			{% include 'billing/forms/direct.html' %}
 		</div>
 	</div>
 	<div class="actions">

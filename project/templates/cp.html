@@ -1,74 +1,20 @@
-{% extends "generic.html" %}
+{% extends 'generic.html' %}
 {% load static %}
 
-{% block head0 %}
-<link rel="stylesheet" type="text/css" href="{% static "css/flag.min.css" %}" />
-<link rel="stylesheet" type="text/css" href="{% static "css/pages/cp.css" %}" />
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/flag.min.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/pages/cp.css' %}" />
+	<script type="text/javascript" src="{% static 'js/cp.js' %}"></script>
 {% endblock %}
 
 {% block messages %}
 	{% if messages %}
 		<div class="wrapper">
 			<div class="message margin">
-				{% include "messages.html" %}
+				{% include 'messages.html' %}
 			</div>
 		</div>
 	{% endif %}
 {% endblock %}
 
-{% block sidemenu %}
-<div class="ui inverted vertical fixed side menu computer only">
-	<div class="header item">Control Panel</div>
-
-	<a class="item dashboard" href="{% url "dashboard" %}">
-		<i class="home icon"></i> Dashboard
-	</a>
-
-	<a class="item offers" href="{% url "offers" %}">
-		<i class="tags icon"></i> Offers
-	</a>
-	{% comment %}
-	<a class="item statistics" href="#">
-		<i class="bar chart icon"></i> Statistics
-	</a>
-	{% endcomment %}
-	<div class="header item">Lockers</div>
-	<a class="item files" href="{% url "files" %}">
-		<i class="file icon"></i> Files
-	</a>
-	<a class="item links" href="{% url "links" %}">
-		<i class="linkify icon"></i> Links
-	</a>
-	<a class="item lists" href="{% url "lists" %}">
-		<i class="list layout icon"></i> Lists
-	</a>
-
-	<div class="header item">Support</div>
-
-	<a class="item tickets" href="{% url "tickets" %}">
-		<i class="ticket icon"></i> Tickets
-	</a>
-
-	<a class="item billing" href="{% url "billing" %}">
-		<i class="credit card icon"></i> Billing
-	</a>
-
-	<a class="item account" href="{% url "user-settings" %}">
-		<i class="cogs icon"></i> Account Settings
-	</a>
-
-	{% if user.is_staff %}
-	<div class="header item">Staff</div>
-
-	<a class="item staff-tickets" href="{% url "staff-tickets" %}">
-		<i class="ticket icon"></i> Tickets
-	</a>
-
-	<a class="item staff" href="{% url "staff" %}">
-		<i class="shield icon"></i> Staff
-	</a>
-	{% endif %}
-</div>
-
-<script>$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
-{% endblock %}
+{% block sidemenu %}{% endblock %}

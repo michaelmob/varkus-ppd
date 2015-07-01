@@ -1,10 +1,10 @@
-{% extends "frontend.html" %}
+{% extends 'frontend.html' %}
 
 {% block content %}
 <div class="ui modal">
 	<i class="close icon"></i>
 	<div class="content">
-		{% include "offers/widget/inline.html" with request=request inline=True %}
+		{% include 'offers/widget/inline.html' with request=request inline=True %}
 	</div>
 </div>
 
@@ -19,7 +19,7 @@
 				ticket system for an on-site response. 
 			</p>
 
-			<a class="ui mini fluid button blue" target="_blank" href="{% url "contact" %}">
+			<a class="ui mini fluid button blue" target="_blank" href="{% url 'contact' %}">
 				Contact
 			</a>
 		</div>
@@ -28,11 +28,11 @@
 		<div class="ui segment">
 			<p>
 				Should this {% block locker %}file{% endblock %} violate {% site_name %}'s
-				<a href="{% url "terms" %}">Terms and Conditions</a>, please do
+				<a href="{% url 'terms' %}">Terms and Conditions</a>, please do
 				not hesitate to report it and help keep {% site_name %}'s community
 				clean.
 			</p>
-			<a class="ui mini fluid button primary" target="_blank" href="{% url "report" %}">
+			<a class="ui mini fluid button primary" target="_blank" href="{% url 'report' %}">
 				Report
 			</a>
 		</div>
@@ -64,7 +64,7 @@
 							<div class="content">
 								Description
 								<p class="sub header">
-									{{ item.description|default:"<em>The owner has not added a description.</em>" }}
+									{{ obj.description|default:'<em>The owner has not added a description.</em>' }}
 								</p>
 							</div>
 						</h3>

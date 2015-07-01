@@ -1,12 +1,12 @@
 {% load currency %}
 
-<div class="s box">
+<div class="ui segment box">
 	<div class="title">
 		<i class="money icon"></i>
 		Earnings
 	</div>
 	<div class="content">
-		<table class="ui table">
+		<table class="ui definition two column table">
 			<tr>
 				<td>Today</td>
 				<td>${{ user.earnings.today|currency }}</td>
@@ -25,6 +25,8 @@
 			</tr>
 		</table>
 
-		<a class="ui button attached bottom">More</a>
+		<a href="{% url 'leads' %}" class="ui button attached bottom">
+			Leads Feed
+		</a>
 	</div>
 </div>

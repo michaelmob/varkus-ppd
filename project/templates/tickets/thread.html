@@ -1,4 +1,4 @@
-{% extends "cp.html" %}
+{% extends 'cp.html' %}
 {% load static %}
 
 {% block title %}Tickets{% endblock %}
@@ -9,7 +9,7 @@
 <div class="wrapper">
 	<div class="ui grid stackable">
 		<div class="six wide column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="ticket icon"></i>
 					Ticket
@@ -47,48 +47,48 @@
 
 				<div class="padded content no min height">
 
-					<form method="POST" action="{% url "tickets-thread-action" thread.pk "set" %}">
-					{% csrf_token %}
-					{% if not thread.staff_closed %}
-						{% if thread.closed %}
-						<div class="ui labeled fluid icon primary submit button">
-							<i class="unlock icon"></i>
-							Re-Open Ticket
-						</div>
-						{% else %}						
-						<div class="ui labeled fluid icon primary submit button">
-							<i class="lock icon"></i>
-							Close Ticket
-						</div>
+					<form method="POST" action="{% url 'tickets-thread-action' thread.pk 'set' %}">
+						{% csrf_token %}
+						{% if not thread.staff_closed %}
+							{% if thread.closed %}
+								<div class="ui labeled fluid icon primary submit button">
+									<i class="unlock icon"></i>
+									Re-Open Ticket
+								</div>
+							{% else %}
+								<div class="ui labeled fluid icon primary submit button">
+									<i class="lock icon"></i>
+									Close Ticket
+								</div>
+							{% endif %}
+						{% else %}
+							<a class="ui disabled primary button fluid">Re-Open Ticket</a>
 						{% endif %}
-					{% else %}
-						<a class="ui disabled primary button fluid">Re-Open Ticket</a>
-					{% endif %}
 
-					{% if user.is_staff %}
-						<br/>
-						<div class="ui two column grid">
-							<div class="column">
-								<a class="ui labeled fluid icon blue button" target="_blank" href="/admin/tickets/thread/{{ thread.pk }}/">
-									<i class="shield icon"></i>
-									Ticket
-								</a>
+						{% if user.is_staff %}
+							<br/>
+							<div class="ui two column grid">
+								<div class="column">
+									<a class="ui labeled fluid icon blue button" target="_blank" href="/admin/tickets/thread/{{ thread.pk }}/">
+										<i class="shield icon"></i>
+										Ticket
+									</a>
+								</div>
+								<div class="column">
+									<a class="ui labeled fluid icon primary button" target="_blank" href="/admin/auth/user/{{ thread.user.pk }}/">
+										<i class="basic user icon"></i>
+										User
+									</a>
+								</div>
 							</div>
-							<div class="column">
-								<a class="ui labeled fluid icon primary button" target="_blank" href="/admin/auth/user/{{ thread.user.pk }}/">
-									<i class="basic user icon"></i>
-									User
-								</a>
-							</div>
-						</div>
-					{% endif %}
+						{% endif %}
 					</form>
 				</div>
 			</div>
 		</div>
 
 		<div class="ten wide column">
-			<div class="box">
+			<div class="ui segment box">
 				<div class="title">
 					<i class="chat icon"></i>
 					Posts
@@ -96,36 +96,38 @@
 				<div class="padded content">
 					<div class="ui comments">
 						{% for post in posts %}
-						<div class="ui segment">
-							<div class="comment">
-								<div class="content">
-									{% if user.is_staff %}
-									<a class="ui label primary"><i class="shield icon"></i>{{ post.user.first_name }}</a>
-									{% else %}
-									<a class="ui label primary"><i class="user icon"></i>{{ post.user }}</a>
-									{% endif %}
-									<div class="metadata">
-										<span class="date">{{ post.date_time|timesince }} ago</span>
+							<div class="ui basic segment">
+								<div class="comment">
+									<div class="content">
+										{% if user.is_staff %}
+											<a class="ui label primary"><i class="shield icon"></i>{{ post.user.first_name }}</a>
+										{% else %}
+											<a class="ui label primary"><i class="user icon"></i>{{ post.user }}</a>
+										{% endif %}
+
+										<div class="metadata">
+											<span class="date">{{ post.date_time|timesince }} ago</span>
+										</div>
+										<div class="text">
+											{{ post.content|linebreaksbr }}
+										</div>
+
+										{% if post.image %}
+											<div class="actions">
+												<a target="_blank" href="{{ post.image.url }}">
+													View Attached Image
+												</a>
+											</div>
+										{% endif %}
 									</div>
-									<div class="text">
-										{{ post.content|linebreaksbr }}
-									</div>
-									{% if post.image %}
-									<div class="actions">
-										<a target="_blank" href="{{ post.image.url }}">
-											View Attached Image
-										</a>
-									</div>
-									{% endif %}
 								</div>
 							</div>
-						</div>
 						{% endfor %}
 					</div>
 
 					<div class="ui divider"></div>
 
-					<form class="ui form" method="POST" enctype="multipart/form-data" action="{% url "tickets-thread-action" thread.pk "post" %}">
+					<form class="ui form" method="POST" enctype="multipart/form-data" action="{% url 'tickets-thread-action' thread.pk 'post' %}">
 						{% csrf_token %}
 						<div class="ui error message"></div>
 
@@ -150,5 +152,5 @@
 	</div>
 </div>
 
-<script src="{% static "js/forms/ticket-thread.js" %}"></script>
+<script src="{% static 'js/forms/ticket-thread.js' %}"></script>
 {% endblock %}

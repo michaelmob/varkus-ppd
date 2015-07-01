@@ -1,4 +1,4 @@
-$(".ui.modal.edit.account")
+$(".ui.modal.edit")
 	.modal({onApprove: function() { return false; }})
 	.modal("attach events", ".edit.button", "show");
 

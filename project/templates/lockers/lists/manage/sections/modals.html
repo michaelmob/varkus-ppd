@@ -1,4 +1,4 @@
-<form class="ui modal delete" method="POST" action="{% url "lists-manage-delete" item.code %}">
+<form class="ui modal delete" method="POST" action="{% url 'lists-manage-delete' obj.code %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Confirm
@@ -18,7 +18,7 @@
 	</div>
 </form>
 
-<form class="ui modal edit" method="POST" action="{% url "lists-manage" item.code %}">
+<form class="ui modal edit" method="POST" action="{% url 'lists-manage' obj.code %}">
 	<i class="close icon"></i>
 	<div class="header">
 		Edit List

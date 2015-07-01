@@ -26,20 +26,21 @@ def locker(request, code=None):
 		request,
 		"lockers/lists/locker.html",
 		{
-			"item": obj,
+			"obj": obj,
 			"offers": combo.offers,
 			"token": combo.token
 		}
 	)
 
 
-def unlock(request, code=None):
+def unlock(request, code=None, token=None):
 	obj = get_object(code)
 
 	if not obj:
 		return redirect("locker-404")
 
-	token = Token.get_or_create_request(request, obj)
+	if not token:
+		token = Token.get_or_create_request(request, obj)
 
 	# Give access
 	if not token.access():
@@ -53,7 +54,7 @@ def unlock(request, code=None):
 		request,
 		"lockers/lists/unlock.html",
 		{
-			"item": obj,
+			"obj": obj,
 			"data": token.data
 		}
 	)
