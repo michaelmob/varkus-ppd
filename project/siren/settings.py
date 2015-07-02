@@ -1,4 +1,6 @@
 """
+Siren 0.9.9
+
 Django settings for Siren project.
 
 For more information on this file, see
