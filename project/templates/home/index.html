@@ -2,12 +2,6 @@
 {% load static %}
 
 
-{% block head %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/pages/index.css' %}" />
-	<script src="{% static 'js/comp/unslider.min.js' %}"></script>
-{% endblock %}
-
-
 {% block content %}
 <div class="banner" style="width:100% !important">
 	<a class="next slideshow frame"><i class="right angle icon"></i></a>
@@ -67,45 +61,4 @@
 		</li>
 	</ul>
 </div>
-
-<div class="ui green inverted vertical segment">
-	<div class="ui page three column center aligned stackable divided grid">
-
-		<div class="column">
-			<div class="ui icon header">
-				<i class="upload icon"></i>
-				Upload
-			</div>
-
-			<p>Uploading is easy using our speedy uploader. As soon as you register you can start uploading your files right away!</p>
-
-			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
-		</div>
-
-		<div class="column">
-			<h1 class="ui icon header">
-				<i class="share icon"></i>
-				Share
-			</h1>
-
-			<p>After, you can immediately start sharing them anywhere you want. Your files download links are short and easy to share.</p>
-
-			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
-		</div>
-
-		<div class="column">
-			<div class="ui circular icon header">
-				<i class="currency icon"></i>
-				Earn
-			</div>
-
-			<p>Start watching the money roll in as people start downloading your file by the dozen! Easy cash straight to you!</p>
-
-			{# <p><a href="#" class="ui button">Start Earning Now</a></p> #}
-		</div>
-
-	</div>
-</div>
-
-<script src="{% static 'js/pages/index.js' %}"></script>
 {% endblock %}
