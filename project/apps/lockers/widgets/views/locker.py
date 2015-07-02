@@ -34,7 +34,7 @@ def locker(request, code=None):
 			"obj": obj,
 			"offers": combo.offers,
 			"token": combo.token,
-			"custom_css": obj.custom_css
+			"custom_css_url": obj.custom_css_url
 		}
 	)
 
@@ -54,7 +54,7 @@ def unlock(request, code=None):
 	locker_obj = obj.locker_object()
 
 	if locker_obj == None:
-		url = obj.standalone_redirect
+		url = obj.standalone_redirect_url
 
 		validate = URLValidator()
 		try:

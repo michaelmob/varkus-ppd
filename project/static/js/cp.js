@@ -1,5 +1,5 @@
 $(function() {
-	var resizeInterval;
+	/*var resizeInterval;
 	var sideMenu = $(".ui.left.fixed.menu");
 
 	var doResize = function() {
@@ -15,7 +15,7 @@ $(function() {
 	window.onresize = function(){
 		clearTimeout(resizeInterval);
 		resizeInterval = setTimeout(doResize, 50);
-	};
+	};*/
 	
 	window.dispatchEvent(new Event("resize"));
 });

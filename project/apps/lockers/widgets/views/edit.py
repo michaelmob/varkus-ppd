@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.validators import URLValidator
 
@@ -24,7 +25,7 @@ def locker(request, code=None):
 		except:
 			locker = None
 			code = None
-			obj.standalone_redirect = request.POST.get("redirect", "http://varkus.com/").strip()
+			obj.standalone_redirect_url = request.POST.get("redirect", settings.SITE_URL).strip()
 			obj.save()
 
 		obj.set_locker(Locker_Item(locker, code, request.user))
@@ -83,7 +84,7 @@ def css(request, code=None):
 	if not obj:
 		return redirect("widgets")
 
-	url = obj.custom_css
+	url = obj.custom_css_url
 
 	if request.POST:
 		url = request.POST.get("css", "").strip()
@@ -92,14 +93,14 @@ def css(request, code=None):
 			validate = URLValidator()
 			try:
 				validate(url)
-				obj.custom_css = url
+				obj.custom_css_url = url
 				obj.save()
 				messages.success(request, "This widget's Custom CSS URL has been updated.")
 				return redirect("widgets-manage", obj.code)
 			except:
 				messages.error(request, "The Custom CSS URL entered is invalid.")
 		else:
-			obj.custom_css = ""
+			obj.custom_css_url = ""
 			obj.save()
 
 	return render(

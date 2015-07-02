@@ -71,7 +71,7 @@ $(function() {
 				clearInterval(titleInterval);
 			}
 
-			document.title = "New Lead | Siren"
+			document.title = "New Lead | Varkus"
 
 			setTimeout(function() {
 				document.title = title;

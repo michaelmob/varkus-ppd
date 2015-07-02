@@ -70,9 +70,9 @@
 			<div class="required field">
 				<label>Birthday <small>(This can't be changed later, so make sure it's correct!)</small></label>
 				
-				<div class="ui three column grid">
-					<div class="column">
-						<div class="ui fluid selection dropdown">
+				<div class="inline fields">
+					<div class="field">
+						<div class="ui selection dropdown">
 							{{ form.month }}
 							<div class="text">Month</div>
 							<i class="dropdown icon"></i>
@@ -80,8 +80,8 @@
 						</div>
 					</div>
 
-					<div class="column">
-						<div class="ui fluid selection dropdown">
+					<div class="field">
+						<div class="ui selection dropdown">
 							{{ form.day }}
 							<div class="text">Day</div>
 							<i class="dropdown icon"></i>
@@ -89,8 +89,8 @@
 						</div>
 					</div>
 
-					<div class="column">
-						<div class="ui fluid selection dropdown">
+					<div class="field">
+						<div class="ui selection dropdown">
 							{{ form.year }}
 							<div class="text">Year</div>
 							<i class="dropdown icon"></i>
@@ -106,7 +106,7 @@
 
 			<div class="ui stackable grid">
 				<div class="ten wide column">
-					<div class="ui fluid vertical labeled icon buttons">
+					<div class="ui fluid labeled icon buttons">
 						<div class="ui submit primary button">
 							<i class="signup icon"></i>
 							Sign up

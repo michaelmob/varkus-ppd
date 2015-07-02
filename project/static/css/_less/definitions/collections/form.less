@@ -740,6 +740,9 @@
 
 /* Swap to full width on mobile */
 @media only screen and (max-width : @largestMobileScreen) {
+  .ui.form .fields {
+    flex-wrap: wrap;
+  }
   .ui.form .two.fields > .fields,
   .ui.form .two.fields > .field,
   .ui.form .three.fields > .fields,
@@ -891,7 +894,7 @@
   width: auto;
   margin-top: 0em;
   margin-bottom: 0em;
-  vertical-align: middle;
+  vertical-align: baseline;
   font-size: @inlineLabelFontSize;
   font-weight: @inlineLabelFontWeight;
   color: @inlineLabelColor;

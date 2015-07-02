@@ -29,6 +29,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # The Green Roots - Sooner or Later
 # Quicksilver - Pride of Man
 # 3 Dog Night - Joy to The world
+# Michael Bruce - So Far So Good
 
 # TODO:
 #######
@@ -166,6 +167,8 @@ TEMPLATES = [
 # Add Site
 from django.template.base import add_to_builtins
 add_to_builtins("apps.home.templatetags.site")
+
+INVITE_ONLY = True
 
 # GeoIP
 import geoip2.database

@@ -11,8 +11,8 @@ class Widget(Locker_Base):
 	locker_code	= models.CharField(max_length=10, default=None, blank=True, null=True)
 
 	postback_url = models.CharField(max_length=300, default=None, blank=True, null=True)
-	custom_css = models.CharField(max_length=300, default=None, blank=True, null=True)
-	standalone_redirect = models.CharField(max_length=300, default="https://varkus.com/", blank=True, null=True)
+	custom_css_url = models.CharField(max_length=300, default=None, blank=True, null=True)
+	standalone_redirect_url = models.CharField(max_length=300, default=settings.SITE_URL, blank=True, null=True)
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.name)

@@ -33,7 +33,7 @@
   outline: none;
   border: none;
   vertical-align: @verticalAlign;
-  background-color: @backgroundColor;
+  background: @background;
   color: @textColor;
 
   font-family: @fontFamily;
@@ -44,12 +44,11 @@
   text-transform: @textTransform;
   text-shadow: @textShadow;
   font-weight: @fontWeight;
-  line-height: 1;
+  line-height: @lineHeight;
   font-style: normal;
   text-align: center;
   text-decoration: none;
 
-  background-image: @backgroundImage;
   border-radius: @borderRadius;
   box-shadow: @boxShadow;
 
@@ -259,7 +258,7 @@
   top: 50%;
   left: auto;
   right: -100%;
-  margin-top: -0.5em;
+  margin-top: -(@lineHeight / 2);
 }
 .ui.animated.button:focus .visible.content,
 .ui.animated.button:hover .visible.content {
@@ -352,9 +351,6 @@
 }
 .ui.inverted.vertical.buttons .button:first-child {
   margin-top: 0em;
-}
-.ui.inverted.buttons .button:hover {
-  position: relative;
 }
 
 /* States */
@@ -644,7 +640,6 @@
 .ui.basic.buttons .button,
 .ui.basic.button {
   background: @basicBackground !important;
-  background-image: none;
   color: @basicTextColor !important;
   font-weight: @basicFontWeight;
   border-radius: @basicBorderRadius;
@@ -813,7 +808,7 @@
   width: 100%;
   top: 50%;
   text-align: center;
-  margin-top: -0.5em;
+  margin-top: -(@lineHeight / 2);
 }
 
 .ui.labeled.icon.buttons .button > .icon {
@@ -3142,10 +3137,6 @@
   font-size: 0em;
   vertical-align: baseline;
   margin: @verticalMargin @horizontalMargin 0em 0em;
-}
-.ui.buttons > .button:hover,
-.ui.buttons > .active.button {
-  position: relative;
 }
 .ui.buttons:not(.basic):not(.inverted) {
   box-shadow: @groupBoxShadow;

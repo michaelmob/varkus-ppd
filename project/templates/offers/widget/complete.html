@@ -1,7 +1,7 @@
 {% load static %}
 
-{% if custom_css %}
-	<link rel="stylesheet" type="text/css" href="{{ custom_css }}">
+{% if custom_css_url %}
+	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
 {% else %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/default.css' %}" />
 {% endif %}

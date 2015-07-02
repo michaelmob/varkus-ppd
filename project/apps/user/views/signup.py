@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.conf import settings as settings
+from django.conf import settings
 from ..models import Party
 from datetime import datetime, date
 
@@ -45,7 +45,7 @@ def signup(request, referrer=-1):
 
 				if(today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day)) < 18):
 					# Not 18!
-					messages.error(request, "You must be 18 years or older to use Siren.")
+					messages.error(request, "You must be 18 years or older to use %s." % settings.SITE_NAME)
 					errors += 1
 
 			except:
@@ -65,7 +65,7 @@ def signup(request, referrer=-1):
 			# No errors! Let's create the account
 			if errors < 1:
 				user = User.objects.create_user(username, email, password)
-				user.is_active = True
+				user.is_active = not settings.INVITE_ONLY
 				user.first_name = form.cleaned_data["first_name"].strip()
 				user.last_name = form.cleaned_data["last_name"].strip()
 
@@ -94,7 +94,7 @@ def signup(request, referrer=-1):
 				user = authenticate(username=username, password=password)
 				login(request, user)
 
-				messages.success(request, "Welcome to Siren!")
+				messages.success(request, "Welcome to %s!" % settings.SITE_NAME)
 				return redirect("dashboard")
 
 	return render(request, "user/signup.html", {"form": form})

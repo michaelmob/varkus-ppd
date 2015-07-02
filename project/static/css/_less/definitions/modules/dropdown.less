@@ -181,6 +181,7 @@
 }
 
 .ui.dropdown .menu > .input {
+  width: auto;
   display: flex;
   margin: @menuInputMargin;
   min-width: @menuInputMinWidth;
@@ -411,6 +412,7 @@ select.ui.dropdown {
   outline: none;
   margin: 0px -@menuBorderWidth;
   min-width: @menuMinWidth;
+  width: @menuMinWidth;
 
   border-radius: @selectionMenuBorderRadius;
   box-shadow: @selectionMenuBoxShadow;
@@ -427,13 +429,6 @@ select.ui.dropdown {
 
 .ui.selection.dropdown .menu > .message {
   padding: @selectionMessagePadding;
-}
-
-/* Scrollbar in IE */
-@media all and (-ms-high-contrast:none) {
-  .ui.selection.dropdown .menu {
-    min-width: ~"calc(100% - "@scrollbarWidth~")";
-  }
 }
 
 @media only screen and (max-width : @largestMobileScreen) {
@@ -534,7 +529,6 @@ select.ui.dropdown {
   background: none transparent !important;
   border: none !important;
   box-shadow: none !important;
-  border-radius: 0em !important;
   cursor: pointer;
   top: 0em;
   left: 0em;
