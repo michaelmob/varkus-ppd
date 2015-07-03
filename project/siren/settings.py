@@ -1,5 +1,5 @@
 """
-Siren 0.9.10
+Siren 1.0.0
 
 Django settings for Siren project.
 
@@ -54,7 +54,7 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
 	from .private.development import *

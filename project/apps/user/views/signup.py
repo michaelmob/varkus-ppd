@@ -12,7 +12,7 @@ from ..forms import Form_Sign_Up
 def signup(request, referrer=-1):
 	# If logged in we don't need to be here
 	if request.user.is_authenticated():
-		return redirect("home")
+		return redirect("dashboard")
 
 	form = Form_Sign_Up(request.POST or None, initial={"referrer": referrer})
 

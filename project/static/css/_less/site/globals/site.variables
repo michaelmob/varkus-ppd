@@ -8,12 +8,12 @@
        Fonts
 --------------------*/
 
-@headerFont        : 'Roboto', Arial, Helvetica, sans-serif;
-@pageFont          : 'Roboto', Arial, Helvetica, sans-serif;
+@headerFont        : 'Arimo', Arial, Helvetica, sans-serif;
+@pageFont          : 'Arimo', Arial, Helvetica, sans-serif;
 @fontSmoothing     : antialiased;
 
 @importGoogleFonts : true;
-@googleFontName    : 'Roboto';
+@googleFontName    : 'Arimo';
 @googleFontSizes   : '400,700,400italic,700italic';
 @googleSubset      : 'latin';
 
