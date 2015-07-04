@@ -226,8 +226,8 @@ OFFER_REDIRECT_URL = "http://2.quicktrkr.com/cl/%s/%s?s1=%s"
 # Deposits # Default must exist // Always make "-1" default
 DEPOSITS = (
 	# User ID   Company     Aff ID      Deposit Code        Deposit Name        Password
-	(-1,        "ADGATE",   2981,       "DEFAULT_DEPOSIT",  "Default Deposit",  "password"),
-	(1,         "ADGATE",   2905,       "MIKE_DEPOSIT",     "Mike's Deposit",   "mike_password"),
+	(-1,        "ADGATE",   43196,       "DEFAULT_DEPOSIT",  "Default Deposit",  "m20spl0h5jsjryfvg52s"),
+	(1,         "ADGATE",   43196,       "MIKE_DEPOSIT",     "Mike's Deposit",   "54c1v40ivlc7usaumjwx"),
 )
 
 DEPOSIT_NAMES = ((d[3], d[4],) for d in DEPOSITS)
