@@ -210,8 +210,6 @@ class Offer(models.Model):
 		offer_priority=None, offer_block=None
 	):
 		user_agent = get_ua(user_agent)
-
-		print(user_agent)
 		
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []

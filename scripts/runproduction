@@ -1,6 +1,24 @@
 #!/bin/bash
+
 cd "${0%/*}"
 cd ../
 source env/bin/activate
 cd project/
-gunicorn --workers=4 siren.wsgi
+
+case "$1" in
+	start)
+		gunicorn --workers=4 siren.wsgi &
+		celery -A siren beat -l info &
+		celery -A siren worker -l info &
+		;;
+	stop)
+		pkill gunicorn &
+		pkill celery & 
+		;;
+	*)
+		echo "Usage: rungunicorn {start|stop}"
+		exit 1
+		;;
+esac
+
+exit 0
