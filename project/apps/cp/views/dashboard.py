@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.core.cache import cache
 from django.contrib.admin.views.decorators import staff_member_required
 from ...leads.models import Lead
@@ -36,3 +36,21 @@ def index(request):
 @staff_member_required
 def staff(request):
 	return render(request, "cp/dashboard/staff.html", {})
+
+
+
+@staff_member_required
+def staff_info(request):
+	output = "<h1>META</h1>"
+	for k, v in request.META.items():
+		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
+
+	output += "<br/><br/><h1>POST</h1>"
+	for k, v in request.POST.items():
+		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
+
+	output += "<br/><br/><h1>GET</h1>"
+	for k, v in request.GET.items():
+		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
+
+	return HttpResponse(output)
