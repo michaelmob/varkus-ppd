@@ -6,5 +6,7 @@ django-celery
 pillow
 django-countries
 filemagic
+pysocks
 geoip2
+mysqlclient
 git+https://github.com/thetarkus/anora

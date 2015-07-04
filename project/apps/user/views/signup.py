@@ -91,10 +91,20 @@ def signup(request, referrer=-1):
 				user.profile.birthday = birthday
 				user.profile.save()
 
-				user = authenticate(username=username, password=password)
-				login(request, user)
+				if user.is_active:
+					user = authenticate(username=username, password=password)
+					login(request, user)
 
-				messages.success(request, "Welcome to %s!" % settings.SITE_NAME)
-				return redirect("dashboard")
+					messages.success(request, "Welcome to %s!" % settings.SITE_NAME)
+					return redirect("dashboard")
+				else:
+					messages.success(request, "Welcome to %s! We'll notify you when your account is activated." % settings.SITE_NAME)
+					return redirect("login")
 
-	return render(request, "user/signup.html", {"form": form})
+	return render(
+		request, "user/signup.html",
+		{
+			"form": form,
+			"invite_only": settings.INVITE_ONLY,
+		}
+	)

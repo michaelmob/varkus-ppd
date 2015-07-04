@@ -4,9 +4,25 @@
 {% block title %}Sign up{% endblock %}
 
 {% block content %}
+
+
 <div class="middle aligned ui grid page">
 
-	<div class="column">
+	{% if invite_only %}
+		<div class="row no margin">
+			<div class="column no margin">
+					<div class="ui message error">
+						<i class="close icon"></i>
+						{% site_name %} is currently invite only. Your account
+						will be created but it will not be activated. You will be
+						notified via e-mail when your account has been activated.
+					</div>
+				<p></p>
+			</div>
+		</div>
+	{% endif %}
+
+	<div class="row column">
 		<h2><i class="signup icon"></i> Sign up for {% site_name %}</h2>
 	
 		<form class="ui form segment" method="POST" action="{% url 'signup' %}">
