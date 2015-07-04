@@ -14,7 +14,7 @@ app = Celery("siren")
 app.config_from_object("django.conf:settings")
 app.conf.update(
 	CELERY_TIMEZONE="America/New_York",
-	CELERY_RESULT_BACKEND="djcelery.backends.database.DatabaseBackend",
+	CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend',
 	CELERYBEAT_SCHEDULER="djcelery.schedulers.DatabaseScheduler",
 	CELERYBEAT_SCHEDULE=CELERYBEAT_SCHEDULE,
 )

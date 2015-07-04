@@ -8,8 +8,7 @@ cd project/
 case "$1" in
 	start)
 		gunicorn --workers=4 siren.wsgi &
-		celery -A siren beat -l info &
-		celery -A siren worker -l info &
+		celery worker --app=siren --beat --loglevel=INFO &
 		;;
 	stop)
 		pkill gunicorn &
