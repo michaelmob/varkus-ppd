@@ -47,14 +47,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Fix maps /// 0%
 # In all lockers rename variable "item" to "obj" /// 100%
 
-import os
+import os, socket
 from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don"t run with debug turned on in production! 
-DEBUG = False
+DEBUG = socket.gethostname() == "pc"
 
 if DEBUG:
 	from .private.development import *
@@ -105,6 +105,7 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.messages.middleware.MessageMiddleware",
 	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
+	"siren.middleware.cloudflare.CFMiddleware",
 )
 
 AUTHENTICATION_BACKENDS = (
