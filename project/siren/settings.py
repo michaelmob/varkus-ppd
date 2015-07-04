@@ -53,7 +53,7 @@ from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: don"t run with debug turned on in production!
+# SECURITY WARNING: don"t run with debug turned on in production! 
 DEBUG = False
 
 if DEBUG:
