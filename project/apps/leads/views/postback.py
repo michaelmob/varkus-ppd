@@ -213,7 +213,7 @@ def receive(request, password=None):
 	# if not lead_blocked:
 	# Send Postback if Widget
 	if locker_obj.get_name() == "Widget":
-		if len(locker_obj.postback_url) > 20:
+		if locker_obj.postback_url and len(locker_obj.postback_url) > 20:
 			post(lead, locker_obj, token)
 
 	return JsonResponse(response)

@@ -5,11 +5,11 @@ $(".ui.modal")
 $("form").form({
 	name: {
 		identifier : "name",
-		rules: [
-		{
-			type   : "empty",
-			prompt : "Please a name for your widget."
-		}
+			rules: [
+			{
+				type   : "empty",
+				prompt : "Please a name for your widget."
+			}
 		]
 	}
 }, {
