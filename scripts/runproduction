@@ -1,0 +1,6 @@
+#!/bin/bash
+cd "${0%/*}"
+cd ../
+source env/bin/activate
+cd project/
+gunicorn --workers=4 siren.wsgi

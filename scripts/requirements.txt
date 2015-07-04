@@ -8,5 +8,6 @@ django-countries
 filemagic
 pysocks
 geoip2
+gunicorn
 mysqlclient
 git+https://github.com/thetarkus/anora
