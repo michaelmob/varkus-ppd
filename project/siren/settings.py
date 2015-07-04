@@ -1,5 +1,5 @@
 """
-Siren 1.0.2
+Siren 1.0.3
 
 Django settings for Siren project.
 

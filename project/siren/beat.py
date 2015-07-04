@@ -10,9 +10,9 @@ week = crontab(minute=0, hour=0, day_of_week="sunday")
 month = crontab(minute=0, hour=0, day_of_month="1")
 year = crontab(minute=0, hour=0, day_of_month="1", month_of_year="1")
 
-@shared_task
-def test(): 
-	return "Test"
+# @shared_task
+# def test(): 
+#	"Test"
 
 CELERYBEAT_SCHEDULE = {
 	#"test":	{"task": "siren.beat", "schedule": crontab()},
