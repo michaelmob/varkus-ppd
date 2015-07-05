@@ -8,11 +8,13 @@ cd project/
 case "$1" in
 	start)
 		gunicorn --workers=4 siren.wsgi &
-		celery worker --app=siren --beat --loglevel=INFO &
+		celery worker --app=siren --beat --events --loglevel=INFO &
+		../scripts/manage celerycam --frequency=30.0 &
 		;;
 	stop)
 		pkill gunicorn &
 		pkill celery & 
+		pkill python & 
 		;;
 	*)
 		echo "Usage: rungunicorn {start|stop}"
