@@ -40,15 +40,14 @@
 			{% if user.is_authenticated %}
 
 				{# Earnings #}
-				<a class="item">
-
+				<a class="item computer only">
 					<small>Today: </small>
 					<small class="ui primary text">
 						${{ user.earnings.today|currency }}
 					</small>
 				</a>
 				
-				<a class="item">
+				<a class="item computer only">
 					<small>Month: </small>
 					<small class="ui primary text">
 						${{ user.earnings.month|currency }}
@@ -95,6 +94,21 @@
 	</nav>
 
 	<aside class="ui inverted vertical sidebar{% block sidemenu %}{% endblock %} left fixed menu">
+		<div class="header item mobile tablet only">{{ user.username|title }}'s Account</div>
+		<span class="item mobile tablet only">
+			Today:
+			<span class="ui primary text">
+				${{ user.earnings.today|currency }}
+			</span>
+		</span>
+
+		<span class="item mobile tablet only">
+			Month:
+			<span class="ui primary text">
+				${{ user.earnings.month|currency }}
+			</span>
+		</span>
+
 		<div class="header item">Control Panel</div>
 		<a class="item dashboard" href="{% url 'dashboard' %}">
 			<i class="dashboard icon"></i> Dashboard

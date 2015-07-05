@@ -35,7 +35,7 @@
 	height: 100%;
 	width: 100%;
 
-	background: url(http://www.semantic-ui.com/images/backgrounds/16.jpg);
+	background: url(/static/img/masthead.jpg);
 	background-size: cover;
 	
 	animation-name: fade-in;
