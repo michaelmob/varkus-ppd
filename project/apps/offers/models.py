@@ -144,7 +144,7 @@ class Offer(models.Model):
 		token = Token.get_or_create_request(request, locker_obj).unique
 
 		# Get Offers
-		offers = None #cache.get("token__" + token)
+		offers = cache.get("token__" + token)
 
 		# If no offers then get and set them
 		if not offers:
