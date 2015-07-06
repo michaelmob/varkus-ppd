@@ -13,11 +13,11 @@ $("form").form({
 		]
 	},
 
-	item_name: {
+	url: {
 		identifier : "url",
 		rules: [
 		{
-			type   : "url",
+			type   : "empty",
 			prompt : "Please enter a URL."
 		}
 		]

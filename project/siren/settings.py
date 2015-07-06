@@ -171,7 +171,7 @@ TEMPLATES = [
 from django.template.base import add_to_builtins
 add_to_builtins("apps.home.templatetags.site")
 
-INVITE_ONLY = True
+INVITE_ONLY = False
 
 # GeoIP
 import geoip2.database
@@ -268,7 +268,7 @@ CATEGORY_TYPES_ICONS = {
 	"Home & Garden": "home",
 	"iOS Devices": "apple",
 	"iPad": "tablet",
-	"iPhone": "phone",
+	"iPhone": "mobile",
 	"Lead Gen": "lightning",
 	"Mobile WAP": "mobile",
 	"Online Services": "desktop",

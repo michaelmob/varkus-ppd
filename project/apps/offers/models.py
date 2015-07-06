@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.core.cache import cache
 
 from django_countries import countries
@@ -120,6 +121,7 @@ class Offer(models.Model):
 		request, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
+		print(request.META['HTTP_USER_AGENT'])
 		return Offer.get(
 			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
 			count, min_payout, offer_priority, offer_block
@@ -142,7 +144,7 @@ class Offer(models.Model):
 		token = Token.get_or_create_request(request, locker_obj).unique
 
 		# Get Offers
-		offers = cache.get("token__" + token)
+		offers = None #cache.get("token__" + token)
 
 		# If no offers then get and set them
 		if not offers:
@@ -158,14 +160,19 @@ class Offer(models.Model):
 		count, category, country, user_agent=None, min_payout=0.01,
 		offer_block=[], offer_exclude=[], extra={}
 	):
+		args = ()
 		if user_agent:
-			extra["user_agent__in"] = [user_agent, ""]
+			args = (
+				Q(user_agent__icontains=user_agent) |
+				Q(user_agent=""),
+			)
 		
 		return Offer.objects\
 			.filter(
 				category__in 		= category,
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
+				*args,
 				**extra
 			)\
 			.exclude(pk__in=offer_block)\
@@ -187,15 +194,19 @@ class Offer(models.Model):
 		count, country, user_agent=None, min_payout=0.01,
 		offer_block=None, offer_exclude=[]
 	):
-		extra = {}
+		args = ()
+
 		if user_agent:
-			extra["user_agent__in"] = [user_agent, ""]
+			args = (
+				Q(user_agent__icontains=user_agent) |
+				Q(user_agent=""),
+			)
 			
 		return Offer.objects\
 			.filter(
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
-				**extra
+				*args
 			)\
 			.exclude(pk__in=offer_block)\
 			.exclude(pk__in=offer_exclude)\
@@ -209,7 +220,10 @@ class Offer(models.Model):
 		ip_address, user_agent, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
+		print(user_agent)
 		user_agent = get_ua(user_agent)
+
+		print(user_agent)
 		
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
@@ -229,6 +243,14 @@ class Offer(models.Model):
 
 		for lead in leads:
 			offer_block.append(lead.offer.id)
+
+		# User Agent Args
+		args = ()
+		if user_agent:
+			args = (
+				Q(user_agent__icontains=user_agent) |
+				Q(user_agent=""),
+			)
 		
 		# Staff Priority
 		_offers += Offer.objects\
@@ -236,7 +258,7 @@ class Offer(models.Model):
 				priority 			= True,
 				payout__gte 		= min_payout,
 				country__icontains 	= c_r[0],
-				user_agent__in 		= [user_agent, ""]
+				*args
 			)\
 			.exclude(pk__in=offer_block)
 			
@@ -246,7 +268,7 @@ class Offer(models.Model):
 				pk__in 				= offer_priority,
 				payout__gte 		= min_payout,
 				country__icontains 	= c_r[0],
-				user_agent__in 		= [user_agent, ""]
+				*args
 			)
 			
 		# Common arguments
@@ -260,9 +282,6 @@ class Offer(models.Model):
 
 		_30 = int(0.3 * count)
 		_20 = int(0.2 * count)
-		
-		# Email _offers
-		_offers += Offer.get_basic(_30, "Email Submits", **kwargs)
 
 		# Android _offers
 		if user_agent == "Android":
@@ -277,9 +296,12 @@ class Offer(models.Model):
 			_offers += Offer.get_basic_ex(_30, ["iPad", "iOS Devices"], **kwargs)
 			
 		# We'll assume it's Windows
-		else:
+		elif user_agent == "Windows":
 			_offers += Offer.get_basic(_30, "Downloads", **kwargs)
-			
+		
+		# Email _offers
+		_offers += Offer.get_basic(_30, "Email Submits", **kwargs)
+
 		# PIN _offers
 		_offers += Offer.get_basic(_20, "PIN Submit", **kwargs)
 		

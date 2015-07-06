@@ -1,3 +1,5 @@
 #!/bin/bash
 cd "${0%/*}"
 ./manage runserver 0.0.0.0:7999
+#./manage celery worker --app=siren --beat --events --loglevel=INFO &
+#./manage celerycam --frequency=30.0 &

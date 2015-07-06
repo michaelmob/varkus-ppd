@@ -28,8 +28,6 @@ def user_settings(request, save=None):
 			request.user.profile.country 	= form_personal.cleaned_data["country"]
 			request.user.profile.website	= form_personal.cleaned_data["website"]
 
-			print("yeah")
-
 			request.user.save()
 			request.user.profile.save()
 

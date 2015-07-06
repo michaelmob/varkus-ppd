@@ -18,4 +18,4 @@ def get_ua(user_agent):
 		return "Macintosh"
 	
 	else:
-		return "Other"
+		return None
