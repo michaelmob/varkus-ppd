@@ -23,10 +23,10 @@ def get_object(code):
 def locker(request, code=None):
 	obj = get_object(code)
 
-	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
-
 	if not obj:
 		return redirect("locker-404")
+
+	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
 
 	return render(
 		request,

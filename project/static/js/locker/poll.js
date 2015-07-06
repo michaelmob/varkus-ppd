@@ -26,3 +26,17 @@ function _s_start(uri) {
 	_s_pollInterval = setInterval("_s_poll(\"" + uri + "\");", 15 * 1000);
 	_s_pollInterval = setInterval(_s_idle, 1000);
 }
+
+function _s_warning(e) {
+	if(!e) e = window.event;
+	e.cancelBubble = true;
+	e.returnValue = "Are you sure you want to leave?";
+
+	//e.stopPropagation works in Firefox.
+	if (e.stopPropagation) {
+		e.stopPropagation();
+		e.preventDefault();
+	}
+}
+
+window.onbeforeunload = _s_warning;
