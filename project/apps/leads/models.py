@@ -173,6 +173,11 @@ class Lead(models.Model):
 	):
 		locker = str(type(locker_obj).__name__).upper()
 
+		try:
+			user_agent = token.user_agent
+		except:
+			user_agent = ""
+
 		args = {
 			"offer" 			: offer,
 			"offer_name"		: offer.name,
@@ -184,7 +189,7 @@ class Lead(models.Model):
 			"sender_ip_address"	: sender_ip_address,
 			"user_ip_address"	: user_ip_address,
 
-			"user_user_agent" 	: token.user_agent,
+			"user_user_agent" 	: user_agent,
 
 			"payout"			: payout,
 			"dev_payout"		: dev_payout,

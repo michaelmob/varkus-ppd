@@ -35,17 +35,14 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # TODO:
 #######
-# Front Page /// 0%
-# Widgets along with example code // 50%
-# Postbacks /// 80%
-# Postbacks Page telling user to create postback with widget /// 50%
-# Tickets unread variable and badge on icon /// 0%
-# Staff section rework /// 0%
+# Widget example code
+# Tickets unread variable and badge on icon
+# Staff section rework
 # -- Leads
 # -- Deposits
 # -- Tickets
-# Fix maps /// 0%
-# In all lockers rename variable "item" to "obj" /// 100%
+# Celery beat for deleting old tokens
+# Fix charts
 
 import os, socket
 from datetime import timedelta

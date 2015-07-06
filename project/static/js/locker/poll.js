@@ -39,4 +39,4 @@ function _s_warning(e) {
 	}
 }
 
-window.onbeforeunload = _s_warning;
+//window.onbeforeunload = _s_warning;

@@ -204,16 +204,17 @@ def receive(request, password=None):
 	except:
 		pass
 
-	# Clear Caches
-	cache.delete_many([
-		"charts__offer_%s" % offer.id,
-		"token__%s" % token.unique,
-	])
+	if token:
+		# Clear Caches
+		cache.delete_many([
+			"charts__offer_%s" % offer.id,
+			"token__%s" % token.unique,
+		])
 
-	# if not lead_blocked:
-	# Send Postback if Widget
-	if locker_obj.get_name() == "Widget":
-		if locker_obj.postback_url and len(locker_obj.postback_url) > 20:
-			post(lead, locker_obj, token)
+		# if not lead_blocked:
+		# Send Postback if Widget
+		if locker_obj.get_name() == "Widget":
+			if locker_obj.postback_url and len(locker_obj.postback_url) > 20:
+				post(lead, locker_obj, token)
 
 	return JsonResponse(response)
