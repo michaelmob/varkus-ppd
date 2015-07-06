@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.conf import settings
 from ..models import List
 from ....leads.models import Token
 from ....offers.models import Offer
@@ -17,7 +18,7 @@ def get_object(code):
 def locker(request, code=None):
 	obj = get_object(code)
 
-	combo = Offer.get_locker_request_cache(request, obj, 15, 0.05)
+	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
 
 	if not obj:
 		return redirect("locker-404")

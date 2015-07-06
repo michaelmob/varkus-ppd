@@ -199,6 +199,8 @@ LOCKERS = (
 	("LIST", "List"),
 )
 
+OFFERS_COUNT = 10
+
 # Widgets Locker
 MAX_WIDGETS = 10
 

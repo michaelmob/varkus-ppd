@@ -121,7 +121,6 @@ class Offer(models.Model):
 		request, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
-		print(request.META['HTTP_USER_AGENT'])
 		return Offer.get(
 			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
 			count, min_payout, offer_priority, offer_block
@@ -220,10 +219,7 @@ class Offer(models.Model):
 		ip_address, user_agent, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
-		print(user_agent)
 		user_agent = get_ua(user_agent)
-
-		print(user_agent)
 		
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
