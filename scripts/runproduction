@@ -15,6 +15,7 @@ case "$1" in
 		pkill gunicorn &
 		pkill celery & 
 		pkill python & 
+		pkill python3 & 
 		;;
 	*)
 		echo "Usage: rungunicorn {start|stop}"
