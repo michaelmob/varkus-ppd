@@ -228,6 +228,7 @@ DEPOSITS = (
 	# User ID   Company     Aff ID      Deposit Code        Deposit Name        Password
 	(-1,        "ADGATE",   43196,       "DEFAULT_DEPOSIT",  "Default Deposit",  "m20spl0h5jsjryfvg52s"),
 	(1,         "ADGATE",   43196,       "MIKE_DEPOSIT",     "Mike's Deposit",   "54c1v40ivlc7usaumjwx"),
+	(2,         "ADGATE",   2981,        "JOE_DEPOSIT",      "Joe's Deposit",    "jjbm086pcp2mdm00k5mf"),
 )
 
 DEPOSIT_NAMES = ((d[3], d[4],) for d in DEPOSITS)

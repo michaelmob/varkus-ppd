@@ -43,8 +43,14 @@
 							<i class="world icon"></i>
 							<div class="content">
 								<label class="header">Country</label>
-								<i class="{{ user.profile.country }} flag"></i
-								>{{ user.profile.country|country|default:'<em>Not Specified</em>' }}
+								{% with country=user.profile.country %}
+									{% if country|length > 1 and country != None %}
+										<i class="{{ country }} flag"></i
+										>{{ country|country }}
+									{% else %}
+										<em>Not Specified</em>
+									{% endif %}
+								{% endwith %}
 							</div>
 						</div>
 						<div class="item">
