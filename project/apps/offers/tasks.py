@@ -9,7 +9,7 @@ def sync(): 		return _sync()
 
 
 @shared_task
-def reset_today(): 	return Earnings().reset_today()
+def reset_today(): return Earnings().reset_today()
 
 
 @shared_task

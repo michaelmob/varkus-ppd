@@ -10,5 +10,5 @@ class Admin_Lead(admin.ModelAdmin):
 
 @admin.register(Token)
 class Admin_Token(admin.ModelAdmin):
-	list_display = ("unique", "ip_address", "user_agent", "lead", "paid", "staff")
+	list_display = ("unique", "ip_address", "user_agent", "date_time", "lead", "paid", "staff")
 	search_fields = ["unique", "ip_address", "user_agent"]

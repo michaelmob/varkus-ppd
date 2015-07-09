@@ -1,9 +1,14 @@
 from celery import shared_task
 from .models import Earnings, Referral_Earnings
+from apps.leads.models import Token
+from django.core.cache import cache
 
 
 @shared_task
 def reset_today():
+	cache.clear()
+	Token.clear()
+
 	return (
 		Earnings().reset_today(),
 		Referral_Earnings().reset_today(),

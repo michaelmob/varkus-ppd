@@ -94,79 +94,94 @@
 	</nav>
 
 	<aside class="ui inverted vertical sidebar{% block sidemenu %}{% endblock %} left fixed menu">
-		<div class="header item mobile tablet only">{{ user.username|title }}'s Account</div>
-		<span class="item mobile tablet only">
-			Today:
-			<span class="ui primary text">
-				${{ user.earnings.today|currency }}
+		{% if user.is_authenticated %}
+			<div class="header item mobile tablet only">{{ user.username|title }}'s Account</div>
+			<span class="item mobile tablet only">
+				Today:
+				<span class="ui primary text">
+					${{ user.earnings.today|currency }}
+				</span>
 			</span>
-		</span>
 
-		<span class="item mobile tablet only">
-			Month:
-			<span class="ui primary text">
-				${{ user.earnings.month|currency }}
+			<span class="item mobile tablet only">
+				Month:
+				<span class="ui primary text">
+					${{ user.earnings.month|currency }}
+				</span>
 			</span>
-		</span>
 
-		<div class="header item">Control Panel</div>
-		<a class="item dashboard" href="{% url 'dashboard' %}">
-			<i class="dashboard icon"></i> Dashboard
-		</a>
+			<div class="header item">Control Panel</div>
+			<a class="item dashboard" href="{% url 'dashboard' %}">
+				<i class="dashboard icon"></i> Dashboard
+			</a>
 
-		<a class="item leads" href="{% url 'leads' %}">
-			<i class="lightning icon"></i> Leads
-		</a>
+			<a class="item leads" href="{% url 'leads' %}">
+				<i class="lightning icon"></i> Leads
+			</a>
 
-		<a class="item offers" href="{% url 'offers' %}">
-			<i class="tags icon"></i> Offers
-		</a>
+			<a class="item offers" href="{% url 'offers' %}">
+				<i class="tags icon"></i> Offers
+			</a>
 
-		{% comment %}
-		<a class="item statistics" href="#">
-			<i class="bar chart icon"></i> Statistics
-		</a>
-		{% endcomment %}
+			{% comment %}
+			<a class="item statistics" href="#">
+				<i class="bar chart icon"></i> Statistics
+			</a>
+			{% endcomment %}
 
-		<div class="header item">Lockers</div>
-		<a class="item widgets" href="{% url 'widgets' %}">
-			<i class="file image outline icon"></i> Widgets
-		</a>
+			<div class="header item">Lockers</div>
+			<a class="item widgets" href="{% url 'widgets' %}">
+				<i class="file image outline icon"></i> Widgets
+			</a>
 
-		<a class="item files" href="{% url 'files' %}">
-			<i class="file icon"></i> Files
-		</a>
+			<a class="item files" href="{% url 'files' %}">
+				<i class="file icon"></i> Files
+			</a>
 
-		<a class="item links" href="{% url 'links' %}">
-			<i class="linkify icon"></i> Links
-		</a>
+			<a class="item links" href="{% url 'links' %}">
+				<i class="linkify icon"></i> Links
+			</a>
 
-		<a class="item lists" href="{% url 'lists' %}">
-			<i class="list layout icon"></i> Lists
-		</a>
+			<a class="item lists" href="{% url 'lists' %}">
+				<i class="list layout icon"></i> Lists
+			</a>
 
-		<div class="header item">Support</div>
-		<a class="item tickets" href="{% url 'tickets' %}">
-			<i class="ticket icon"></i> Tickets
-		</a>
-
-		<a class="item billing" href="{% url 'billing' %}">
-			<i class="credit card icon"></i> Billing
-		</a>
-
-		<a class="item account" href="{% url 'user-settings' %}">
-			<i class="cogs icon"></i> Account Settings
-		</a>
-
-		{% if user.is_staff %}
-			<div class="header item">Staff</div>
-
-			<a class="item staff-tickets" href="{% url 'staff-tickets' %}">
+			<div class="header item">Support</div>
+			<a class="item tickets" href="{% url 'tickets' %}">
 				<i class="ticket icon"></i> Tickets
 			</a>
 
-			<a class="item staff" href="{% url 'staff' %}">
-				<i class="shield icon"></i> Staff
+			<a class="item billing" href="{% url 'billing' %}">
+				<i class="credit card icon"></i> Billing
+			</a>
+
+			<a class="item account" href="{% url 'user-settings' %}">
+				<i class="cogs icon"></i> Account Settings
+			</a>
+
+			{% if user.is_staff %}
+				<div class="header item">Staff</div>
+
+				<a class="item staff-tickets" href="{% url 'staff-tickets' %}">
+					<i class="ticket icon"></i> Tickets
+				</a>
+
+				<a class="item staff" href="{% url 'staff' %}">
+					<i class="shield icon"></i> Staff
+				</a>
+			{% endif %}
+
+		{% else %}
+			<a class="item" href="{% url 'login' %}">
+				<i class="sign in icon"></i> Log in
+			</a>
+
+			<a class="item" href="{% url 'signup' %}">
+				<i class="signup icon"></i> Sign up
+			</a>
+
+			<a class="item" href="{% url 'contact' %}">
+				<i class="chat icon"></i> Contact
 			</a>
 		{% endif %}
 	</aside>

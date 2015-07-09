@@ -75,7 +75,7 @@ class Token(models.Model):
 
 	def clear():
 		return Token.objects.filter(
-			date_time__lt = datetime.now() - timedelta(days=2),
+			date_time__gt = datetime.now() - timedelta(days=2),
 			paid = False
 		)
 
