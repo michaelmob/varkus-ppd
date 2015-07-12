@@ -2,6 +2,7 @@
 *.pyo
 *.sqlite3
 *.mmdb
+*.pid
 env/
 __pycache__/
 migrations/
