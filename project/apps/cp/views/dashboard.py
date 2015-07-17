@@ -8,8 +8,28 @@ from utils import charts as Charts
 from utils import cache2
 
 
-def index(request):
+'''def index(request):
+	# Cache Newest Offers
+	offers = cache2.get(
+		"newest_offers",
+		lambda: Offer.objects.order_by('-date')[:10]
+	)
 
+	# Cache Most Recent Leads
+	leads = cache2.get(
+		"recent__user_%s" % request.user.id,
+		lambda: Lead.objects.filter(
+			lead_blocked=False, user=request.user
+		).order_by("-date_time")[:10]
+	)
+
+	return render(request, "cp/dashboard/index.html", {
+		"offers": offers,
+		"leads": leads,
+	})
+'''
+
+def index(request):
 	# Cache Charts
 	key = "charts__user_%s" % request.user.id
 	chart = cache.get(key)
@@ -36,7 +56,6 @@ def index(request):
 @staff_member_required
 def staff(request):
 	return render(request, "cp/dashboard/staff.html", {})
-
 
 
 @staff_member_required

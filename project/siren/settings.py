@@ -41,7 +41,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # -- Leads
 # -- Deposits
 # -- Tickets
-# Celery beat for deleting old tokens
+# Use polling to see active users on page
 # Fix charts
 
 import os, socket

@@ -11,7 +11,7 @@ from utils.user_agent import get_ua
 
 
 def adgate(request):
-	out = sync()
+	out = adgate_sync()
 
 	return HttpResponse(
 		"Added: %s | Removed: %s | Updated: %s | Untouched: %s | OKAY @ %s" %
@@ -21,8 +21,11 @@ def adgate(request):
 	)
 
 
-def sync():
-	url = "https://api.adgatemedia.com/v1/offers?aff=2981&api_key=c852cc6460ee84ed1c13fda34a9620aa&epcmin=.01&paymin=.05"
+def adgate_sync():
+	aff_id = "43196"
+	aff_key = "18527d29062f11802b2e2aea5d7b94ab"
+
+	url = "https://api.adgatemedia.com/v1/offers?aff=%s&api_key=%s&minepc=.01&paymin=.05" % (aff_id, aff_key)
 	offers_remote 	= loads(urlopen(url).read().decode("utf-8"))
 	offers_local 	= Offer.objects.all()
 	
@@ -43,7 +46,7 @@ def sync():
 			# Update EPCs
 			if float(offer_local.earnings_per_click) != float(offer_remote["epc"]):
 				offer_local.earnings_per_click = Decimal(offer_remote["epc"])
-				offer_local.earnings_per_click = Decimal(offer_remote["epc"])
+				offer_local.difference = Decimal(offer_remote["payout"]) - Decimal(offer_remote["epc"])
 				updated = True
 				
 			# Update Payouts
@@ -58,8 +61,18 @@ def sync():
 
 		except Offer.DoesNotExist:
 			payout = Decimal(offer_remote["payout"])
+			epc = Decimal(offer_remote["epc"])
 
-			if payout > 0.00:
+			# {o} == Offer ID
+			# {a} == Aff ID
+			# {u} == Unique hash
+
+			tracking_url = str(offer_remote["tracking_url"]) 	\
+				.replace("/" + str(offer_remote["id"]), "/{o}") \
+				.replace("/" + str(aff_id), 			"/{a}") \
+				.replace("?s1=", 						"?s1={u}")
+
+			if payout > 0.00 and epc > 0.00:
 				Offer.create(
 					id=offer_remote["id"],
 					name=unescape(offer_remote["name"]),
@@ -70,7 +83,7 @@ def sync():
 					earnings_per_click=offer_remote["epc"],
 					country=offer_remote["country"],
 					payout=payout,
-					tracking_url=offer_remote["tracking_url"]
+					tracking_url=tracking_url
 				)
 				offers_added += 1
 		

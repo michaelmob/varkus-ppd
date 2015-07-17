@@ -1,4 +1,6 @@
 #!/bin/bash
+cd $(dirname $0)
+
 sudo apt-get install \
 	build-essential \
 	libmysqlclient-dev \

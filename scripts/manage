@@ -1,6 +1,5 @@
 #!/bin/bash
-cd "${0%/*}"
-cd ../
+cd $(dirname $0)/../
 source env/bin/activate
 cd project/
 python manage.py $@

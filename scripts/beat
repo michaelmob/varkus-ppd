@@ -1,4 +1,4 @@
 #!/bin/bash
-cd "${0%/*}"
+cd $(dirname $0)
 ./manage celery beat -l info &
 ./manage celery worker -l info

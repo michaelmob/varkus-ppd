@@ -1,38 +1,50 @@
+from urllib.parse import unquote
+
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.core.cache import cache
 from django.db.models import Q
+
 from ..models import Offer
 from ..forms import Form_Offer
-from utils import paginate
 
+from utils import paginate
 from utils import charts as Charts
 
-orders = {
-	"name": "name",
-	"cat": "category",
-	"ctry": "country",
-	"ua": "user_agent",
-	"epc": "earnings_per_click",
-	"pay": "payout",
-}
+offer_list_columns = [
+	"name", "category", "flag", "user_agent",
+	"earnings_per_click", "payout"
+]
 
 
-def list(request, page=1, column="epc", order="desc"):
-	try:
-		order_ = ("-" if order == "desc" else "") + orders[column]
-	except KeyError:
-		column = "epc"
-		order_ = "-earnings_per_click"
+def list(request, page=1):
 
+	# Multi-Sort Table
 	query = request.GET.get("q")
+	sort = request.GET.get("o", "").split(',')
+	order = ["-date"]
+
+	if sort[0] != "":
+		for idx in sort:
+			try:
+				idx = int(idx)
+				order.append(
+					("-" if idx < 0 else "") +
+					offer_list_columns[abs(idx) - 1]
+				)
+			except:
+				pass
+
+	print(order)
+
+	get_params = request.GET.urlencode().replace("%2C", ",")
 
 	if query:
-		offers = Offer.objects.filter(
+		offers = Offer.objects.filter(earnings_per_click__gt="0.01").filter(
 			Q(name__icontains=query) | Q(anchor__icontains=query)
-		).order_by(order_)
+		).order_by(*order)
 	else:
-		offers = Offer.objects.all().order_by(order_)
+		offers = Offer.objects.all().filter(earnings_per_click__gt="0.01").order_by(*order)
 
 	# Pagination
 	offers = paginate.pages(offers, 30, page)
@@ -40,9 +52,8 @@ def list(request, page=1, column="epc", order="desc"):
 	return render(
 		request, "offers/list.html",
 		{
+			"get_params": get_params,
 			"offers": offers,
-			"column": column,
-			"order": order,
 			"query": query
 		}
 	)

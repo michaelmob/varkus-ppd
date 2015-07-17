@@ -29,6 +29,7 @@ class Offer(models.Model):
 	flag 					= models.CharField(max_length=3)
 	country_count 			= models.IntegerField()
 	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	difference				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	tracking_url 			= models.CharField(max_length=300)
 	clicks 					= models.IntegerField(default=0)
 	date 					= models.DateField()
@@ -89,7 +90,7 @@ class Offer(models.Model):
 			dirty = (dirty[:-2]).strip()
 
 		return dirty
-	
+
 	""" Create offer with arguments """
 	def create(
 		id, name, anchor, requirements, user_agent, category,
@@ -104,9 +105,10 @@ class Offer(models.Model):
 			category				= category,
 			earnings_per_click 		= Decimal(earnings_per_click),
 			country 				= country,
-			flag 					= Offer.pick_flag(country),
+			flag 					= str(Offer.pick_flag(country)).upper(),
 			country_count 			= len(country.split(',')),
 			payout 					= payout,
+			difference				= payout - Decimal(earnings_per_click),
 			tracking_url 			= tracking_url,
 			date 					= date.today()
 		)
@@ -159,18 +161,22 @@ class Offer(models.Model):
 		count, category, country, user_agent=None, min_payout=0.01,
 		offer_block=[], offer_exclude=[], extra={}
 	):
-		args = ()
+
+		args = (Q(user_agent=""),)
+
 		if user_agent:
 			args = (
 				Q(user_agent__icontains=user_agent) |
 				Q(user_agent=""),
 			)
+
 		
 		return Offer.objects\
 			.filter(
 				category__in 		= category,
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
+				difference__lte 	= 3,
 				*args,
 				**extra
 			)\
@@ -193,7 +199,7 @@ class Offer(models.Model):
 		count, country, user_agent=None, min_payout=0.01,
 		offer_block=None, offer_exclude=[]
 	):
-		args = ()
+		args = (Q(user_agent=""),)
 
 		if user_agent:
 			args = (
@@ -205,6 +211,7 @@ class Offer(models.Model):
 			.filter(
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
+				difference__lte 	= 3,
 				*args
 			)\
 			.exclude(pk__in=offer_block)\
@@ -224,10 +231,10 @@ class Offer(models.Model):
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
 		
-		c_r = lookup.country_region(ip_address 
-										if ip_address != "127.0.0.1"
-										else "173.63.97.160"
-									)
+		c_r = lookup.country_region(
+			ip_address if ip_address != "127.0.0.1" else "173.63.97.160"
+		)
+
 		_offers = []
 
 		# Block Completed Offers
@@ -241,7 +248,7 @@ class Offer(models.Model):
 			offer_block.append(lead.offer.id)
 
 		# User Agent Args
-		args = ()
+		args = (Q(user_agent=""),)
 		if user_agent:
 			args = (
 				Q(user_agent__icontains=user_agent) |

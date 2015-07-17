@@ -37,12 +37,6 @@ urlpatterns = [
 	),
 
 	url(
-		r"^(?P<page>[0-9]+)/(?P<column>\w+)/(?P<order>\w+)/$",
-		login_required(manage.list),
-		name="offers-page-sort"
-	),
-
-	url(
 		r"^manage/(?P<id>[0-9]+)/$",
 		login_required(manage.offer),
 		name="offers-manage"

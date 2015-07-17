@@ -1,32 +1,26 @@
 {% spaceless %}
 
 	{% if items.paginator.num_pages > 1 %}
+		{% load pagination %}
 
 		{% with num=items.paginator.page_range %}
-			<div class="ui pagination fluid inverted primary menu">
+			<div class="ui pagination fluid {% if not not_inverted %}inverted{% endif %} primary menu">
 
-				{% if items.paginator.num_pages > 6 %}
+				{% if items.number > 4 %}
+					<a href="{% url uri 1 %}?{{ get_params }}" class="item">1</a>
+					<a class="disabled item">...</a>
+				{% endif %}
 
-					<div class="ui item selection dropdown button">
-						<i class="ellipsis vertical icon"></i>
-						<span class="text" style="color:white">Select Page</span>
-						<div class="menu">
-							{% for page in num %}
-								<a class="{% if page == items.number %}active {% endif %}item" href="{% url uri page column order %}">
-									{{ page }}
-								</a>
-							{% endfor %}
-						</div>
-					</div>
+				{% for page in num|paginate:items.number %}
+					<a href="{% url uri page %}?{{ get_params }}" class="{% if page == items.number %}active {% endif %}item">
+						{{ page }}
+					</a>
+				{% endfor %}
 
-				{% else %}
 
-					{% for page in num %}
-						<a class="{% if page == items.number %}active {% endif %}item" href="{% url uri page column order %}">
-							{{ page }}
-						</a>
-					{% endfor %}
-
+				{% if items.number < num|length|add:"-3" %}
+					<a class="disabled item">...</a>
+					<a href="{% url uri num|length %}?{{ get_params }}" class="item">{{ num|length }}</a>
 				{% endif %}
 
 				<div class="item float right">

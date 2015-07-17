@@ -1,7 +1,6 @@
 #!/bin/bash
 
-cd "${0%/*}"
-cd ../
+cd $(dirname $0)/../
 source env/bin/activate
 cd project/
 
@@ -15,10 +14,15 @@ case "$1" in
 		pkill gunicorn &
 		pkill celery & 
 		pkill python & 
-		pkill python3 & 
+		pkill python3 &
+		kill `ps ax| grep -v awk| awk '/celerycam/{print $1}'`
+		;;
+	restart)
+		./runproduction stop
+		./runproduction start
 		;;
 	*)
-		echo "Usage: rungunicorn {start|stop}"
+		echo "Usage: rungunicorn {start|stop|restart}"
 		exit 1
 		;;
 esac

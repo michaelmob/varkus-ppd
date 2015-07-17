@@ -25,7 +25,7 @@
 					</form>
 
 					<div class="six wide column">
-						<a href="{% url 'offers-priority' %}" class="ui fluid primary button">Edit Prioritized and Blocked Offers</a>
+						<a href="{% url 'offers-priority' %}" class="ui fluid primary button">Personalize Locker Offers</a>
 					</div>
 				</div>
 			</div>
@@ -39,24 +39,24 @@
 				</div>
 
 				<div class="content">
-					{% include 'offers/paginate.html' with items=offers uri='offers-page-sort' %}
+					{% include 'offers/paginate.html' with items=offers uri='offers-page' %}
 
 					<table class="ui sortable table">
 						<thead>
 							<tr>
-								<th data-sort="name" class="link name sort">Name</a></th>
-								<th data-sort="cat" class="link cat two wide">Category</th>
-								<th data-sort="ctry" class="link ctry one wide">Country</th>
-								<th data-sort="ua" 	class="link ua two wide">User Agent</th>
-								<th data-sort="epc" class="link epc one wide">EPC</th>
-								<th data-sort="pay" class="link pay one wide">Payout</th>
+								<th column="1" class="">Name</a></th>
+								<th column="2" class="two wide">Category</th>
+								<th column="3" class="one wide">Country</th>
+								<th column="4" class="two wide">User Agent</th>
+								<th column="5" class="one wide">EPC</th>
+								<th column="6" class="one wide">Payout</th>
 							</tr>
 						</thead>
 
 						<tbody>
 							{% if offers|length < 1 %}
 								<tr>
-									<td colspan="5">There are no offers...</td>
+									<td colspan="5">No offers found.</td>
 								</tr>
 							{% else %}
 								{% with cut_amount=user.profile.party.cut_amount %}
@@ -86,20 +86,54 @@
 							{% endif %}
 						</tbody>
 					</table>
+
+					{% include 'offers/paginate.html' with items=offers uri='offers-page' not_inverted=True %}
 				</div>
+
 			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	$(".ui.form").form();
-	$(".link.{{ column }}").addClass("sorted {{ order }}ending");
+	$(".submit.basic").click(function() {
+		$("form:first").submit();
+	});
 
-	$(".link").click(function() {
-		url = '{% url 'offers-page' offers.number %}" + $(this).attr("data-sort");
-		direction = $(this).hasClass("descending") ? "/asc/" : "/desc/";
-		window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};
+	//$(".ui.form").form();
+	var _arg = function(key) {
+		var r = new RegExp("[\?&]" + key + "=([^&#]*)").exec(window.location.href);
+		return r == null ? "" : r[1];
+	};
+
+	var _remove = function(value) {
+		var index = order.indexOf(value.toString());
+		if(index > -1) order.splice(index, 1);
+	};
+
+	var order = _arg("o").split(',');
+	if(order[0] == "") order.pop(0);
+
+	$.each(order, function(index, value) {
+		value = parseInt(value);
+		direction = value > 0 ? "ascending" : "descending";
+		$("th[column=" + Math.abs(value) + "]").addClass("sorted " + direction);
+	});
+
+
+	$("th").click(function() {
+		var value = parseInt($(this).attr("column"));
+
+		_remove(value);
+		_remove(value*-1);
+
+		if(!$(this).hasClass("descending"))
+			order.push($(this).hasClass("ascending") ? value*-1 : value);
+
+		url = "{% url 'offers-page' offers.number %}?o=" + order.join();
+		window.location = url{% if query|length > 0 %} + "&q={{ query }}"{% endif %};
 	});
 </script>
 {% endblock %}
+		//url = "{% url 'offers-page' offers.number %}" + $(this).attr("column");
+		//window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};

@@ -1,6 +1,6 @@
 /* Text */
 .s.wrap > h3:after {
-	content: "Complete one of the offers below to continue";
+	content: "Complete one of the easy offers below to continue";
 }
 
 .s.wrap > h3 {
@@ -49,6 +49,11 @@
 .s.wrap > a > .icon ~ .anchor {
 	display: table-cell;
 	vertical-align: middle;
+}
+
+/* Pagination */
+.s.wrap > .s.pagination.container {
+	text-align: center;
 }
 
 /* Offer Category Icon */
