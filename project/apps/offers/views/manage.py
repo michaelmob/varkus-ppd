@@ -1,15 +1,17 @@
 from urllib.parse import unquote
 
+from django.http import JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.db.models import Q
 
 from ..models import Offer
 from ..forms import Form_Offer
 
 from utils import paginate
-from utils import charts as Charts
+from utils import charts
 
 offer_list_columns = [
 	"name", "category", "flag", "user_agent",
@@ -66,15 +68,6 @@ def offer(request, id=None):
 	except Offer.DoesNotExist:
 		return redirect("offers")
 
-	# Cache Offer Leads
-	key = "charts__offer_%s" % id
-	chart = cache.get(key)
-
-	if (not chart):
-		leads = offer.earnings.get_leads()
-		chart = Charts.line_chart_lead_count(leads)
-		cache.set(key, chart, 3600)
-
 	# Get initial
 	if offer in request.user.profile.offer_block.all():
 		priority = "1"
@@ -105,10 +98,23 @@ def offer(request, id=None):
 	return render(
 		request, "offers/manage.html",
 		{
+			"data_url": reverse("offers-manage-line-chart", args=[offer.pk]),
 			"offer": offer,
-			"line_chart": chart,
 			"form": form
 		}
+	)
+
+
+def line_chart(request, id=None):
+	try:
+		obj = Offer.objects.get(id=id)
+	except Offer.DoesNotExist:
+		return JsonResponse({"data": None})
+
+	return charts.line_chart_view(
+		"charts__offer_%s" % obj.pk,
+		lambda: obj.earnings.get_leads(),
+		no_earnings=True
 	)
 
 

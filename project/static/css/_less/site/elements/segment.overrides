@@ -4,6 +4,7 @@
 
 .ui.segment.box {
 	padding: 0 !important;
+	margin: 0 !important;
 
 	> .title {
 		cursor: default;

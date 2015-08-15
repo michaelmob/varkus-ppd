@@ -16,7 +16,7 @@ var flotOptions = {
 		radius: 2,
 		symbol: "circle"
 	},
-	colors: ["#1cb842", "#2185d0", "#f44336"],
+	colors: ["#f44336", "#2185d0", "#1cb842"],
 	shadowSize: 0,
 	yaxis: {
 		tickSize: 1,

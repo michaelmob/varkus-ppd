@@ -4,22 +4,27 @@ from django.http import JsonResponse
 from django.core.cache import cache
 
 
-def line_chart_dict(objects):
+def line_chart_dict(objects, no_earnings=False):
 	chart = []
 	chart_dict = {x: [0.0, 0, 0] for x in range(24)}
 
 	for obj in objects:
 		key = (obj.date_time).hour
 
-		# If already exists just add onto the payment
-		if key in chart_dict:
-			chart_dict[key][0] += float(obj.user_payout)
+		if not no_earnings:
+			# If already exists just add onto the payment
+			if key in chart_dict:
+				chart_dict[key][0] += float(obj.user_payout)
 
-		# Otherwise add the payment to the dict
-		else:
-			chart_dict[key][0] = float(obj.user_payout)
+			# Otherwise add the payment to the dict
+			else:
+				chart_dict[key][0] = float(obj.user_payout)
 
+		# Leads
 		chart_dict[(obj.date_time).hour][1] += 1
+
+		# Clicks
+		#chart_dict[(obj.date_time).hour][2] += 1
 
 	for key, value in chart_dict.items():
 		chart.append((key, value[0], value[1], value[2]))
@@ -62,7 +67,7 @@ def map_chart_dict(objects):
 	return chart
 
 
-def line_chart_view(key, func):
+def line_chart_view(key, func, no_earnings=False):
 	data = cache.get(key)
 	
 	if (not data):
@@ -73,9 +78,9 @@ def line_chart_view(key, func):
 
 	return JsonResponse({
 		"data": [
-			{"label": "Earnings", "data": data[0]},
-			{"label": "Leads", "data": data[1]},
 			{"label": "Clicks", "data": data[2]},
+			{"label": "Leads", "data": data[1]},
+			{"label": "Earnings", "data": data[0]} if not no_earnings else {},
 		],
 	})
 

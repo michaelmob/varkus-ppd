@@ -29,8 +29,10 @@
 }
 
 .ui.main.menu {
+	height: 47px !important;
+
 	.item.header {
-		height: 46px;
+		height: 47px;
 	}
 }
 

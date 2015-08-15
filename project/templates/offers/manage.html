@@ -167,24 +167,8 @@
 		</div>
 
 		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="line chart icon"></i>
-					Today
-				</div>
-				<div class="content">
-					<div class="ui inverted active line dimmer">
-						<div class="ui text loader"></div>
-					</div>
-
-					<div class="line chart container"></div>
-				</div>
-			</div>
+			{% include 'cp/common/line_chart.html' %}
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="{% static 'js/pages/charts.js' %}"></script>
-<script>$(window).resize(function() { draw_line_chart_leads($(".line.chart.container"), [{{ line_chart|safe }}], true); });</script>
 {% endblock %}

@@ -9,44 +9,17 @@ urlpatterns = [
 	url(r"^output/$", output.public, name="offers-output"),
 
 	# Staff Offer Management
-	url(
-		r"^sync/",
-		sync.adgate,
-		name="offers-sync-adgate"
-	),
+	url(r"^sync/", sync.adgate, name="offers-sync-adgate"),
 
 	# Redirect
-	url(
-		r"^redirect/(?P<id>[0-9]+)/(?P<token>\w+)/$",
-		redirect.redirect,
-		name="offers-redirect"
-	),
-
+	url(r"^redirect/(?P<id>[0-9]+)/(?P<token>\w+)/$", redirect.redirect, name="offers-redirect"),
 
 	# Offer Management
-	url(
-		r"^$",
-		login_required(manage.list),
-		name="offers"
-	),
-
-	url(
-		r"^(?P<page>[0-9]+)/$",
-		login_required(manage.list),
-		name="offers-page"
-	),
-
-	url(
-		r"^manage/(?P<id>[0-9]+)/$",
-		login_required(manage.offer),
-		name="offers-manage"
-	),
-
+	url(r"^$", login_required(manage.list), name="offers"),
+	url(r"^(?P<page>[0-9]+)/$", login_required(manage.list), name="offers-page"),
+	url(r"^manage/(?P<id>[0-9]+)/$", login_required(manage.offer), name="offers-manage"),
+	url(r"^manage/(?P<id>[0-9]+)/chart/line.json$", login_required(manage.line_chart), name="offers-manage-line-chart"),
 
 	# Priority
-	url(
-		r"^manage/$",
-		login_required(manage.priority),
-		name="offers-priority"
-	),
+	url(r"^manage/$", login_required(manage.priority), name="offers-priority"),
 ]
