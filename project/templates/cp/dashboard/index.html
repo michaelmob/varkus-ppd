@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="column">
-				{% include 'cp/common/line_chart.html' %}
+				{% include 'cp/common/line_chart.html' with data_url='/dashboard/chart/line.json' %}
 			</div>
 		</div>
 
@@ -42,17 +42,8 @@
 		{% endwith %}
 
 		<div class="six wide column">
-			{% include 'cp/common/map_chart.html' %}
+			{% include 'cp/common/map_chart.html' with data_url='/dashboard/chart/map.json' %}
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="{% static 'js/pages/charts.js' %}"></script>
-<script>
-$(window).resize(function() {
-	draw_line_chart($(".line.chart.container"), [{{ hour_chart|safe }}]);
-	draw_map_chart($(".map.chart.container"), [{{ map_chart|safe }}]);
-});
-</script>
 {% endblock %}

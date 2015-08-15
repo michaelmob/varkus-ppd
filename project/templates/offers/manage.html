@@ -186,5 +186,5 @@
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="{% static 'js/pages/charts.js' %}"></script>
-<script>$(window).resize(function() { draw_line_chart_leads($(".line.chart.container"), [{{ hour_chart|safe }}], true); });</script>
+<script>$(window).resize(function() { draw_line_chart_leads($(".line.chart.container"), [{{ line_chart|safe }}], true); });</script>
 {% endblock %}

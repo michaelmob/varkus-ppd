@@ -196,7 +196,8 @@ def receive(request, password=None):
 
 		# Clear User/Locker Cache
 		cache.delete_many([
-			"charts__user_%s" % user.id,
+			"charts_line__user_%s" % user.id,
+			"charts_map__user_%s" % user.id,
 			"recent__user_%s" % user.id,
 			"charts__%s_%s" % locker_reference,
 			"leads__%s_%s" % locker_reference

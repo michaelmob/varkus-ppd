@@ -120,20 +120,17 @@
 		$("th[column=" + Math.abs(value) + "]").addClass("sorted " + direction);
 	});
 
-
 	$("th").click(function() {
 		var value = parseInt($(this).attr("column"));
 
 		_remove(value);
 		_remove(value*-1);
 
-		if(!$(this).hasClass("descending"))
-			order.push($(this).hasClass("ascending") ? value*-1 : value);
+		if(!$(this).hasClass("ascending"))
+			order.unshift($(this).hasClass("descending") ? value : value*-1);
 
 		url = "{% url 'offers-page' offers.number %}?o=" + order.join();
 		window.location = url{% if query|length > 0 %} + "&q={{ query }}"{% endif %};
 	});
 </script>
 {% endblock %}
-		//url = "{% url 'offers-page' offers.number %}" + $(this).attr("column");
-		//window.location = url + direction{% if query|length > 0 %} + "?q={{ query }}"{% endif %};

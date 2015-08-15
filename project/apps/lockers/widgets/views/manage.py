@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from ..forms import Widget_Create, Widget_Edit
 from ..models import Widget
 
-from utils import charts as Charts
+from utils import charts
 from utils import paginate, cache2
 
 
@@ -25,6 +26,18 @@ def display(request, page=1):
 			"MAX_WIDGETS": settings.MAX_WIDGETS,
 			"form": Widget_Create()
 		}
+	)
+
+
+def line_chart(request, code):
+	try:
+		obj = Widget.objects.get(user=request.user, code=code)
+	except Widget.DoesNotExist:
+		return JsonResponse({"data": None})
+
+	return charts.line_chart_view(
+		"charts__widget_%s" % obj.pk,
+		lambda: obj.earnings.get_leads()
 	)
 
 
@@ -96,7 +109,6 @@ def manage(request, code=None):
 
 	# Cache
 	leads = cache2.get("leads__widget_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
-	chart = cache2.get("charts__widget_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
 	url = request.build_absolute_uri(reverse("widgets-locker", args=[obj.code]))
 
@@ -104,10 +116,10 @@ def manage(request, code=None):
 		request,
 		"lockers/widgets/manage/manage.html",
 		{
+			"data_url": reverse("widgets-manage-line-chart", args=[obj.code]),
 			"form": form,
 			"leads": leads,
 			"obj": obj,
-			"chart": chart,
 			"url": url
 		}
 	)

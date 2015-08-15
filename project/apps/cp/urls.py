@@ -9,6 +9,9 @@ urlpatterns = [
 
 	url(r"^staff/info/$", login_required(dashboard.staff_info), name="staff-info"),
 
+	url(r"^dashboard/chart/line.json$", login_required(dashboard.line_chart), name="dashboard-chart-line"),
+	url(r"^dashboard/chart/map.json$", login_required(dashboard.map_chart), name="dashboard-chart-map"),
+
 	url(r"^dashboard/leads/$", login_required(leads.index), name="leads"),
 	url(r"^dashboard/leads/poll/$", login_required(leads.poll), name="leads-poll"),
 ]

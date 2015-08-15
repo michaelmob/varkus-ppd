@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="ui segment box">
 	<div class="title">
 		<i class="map icon"></i>
@@ -11,3 +13,7 @@
 		<div class="map chart container"></div>
 	</div>
 </div>
+
+<script type="text/javascript">var dataUrl = "{{ data_url }}";</script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static 'js/charts/map.js' %}"></script>

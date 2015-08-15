@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from ..forms import List, List_Create, List_Edit
 
-from utils import charts as Charts
+from utils import charts
 from utils import paginate, cache2
 
 
@@ -24,6 +25,18 @@ def display(request, page=1):
 			"MAX_LISTS": settings.MAX_LISTS,
 			"form": List_Create()
 		}
+	)
+
+
+def line_chart(request, code):
+	try:
+		obj = List.objects.get(user=request.user, code=code)
+	except List.DoesNotExist:
+		return JsonResponse({"data": None})
+
+	return charts.line_chart_view(
+		"charts__list_%s" % obj.pk,
+		lambda: obj.earnings.get_leads()
 	)
 
 
@@ -96,7 +109,6 @@ def manage(request, code=None):
 
 	# Cache
 	leads = cache2.get("leads__list_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
-	chart = cache2.get("charts__list_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
 	url = request.build_absolute_uri(reverse("lists-locker", args=[obj.code]))
 
@@ -104,10 +116,10 @@ def manage(request, code=None):
 		request,
 		"lockers/lists/manage/manage.html",
 		{
+			"data_url": reverse("lists-manage-line-chart", args=[obj.code]),
 			"form": form,
 			"leads": leads,
 			"obj": obj,
-			"chart": chart,
 			"url": url
 		}
 	)

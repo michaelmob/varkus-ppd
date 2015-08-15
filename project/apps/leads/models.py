@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from utils import strings
 from geoip import lookup
 
+#from ..lockers.models import Earnings_Base
 from ..lockers.utils import Locker
 
 
@@ -148,13 +149,11 @@ class Lead(models.Model):
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
 	date_time			= models.DateTimeField()
 
-
 	def locker_object(self):
 		try:
 			return Locker(self.locker).objects.get(id=self.locker_id)
 		except:
 			return None
-
 
 	def create(
 		offer,

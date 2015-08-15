@@ -1,6 +1,8 @@
-from django.db import models, connection
 from decimal import Decimal, getcontext
 from datetime import timedelta, date
+
+from django.db import models, connection
+from django.core.urlresolvers import reverse
 
 import apps.leads
 from apps.billing.models import Billing
@@ -49,7 +51,6 @@ class Earnings_Base(models.Model):
 	real_month	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	
-
 	def reset_today(self):
 		print("Reset Today")
 		cursor = connection.cursor()

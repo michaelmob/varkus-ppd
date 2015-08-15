@@ -1,9 +1,11 @@
+{% load static %}
+
 <div class="ui segment box">
 	<div class="title">
 		<i class="line chart icon"></i>
 		Activity
 	</div>
-	<div class="content">
+	<div class="padded content">
 		<div class="ui inverted active line dimmer">
 			<div class="ui text loader"></div>
 		</div>
@@ -11,3 +13,9 @@
 		<div class="line chart container"></div>
 	</div>
 </div>
+
+<script type="text/javascript">var dataUrl = "{{ data_url }}";</script>
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.tooltip.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.resize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/charts/line.js' %}"></script>

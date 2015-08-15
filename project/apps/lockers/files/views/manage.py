@@ -9,7 +9,7 @@ from django.conf import settings
 from ..models import File
 from ..forms import File_Edit
 
-from utils import charts as Charts
+from utils import charts
 from utils import paginate, cache2
 
 
@@ -27,6 +27,18 @@ def display(request, page=1):
 	)
 
 
+def line_chart(request, code):
+	try:
+		obj = File.objects.get(user=request.user, code=code)
+	except File.DoesNotExist:
+		return JsonResponse({"data": None})
+
+	return charts.line_chart_view(
+		"charts__file_%s" % obj.pk,
+		lambda: obj.earnings.get_leads()
+	)
+
+
 def delete(request, code=None):
 	File.objects.filter(user=request.user, code=code).delete()
 	messages.success(request, "Your file has been deleted.")
@@ -36,7 +48,7 @@ def delete(request, code=None):
 def upload(request):
 	return render(
 		request, "lockers/files/upload.html",
-		{ "MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE }
+		{"MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE}
 	)
 
 
@@ -66,7 +78,6 @@ def manage(request, code=None):
 
 	# Cache
 	leads = cache2.get("leads__file_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
-	chart = cache2.get("charts__file_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
 	url = request.build_absolute_uri(reverse("files-locker", args=[obj.code]))
 
@@ -74,10 +85,10 @@ def manage(request, code=None):
 		request,
 		"lockers/files/manage/manage.html",
 		{
+			"data_url": reverse("files-manage-line-chart", args=[obj.code]),
 			"form": form,
 			"obj": obj,
 			"leads": leads,
-			"chart": chart,
 			"url": url
 		}
 	)

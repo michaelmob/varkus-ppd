@@ -50,6 +50,10 @@
 		padding: 0.8rem;
 	}
 
+	> .content.half.padded {
+		padding: 0.4rem;
+	}
+
 	> .content.no.min.height {
 		min-height: 0;
 	}

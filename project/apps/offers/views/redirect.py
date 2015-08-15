@@ -22,11 +22,9 @@ def redirect(request, id=None, token=None):
 	except:
 		aff_id = settings.DEFAULT_AFFILIATE_ID
 
-	url = str(offer.tracking_url)						\
+	url = str(offer.tracking_url)					\
 			.replace("{o}", str(offer.offer_id))	\
 			.replace("{a}", str(aff_id))			\
 			.replace("{u}", str(token.unique))
-
-	print(url)
 
 	return _redirect(url)

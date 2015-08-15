@@ -7,7 +7,7 @@ def get(ip_address):
 
 def country(ip_address):
 	return get(ip_address).country.iso_code
-	
+
 
 def country_region(ip_address):
 	obj = get(ip_address)

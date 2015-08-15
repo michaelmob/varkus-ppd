@@ -50,8 +50,8 @@ from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# SECURITY WARNING: don"t run with debug turned on in production! 
-DEBUG = socket.gethostname() == "pc"
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = socket.gethostname() == "michael-pc"
 
 if DEBUG:
 	from .private.development import *

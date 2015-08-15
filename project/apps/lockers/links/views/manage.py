@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from ..forms import Link_Create, Link_Edit
 from ..models import Link
 
-from utils import charts as Charts
+from utils import charts
 from utils import paginate, cache2
 
 
@@ -25,6 +26,18 @@ def display(request, page=1):
 			"MAX_LINKS": settings.MAX_LINKS,
 			"form": Link_Create()
 		}
+	)
+
+
+def line_chart(request, code):
+	try:
+		obj = Link.objects.get(user=request.user, code=code)
+	except Link.DoesNotExist:
+		return JsonResponse({"data": None})
+
+	return charts.line_chart_view(
+		"charts__link_%s" % obj.pk,
+		lambda: obj.earnings.get_leads()
 	)
 
 
@@ -86,7 +99,6 @@ def manage(request, code=None):
 
 	# Cache
 	leads = cache2.get("leads__link_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
-	chart = cache2.get("charts__link_%s" % obj.pk, lambda: Charts.hour_chart(obj.earnings.get_leads()))
 
 	url = request.build_absolute_uri(reverse("links-locker", args=[obj.code]))
 
@@ -94,10 +106,10 @@ def manage(request, code=None):
 		request,
 		"lockers/links/manage/manage.html",
 		{
+			"data_url": reverse("links-manage-line-chart", args=[obj.code]),
 			"form": form,
 			"leads": leads,
 			"obj": obj,
-			"chart": chart,
 			"url": url
 		}
 	)

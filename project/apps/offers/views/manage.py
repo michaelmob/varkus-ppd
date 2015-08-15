@@ -35,8 +35,6 @@ def list(request, page=1):
 			except:
 				pass
 
-	print(order)
-
 	get_params = request.GET.urlencode().replace("%2C", ",")
 
 	if query:
@@ -74,7 +72,7 @@ def offer(request, id=None):
 
 	if (not chart):
 		leads = offer.earnings.get_leads()
-		chart = Charts.hour_chart_lead_count(leads)
+		chart = Charts.line_chart_lead_count(leads)
 		cache.set(key, chart, 3600)
 
 	# Get initial
@@ -108,7 +106,7 @@ def offer(request, id=None):
 		request, "offers/manage.html",
 		{
 			"offer": offer,
-			"hour_chart": chart,
+			"line_chart": chart,
 			"form": form
 		}
 	)

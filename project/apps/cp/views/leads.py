@@ -4,8 +4,9 @@ from ...leads.models import Lead
 
 from utils import cache2
 
+
 def index(request):
-	return render(request, "cp/leads/index.html", { })
+	return render(request, "cp/leads/index.html", {})
 
 
 def poll(request):

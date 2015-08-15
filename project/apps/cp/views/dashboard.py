@@ -1,56 +1,37 @@
 from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.admin.views.decorators import staff_member_required
 from ...leads.models import Lead
 from ...offers.models import Offer
 
-from utils import charts as Charts
+from utils import charts
 from utils import cache2
 
 
-'''def index(request):
-	# Cache Newest Offers
-	offers = cache2.get(
-		"newest_offers",
-		lambda: Offer.objects.order_by('-date')[:10]
-	)
-
-	# Cache Most Recent Leads
-	leads = cache2.get(
-		"recent__user_%s" % request.user.id,
-		lambda: Lead.objects.filter(
-			lead_blocked=False, user=request.user
-		).order_by("-date_time")[:10]
-	)
-
-	return render(request, "cp/dashboard/index.html", {
-		"offers": offers,
-		"leads": leads,
-	})
-'''
-
 def index(request):
-	# Cache Charts
-	key = "charts__user_%s" % request.user.id
-	chart = cache.get(key)
-
-	if (not chart):
-		leads = request.user.earnings.get_leads()
-		chart = [Charts.hour_chart(leads), Charts.map_chart(leads)]
-		cache.set(key, chart, 3600)
-
-	# Cache Newest OFfers
+	# Cache Newest Offers and Recent Leads
 	offers = cache2.get("newest_offers", lambda: Offer.objects.order_by('-date')[:5])
-
-	# Cache Most Recent Leads
 	leads = cache2.get("recent__user_%s" % request.user.id, lambda: Lead.objects.filter(lead_blocked=False, user=request.user).order_by("-date_time")[:5])
 
 	return render(request, "cp/dashboard/index.html", {
-		"hour_chart": chart[0],
-		"map_chart": chart[1],
 		"offers": offers,
 		"leads": leads,
 	})
+
+
+def line_chart(request):
+	return charts.line_chart_view(
+		"charts_line__user_%s" % request.user.id,
+		lambda: request.user.earnings.get_leads()
+	)
+
+
+def map_chart(request):
+	return charts.map_chart_view(
+		"charts_map__user_%s" % request.user.id,
+		lambda: request.user.earnings.get_leads()
+	)
 
 
 @staff_member_required

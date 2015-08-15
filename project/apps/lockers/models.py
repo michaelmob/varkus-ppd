@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.urlresolvers import reverse
-from ..cp.models import Earnings_Base
 from utils import strings
 
+from apps.cp.models import Earnings_Base
 
 ''' Base for Lockers '''
 class Locker_Base(models.Model):

@@ -1,0 +1,25 @@
+{
+	"build_systems":
+	[
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "/home/michael/Dropbox/Workspace/Python/Django/siren/env/bin/python -u \"$file\""
+		}
+	],
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"env"
+			],
+			"path": "/home/michael/Dropbox/Workspace/Python/Django/siren"
+		}
+	],
+	"settings":
+	{
+		"python_interpreter": "/home/michael/Dropbox/Workspace/Python/Django/siren/env/bin/python"
+	}
+}
