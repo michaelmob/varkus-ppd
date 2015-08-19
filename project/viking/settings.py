@@ -1,7 +1,7 @@
 """
-Siren 1.0.3
+Viking 1.0.3
 
-Django settings for Siren project.
+Django settings for Viking project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.8/topics/settings/
@@ -51,7 +51,7 @@ from datetime import timedelta
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = socket.gethostname() == "michael-pc"
+DEBUG = socket.gethostname() == "pc"
 
 if DEBUG:
 	from .private.development import *
@@ -102,17 +102,17 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.messages.middleware.MessageMiddleware",
 	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
-	"siren.middleware.cloudflare.CFMiddleware",
+	"viking.middleware.cloudflare.CFMiddleware",
 )
 
 AUTHENTICATION_BACKENDS = (
-	"siren.backends.auth.CaseInsensitiveModelBackend",
+	"viking.backends.auth.CaseInsensitiveModelBackend",
 	"django.contrib.auth.backends.ModelBackend",
 )
 
-ROOT_URLCONF = "siren.urls"
+ROOT_URLCONF = "viking.urls"
 
-WSGI_APPLICATION = "siren.wsgi.application"
+WSGI_APPLICATION = "viking.wsgi.application"
 
 # Cache
 CACHES = {

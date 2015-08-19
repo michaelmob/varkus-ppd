@@ -7,22 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "project/apps/lockers/lists/views/manage.py",
-			"settings":
-			{
-				"buffer_size": 3031,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "project/static/js/charts/map.js",
-			"settings":
-			{
-				"buffer_size": 1270,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -31,10 +15,34 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 400.0,
-		"last_filter": "",
+		"height": 179.0,
+		"last_filter": "build",
 		"selected_items":
 		[
+			[
+				"build",
+				"Build: New Build System"
+			],
+			[
+				"color pick",
+				"Color Picker"
+			],
+			[
+				"",
+				"Color Picker"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
 			[
 				"preference",
 				"Preferences: Settings - User"
@@ -64,14 +72,6 @@
 				"Anaconda: Show error list"
 			],
 			[
-				"menu",
-				"View: Toggle Menu"
-			],
-			[
-				"install",
-				"Package Control: Install Package"
-			],
-			[
 				"install ",
 				"Package Control: Install Package"
 			],
@@ -86,10 +86,6 @@
 			[
 				"reidne",
 				"Indentation: Reindent Lines"
-			],
-			[
-				"remove",
-				"Package Control: Remove Package"
 			],
 			[
 				"error",
@@ -163,55 +159,63 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/home/michael/Dropbox/Workspace/Python/Django/siren",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/files/views/__pycache__",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/links/views",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/widgets",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/widgets/views",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/pages",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/charts",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/scripts"
-	],
 	"file_history":
 	[
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/viking.sublime-project",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/.gitignore",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/contributors.txt",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/siren.sublime-project",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/viking.sublime-workspace",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/project/apps/offers/models.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/viking/project/apps/cp/models.py",
+		"/home/michael/.config/sublime-text-3/Installed Packages/base16-eighties.dark.tmTheme",
+		"/home/michael/.config/sublime-text-3/Installed Packages/brogrammer.tmTheme",
+		"/home/michael/.config/sublime-text-3/Installed Packages/Brogrammer.sublime-theme",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/utils/files.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/billing/tasks.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/.gitignore",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/site/collections/menu.overrides",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/site/elements/segment.overrides",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/semantic.less",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/theme.less",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/theme.config",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/lockers/links/manage/manage.html",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/offers/manage.html",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/offers/views/manage.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/utils/charts.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/charts/line.js",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/scripts/less",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/lists/views/manage.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp/common/line_chart.html",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/offers/urls.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/links/views/manage.py",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/charts/map.js",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/contributors.txt",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/siren.sublime-project",
+		"/home/michael/Dropbox/Workspace/Python/Django/siren/siren.sublime-workspace",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/widgets/views/manage.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/lockers/widgets/manage/manage.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/forms/widgets-manage.js",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/files/views/manage.py",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/charts/line.js",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/lockers/files/manage/manage.html",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp/common/line_chart.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/cp/models.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/urls.py",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/lockers/lists/views/manage.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/leads/views/postback.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp/common/map_chart.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp/dashboard/index.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/cp/views/dashboard.py",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/utils/charts.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/utils/cache2.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/siren/urls.py",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/charts/map.js",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/api/views/postback.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/pages/cp.css",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/cp/dashboard/sections/referral.html",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_less/site/elements/segment.overrides",
 		"/home/michael/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/generic.html",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/offers/views/manage.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/pages/map-chart.js",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/css/_compile.sh",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/forms/files-manage.js",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/cp/urls.py",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/offers/manage.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/cp/views/leads.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/templates/offers/list.html",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/static/js/cp.js",
@@ -227,7 +231,6 @@
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/geoip/lookup.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/offers/views/redirect.py",
 		"/mnt/HDD/Untitled Document",
-		"/home/michael/Dropbox/Workspace/Python/Django/siren/siren.sublime-project",
 		"/mnt/HDD/cc.txt",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/siren/_private/production.py",
 		"/home/michael/Dropbox/Workspace/Python/Django/siren/project/apps/offers/models.py",
@@ -279,6 +282,32 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"sync",
+			"siren",
+			"gutter",
+			"background",
+			"increment_c",
+			"shared_",
+			"click",
+			"add_click",
+			".ui.segment.box",
+			".ui.segment",
+			".box",
+			".main.menu",
+			"line_chart.html",
+			"line_chart",
+			"dataUrl",
+			"offer-manage",
+			"data_url",
+			"chart/line",
+			"charts/line",
+			"charts/json",
+			"chart/json",
+			"line_chart_view",
+			"line_chart",
+			"draw_line_chart_leads",
+			"line_chart",
+			"Siren",
 			"data_url=",
 			"dataUrl=",
 			"line_chart.html",
@@ -359,67 +388,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "project/apps/lockers/lists/views/manage.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3031,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1934,
-								1934
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1122.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "project/static/js/charts/map.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1270,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								676,
-								676
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -480,16 +450,32 @@
 		"selected_items":
 		[
 			[
+				"line.js",
+				"project/static/js/charts/line.js"
+			],
+			[
+				"offermana",
+				"project/templates/offers/manage.html"
+			],
+			[
+				"offermanage.py",
+				"project/apps/offers/views/manage.py"
+			],
+			[
+				"offersmana",
+				"project/apps/offers/views/manage.py"
+			],
+			[
+				"offersviewsmanage",
+				"project/apps/offers/views/manage.py"
+			],
+			[
 				"map.js",
 				"project/static/js/charts/map.js"
 			],
 			[
 				"widgetmanage",
 				"project/apps/lockers/widgets/views/manage.py"
-			],
-			[
-				"line.js",
-				"project/static/js/charts/line.js"
 			],
 			[
 				"filemanage",
@@ -597,17 +583,21 @@
 	},
 	"select_symbol":
 	{
-		"height": 214.0,
-		"last_filter": "manage",
+		"height": 74.0,
+		"last_filter": "Earnings_ba",
 		"selected_items":
 		[
 			[
-				"manage",
-				"manage"
+				"Earnings_ba",
+				"Earnings_Base"
 			],
 			[
 				"line_chart",
-				"line_chart"
+				"line_chart_dict"
+			],
+			[
+				"manage",
+				"manage"
 			],
 			[
 				"get_leads",
@@ -644,7 +634,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 244.0,
+	"side_bar_width": 199.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

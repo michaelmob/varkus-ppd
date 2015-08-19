@@ -16,7 +16,7 @@ def test():
 	"Test"
 
 CELERYBEAT_SCHEDULE = {
-	#"test":	{"task": "siren.beat", "schedule": crontab()},
+	#"test":	{"task": "viking.beat", "schedule": crontab()},
 
 	# Offer Sync
 	"offer-sync"		: 	{	"task": "apps.offers.tasks.sync", 			"schedule": half	},

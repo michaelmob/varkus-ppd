@@ -6,8 +6,8 @@ cd project/
 
 case "$1" in
 	start)
-		gunicorn --workers=4 siren.wsgi &
-		celery worker --app=siren --beat --events --loglevel=INFO &
+		gunicorn --workers=4 viking.wsgi &
+		celery worker --app=viking --beat --events --loglevel=INFO &
 		../scripts/manage celerycam --frequency=30.0 &
 		;;
 	stop)

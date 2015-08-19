@@ -31,44 +31,21 @@ class Offer(models.Model):
 	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	difference				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 	tracking_url 			= models.CharField(max_length=300)
-	clicks 					= models.IntegerField(default=0)
 	date 					= models.DateField()
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.name)
 
-	""" Add click if unique """
-	def increment_clicks(self, ip_address):
-		key = "clicks__o%s" % self.id
-		clicks = cache.get(key)
-
-		if not clicks:
-			clicks = []
-		elif ip_address in clicks:
-			return False
-
-		clicks.append(ip_address)
-
-		if(len(clicks) >= 5):
-			clicks.pop(0)
-
-		cache.set(key, clicks)
-
-		self.clicks += 1
-		self.save()
-
-		return True
-
-	""" Get offer by its id from the ad company """
 	def get_by_offer_id(offer_id):
+		""" Get offer by its id from the ad company """
 		try:
 			return Offer.objects.get(offer_id=offer_id)
 		except Offer.DoesNotExist:
 			return None
-		
-	""" Picks the flag for the offer, if it above 10 then
-		use intl, otherwise US if under 10 with US in it """
+
 	def pick_flag(country):
+		""" Picks the flag for the offer, if it above 10 then
+			use intl, otherwise US if under 10 with US in it """
 		countries = country.lower().split(',')
 		count = len(countries)
 
@@ -81,9 +58,10 @@ class Offer(models.Model):
 		else:
 			return countries[0]
 
-	""" Clean the name from the useless shit
-		that the ad company gives """
 	def clean_name(dirty):
+		""" Clean the name from the useless shit
+			that the ad company gives """
+
 		dirty = str(dirty).split('(')[0]
 
 		if dirty.endswith("- "):
@@ -91,11 +69,11 @@ class Offer(models.Model):
 
 		return dirty
 
-	""" Create offer with arguments """
 	def create(
 		id, name, anchor, requirements, user_agent, category,
 		earnings_per_click, country, payout, tracking_url
 	):
+		""" Create offer with arguments """
 		obj = Offer.objects.create(
 			offer_id				= id,
 			name					= Offer.clean_name(name),
@@ -118,49 +96,48 @@ class Offer(models.Model):
 
 		return obj
 
-	""" Get offers by request only """
 	def offers_request(
 		request, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
+		""" Get offers by request only """
 		return Offer.get(
 			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
 			count, min_payout, offer_priority, offer_block
 		)
 
-	""" Get offers by locker object """
-	def get_locker_request(
-		request, locker_obj, count=5, min_payout=0.01
-	):
+	def get_locker_request(request, locker_obj, count=5, min_payout=0.01):
+		""" Get offers by locker object """
 		user = locker_obj.user.profile
 		return Offer.offers_request(
 			request, count, min_payout, user.offer_priority, user.offer_block
 		)
 
-	""" Get offers by using the request to retrieve the token,
-		user_agent, and user. then if already retrieved... serve
-		from cache (this is the one you want to use from a view)
-		[call token item .renew() its cached offers] """
 	def get_locker_request_cache(request, locker_obj, count=5, min_payout=0.01):
+		""" Get offers by using the request to retrieve the token,
+			user_agent, and user. then if already retrieved... serve
+			from cache (this is the one you want to use from a view)
+			[call token item .renew() its cached offers] """
+
 		token = Token.get_or_create_request(request, locker_obj).unique
 
 		# Get Offers
-		offers = cache.get("token__" + token)
+		offers = cache.get("t_" + token)
 
 		# If no offers then get and set them
 		if not offers:
 			offers = Offer.get_locker_request(
 				request, locker_obj, count, min_payout)
 
-			cache.set("token__" + token, offers, 300)  # Cache for 5 minutes
+			cache.set("t_" + token, offers, 300)  # Cache for 5 minutes
 			
 		return Combo(offers, token)
 
-	""" Get offers with a bunch of customizable arguments """
 	def get_basic_ex(
 		count, category, country, user_agent=None, min_payout=0.01,
 		offer_block=[], offer_exclude=[], extra={}
 	):
+		""" Get offers with a bunch of customizable arguments """
 
 		args = (Q(user_agent=""),)
 
@@ -169,7 +146,6 @@ class Offer(models.Model):
 				Q(user_agent__icontains=user_agent) |
 				Q(user_agent=""),
 			)
-
 		
 		return Offer.objects\
 			.filter(
@@ -184,21 +160,21 @@ class Offer(models.Model):
 			.exclude(pk__in=offer_exclude)\
 			.order_by("-earnings_per_click")[:count]
 		
-	""" Get offers without extra arguments """
 	def get_basic(
 		count, category, country, user_agent=None, min_payout=0.01,
 		offer_block=[], offer_exclude=[]
 	):
+		""" Get offers without extra arguments """
 		return Offer.get_basic_ex(
 			count, [category], country, user_agent,
 			min_payout, offer_block, offer_exclude
 		)
 			
-	""" Get offers randomly """
 	def get_random(
 		count, country, user_agent=None, min_payout=0.01,
 		offer_block=None, offer_exclude=[]
 	):
+		""" Get offers randomly """
 		args = (Q(user_agent=""),)
 
 		if user_agent:
@@ -218,14 +194,15 @@ class Offer(models.Model):
 			.exclude(pk__in=offer_exclude)\
 			.order_by("?")[:count]
 
-	""" Get offers with ip_address and user_agent,
-		geoip tells what country the ip_address is
-		of and selects specific offers with user_agents
-		that correspond to given user_agent """
 	def get(
 		ip_address, user_agent, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
+		""" Get offers with ip_address and user_agent,
+			geoip tells what country the ip_address is
+			of and selects specific offers with user_agents
+			that correspond to given user_agent """
+
 		user_agent = get_ua(user_agent)
 		
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
@@ -322,8 +299,9 @@ class Offer(models.Model):
 
 		return _offers[:count]
 
-	""" Countries to List """
 	def get_countries(self):
+		""" Countries to List """
+
 		d = dict(countries)
 		r = {}
 
@@ -335,8 +313,9 @@ class Offer(models.Model):
 
 		return r
 
-	""" Get country name from code """
 	def get_country(self):
+		""" Get country name from code """
+
 		if self.flag == "intl":
 			return "International"
 

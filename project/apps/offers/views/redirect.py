@@ -14,7 +14,7 @@ def redirect(request, id=None, token=None):
 		# Offer doesn't exist
 		return _redirect("home")
 
-	offer.increment_clicks(request.META.get("REMOTE_ADDR"))
+	offer.earnings.increment_clicks(request.META.get("REMOTE_ADDR"))
 
 	# Check if there's an Affiliate ID override in settings.py
 	try:

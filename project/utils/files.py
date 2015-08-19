@@ -20,7 +20,8 @@ def check_image(image):
 
 		# If "image" is not in the kb then it's not an image
 		magic = Magic()
-		if not "image" in str(magic.from_buffer(kb)):
+
+		if not ("image" in str(magic.from_buffer(kb))):
 			return None
 
 		return kb + image.read()

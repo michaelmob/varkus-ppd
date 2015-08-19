@@ -5,9 +5,9 @@ from .settings import INSTALLED_APPS
 from .beat import CELERYBEAT_SCHEDULE
 
 # set the default Django settings module for the "celery" program.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "siren.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "viking.settings")
 
-app = Celery("siren")
+app = Celery("viking")
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
