@@ -8,7 +8,7 @@ var amPMTickFormatter = function (n, s) {
 };
 
 var tfTickFormatter = function (n, s) {
-	return n != hour ? n : "<strong>" + n + "</strong>";
+	return n != hour ? n : "[<strong>" + n + "</strong>]";
 };
 
 var flotOptions = {

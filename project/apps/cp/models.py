@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal, getcontext
 from datetime import datetime, date, timedelta
 
@@ -53,7 +54,7 @@ class Earnings_Base(models.Model):
 	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 
 	clicks		= models.IntegerField(default=0)
-	clicks_hourly = models.CharField(default="", max_length=250)
+	clicks_hourly = models.CharField(default="", max_length=250, blank=True, null=True)
 
 	def reset_today(self):
 		print("Reset Today's Earnings")
@@ -126,18 +127,27 @@ class Earnings_Base(models.Model):
 	def get_most_recent_leads(self, count=25):
 		return self.get_leads(None, count)
 
-	def __add_click_hour(self, string, hour, number):
-		string = string.split(',')
-		str_len = len(string)
+	def __increment_clicks_hourly_list(self):
+		try:
+			self.clicks_hourly = json.loads(self.clicks_hourly)
+			hour = datetime.now().hour
+			self.clicks_hourly[hour] = int(self.clicks_hourly[hour]) + 1
+			return self.clicks_hourly
+		except:
+			self.clicks_hourly = json.dumps([0 for n in range(24)])
+			return self.__increment_clicks_hourly_list()
 
-		if(hour > str_len):
-			string.extend([str(0) for x in range(hour - str_len + 1)])
-		elif(hour == str_len):
-			string.append(str(0))
+	def get_clicks(self):
+		try:
+			self.clicks_hourly = json.loads(self.clicks_hourly)
+		except:
+			return []
+			
+		return [(n, self.clicks_hourly[n]) for n in range(len(self.clicks_hourly))]
 
-		string[hour] = str(number)
-
-		return ','.join(string)
+	def clicks_list(self):
+		""" Clicks from cache """
+		return cache.get("c_%s_%s" % (self._meta.db_table, self.pk))
 
 	def increment_clicks(self, ip_address):
 		""" Add click if unique """
@@ -152,9 +162,9 @@ class Earnings_Base(models.Model):
 		elif ip_address in clicks:
 			return False
 
-		# If 25 IPs in array then remove one
+		# If 100 IPs in array then remove one
 		# and add the new one
-		if(len(clicks) >= 25):
+		if(len(clicks) >= 100):
 			clicks.pop(0)
 
 		clicks.append(ip_address)
@@ -162,8 +172,11 @@ class Earnings_Base(models.Model):
 
 		# Add to total count
 		# Add click to hourly clicks
-		self.count += 1
-		self.hourly = self.__add_click_hour(self.hourly, datetime.now().hour, self.count)
+		self.clicks += 1
+		self.clicks_hourly = json.dumps(
+			self.__increment_clicks_hourly_list(),
+			separators=(',', ':')
+		)
 		self.save()
 
 		return True

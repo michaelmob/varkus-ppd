@@ -6,7 +6,7 @@ from django.core.cache import cache
 
 def line_chart_dict(objects, no_earnings=False):
 	chart = []
-	chart_dict = {x: [0.0, 0, 0] for x in range(24)}
+	chart_dict = {x: [0.0, 0] for x in range(24)}
 
 	for obj in objects:
 		key = (obj.date_time).hour
@@ -23,11 +23,8 @@ def line_chart_dict(objects, no_earnings=False):
 		# Leads
 		chart_dict[(obj.date_time).hour][1] += 1
 
-		# Clicks
-		#chart_dict[(obj.date_time).hour][2] += 1
-
 	for key, value in chart_dict.items():
-		chart.append((key, value[0], value[1], value[2]))
+		chart.append((key, value[0], value[1]))
 
 	return chart
 
@@ -67,7 +64,7 @@ def map_chart_dict(objects):
 	return chart
 
 
-def line_chart_view(key, func, no_earnings=False):
+def line_chart_view(key, func, clicks_data=[], no_earnings=False):
 	data = cache.get(key)
 	
 	if (not data):
@@ -78,7 +75,7 @@ def line_chart_view(key, func, no_earnings=False):
 
 	return JsonResponse({
 		"data": [
-			{"label": "Clicks", "data": data[2]},
+			{"label": "Clicks", "data": clicks_data},
 			{"label": "Leads", "data": data[1]},
 			{"label": "Earnings", "data": data[0]} if not no_earnings else {},
 		],

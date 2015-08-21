@@ -1,4 +1,3 @@
 #!/bin/bash
 cd $(dirname $0)
-./manage celery beat -l info &
-./manage celery worker -l info
+./manage celery worker --app=viking --beat --events --loglevel=INFO

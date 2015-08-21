@@ -23,7 +23,8 @@ def index(request):
 def line_chart(request):
 	return charts.line_chart_view(
 		"charts_line__user_%s" % request.user.id,
-		lambda: request.user.earnings.get_leads()
+		lambda: request.user.earnings.get_leads(),
+		request.user.earnings.get_clicks()
 	)
 
 

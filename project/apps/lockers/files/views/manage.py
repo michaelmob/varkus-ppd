@@ -35,7 +35,8 @@ def line_chart(request, code):
 
 	return charts.line_chart_view(
 		"charts__file_%s" % obj.pk,
-		lambda: obj.earnings.get_leads()
+		lambda: obj.earnings.get_leads(),
+		obj.earnings.get_clicks(),
 	)
 
 
@@ -109,7 +110,9 @@ def process(request):
 				"value": "You have reached your maximum file limit."
 			})
 
-		disallowed_exts = ["exe", "bat", "com", "cmd", "vbs", "vbscript"]
+		disallowed_exts = [
+			"exe", "bat", "com", "cmd", "vbs", "vbscript", "py",
+		]
 
 		# File Exists
 		try:

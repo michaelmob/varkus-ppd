@@ -15,8 +15,7 @@ ADMINS = (
 )
 
 
-# SECURITY WARNING: don"t run with debug turned on in production!
-TEMPLATE_DEBUG = False
+# SECURITY WARNING: don't run with debug turned on in production!
 ALLOWED_HOSTS = [".viking.com", SITE_DOMAIN]
 
 

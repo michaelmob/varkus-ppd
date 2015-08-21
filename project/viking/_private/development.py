@@ -11,7 +11,6 @@ EMAIL_PORT = 25
 
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 

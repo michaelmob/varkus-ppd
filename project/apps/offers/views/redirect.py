@@ -14,13 +14,19 @@ def redirect(request, id=None, token=None):
 		# Offer doesn't exist
 		return _redirect("home")
 
-	offer.earnings.increment_clicks(request.META.get("REMOTE_ADDR"))
-
 	# Check if there's an Affiliate ID override in settings.py
 	try:
-		aff_id = Deposit.get_by_user_id(token.locker_object().user.pk).aff_id
+		user = token.locker_object().user
+		aff_id = Deposit.get_by_user_id(user.pk).aff_id
 	except:
 		aff_id = settings.DEFAULT_AFFILIATE_ID
+
+	# Increment offer and user's clicks
+	try:
+		offer.earnings.increment_clicks(request.META.get("REMOTE_ADDR"))
+		user.earnings.increment_clicks(request.META.get("REMOTE_ADDR"))
+	except:
+		pass
 
 	url = str(offer.tracking_url)					\
 			.replace("{o}", str(offer.offer_id))	\

@@ -4,4 +4,5 @@ cd $(dirname $0)
 ./manage celerycam --frequency=30.0 &
 ./manage runserver 0.0.0.0:7999
 kill `ps ax| grep -v awk| awk '/celerycam/{print $1}'`
+pkill python
 exit 0

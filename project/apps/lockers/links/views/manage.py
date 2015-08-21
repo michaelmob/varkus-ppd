@@ -37,7 +37,8 @@ def line_chart(request, code):
 
 	return charts.line_chart_view(
 		"charts__link_%s" % obj.pk,
-		lambda: obj.earnings.get_leads()
+		lambda: obj.earnings.get_leads(),
+		obj.earnings.get_clicks()
 	)
 
 

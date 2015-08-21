@@ -23,6 +23,8 @@ def locker(request, code=None):
 
 	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
 
+	obj.earnings.increment_clicks(request.META["REMOTE_ADDR"])
+
 	return render(
 		request,
 		"lockers/links/locker.html",

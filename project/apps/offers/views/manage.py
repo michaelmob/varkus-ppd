@@ -114,6 +114,7 @@ def line_chart(request, id=None):
 	return charts.line_chart_view(
 		"charts__offer_%s" % obj.pk,
 		lambda: obj.earnings.get_leads(),
+		obj.earnings.get_clicks(),
 		no_earnings=True
 	)
 
