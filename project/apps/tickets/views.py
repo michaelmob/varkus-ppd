@@ -91,7 +91,6 @@ def thread(request, id=None, action=None):
 		return redirect("tickets")
 
 	form = Form_Ticket_Post(request.POST if request.POST else None)
-	form.is_valid()
 
 	# Create our form
 	if action:
@@ -100,7 +99,7 @@ def thread(request, id=None, action=None):
 		if request.POST and action == "set":
 			thread.inverse(request, messages)
 
-		elif action == "post":
+		elif form.is_valid() and action == "post":
 			image = request.FILES.get("image", None)
 
 			# Format Image
@@ -133,6 +132,8 @@ def thread(request, id=None, action=None):
 					messages.success(request, "Your message has been posted.")
 				else:
 					messages.error(request, "Your message has not been posted because it is a duplicate.")
+
+				form = Form_Ticket_Post()
 			else:
 				messages.error(request, "You cannot post a message to this closed ticket.")
 
