@@ -118,6 +118,11 @@
 
 			<a class="item leads" href="{% url 'leads' %}">
 				<i class="lightning icon"></i> Leads
+				{% with count=user.profile.notification_lead %}
+					{% if count > 0 %}
+						<div class="ui yellow horizontal circular label">{{ count }}</div>
+					{% endif %}
+				{% endwith %}
 			</a>
 
 			<a class="item offers" href="{% url 'offers' %}">
@@ -150,10 +155,20 @@
 			<div class="header item">Support</div>
 			<a class="item tickets" href="{% url 'tickets' %}">
 				<i class="ticket icon"></i> Tickets
+				{% with count=user.profile.notification_ticket %}
+					{% if count > 0 %}
+						<div class="ui yellow horizontal circular label">{{ count }}</div>
+					{% endif %}
+				{% endwith %}
 			</a>
 
 			<a class="item billing" href="{% url 'billing' %}">
 				<i class="credit card icon"></i> Billing
+				{% with count=user.profile.notification_billing %}
+					{% if count > 0 %}
+						<div class="ui yellow horizontal circular label">{{ count }}</div>
+					{% endif %}
+				{% endwith %}
 			</a>
 
 			<a class="item account" href="{% url 'user-settings' %}">
@@ -168,7 +183,7 @@
 				</a>
 
 				<a class="item staff" href="{% url 'staff' %}">
-					<i class="shield icon"></i> Staff
+					<i class="shield icon"></i> Admin
 				</a>
 			{% endif %}
 

@@ -108,14 +108,14 @@
 						<tbody>
 							{% if threads|length > 0 %}
 							{% for thread in threads %}
-							<tr {% if thread.last_reply_user and not thread.staff_closed and not thread.closed and thread.last_reply_user != thread.user %}class="warning"{% endif %}>
+							<tr {% if thread.is_unread %}class="warning"{% endif %}>
 								<td>
 									<a class="block" href="{% url 'tickets-thread' thread.pk %}">
 										{{ thread.subject|truncatechars:'30' }}
 									</a>
 								</td>
 								<td>{{ thread.date_time }}</td>
-								<td>{{ thread.last_reply_user }}</td>
+								<td>{{ thread.last_reply_user.first_name }}</td>
 								{% if thread.closed %}
 								<td class="negative">Closed</td>
 								{% else %}

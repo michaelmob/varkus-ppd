@@ -40,6 +40,10 @@
 	top: 47px !important;
 	height: calc(~"100% - 47px") !important;
 	overflow-y: auto;
+
+	.ui.yellow.label {
+		color: #000 !important;
+	}
 }
 
 @media only screen and (min-width: 992px) {

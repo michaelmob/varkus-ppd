@@ -8,6 +8,10 @@ from utils import paginate
 def overview(request, page=1):
 	Billing.objects.get_or_create(user=request.user)
 
+	if request.user.profile.notification_billing > 0:
+		request.user.profile.notification_billing = 0
+		request.user.profile.save()
+
 	info 	= request.user.billing
 	forms 	= __overview_forms(request.POST or None, info)
 

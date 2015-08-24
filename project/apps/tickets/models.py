@@ -34,23 +34,20 @@ class Thread(models.Model):
 	last_reply_date_time = models.DateTimeField(default=None, blank=True, null=True)
 	closed = models.BooleanField(default=False)
 	staff_closed = models.BooleanField(default=False)
-
+	unread = models.BooleanField(default=False)
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.subject)
-
 
 	def delete(self, *args, **kwargs):
 		for post in Post.objects.filter(thread=self):
 			post.image.delete()
 		super(Thread, self).delete(*args, **kwargs)
 
-
 	def save(self, *args, **kwargs):
 		if self.staff_closed:
 			self.closed = True
 		super(Thread, self).save(*args, **kwargs)
-
 
 	def create(user, ip_address, priority, type, subject, content, image=None):
 
@@ -68,26 +65,25 @@ class Thread(models.Model):
 
 		post = Post.create(
 			thread=thread,
+			thread_post=True,
 			user=user,
 			ip_address=ip_address,
 			content=content,
-			image=image
+			image=image,
 		)
 
 		return (thread, post)
 
-
 	def type_human(self):
+		# type from Key to Value: "help" -> "Account Help"
 		return dict(self.TYPES)[self.type]
 
-
 	def priority_human(self):
+		# priority from Key to Value: "3" -> "High"
 		return dict(self.PRIORITIES)[self.priority]
-
 
 	def get(user):
 		return Thread.objects.filter(user=user).order_by("-date_time")
-
 
 	def admin_get():
 		return Thread.objects.filter(staff_closed=False)\
@@ -96,13 +92,11 @@ class Thread(models.Model):
 			.order_by("-priority")\
 			.order_by("-last_reply_date_time")
 
-
 	def inverse(self, request, messages):
 		# If thread was closed by staff we don't want the
 		# user to re-open it
 		if self.staff_closed:
-			messages.error(request, "This ticket cannot be re-opened as it" +
-				"has been closed by a staff member.")
+			messages.error(request, "This ticket cannot be re-opened as it has been closed by a staff member.")
 			return
 
 		# Invert thread.closed
@@ -118,14 +112,12 @@ class Thread(models.Model):
 		# Return to our thread with the thread
 		return
 
-
 	def staff_close(self):
 		self.closed = True
 		self.staff_closed = True
 		self.save()
 
 		return self
-
 
 	def exists(user, pk=None):
 		if user.is_staff:
@@ -149,41 +141,51 @@ class Thread(models.Model):
 		except Thread.DoesNotExist:
 			return None
 
-
 	def posts(thread):
 		return Post.objects.get(thread=thread)
 
+	def is_unread(self):
+		return self.unread and not self.closed and not self.staff_closed
+
+	def unread_count(user):
+		return Thread.objects.filter(user=user, unread=True, closed=False, staff_closed=False).count()
 
 
 class Post(models.Model):
 	thread = models.ForeignKey(Thread)
+	thread_post = models.BooleanField(default=False)
 	user = models.ForeignKey(User, default=None, blank=True, null=True)
 	ip_address = models.GenericIPAddressField()
 	date_time = models.DateTimeField()
 	content = models.TextField(max_length=1000)
 	image = models.ImageField(upload_to="tickets/%Y/%m/", default=None, blank=True, null=True)
-	
 
 	def delete(self, *args, **kwargs):
 		self.image.delete()
 		super(Post, self).delete(*args, **kwargs)
-		
 
-	def create(user, thread, ip_address, content, image):
+	def create(user, thread, thread_post, ip_address, content, image):
 		# No duplicates
 		if Post.objects.filter(user=user, thread=thread, content=content).count() > 0:
 			return None
 
+		thread.unread = (not thread_post and thread.user != user)
 		thread.last_reply_user = user
 		thread.last_reply_date_time = datetime.now()
 		thread.save()
 
+		if thread.unread:
+			thread_user = thread.user
+			thread_user.profile.notification_ticket += 1
+			thread_user.profile.save()
+
 		post = Post.objects.create(
 			thread=thread,
+			thread_post=thread_post,
 			user=user,
 			ip_address=ip_address,
 			date_time=datetime.now(),
-			content=content
+			content=content,
 		)
 
 		if image:

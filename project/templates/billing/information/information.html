@@ -8,7 +8,7 @@
 		<div class="content">
 			<div class="header">Payment Method</div>
 			{% if method == 'none' %}
-				None, set up your payment method now to recieve payouts!
+				None, set up your payment method now to receive payouts!
 			{% else %}
 				{{ method|payment_method }}
 			{% endif %}

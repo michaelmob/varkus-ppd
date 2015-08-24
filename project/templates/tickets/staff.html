@@ -15,7 +15,7 @@
 			<div class="ui segment box">
 				<div class="title">
 					<i class="ticket icon"></i>
-					Staff Tickets
+					Tickets
 				</div>
 				<div class="content">
 					{% include 'cp/paginate.html' with items=threads uri='staff-tickets-page' %}
@@ -35,8 +35,9 @@
 						</thead>
 
 						<tbody>
+							{% if threads|length > 0 %}
 							{% for thread in threads %}
-								<tr {% if thread.last_reply_user and not thread.staff_closed and not thread.closed and thread.last_reply_user != thread.user %}class="warning"{% endif %}>
+								<tr>
 									<td>
 										<a class="block" href="{% url 'tickets-thread' thread.pk %}">
 											{{ thread.subject }}
@@ -55,6 +56,9 @@
 									{% endif %}
 								</tr>
 							{% endfor %}
+							{% else %}
+								<tr><td colspan=10>No tickets have been created.</td></tr>
+							{% endif %}
 						</tbody>
 					</table>
 				</div>

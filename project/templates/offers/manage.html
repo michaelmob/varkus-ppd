@@ -128,7 +128,7 @@
 									<i class="shield icon"></i>
 									<div class="content">
 										<div class="header">Staff</div>
-										<a target="_blank" href="/admin/offers/offer/{{ offer.pk }}">Open in Admin</a>
+										<a target="_blank" href="{% url 'staff' %}?url=/admin/offers/offer/{{ offer.pk }}">Open in Staff</a>
 									</div>
 								</div>
 							{% endif %}

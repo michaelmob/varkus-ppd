@@ -4,19 +4,18 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+
+from datetime import datetime, timedelta
+
 from .forms import Form_Ticket_Create, Form_Ticket_Post
 from .models import Thread, Post
+
 from utils import dicts, files, paginate
-
-
-def thread_pagination(user, page):
-	threads = Thread.get(user)
-	return paginate.pages(threads, 15, page)
 
 
 @staff_member_required
 def staff_list(request, page=1):
-	threads = thread_pagination(request.user, page)
+	threads = paginate.pages(Thread.admin_get(), 15, page)
 	
 	return render(
 		request, "tickets/staff.html",
@@ -27,7 +26,11 @@ def staff_list(request, page=1):
 
 
 def list(request, page=1):
-	threads = thread_pagination(request.user, page)
+	threads = paginate.pages(Thread.get(request.user), 15, page)
+
+	if request.user.profile.notification_ticket > 0:
+		request.user.profile.notification_ticket = 0
+		request.user.profile.save()
 
 	if request.POST:
 		form = Form_Ticket_Create(request.POST)
@@ -88,6 +91,7 @@ def thread(request, id=None, action=None):
 		return redirect("tickets")
 
 	form = Form_Ticket_Post(request.POST if request.POST else None)
+	form.is_valid()
 
 	# Create our form
 	if action:
@@ -96,10 +100,11 @@ def thread(request, id=None, action=None):
 		if request.POST and action == "set":
 			thread.inverse(request, messages)
 
-		elif form.is_valid() and action == "post":
+		elif action == "post":
 			image = request.FILES.get("image", None)
 
 			# Format Image
+			errors = 0
 			if image:
 				# Set Image to the uploaded image
 
@@ -111,16 +116,18 @@ def thread(request, id=None, action=None):
 					messages.error(request, "Uploaded files must be images.")
 					errors += 1
 
-			post = request.POST.get("message", 0)
-			post = form.cleaned_data["message"]
+			message = request.POST.get("message")
 
-			if not(thread.staff_closed or thread.closed):
+			if (errors > 0):
+				pass
+			elif not(thread.staff_closed or thread.closed):
 				# Create post
 				if Post.create(
 					user=request.user,
 					thread=thread,
+					thread_post=False,
 					ip_address=request.META.get("REMOTE_ADDR"),
-					content=post,
+					content=message,
 					image=image
 				):
 					messages.success(request, "Your message has been posted.")
@@ -129,10 +136,25 @@ def thread(request, id=None, action=None):
 			else:
 				messages.error(request, "You cannot post a message to this closed ticket.")
 
+		elif action == "delete":
+			id = request.GET.get("id", None)
+			if id:
+				try:
+					post = Post.objects.get(user=request.user, id=id)
+
+					if post.date_time > datetime.now() + timedelta(hours=2):
+						messages.error(request, "You cannot delete your message two hours after it has been posted.")
+					elif post.thread_post:
+						messages.error(request, "You cannot delete the opening message.")
+					else:
+						post.delete()
+						messages.success(request, "Your message has been deleted.")
+				except:
+					pass
 
 	# Let the her know what's with her ticket
 	if thread.staff_closed:
-		messages.error(request, "This ticket is currently closed. You may not re-open it. If a new issue arises you should create a new ticket.")
+		messages.error(request, "This ticket is currently closed. You may not re-open it. Should a new issue arise, you may create a new ticket.")
 
 	elif thread.closed:
 		messages.error(request, "This ticket is currently closed. You may re-open it.")

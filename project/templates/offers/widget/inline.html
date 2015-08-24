@@ -83,7 +83,7 @@
 			document.querySelector(".offer.button").onclick = function() {
 				var e = document.querySelector("[name='offer']");
 				window.open(
-					"/admin/offers/offer/" + e.options[e.selectedIndex].value,
+					"{% url 'staff' %}?url=/admin/offers/offer/" + e.options[e.selectedIndex].value,
 					"_blank"
 				);
 			};

@@ -85,6 +85,7 @@
 								<th>Name</th>
 								<th>Items</th>
 								<th>Leads</th>
+								<th>Clicks</th>
 								<th>Month</th>
 								<th>Total</th>
 								<th>Date</th>
@@ -100,6 +101,7 @@
 								<td><a href="{% url 'lists-manage' list.code %}">{{ list.name }}</a></td>
 								<td>{{ list.item_count }}</td>
 								<td>{{ list.earnings.leads|default:'0' }}</td>
+								<td>{{ list.earnings.clicks|default:'0' }}</td>
 								<td>${{ list.earnings.month|currency }}</td>
 								<td>${{ list.earnings.total|currency }}</td>
 								<td>{{ list.date_time }}</td>

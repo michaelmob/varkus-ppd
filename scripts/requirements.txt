@@ -7,7 +7,10 @@ pillow
 django-countries
 filemagic
 pysocks
+django-gravatar2
 geoip2
 gunicorn
+python-magic
 mysqlclient
+psutil
 git+https://github.com/thetarkus/anora

@@ -1,5 +1,6 @@
 {% extends 'cp.html' %}
 {% load static %}
+{% load gravatar %}
 
 {% block title %}Tickets{% endblock %}
 
@@ -24,9 +25,9 @@
 							<tr>
 								<td>Status </td>
 								{% if thread.closed %}
-								<td class="negative">Closed</td>
+									<td class="negative">Closed</td>
 								{% else %}
-								<td class="positive">Open</td>
+									<td class="positive">Open</td>
 								{% endif %}
 							</tr>
 							<tr>
@@ -65,17 +66,17 @@
 							<a class="ui disabled primary button fluid">Re-Open Ticket</a>
 						{% endif %}
 
-						{% if user.is_staff %}
+						{% if user.is_superuser %}
 							<br/>
 							<div class="ui two column grid">
 								<div class="column">
-									<a class="ui labeled fluid icon blue button" target="_blank" href="/admin/tickets/thread/{{ thread.pk }}/">
+									<a class="ui labeled fluid icon blue button" target="_blank" href="{% url 'staff' %}?url=/admin/tickets/thread/{{ thread.pk }}/">
 										<i class="shield icon"></i>
 										Ticket
 									</a>
 								</div>
 								<div class="column">
-									<a class="ui labeled fluid icon primary button" target="_blank" href="/admin/auth/user/{{ thread.user.pk }}/">
+									<a class="ui labeled fluid icon primary button" target="_blank" href="{% url 'staff' %}?url=/admin/auth/user/{{ thread.user.pk }}">
 										<i class="basic user icon"></i>
 										User
 									</a>
@@ -90,34 +91,36 @@
 		<div class="ten wide column">
 			<div class="ui segment box">
 				<div class="title">
-					<i class="chat icon"></i>
-					Posts
+					<i class="comments icon"></i>
+					Messages
 				</div>
 				<div class="padded content">
 					<div class="ui comments">
 						{% for post in posts %}
-							<div class="ui basic segment">
-								<div class="comment">
-									<div class="content">
-										{% if user.is_staff %}
-											<a class="ui label primary"><i class="shield icon"></i>{{ post.user.first_name }}</a>
-										{% else %}
-											<a class="ui label primary"><i class="user icon"></i>{{ post.user }}</a>
+							<div class="comment">
+								<a class="avatar">
+									{% gravatar post.user.email 150 %}
+								</a>
+								<div class="content">
+									<a class="author">
+										{{ post.user.first_name }}
+									</a>
+									<div class="metadata">
+										<span class="date">{{ post.date_time|timesince }} ago</span>
+									</div>
+									<div class="text">
+										{{ post.content|linebreaksbr }}
+									</div>
+									<div class="actions">
+										{% if request.user == post.user %}
+											<a target="_blank" href="{% url 'tickets-thread-action' thread.pk 'delete' %}?id={{ post.id }}">
+												Delete
+											</a>
 										{% endif %}
-
-										<div class="metadata">
-											<span class="date">{{ post.date_time|timesince }} ago</span>
-										</div>
-										<div class="text">
-											{{ post.content|linebreaksbr }}
-										</div>
-
 										{% if post.image %}
-											<div class="actions">
-												<a target="_blank" href="{{ post.image.url }}">
-													View Attached Image
-												</a>
-											</div>
+											<a target="_blank" href="{{ post.image.url }}">
+												View Attached Image
+											</a>
 										{% endif %}
 									</div>
 								</div>
@@ -143,7 +146,7 @@
 
 						<div class="ui labeled fluid icon primary submit button">
 							<i class="add icon"></i>
-							Add Post
+							Submit Message
 						</div>
 					</form>
 				</div>

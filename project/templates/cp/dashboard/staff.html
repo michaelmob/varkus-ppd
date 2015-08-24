@@ -5,111 +5,166 @@
 
 {% block tab %}staff{% endblock %}
 
-{% block content %}
-<div class="wrapper">
-	<div class="ui two column grid stackable no margin">
-		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="user icon"></i>
-					Users
-				</div>
-				<div class="padded content">
-					<div class="ui bulleted list">
-						<div class="item">
-							<strong>Auth</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}auth/user/" target="_blank" class="item">User</a>
-								<a href="{% url 'admin:index' %}user/party/" target="_blank" class="item">Party</a>
-							</div>
-						</div>
-						<div class="item">
-							<strong>Axes</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}axes/accessattempt/" target="_blank" class="item">Attempts</a>
-								<a href="{% url 'admin:index' %}axes/accesslog/" target="_blank" class="item">Logs</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="ticket icon"></i>
-					Support
-				</div>
-				<div class="padded content">
-					<div class="ui bulleted list">
-						<div class="item">
-							<strong>Support</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}support/abuse_report/" target="_blank" class="item">Abuse Reports</a>
-								<a href="{% url 'admin:index' %}support/contact_message/" target="_blank" class="item">Contact Messages</a>
-							</div>
-						</div>
-						<div class="item">
-							<strong>Tickets (Admin)</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}tickets/thread/" target="_blank" class="item">Threads</a>
-								<a href="{% url 'admin:index' %}tickets/post/" target="_blank" class="item">Posts</a>
-							</div>
-						</div>
-						<div class="item">
-							<strong>Billing</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}billing/invoice/" target="_blank" class="item">Invoice</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+{% block head0 %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pages/staff.css' %}" />
+{% endblock %}
 
-		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="lock icon"></i>
-					Lockers
-				</div>
-				<div class="padded content">
-					<div class="ui bulleted list">
-						<div class="item">
-							<strong>Lockers</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}widgets/widget/" target="_blank" class="item">Widget</a>
-								<a href="{% url 'admin:index' %}files/file/" target="_blank" class="item">Files</a>
-								<a href="{% url 'admin:index' %}links/link/" target="_blank" class="item">Links</a>
-								<a href="{% url 'admin:index' %}lists/list/" target="_blank" class="item">Lists</a>
-							</div>
-						</div>
-					</div>
-				</div>
+{% block content %}
+{# var div = document.getElementById('header');div.parentNode.removeChild(div); #}
+<div class="wrapper">
+	<div class="ui top attached tabular menu">
+		<a class="item" data-tab="server">Server</a>
+		<a class="item active" data-tab="admin">Admin</a>
+	</div>
+
+	<div class="ui bottom attached tab segment" data-tab="server">
+		<div class="ui two column stackable grid">
+			<div class="column">
+				<h2>Information</h2>
+				<table class="ui definition table">
+					<tbody>
+						<tr>
+							<td>CPU</td>
+							<td>{{ data.cpu }}% ({{ data.cpu_count }} cores)</td>
+						</tr>
+						<tr>
+							<td>Memory</td>
+							<td>{{ data.memory.used|filesizeformat }}/{{ data.memory.total|filesizeformat }}</td>
+						</tr>
+						<tr>
+							<td>Page</td>
+							<td>{{ data.page.used|filesizeformat }}/{{ data.page.total|filesizeformat }}</td>
+						</tr>
+						<tr>
+							<td>Disk</td>
+							<td>{{ data.disk.used|filesizeformat }}/{{ data.disk.total|filesizeformat }}</td>
+						</tr>
+						<tr>
+							<td>Uptime</td>
+							<td>{{ data.uptime }}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		</div>
-		
-		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="tags icon"></i>
-					Leads and Offers
-				</div>
-				<div class="padded content">
-					<div class="ui bulleted list">
-						<div class="item">
-							<strong>Leads and Offers</strong>
-							<div class="list">
-								<a href="{% url 'admin:index' %}leads/lead/" target="_blank" class="item">Leads</a>
-								<a href="{% url 'admin:index' %}leads/token/" target="_blank" class="item">Tokens</a>
-								<a href="{% url 'admin:index' %}offers/offer/" target="_blank" class="item">Offers</a>
-							</div>
-						</div>
-					</div>
-				</div>
+			<div class="column">
+				<h2>Statistics</h2>
+				<table class="ui definition table">
+					<tbody>
+						<tr>
+							<td>System</td>
+							<td>{{ data.uname.system }}</td>
+						</tr>
+						<tr>
+							<td>Node</td>
+							<td>{{ data.uname.node }}</td>
+						</tr>
+						<tr>
+							<td>Release</td>
+							<td>{{ data.uname.release }}</td>
+						</tr>
+						<tr>
+							<td>Version</td>
+							<td>{{ data.uname.version }}</td>
+						</tr>
+						<tr>
+							<td>Machine</td>
+							<td>{{ data.uname.machine }}</td>
+						</tr>
+						<tr>
+							<td>Processor</td>
+							<td>{{ data.uname.processor }}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
+
+	<div class="ui bottom attached tab frame segment active" data-tab="admin">
+		<div class="ui secondary admin menu">
+			<a href="/admin/auth/user/" target="staffFrame" class="users item">
+				<i class="user icon"></i>
+				Users
+			</a>
+			<a href="/admin/user/party/" target="staffFrame" class="item">
+				<i class="users icon"></i>
+				Parties
+			</a>
+			<a href="/admin/offers/offer/" target="staffFrame" class="item">
+				<i class="tags icon"></i>
+				Offers
+			</a>
+			<a href="/admin/widgets/widget/" target="staffFrame" class="item">
+				<i class="file image outline icon"></i>
+				Widgets
+			</a>
+			<a href="/admin/files/file/" target="staffFrame" class="item">
+				<i class="file icon"></i>
+				Files
+			</a>
+			<a href="/admin/links/link/" target="staffFrame" class="item">
+				<i class="linkify icon"></i>
+				Links
+			</a>
+			<a href="/admin/lists/list/" target="staffFrame" class="item">
+				<i class="list layout icon"></i>
+				Lists
+			</a>
+			<a href="/admin/leads/lead/" target="staffFrame" class="item">
+				<i class="lightning icon"></i>
+				Leads
+			</a>
+			<a href="/admin/leads/token/" target="staffFrame" class="item">
+				<i class="crosshairs icon"></i>
+				Tokens
+			</a>
+			<a class="other item">
+				<i class="cube icon"></i>
+				Other
+			</a>
+		</div>
+
+		<div class="frame container">
+			<iframe name="staffFrame" id="staffFrame" onLoad="iFrameOnLoad()"></iframe>
+		</div>
+	</div>
 </div>
+
+<script>
+var iframe = document.getElementById("staffFrame");
+
+$.urlParam = function(name){
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	return results == null ? null : results[1] || 0;
+}
+
+var iFrameOnLoad = function() {
+	var div;
+	var segment = $(".frame.container");
+	var breadcrumbs = iframe.contentDocument.querySelector(".breadcrumbs");
+
+	var deleteNode = function(selector) {
+		div = iframe.contentDocument.querySelector(selector);
+		div.parentNode.removeChild(div);
+	}
+
+	deleteNode("#header");
+	deleteNode(".breadcrumbs>a:nth-child(1)");
+	deleteNode(".breadcrumbs>a:nth-child(1)");
+
+	$(".admin.menu>.item").click(function() {
+		$(".admin.menu>.item").removeClass("active");
+		$(this).addClass("active");
+	});
+
+	breadcrumbs.innerHTML = breadcrumbs.innerHTML.substr(7);
+	segment.height(0);
+	segment.height(iframe.contentDocument.querySelector("body").scrollHeight);
+}
+
+iframe.src = $.urlParam("url") || "/admin/auth/user/";
+
+$(!$.urlParam("url") ? ".users.item" : ".other.item").addClass("active");
+$(".tabular>.item").tab();
+</script>
 {% endblock %}

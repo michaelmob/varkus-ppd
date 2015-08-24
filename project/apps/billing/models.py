@@ -74,7 +74,6 @@ class Billing(models.Model):
 	additional 				= models.TextField(max_length=300, **a)
 
 
-
 class Invoice(models.Model):
 	user 				= models.ForeignKey(User)
 
@@ -93,7 +92,6 @@ class Invoice(models.Model):
 	details 			= models.TextField(max_length=1000, default="", blank=True, null=True)
 	file 				= models.FileField(upload_to="billing/%b-%Y/", default=None, blank=True, null=True)
 
-
 	def create(user, year, month, due_in_days, total_amount, referral_amount):
 		end_date = date(year, month, monthrange(year, month)[1])
 		return Invoice.objects.create(
@@ -107,7 +105,6 @@ class Invoice(models.Model):
 			total_amount		= total_amount,
 			referral_amount		= referral_amount
 		)
-
 
 	def create_auto(user):
 		minimum_payout = user.profile.party.minimum_payout
@@ -141,7 +138,6 @@ class Invoice(models.Model):
 			total_amount	= user_earnings,
 			referral_amount	= referral_earnings
 		)
-
 
 	# INTENSE!!!
 	def generate():

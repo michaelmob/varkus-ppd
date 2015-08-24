@@ -60,6 +60,7 @@
 							<tr>
 								<th>Name</th>
 								<th>Leads</th>
+								<th>Clicks</th>
 								<th>Month</th>
 								<th>Total</th>
 								<th>Date</th>
@@ -74,6 +75,7 @@
 									<tr>
 										<td><a href="{% url 'widgets-manage' widget.code %}">{{ widget.name }}</a></td>
 										<td>{{ widget.earnings.leads|default:'0' }}</td>
+										<td>{{ widget.earnings.clicks|default:'0' }}</td>
 										<td>${{ widget.earnings.month|currency }}</td>
 										<td>${{ widget.earnings.total|currency }}</td>
 										<td>{{ widget.date_time }}</td>

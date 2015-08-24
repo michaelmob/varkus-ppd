@@ -74,6 +74,7 @@ INSTALLED_APPS = (
 	"djcelery",             # django-celery
 	"anora",                # anora
 	"django_countries",     # django-countries
+	"django_gravatar",		# django-gravatar2
 
 	"apps.user",
 	"apps.offers",
@@ -169,6 +170,9 @@ from django.template.base import add_to_builtins
 add_to_builtins("apps.home.templatetags.site")
 
 INVITE_ONLY = False
+
+# Gravatar
+GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 # GeoIP
 import geoip2.database

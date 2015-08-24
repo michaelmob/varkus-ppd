@@ -23,6 +23,7 @@
 							<tr>
 								<th>Name</th>
 								<th>Leads</th>
+								<th>Clicks</th>
 								<th>Month</th>
 								<th>Total</th>
 								<th>Date</th>
@@ -37,6 +38,7 @@
 									<tr>
 										<td><a href="{% url 'files-manage' file.code %}">{{ file.name }}</a></td>
 										<td>{{ file.earnings.leads|default:'0' }}</td>
+										<td>{{ file.earnings.clicks|default:'0' }}</td>
 										<td>${{ file.earnings.month|currency }}</td>
 										<td>${{ file.earnings.total|currency }}</td>
 										<td>{{ file.date_time }}</td>

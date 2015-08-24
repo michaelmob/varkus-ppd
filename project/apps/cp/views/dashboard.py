@@ -1,7 +1,13 @@
+import psutil
+import platform
+
+from datetime import timedelta
+
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.admin.views.decorators import staff_member_required
+
 from ...leads.models import Lead
 from ...offers.models import Offer
 
@@ -37,7 +43,25 @@ def map_chart(request):
 
 @staff_member_required
 def staff(request):
-	return render(request, "cp/dashboard/staff.html", {})
+	data = cache.get("system_data")
+	
+	if not data:
+		with open('/proc/uptime', 'r') as f:
+			uptime = str(timedelta(seconds=float(f.readline().split()[0]))).split('.')[0]
+			
+		data = {
+			"cpu": psutil.cpu_percent(interval=0.1),
+			"cpu_count": psutil.cpu_count(),
+			"memory": psutil.virtual_memory(),
+			"swap": psutil.swap_memory(),
+			"disk": psutil.disk_usage('/'),
+			"uptime": uptime,
+			"uname": platform.uname(),
+		}
+
+		cache.set("system_data", data, 60)
+
+	return render(request, "cp/dashboard/staff.html", {"data": data})
 
 
 @staff_member_required

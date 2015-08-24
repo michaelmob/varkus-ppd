@@ -40,5 +40,11 @@ CELERYBEAT_SCHEDULE = {
 	"offer-reset-month"	: 	{	"task": "apps.offers.tasks.reset_month", 	"schedule": month 	},
 	"offer-reset-year"	: 	{	"task": "apps.offers.tasks.reset_year", 	"schedule": year 	},
 
+	# Lockers Resets
+	"locker-reset-today": 	{	"task": "apps.lockers.tasks.reset_today", 	"schedule": day 	},
+	"locker-reset-week"	: 	{	"task": "apps.lockers.tasks.reset_week", 	"schedule": week 	},
+	"locker-reset-month": 	{	"task": "apps.lockers.tasks.reset_month", 	"schedule": month 	},
+	"locker-reset-year"	: 	{	"task": "apps.lockers.tasks.reset_year", 	"schedule": year 	},
+
 
 }

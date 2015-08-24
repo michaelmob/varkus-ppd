@@ -6,6 +6,10 @@ from utils import cache2
 
 
 def index(request):
+	if request.user.profile.notification_lead > 0:
+		request.user.profile.notification_lead = 0
+		request.user.profile.save()
+
 	return render(request, "cp/leads/index.html", {})
 
 

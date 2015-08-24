@@ -151,6 +151,10 @@ def receive(request, password=None):
 							user_payout, user.profile.party.referral_cut_amount, False
 						)
 
+					# Add Lead Notification
+					user.profile.notification_lead += 1
+					user.profile.save()
+
 			# Add earnings to offer
 			if offer:
 				offer.earnings.add(payout, cut_amount, typeof == "lead")
