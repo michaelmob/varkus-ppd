@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.admin.views.decorators import staff_member_required
 
-from ...leads.models import Lead
+from ...leads.models import Lead, Deposit
 from ...offers.models import Offer
 
 from utils import charts
@@ -61,7 +61,12 @@ def staff(request):
 
 		cache.set("system_data", data, 60)
 
-	return render(request, "cp/dashboard/staff.html", {"data": data})
+	return render(request, "cp/dashboard/staff.html",
+		{
+			"data": data,
+			"deposits": Deposit.objects.all()
+		}
+	)
 
 
 @staff_member_required

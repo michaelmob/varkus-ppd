@@ -81,53 +81,48 @@
 	</div>
 
 	<div class="ui bottom attached tab frame segment active" data-tab="admin">
-		<div class="ui secondary admin menu">
-			<a target="staffFrame" class="refresh item">
+		<div class="ui secondary stackable admin icon menu">
+			<a target="staffFrame" class="refresh item" data-content="Refresh">
 				<i class="refresh icon"></i>
 			</a>
-			<a href="/admin/auth/user/" target="staffFrame" class="users item">
+			<a href="/admin/auth/user/" target="staffFrame" class="users item" data-content="Users">
 				<i class="user icon"></i>
-				Users
 			</a>
-			<a href="/admin/user/party/" target="staffFrame" class="item">
+			<a href="/admin/user/party/" target="staffFrame" class="item" data-content="Parties">
 				<i class="users icon"></i>
-				Parties
 			</a>
-			<a href="/admin/offers/offer/" target="staffFrame" class="item">
+			<a href="/admin/offers/offer/" target="staffFrame" class="item" data-content="Offers">
 				<i class="tags icon"></i>
-				Offers
 			</a>
-			<a href="/admin/widgets/widget/" target="staffFrame" class="item">
+			<a href="/admin/widgets/widget/" target="staffFrame" class="item" data-content="Widgets">
 				<i class="file image outline icon"></i>
-				Widgets
 			</a>
-			<a href="/admin/files/file/" target="staffFrame" class="item">
+			<a href="/admin/files/file/" target="staffFrame" class="item" data-content="Files">
 				<i class="file icon"></i>
-				Files
 			</a>
-			<a href="/admin/links/link/" target="staffFrame" class="item">
+			<a href="/admin/links/link/" target="staffFrame" class="item" data-content="Links">
 				<i class="linkify icon"></i>
-				Links
 			</a>
-			<a href="/admin/lists/list/" target="staffFrame" class="item">
+			<a href="/admin/lists/list/" target="staffFrame" class="item" data-content="Lists">
 				<i class="list layout icon"></i>
-				Lists
 			</a>
-			<a href="/admin/leads/lead/" target="staffFrame" class="item">
+			<a href="/admin/leads/lead/" target="staffFrame" class="item" data-content="Leads">
 				<i class="lightning icon"></i>
-				Leads
 			</a>
-			<a href="/admin/leads/token/" target="staffFrame" class="item">
+			<a href="/admin/leads/token/" target="staffFrame" class="item" data-content="Tokens">
 				<i class="crosshairs icon"></i>
-				Tokens
 			</a>
-			<a href="/admin/billing/invoice/" target="staffFrame" class="item">
+			<a href="/admin/billing/invoice/" target="staffFrame" class="item" data-content="Invoices">
 				<i class="payment icon"></i>
-				Invoices
 			</a>
-			<a class="other item">
+			<a href="/admin/support/abuse_report/" target="staffFrame" class="item" data-content="Abuse Reports">
+				<i class="legal icon"></i>
+			</a>
+			<a href="/admin/support/contact_message/" target="staffFrame" class="item" data-content="Contact Messages">
+				<i class="chat icon"></i>
+			</a>
+			<a class="other item" data-content="Other">
 				<i class="cube icon"></i>
-				Other
 			</a>
 		</div>
 
@@ -167,27 +162,37 @@ var iFrameOnLoad = function() {
 	if(h1.innerText == "Change user") {
 		var u = iframe.contentDocument.querySelector("#id_profile-0-user").value;
 		h1.innerHTML = h1.innerHTML +
-			" <a href='/admin/leads/lead/?user=" + u + "'>[Leads]</a>" +
+			"<small style='font-size:12px'> <a href='/admin/leads/lead/?user=" + u + "'>[Leads]</a>" +
 			" <a href='/admin/widgets/widget/?user=" + u + "'>[Widgets]</a>" +
 			" <a href='/admin/files/file/?user=" + u + "'>[Files]</a>" +
 			" <a href='/admin/links/link/?user=" + u + "'>[Links]</a>" +
 			" <a href='/admin/lists/list/?user=" + u + "'>[Lists]</a>" +
-			" <a href='/admin/billing/invoice/?user=" + u + "'>[Invoices]</a>";
+			" <a href='/admin/billing/invoice/?user=" + u + "'>[Invoices]</a></small>";
+	} else if(h1.innerText == "Select lead to change") {
+		h1.innerHTML = h1.innerHTML + 
+		{% for deposit in deposits %}
+		" <a href='/admin/leads/lead/?deposit={{ deposit.code }}'>[{{ deposit.name }}]</a>" +
+		{% endfor %}
+		"";
 	}
 }
 
-$(".admin.menu>.item").click(function() {
-	$(".admin.menu>.item").removeClass("active");
-	$(this).addClass("active");
-});
-
 $(".refresh.item").click(function() {
 	iframe.contentWindow.location.reload(true);
+});
+
+$(".admin.menu>.item").click(function() {
+	if($(this).hasClass("other") || $(this).hasClass("refresh"))
+		return;
+
+	$(".admin.menu>.item").removeClass("active");
+	$(this).addClass("active");
 });
 
 iframe.src = $.urlParam("url") || "/admin/auth/user/";
 
 $(!$.urlParam("url") ? ".users.item" : ".other.item").addClass("active");
 $(".tabular>.item").tab();
+$(".admin.menu>.item").popup();
 </script>
 {% endblock %}

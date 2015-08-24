@@ -36,13 +36,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # TODO:
 #######
 # Widget example code
-# Tickets unread variable and badge on icon
-# Staff section rework
-# -- Leads
-# -- Deposits
-# -- Tickets
 # Use polling to see active users on page
-# Fix charts
+# Allow users to see IPs of visitors
+# Referral guide
+
 
 import os, socket
 from datetime import timedelta

@@ -35,22 +35,12 @@ def page(request):
 def action(request):
 	form = Form_Report(request.POST)
 
-	# Django-Captcha either has an error with Python 3.4 or Django 1.7
-	# so wrapping it in a try except tells us if the captcha is incorrect
-	# ! Temporary workaround !
-	try:
-		if not form.is_valid():
-			pass
-
-			# Captcha field has errors
-			if len(form["captcha"].value()[-1]) < 1:
-				messages.error(request, "You have forgotten to enter a CAPTCHA.")
-			else:
-				messages.error(request, "You have entered an incorrect CAPTCHA.")
-
-			return form
-	except AttributeError:
-		messages.error(request, "You have entered an incorrect CAPTCHA.")
+	if not form.is_valid():
+		if len(form["captcha"].errors) > 0:
+			messages.error(request, "Your captcha was incorrect!")
+		else:
+			messages.error(request, "Something went wrong! Please try again.")
+			
 		return form
 
 	# Add the 3 files, so we don't get a
