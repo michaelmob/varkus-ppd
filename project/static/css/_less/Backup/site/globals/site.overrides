@@ -1,0 +1,42 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+html, body {
+	font-size: 16px !important;
+	background: #EEE url("/static/img/pattern-bg.png");
+}
+
+.main.menu {
+	margin: 0 !important;
+	border-radius: 0 !important;
+
+	.logo {
+		height: 1rem;
+		font-size: 1.5rem;
+
+		&:hover {
+			background-color: @primaryColor !important;
+		}
+	}
+}
+
+.pusher {
+	padding-top: 47px;
+}
+
+.wrapper {
+	padding: 0.5rem;
+}
+
+/* Computer Screens */
+@media only screen and (min-width: 992px) {
+	.wrapper {
+		margin-left: @sidebarWidth !important;
+	}
+}
+
+.ui.primary.text {
+	color: @primaryColor;
+}
+

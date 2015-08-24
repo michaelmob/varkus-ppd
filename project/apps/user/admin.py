@@ -44,13 +44,15 @@ class Inline_Referral_Earnings(admin.StackedInline):
 	max_num = 1
 
 
-
 @admin.register(User)
 class Admin_User(UserAdmin):
 
 	def leads(s, i): return i.earnings.leads
+
 	def earnings_today(s, i): return currency(i.earnings.today)
+
 	def earnings_month(s, i): return currency(i.earnings.month)
+
 	def earnings_total(s, i): return currency(i.earnings.total)
 
 	inlines = [

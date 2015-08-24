@@ -17,9 +17,8 @@ class Widget(Locker_Base):
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.name)
 
-
 	def set_locker(self, obj):
-		if obj == None:
+		if not obj:
 			self.locker 		= None
 			self.locker_id 		= None
 			self.locker_code 	= None
@@ -29,13 +28,11 @@ class Widget(Locker_Base):
 			self.locker_code 	= obj.code
 		self.save()
 
-
 	def locker_object(self):
 		try:
 			return apps.lockers.utils.Locker(self.locker).objects.get(id=self.locker_id)
 		except:
 			return None
-
 
 	def create(user, name, description):
 		obj = Widget.objects.create(
@@ -49,7 +46,6 @@ class Widget(Locker_Base):
 		Earnings.objects.get_or_create(obj=obj)
 
 		return obj
-
 
 
 class Earnings(Earnings_Base):

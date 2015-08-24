@@ -48,6 +48,7 @@ class Party(models.Model):
 
 class Profile(models.Model):
 	user 			= models.OneToOneField(User, primary_key=True)
+
 	party 			= models.ForeignKey(Party, blank=True, null=True, default=None)
 	referrer 		= models.ForeignKey(User, related_name="referrer_id", blank=True, null=True, default=None)
 	birthday		= models.DateField(blank=True, null=True)

@@ -1,0 +1,83 @@
+// http://learnsemantic.com/developing/customizing.html#setting-global-variables
+
+/*******************************
+         Site Variables
+*******************************/
+
+/*-------------------
+       Fonts
+--------------------*/
+
+@headerFont        : 'Arimo', Arial, Helvetica, sans-serif;
+@pageFont          : 'Arimo', Arial, Helvetica, sans-serif;
+@fontSmoothing     : antialiased;
+
+@importGoogleFonts : true;
+@googleFontName    : 'Arimo';
+@googleFontSizes   : '400,700,400italic,700italic';
+@googleSubset      : 'latin';
+
+@googleProtocol    : 'https://';
+@googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
+
+@imagePath         : "../../static/img/";
+@fontPath          : "../../static/fonts/";
+
+/*-------------------
+    Base Sizes
+--------------------*/
+
+@emSize            : 16px;
+@fontSize          : 16px;
+@sidebarWidth      : 15rem;
+
+/*-------------------
+    Site Colors
+--------------------*/
+
+/*---  Colors  ---*/
+@red               : #F44336;
+@lightRed          : lighten(@red, 2%);
+
+@green             : #1CB842;
+@lightGreen        : lighten(@green, 2%);
+
+/*---  Brand Colors  ---*/
+@primaryColor      : @red;
+@secondaryColor    : @black;
+
+
+/*-------------------
+      Page
+--------------------*/
+
+@pageBackground      : #F7F7F7;
+@pageOverflowX       : hidden;
+
+@fontSize            : 14px;
+@lineHeight          : 1.33;
+@textColor           : rgba(0, 0, 0, 0.8);
+
+@linkColor         : darken(@primaryColor, 1%);
+@linkHoverColor    : lighten(@primaryColor, 5%);
+
+@itemLinkColor     : @linkColor;
+
+/*-------------------
+        Sizes
+--------------------*/
+
+/*
+  To have sizing resolve to a specified pixel values adjust
+  the numerator to the desired font size and the denominator
+  to the base em size
+*/
+
+@miniSize        : (12 / 16);
+@tinySize        : (14 / 16);
+@smallSize       : (15 / 16);
+@mediumSize      : (16 / 16);
+@largeSize       : (18 / 16);
+@bigSize         : (20 / 16);
+@hugeSize        : (22 / 16);
+@massiveSize     : (26 / 16);

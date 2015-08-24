@@ -82,6 +82,9 @@
 
 	<div class="ui bottom attached tab frame segment active" data-tab="admin">
 		<div class="ui secondary admin menu">
+			<a target="staffFrame" class="refresh item">
+				<i class="refresh icon"></i>
+			</a>
 			<a href="/admin/auth/user/" target="staffFrame" class="users item">
 				<i class="user icon"></i>
 				Users
@@ -118,6 +121,10 @@
 				<i class="crosshairs icon"></i>
 				Tokens
 			</a>
+			<a href="/admin/billing/invoice/" target="staffFrame" class="item">
+				<i class="payment icon"></i>
+				Invoices
+			</a>
 			<a class="other item">
 				<i class="cube icon"></i>
 				Other
@@ -152,15 +159,31 @@ var iFrameOnLoad = function() {
 	deleteNode(".breadcrumbs>a:nth-child(1)");
 	deleteNode(".breadcrumbs>a:nth-child(1)");
 
-	$(".admin.menu>.item").click(function() {
-		$(".admin.menu>.item").removeClass("active");
-		$(this).addClass("active");
-	});
-
 	breadcrumbs.innerHTML = breadcrumbs.innerHTML.substr(7);
 	segment.height(0);
 	segment.height(iframe.contentDocument.querySelector("body").scrollHeight);
+
+	var h1 = iframe.contentDocument.querySelector("h1");
+	if(h1.innerText == "Change user") {
+		var u = iframe.contentDocument.querySelector("#id_profile-0-user").value;
+		h1.innerHTML = h1.innerHTML +
+			" <a href='/admin/leads/lead/?user=" + u + "'>[Leads]</a>" +
+			" <a href='/admin/widgets/widget/?user=" + u + "'>[Widgets]</a>" +
+			" <a href='/admin/files/file/?user=" + u + "'>[Files]</a>" +
+			" <a href='/admin/links/link/?user=" + u + "'>[Links]</a>" +
+			" <a href='/admin/lists/list/?user=" + u + "'>[Lists]</a>" +
+			" <a href='/admin/billing/invoice/?user=" + u + "'>[Invoices]</a>";
+	}
 }
+
+$(".admin.menu>.item").click(function() {
+	$(".admin.menu>.item").removeClass("active");
+	$(this).addClass("active");
+});
+
+$(".refresh.item").click(function() {
+	iframe.contentWindow.location.reload(true);
+});
 
 iframe.src = $.urlParam("url") || "/admin/auth/user/";
 
