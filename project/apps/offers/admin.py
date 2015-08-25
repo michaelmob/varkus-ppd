@@ -2,10 +2,8 @@ from django.contrib import admin
 from .models import Offer, Earnings
 
 
-
 class Inline_Earnings(admin.StackedInline):
 	model = Earnings
-
 
 
 @admin.register(Offer)

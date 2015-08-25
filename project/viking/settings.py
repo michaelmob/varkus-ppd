@@ -35,10 +35,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # TODO:
 #######
+# Make forms represent their models
 # Widget example code
 # Use polling to see active users on page
 # Allow users to see IPs of visitors
 # Referral guide
+# Set all tables to use django-tables2
 
 
 import os, socket
@@ -72,6 +74,7 @@ INSTALLED_APPS = (
 	"anora",                # anora
 	"django_countries",     # django-countries
 	"django_gravatar",		# django-gravatar2
+	"django_tables2", 		# django-tables2
 
 	"apps.user",
 	"apps.offers",

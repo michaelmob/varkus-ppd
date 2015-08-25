@@ -2,6 +2,7 @@
 {% load static %}
 {% load pagination %}
 {% load currency %}
+{% load django_tables2 %}
 
 {% block title %}Offers{% endblock %}
 
@@ -16,7 +17,7 @@
 					<form class="ui form ten wide column" method="GET">
 						<div class="field">
 							<div class="ui action input">
-								<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search...">
+								<input name="query" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search...">
 								<div class="ui submit basic button">
 									<i class="search icon"></i>
 								</div>
@@ -38,99 +39,13 @@
 					Offers
 				</div>
 
-				<div class="content">
-					{% include 'offers/paginate.html' with items=offers uri='offers-page' %}
-
-					<table class="ui sortable table">
-						<thead>
-							<tr>
-								<th column="1" class="">Name</a></th>
-								<th column="2" class="two wide">Category</th>
-								<th column="3" class="one wide">Country</th>
-								<th column="4" class="two wide">User Agent</th>
-								<th column="5" class="one wide">EPC</th>
-								<th column="6" class="one wide">Payout</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if offers|length < 1 %}
-								<tr>
-									<td colspan="5">No offers found.</td>
-								</tr>
-							{% else %}
-								{% with cut_amount=user.profile.party.cut_amount %}
-									{% for offer in offers %}
-										<tr>
-											<td><a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a></td>
-											<td>{{ offer.category }}</td>
-											<td>
-												{% if offer.flag != 'intl' %}
-													<i class="{{ offer.flag|lower }} flag"></i>
-												{% else %}
-													<i class="world icon"></i>
-												{% endif %}
-												
-												{% with e=offer.country_count|add:'-1' %}
-													{% if e > 1 %}
-														<small>{{ e }} more</small>
-													{% endif %}
-												{% endwith %}
-											</td>
-											<td>{{ offer.user_agent|default:'' }}</td>
-											<td>${{ offer.earnings_per_click|currency }}</td>
-											<td>${{ offer.payout|cut_percent:cut_amount|currency }}</td>
-										</tr>
-									{% endfor %}
-								{% endwith %}
-							{% endif %}
-						</tbody>
-					</table>
-
-					{% include 'offers/paginate.html' with items=offers uri='offers-page' not_inverted=True %}
+				<div class="no min height content">
+					{% render_table table 'cp/table.html' %}
 				</div>
 
 			</div>
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	$(".submit.basic").click(function() {
-		$("form:first").submit();
-	});
-
-	//$(".ui.form").form();
-	var _arg = function(key) {
-		var r = new RegExp("[\?&]" + key + "=([^&#]*)").exec(window.location.href);
-		return r == null ? "" : r[1];
-	};
-
-	var _remove = function(value) {
-		var index = order.indexOf(value.toString());
-		if(index > -1) order.splice(index, 1);
-	};
-
-	var order = _arg("o").split(',');
-	if(order[0] == "") order.pop(0);
-
-	$.each(order, function(index, value) {
-		value = parseInt(value);
-		direction = value > 0 ? "ascending" : "descending";
-		$("th[column=" + Math.abs(value) + "]").addClass("sorted " + direction);
-	});
-
-	$("th").click(function() {
-		var value = parseInt($(this).attr("column"));
-
-		_remove(value);
-		_remove(value*-1);
-
-		if(!$(this).hasClass("ascending"))
-			order.unshift($(this).hasClass("descending") ? value : value*-1);
-
-		url = "{% url 'offers-page' offers.number %}?o=" + order.join();
-		window.location = url{% if query|length > 0 %} + "&q={{ query }}"{% endif %};
-	});
-</script>
+<script>$(".submit").click(function() { $("form").submit(); });</script>
 {% endblock %}

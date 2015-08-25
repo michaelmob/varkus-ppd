@@ -9,6 +9,7 @@ from django.db.models import Q
 
 from ..models import Offer
 from ..forms import Form_Offer
+from ..tables import Table_Offer
 
 from utils import paginate
 from utils import charts
@@ -20,41 +21,20 @@ offer_list_columns = [
 
 
 def list(request, page=1):
-
-	# Multi-Sort Table
-	query = request.GET.get("q")
-	sort = request.GET.get("o", "").split(',')
-	order = ["-date"]
-
-	if sort[0] != "":
-		for idx in sort:
-			try:
-				idx = int(idx)
-				order.append(
-					("-" if idx < 0 else "") +
-					offer_list_columns[abs(idx) - 1]
-				)
-			except:
-				pass
-
-	get_params = request.GET.urlencode().replace("%2C", ",")
+	query = request.GET.get("query", None)
 
 	if query:
 		offers = Offer.objects.filter(earnings_per_click__gt="0.01").filter(
 			Q(name__icontains=query) | Q(anchor__icontains=query)
-		).order_by(*order)
+		).order_by("-earnings_per_click")
 	else:
-		offers = Offer.objects.all().filter(earnings_per_click__gt="0.01").order_by(*order)
-
-	# Pagination
-	offers = paginate.pages(offers, 30, page)
+		offers = Offer.objects.all().filter(earnings_per_click__gt="0.01").order_by("-earnings_per_click")
 
 	return render(
 		request, "offers/list.html",
 		{
-			"get_params": get_params,
-			"offers": offers,
-			"query": query
+			"query": query,
+			"table": Table_Offer.create(request, offers)
 		}
 	)
 
