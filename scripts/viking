@@ -1,0 +1,30 @@
+#!/bin/bash
+
+cd $(dirname $0)/../
+source env/bin/activate
+cd project/
+
+case "$1" in
+	start)
+		echo "Starting Viking"
+		gunicorn --workers=4 viking.wsgi &
+		../scripts/manage celerycam --frequency=30.0 &
+		celery worker --app=viking --beat --events &
+		;;
+	stop)
+		echo "Stopping Viking"
+		pkill gunicorn
+		kill -9 $(cat celeryev.pid); rm celeryev.pid
+		kill -9 `ps aux | grep celery | awk '{print $2}'`
+		;;
+	restart)
+		../scripts/viking stop
+		../scripts/viking start
+		;;
+	*)
+		echo "Usage: viking {start|stop|restart}"
+		exit 1
+		;;
+esac
+
+exit 0
