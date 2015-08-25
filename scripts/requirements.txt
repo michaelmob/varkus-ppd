@@ -3,11 +3,12 @@ django-recaptcha
 django-storages
 django-axes
 django-celery
-pillow
 django-countries
+django-tables2
+django-gravatar2
+pillow
 filemagic
 pysocks
-django-gravatar2
 geoip2
 gunicorn
 python-magic
