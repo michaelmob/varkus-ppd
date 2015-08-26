@@ -198,23 +198,35 @@ def receive(request, password=None):
 	try:
 		locker_reference = (type(locker_obj).__name__.lower(), locker_obj.pk)
 
+		#cache.delete("charts_line__user_%s" % user.id)
 		# Clear User/Locker Cache
-		cache.delete_many([
+		"""cache.delete_many((
 			"charts_line__user_%s" % user.id,
 			"charts_map__user_%s" % user.id,
 			"recent__user_%s" % user.id,
 			"charts__%s_%s" % locker_reference,
 			"leads__%s_%s" % locker_reference
-		])
+		))"""
+
+		# cache.delete_many with memcached doesn't work
+		cache.delete("charts_line__user_%s" % user.id)
+		cache.delete("charts_map__user_%s" % user.id)
+		cache.delete("recent__user_%s" % user.id)
+		cache.delete("charts__%s_%s" % locker_reference)
+		cache.delete("leads__%s_%s" % locker_reference)
 	except:
 		pass
 
 	if token:
 		# Clear Caches
-		cache.delete_many([
+		"""cache.delete_many([
 			"charts__offer_%s" % offer.id,
 			"token__%s" % token.unique,
-		])
+		])"""
+
+		# cache.delete_many with memcached doesn't work
+		cache.delete("charts__offer_%s" % offer.id)
+		cache.delete("token__%s" % token.unique)
 
 		# if not lead_blocked:
 		# Send Postback if Widget
