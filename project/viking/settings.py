@@ -1,5 +1,5 @@
 """
-Viking 1.0.3
+Viking 1.1.0
 
 Django settings for Viking project.
 
