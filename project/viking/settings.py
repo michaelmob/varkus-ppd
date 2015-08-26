@@ -115,14 +115,6 @@ ROOT_URLCONF = "viking.urls"
 
 WSGI_APPLICATION = "viking.wsgi.application"
 
-# Cache
-CACHES = {
-	"default": {
-		"BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-		"LOCATION": "unique-snowflake"
-	}
-}
-
 # Login
 LOGIN_URL = "/user/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"

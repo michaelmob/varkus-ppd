@@ -6,6 +6,7 @@ django-celery
 django-countries
 django-tables2
 django-gravatar2
+python-memcached
 pillow
 filemagic
 pysocks

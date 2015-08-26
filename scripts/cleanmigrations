@@ -1,0 +1,3 @@
+cd $(dirname $0)/../
+cd project/
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete

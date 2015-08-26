@@ -10,16 +10,24 @@ EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
 
 
-# SECURITY WARNING: don"t run with debug turned on in production!
+# SECURITY WARNING: do not run with debug turned on in production!
 ALLOWED_HOSTS = []
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "1pocfkh#z)llgp&h_t@svn^o3r^x6^g)s#qqx(udo0i7j3hj*e"
 
+# Cache
+# https://docs.djangoproject.com/en/1.8/ref/settings/#cache
+CACHES = {
+	"default": {
+		"BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+		"LOCATION": "unique-snowflake"
+	}
+}
 
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 DATABASES = {
 	"default": {
 		"ENGINE": "django.db.backends.sqlite3",
@@ -34,7 +42,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = "/static/"
 STATIC_ROOT = ""  # os.path.join(BASE_DIR, "static/")
 
