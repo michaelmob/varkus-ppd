@@ -56,7 +56,7 @@ def map_chart_dict(objects):
 		
 		# Otherwise add the payment to the dict
 		else:
-			chart_dict[obj.country] = (float(obj.user_payout), 1)
+			chart_dict[obj.country] = [float(obj.user_payout), 1]
 
 	for key, value in chart_dict.items():
 		chart.append((key, value[0], value[1]))
