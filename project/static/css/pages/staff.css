@@ -1,4 +1,4 @@
-#staffFrame {
+iframe {
 	border: 0;
 	width: 100%;
 	height: 100%;
@@ -6,17 +6,9 @@
 
 .frame.segment {
 	padding: 0 !important;
-	height: 100%;
+	margin: 0 !important;
+	height: 600px;
 }
-
-.buttons.container {
-	padding: 0.5rem;
-}
-
-.frame.segment > .ui.grid>.column:not(.row) {
-	padding: 0 !important;
-}
-
-.admin.menu {
+.staff.menu {
 	margin: 0 !important;
 }

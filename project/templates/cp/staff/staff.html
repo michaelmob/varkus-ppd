@@ -1,0 +1,47 @@
+{% extends 'cp.html' %}
+{% load static %}
+
+{% block title %}Staff{% endblock %}
+
+{% block tab %}staff{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pages/staff.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui secondary inverted orange staff menu">
+		<a class="item" href="/admin/auth/user/">Users</a>
+		<a class="item" href="/admin/auth/group/">Groups</a>
+		<a class="item" href="/admin/user/party/">Parties</a>
+	</div>
+
+	<div class="ui secondary inverted blue staff menu">
+		<a class="item" href="/admin/tickets/thread/">Tickets</a>
+		<a class="item" href="/admin/support/contact_message/">Contacts</a>
+		<a class="item" href="/admin/support/abuse_report/">Reports</a>
+		<a class="item" href="/admin/billing/invoice/">Invoices</a>
+	</div>
+
+	<div class="ui secondary inverted purple staff menu">
+		<a class="item" href="/admin/widgets/widget/">Widgets</a>
+		<a class="item" href="/admin/files/file/">Files</a>
+		<a class="item" href="/admin/links/link/">Links</a>
+		<a class="item" href="/admin/lists/list/">Lists</a>
+	</div>
+
+	<div class="ui secondary inverted teal staff menu">
+		<a class="item" href="/admin/offers/offer/">Offers</a>
+		<a class="item" href="/admin/leads/lead/">Leads</a>
+		<a class="item" href="/admin/leads/token/">Tokens</a>
+	</div>
+
+	<div class="ui frame segment">
+		<iframe name="frame" src="/admin/auth/user/"></iframe>
+	</div>
+</div>
+
+<script>deposits = { {% for deposit in deposits %}"{{ deposit.name }}": "{{ deposit.code }}",{% endfor %} };</script>
+<script type="text/javascript" src="{% static 'js/pages/staff.js' %}"></script>
+{% endblock %}

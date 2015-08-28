@@ -16,14 +16,13 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/visibility.min.css' %}" />
 	
-	{% block head0 %}{% endblock %}
+	{% block head_before %}{% endblock %}
 
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'js/global.js' %}"></script>
 
 	{% block head %}{% endblock %}
-	{% block head_next %}{% endblock %}
 </head>
 
 <body>
@@ -178,12 +177,21 @@
 			{% if user.is_staff %}
 				<div class="header item">Staff</div>
 
-				<a class="item staff-tickets" href="{% url 'staff-tickets' %}">
-					<i class="ticket icon"></i> Tickets
-				</a>
+				{% if user.is_superuser %}
+					<a class="item server" href="{% url 'staff-server' %}">
+						<i class="server icon"></i>
+						Server
+					</a>
+				{% endif %}
 
 				<a class="item staff" href="{% url 'staff' %}">
-					<i class="shield icon"></i> Admin
+					<i class="wizard icon"></i>
+					Staff
+				</a>
+
+				<a target="_blank" class="item admin" href="/admin/">
+					<i class="shield icon"></i>
+					Admin
 				</a>
 			{% endif %}
 
@@ -212,9 +220,7 @@
 		{% block footer %}{% endblock %}
 	</div>
 
-	<script type="text/javascript">
-		$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");
-	</script>
+	<script type="text/javascript">$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
 </body>
 </html>
 {# {% endspaceless %} #}

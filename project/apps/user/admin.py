@@ -1,13 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
 from apps.cp.templatetags.currency import currency
 from apps.user.models import (Profile, Party, Earnings, Referral_Earnings)
 from apps.billing.models import Billing
 
-# Unregister
-admin.site.unregister(Group)
 admin.site.unregister(User)
 
 

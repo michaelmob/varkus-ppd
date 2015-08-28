@@ -1,0 +1,105 @@
+{% extends 'cp.html' %}
+{% load static %}
+
+{% block title %}Server{% endblock %}
+
+{% block tab %}server{% endblock %}
+
+{% block head_before %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/pages/staff.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+
+	<div class="ui two column grid stackable no margin">
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="tasks icon"></i>
+					Specifications
+				</div>
+				<div class="content">
+					<table class="ui definition table">
+						<tbody>
+							<tr>
+								<td>CPU</td>
+								<td>
+									{{ cpu }}% ({{ cpu_count }} cores)
+									<div class="ui indicating progress" data-percent="{{ cpu }}"><div class="bar"></div></div>
+								</td>
+							</tr>
+							<tr>
+								<td>Memory</td>
+								<td>
+									{{ memory_used|filesizeformat }}/{{ memory_total|filesizeformat }}
+									<div class="ui indicating progress" data-percent="{% widthratio memory_used memory_total 100 %}"><div class="bar"></div></div>
+								</td>
+							</tr>
+							<tr>
+								<td>Swap</td>
+								<td>
+									{{ swap.used|filesizeformat }}/{{ swap.total|filesizeformat }}
+									<div class="ui indicating progress" data-percent="{% widthratio swap.used swap.total 100 %}"><div class="bar"></div></div>
+								</td>
+							</tr>
+							<tr>
+								<td>Disk</td>
+								<td>
+									{{ disk.used|filesizeformat }}/{{ disk.total|filesizeformat }}
+									<div class="ui indicating progress" data-percent="{% widthratio disk.used disk.total 100 %}"><div class="bar"></div></div>
+								</td>
+							</tr>
+							<tr>
+								<td>Uptime</td>
+								<td>{{ uptime }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="server icon"></i>
+					Information
+				</div>
+				<div class="content">
+					<table class="ui definition table">
+						<tbody>
+							<tr>
+								<td>System</td>
+								<td>{{ uname.system }}</td>
+							</tr>
+							<tr>
+								<td>Node</td>
+								<td>{{ uname.node }}</td>
+							</tr>
+							<tr>
+								<td>Release</td>
+								<td>{{ uname.release }}</td>
+							</tr>
+							<tr>
+								<td>Version</td>
+								<td>{{ uname.version }}</td>
+							</tr>
+							<tr>
+								<td>Machine</td>
+								<td>{{ uname.machine }}</td>
+							</tr>
+							<tr>
+								<td>Processor</td>
+								<td>{{ uname.processor }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>$(".ui.progress").progress();</script>
+{% endblock %}

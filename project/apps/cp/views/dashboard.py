@@ -67,20 +67,3 @@ def staff(request):
 			"deposits": Deposit.objects.all()
 		}
 	)
-
-
-@staff_member_required
-def staff_info(request):
-	output = "<h1>META</h1>"
-	for k, v in request.META.items():
-		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
-
-	output += "<br/><br/><h1>POST</h1>"
-	for k, v in request.POST.items():
-		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
-
-	output += "<br/><br/><h1>GET</h1>"
-	for k, v in request.GET.items():
-		output += "<strong>%s</strong>: %s<br/>" % (k, v,)
-
-	return HttpResponse(output)

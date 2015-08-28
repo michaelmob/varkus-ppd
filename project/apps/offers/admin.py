@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Offer, Earnings
+from django.core.urlresolvers import reverse
 
 
 class Inline_Earnings(admin.StackedInline):
@@ -8,6 +9,13 @@ class Inline_Earnings(admin.StackedInline):
 
 @admin.register(Offer)
 class Admin_Offer(admin.ModelAdmin):
+	def view_on_site(self, obj):
+		return reverse("offers-manage", args=(obj.id,))
+
 	inlines = [Inline_Earnings]
-	list_display = ("name", "anchor", "category", "user_agent", "date", "country_count", "flag", "earnings_per_click", "payout", "difference")
+	list_display = (
+		"name", "anchor", "category", "user_agent",
+		"date", "country_count", "flag", "earnings_per_click",
+		"payout", "difference"
+	)
 	search_fields = ["name", "country", "anchor"]
