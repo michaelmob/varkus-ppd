@@ -36,11 +36,11 @@
 			{% site_name %}
 		</a>
 		
-		<div class="right menu computer only">
+		<div class="right menu tablet computer only">
 			{% if user.is_authenticated %}
 
 				{# Earnings #}
-				<a class="item computer only">
+				<a class="item computer only default">
 					<small>Today: </small>
 					<small class="ui primary text">
 						${{ user.earnings.today|currency }}

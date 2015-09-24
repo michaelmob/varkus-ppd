@@ -3,7 +3,7 @@ $(".ui.modal.edit")
 	.modal("attach events", ".edit.button", "show");
 
 
-var set_invisible = function() {
+var setInvisible = function() {
 	$("#paypal").hide();
 	$("#check").hide();
 	$("#wire").hide();
@@ -11,7 +11,7 @@ var set_invisible = function() {
 }
 
 
-var form_paypal = function() {
+var formPaypal = function() {
 	$("form").form({
 		paypal_email: {
 			identifier : "paypal_email",
@@ -29,7 +29,7 @@ var form_paypal = function() {
 };
 
 
-var form_check = function() {
+var formCheck = function() {
 	$("form").form({
 		check_pay_to: {
 			identifier : "check_pay_to",
@@ -56,7 +56,7 @@ var form_check = function() {
 };
 
 
-var form_wire = function() {
+var formWire = function() {
 	$("form").form({
 		wire_beneficiary_name: {
 			identifier : "wire_beneficiary_name",
@@ -110,7 +110,7 @@ var form_wire = function() {
 };
 
 
-var form_direct = function() {
+var formDirect = function() {
 	$("form").form({
 		direct_account_holder: {
 			identifier : "account_holder",
@@ -154,27 +154,27 @@ var form_direct = function() {
 	});
 };
 
-set_invisible();
+setInvisible();
 
 $(".payment.method").change(function() {
-	set_invisible();
+	setInvisible();
 	$("#" + $(this).val()).show();
 
 	switch($(this).val()) {
 		case "check":
-			form_check();
+			formCheck();
 			break;
 
 		case "wire":
-			form_wire();
+			formWire();
 			break;
 
 		case "direct":
-			form_direct();
+			formDirect();
 			break;
 
 		default:
-			form_paypal();
+			formPaypal();
 			return;
 	}
 });

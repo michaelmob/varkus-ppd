@@ -11,6 +11,8 @@
 
 {% block content %}
 <div class="wrapper">
+
+	{% comment %}
 	<div class="ui secondary inverted orange staff menu">
 		<a class="item" href="/admin/auth/user/">Users</a>
 		<a class="item" href="/admin/auth/group/">Groups</a>
@@ -35,6 +37,52 @@
 		<a class="item" href="/admin/offers/offer/">Offers</a>
 		<a class="item" href="/admin/leads/lead/">Leads</a>
 		<a class="item" href="/admin/leads/token/">Tokens</a>
+	</div>
+	{% endcomment %}
+
+
+	<div class="ui four item snav menu">
+		<div class="ui dropdown title item">
+			Auth
+			<i class="dropdown icon"></i>
+			<div class="staff menu">
+				<a class="item" href="/admin/auth/user/">Users</a>
+				<a class="item" href="/admin/auth/group/">Groups</a>
+				<a class="item" href="/admin/user/party/">Parties</a>
+			</div>
+		</div>
+
+		<div class="ui dropdown title item">
+			Support
+			<i class="dropdown icon"></i>
+			<div class="staff menu">
+				<a class="item" href="/admin/tickets/thread/">Tickets</a>
+				<a class="item" href="/admin/support/contact_message/">Contacts</a>
+				<a class="item" href="/admin/support/abuse_report/">Reports</a>
+				<a class="item" href="/admin/billing/invoice/">Invoices</a>
+			</div>
+		</div>
+
+		<div class="ui dropdown title item">
+			Lockers
+			<i class="dropdown icon"></i>
+			<div class="staff menu">
+				<a class="item" href="/admin/widgets/widget/">Widgets</a>
+				<a class="item" href="/admin/files/file/">Files</a>
+				<a class="item" href="/admin/links/link/">Links</a>
+				<a class="item" href="/admin/lists/list/">Lists</a>
+			</div>
+		</div>
+
+		<div class="ui dropdown title item">
+			Offers
+			<i class="dropdown icon"></i>
+			<div class="staff menu">
+				<a class="item" href="/admin/offers/offer/">Offers</a>
+				<a class="item" href="/admin/leads/lead/">Leads</a>
+				<a class="item" href="/admin/leads/token/">Tokens</a>
+			</div>
+		</div>
 	</div>
 
 	<div class="ui frame segment">

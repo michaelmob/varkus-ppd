@@ -4,10 +4,13 @@ $.urlParam = function(name){
 }
 
 $(".staff .item").click(function(e) {
+	$("iframe").attr("src", $(this).attr("href"));
+
 	$(".staff .item").removeClass("active");
 	$(this).addClass("active");
 
-	$("iframe").attr("src", $(this).attr("href"));
+	$(".title .item").removeClass("selected");
+	$(this).parent().parent().addClass("selected");
 	
 	e.preventDefault();
 	return;
@@ -26,14 +29,18 @@ $("iframe")
 	);
 
 	// Get iframe pathname, but only the first 4 of them
-// for the link finding otherwise the wrong url is sent
+	// for the link finding otherwise the wrong url is sent
 	// and the tab won't get activated
 	var iframePath = contents.get(0).location.pathname;
 	var iframePath2 = (iframePath.split("/").splice(0, 4)).join("/")
 
 	// Set tab active
-	$(".tabular .item").removeClass("active");
-	$("a[href*='" + iframePath2 + "']").addClass("active");
+	$(".staff .item").removeClass("active");
+	$(".title.item").removeClass("selected");
+	
+	var el = $("a[href*='" + iframePath2 + "']");
+	el.addClass("active");
+	el.parent().parent().addClass("selected");
 
 	// Set URL with iframe path so we can refresh/save link
 	window.history.replaceState({} , "", "?url=" + iframePath);
@@ -41,16 +48,8 @@ $("iframe")
 	// Set height of frame segment to iframe's content height
 	$(".frame.segment").height(contents.find("body").height());
 
-	// Add options to model admin pages
-	switch(contents.find("h1").text()) {
-		case "Change user": userOptions(contents); break;
-		case "Select lead to change": leadOptions(contents); break;
-
-		case "Change widget": lockerOptions(contents, "WIDGET"); break;
-		case "Change file": lockerOptions(contents, "FILE"); break;
-		case "Change link": lockerOptions(contents, "LINK"); break;
-		case "Change list": lockerOptions(contents, "LIST"); break;
-	}
+	// Inject options to model admin pages
+	injectOptions(contents, contents.find("h1").text());
 
 	// Change View site link to open new tab
 	contents.find(".viewsitelink").click(function(e) {
@@ -59,6 +58,17 @@ $("iframe")
 		return;
 	});
 });
+
+var injectOptions = function(contents, text) {
+	switch(text) {
+		case "Change user": userOptions(contents); break;
+		case "Select lead to change": leadOptions(contents); break;
+		case "Change widget": lockerOptions(contents, "WIDGET"); break;
+		case "Change file": lockerOptions(contents, "FILE"); break;
+		case "Change link": lockerOptions(contents, "LINK"); break;
+		case "Change list": lockerOptions(contents, "LIST"); break;
+	}
+};
 
 var userOptions = function(contents) {
 	var id = contents.find("#id_profile-0-user").val();
@@ -70,14 +80,6 @@ var userOptions = function(contents) {
 		" <a href='/admin/lists/list/?user=" + id + "'>[Lists]</a>" +
 		" <a href='/admin/billing/invoice/?user=" + id + "'>[Invoices]</a></small>"
 	);
-};
-
-var leadOptions = function(contents) {
-	var id = contents.find("#id_profile-0-user").val();
-
-	$.each(deposits, function(key, value) { 
-		$("h1", contents).append(" <a style='font-size:12px' href='/admin/leads/lead/?deposit=" + value + "'>[" + key + "]</a> ");
-	});
 };
 
 var leadOptions = function(contents) {

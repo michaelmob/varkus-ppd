@@ -9,6 +9,8 @@ iframe {
 	margin: 0 !important;
 	height: 600px;
 }
-.staff.menu {
-	margin: 0 !important;
+
+.snav.menu {
+	margin: 0;
+	border-radius: 0;
 }

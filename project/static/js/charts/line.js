@@ -58,7 +58,7 @@ var loadLineChart = function() {
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
-			if(!$(".computer.only").is(":visible")) {
+			if(!$(".computer.only.default").is(":visible")) {
 				for (var i = 0; i < response.data.length; i++) {
 					if(response.data[i].data) {
 						response.data[i].data.splice(hour > 1 ? 0 : 12, 12);
