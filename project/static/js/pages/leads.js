@@ -20,11 +20,11 @@ $(function() {
 	};
 
 	var getSettingBoolean = function (key) {
-		return localStorage.getItem(key) == "true" ? "check" : "uncheck";
+		return localStorage.getItem(key) == "false" ? "uncheck" : "check";
 	};
 
 	var loadSettings = function() {
-		$("#setting-sound").dropdown("set selected", localStorage.getItem("leads-sound"));
+		$("#setting-sound").dropdown("set selected", localStorage.getItem("leads-sound") || "bell");
 		$("#setting-update").checkbox(getSettingBoolean("leads-update"));
 		$("#setting-title").checkbox(getSettingBoolean("leads-title"));
 	};
@@ -123,7 +123,12 @@ $(function() {
 
 		var _this = $(this);
 		var prev = _this.text();
-		_this.text("Saved")
+		_this.addClass("loading");
+
+		setTimeout(function() {
+			_this.removeClass("loading");
+			_this.text("Saved!");
+		}, 250);
 
 		setTimeout(function() {
 			_this.text(prev);

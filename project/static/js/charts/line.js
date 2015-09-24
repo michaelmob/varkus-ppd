@@ -3,7 +3,7 @@ flotData = null;
 var amPMTickFormatter = function (n, s) {
 	s = n > 12 ? "p" : "a";
 	s = (((n + 11) % 12) + 1) + s;
-	s = n != hour ? s : "[" + s + "]"
+	s = n != hour ? s : "[<strong>" + s + "</strong>]";
 	return s;
 };
 
@@ -58,7 +58,14 @@ var loadLineChart = function() {
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
-			flotData = response;
+			if(!$(".computer.only").is(":visible")) {
+				for (var i = 0; i < response.data.length; i++) {
+					if(response.data[i].data) {
+						response.data[i].data.splice(hour > 1 ? 0 : 12, 12);
+					}
+				};
+			}
+
 			$(".line.chart.container").height(195);
 			$.plot(".line.chart.container", response.data, flotOptions);
 			$(".line.dimmer").removeClass("active");

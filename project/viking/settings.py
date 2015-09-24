@@ -10,12 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-# apt-get install
-#	build-essential
-#	python3.4-dev
-#	python-magic
-#	rabbitmq-server
-
 # pip install
 #   django
 #   django-recaptcha
@@ -35,6 +29,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # TODO:
 #######
+# Use semantic ui api
 # Make forms represent their models
 # Widget example code
 # Use polling to see active users on page
