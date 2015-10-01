@@ -2,7 +2,7 @@ from django.shortcuts import render
 from ..models import Invoice, Billing, PAYMENT_CHOICES_USER_DICT
 from ..forms import Form_Paypal, Form_Check, Form_Wire, Form_Direct
 
-from utils import paginate
+from ..tables import Table_Invoice
 
 
 def overview(request, page=1):
@@ -18,13 +18,11 @@ def overview(request, page=1):
 	if request.POST:
 		__overview_modify(request.POST or None, forms, info)
 
-	invoices = paginate.pages(
-		Invoice.objects.filter(user=request.user).order_by("-creation_date"),
-		15, page)
+	table = Table_Invoice.create(request)
 
 	return render(request, "billing/overview.html", {
 		"payment_choices":	PAYMENT_CHOICES_USER_DICT,
-		"invoices":			invoices,
+		"table":			table,
 		"form_paypal":		forms["paypal"],
 		"form_check":		forms["check"],
 		"form_wire":		forms["wire"],

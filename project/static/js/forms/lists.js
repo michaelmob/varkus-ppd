@@ -8,7 +8,7 @@ $("form").form({
 		rules: [
 		{
 			type   : "empty",
-			prompt : "Please a name for your list."
+			prompt : "Please enter a name for your list."
 		}
 		]
 	},

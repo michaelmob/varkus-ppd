@@ -14,13 +14,8 @@ from ..tables import Table_Offer
 from utils import paginate
 from utils import charts
 
-offer_list_columns = [
-	"name", "category", "flag", "user_agent",
-	"earnings_per_click", "payout"
-]
 
-
-def list(request, page=1):
+def offers(request):
 	query = request.GET.get("query", None)
 
 	if query:
@@ -31,7 +26,7 @@ def list(request, page=1):
 		offers = Offer.objects.all().filter(earnings_per_click__gt="0.01").order_by("-earnings_per_click")
 
 	return render(
-		request, "offers/list.html",
+		request, "offers/offers.html",
 		{
 			"query": query,
 			"table": Table_Offer.create(request, offers)

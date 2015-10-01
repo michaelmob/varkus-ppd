@@ -6,23 +6,22 @@ from django.core.urlresolvers import reverse
 
 from ..forms import Widget_Create, Widget_Edit
 from ..models import Widget
+from ..tables import Table_Widget
 
-from utils import charts
-from utils import paginate, cache2
+from utils import charts, cache2
 
 
 def display(request, page=1):
 	if request.POST:
 		return create(request)
 
-	widgets = Widget.objects.filter(user=request.user)
-	widgets = paginate.pages(widgets, 15, page)
+	table = Table_Widget.create(request)
 
 	return render(
 		request,
 		"lockers/widgets/display.html",
 		{
-			"widgets": widgets,
+			"table": table,
 			"MAX_WIDGETS": settings.MAX_WIDGETS,
 			"form": Widget_Create()
 		}

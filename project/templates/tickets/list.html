@@ -1,5 +1,6 @@
 {% extends 'cp.html' %}
 {% load static %}
+{% load django_tables2 %}
 
 {% block title %}Tickets{% endblock %}
 
@@ -92,44 +93,7 @@
 					Tickets
 				</div>
 				<div class="content">
-
-					{% include 'cp/paginate.html' with items=threads uri='tickets-page' %}
-
-					<table class="ui table">
-						<thead>
-							<tr>
-								<th>Subject</th>
-								<th>Date</th>
-								<th>Last Replier</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if threads|length > 0 %}
-							{% for thread in threads %}
-							<tr {% if thread.is_unread %}class="warning"{% endif %}>
-								<td>
-									<a class="block" href="{% url 'tickets-thread' thread.pk %}">
-										{{ thread.subject|truncatechars:'30' }}
-									</a>
-								</td>
-								<td>{{ thread.date_time }}</td>
-								<td>{{ thread.last_reply_user.first_name }}</td>
-								{% if thread.closed %}
-								<td class="negative">Closed</td>
-								{% else %}
-								<td class="positive">Open</td>
-								{% endif %}
-							</tr>
-							{% endfor %}
-							{% else %}
-							<tr>
-								<td colspan="6">You have not created any tickets.</td>
-							</tr>
-							{% endif %}
-						</tbody>
-					</table>
+					{% render_table table 'cp/table.html' %}
 				</div>
 			</div>
 		</div>

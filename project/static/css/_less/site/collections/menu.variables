@@ -1,3 +1,5 @@
 /*******************************
     User Variable Overrides
 *******************************/
+@invertedDividerBackground: transparent;
+@invertedVerticalDividerBackground: @invertedDividerBackground;

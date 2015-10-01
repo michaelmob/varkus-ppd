@@ -77,13 +77,13 @@ class Billing(models.Model):
 class Invoice(models.Model):
 	user 				= models.ForeignKey(User)
 
-	creation_date 		= models.DateField()
-	due_date 			= models.DateField()
+	creation_date 		= models.DateField(verbose_name="Creation Date")
+	due_date 			= models.DateField(verbose_name="Due Date")
 
 	billing_start_date 	= models.DateField()
 	billing_end_date 	= models.DateField()
 
-	total_amount 		= models.DecimalField(max_digits=10, decimal_places=2)
+	total_amount 		= models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Total Amount")
 	referral_amount		= models.DecimalField(max_digits=10, decimal_places=2)
 
 	paid 				= models.BooleanField(default=False)

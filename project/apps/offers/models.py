@@ -19,9 +19,9 @@ from utils.user_agent import get_ua
 class Offer(models.Model):
 	offer_id	 			= models.IntegerField()
 	priority 				= models.BooleanField(default=False)
-	name 					= models.CharField(max_length=150, verbose_name="Name")
-	anchor 					= models.CharField(max_length=500, verbose_name="Anchor")
-	requirements 			= models.CharField(max_length=500, verbose_name="Requirements")
+	name 					= models.CharField(max_length=250, verbose_name="Name")
+	anchor 					= models.CharField(max_length=1000, verbose_name="Anchor")
+	requirements 			= models.CharField(max_length=1000, verbose_name="Requirements")
 	user_agent 				= models.CharField(max_length=50, default="", blank=True, verbose_name="User Agent")
 	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, blank=True, null=True, verbose_name="Category")
 	earnings_per_click 		= models.DecimalField(max_digits=15, decimal_places=2, verbose_name="EPC")
@@ -30,7 +30,7 @@ class Offer(models.Model):
 	country_count 			= models.IntegerField()
 	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Payout")
 	difference				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	tracking_url 			= models.CharField(max_length=300)
+	tracking_url 			= models.CharField(max_length=1000)
 	date 					= models.DateField()
 
 	def __str__(self):

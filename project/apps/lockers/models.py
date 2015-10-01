@@ -9,10 +9,10 @@ from apps.cp.models import Earnings_Base
 ''' Base for Lockers '''
 class Locker_Base(models.Model):
 	user 		= models.ForeignKey(User)
-	code 		= models.CharField(max_length=10)
-	name 		= models.CharField(max_length=100)
-	description = models.TextField(max_length=500, default="", blank=True, null=True)
-	date_time 	= models.DateTimeField()
+	code 		= models.CharField(max_length=10, verbose_name="Code")
+	name 		= models.CharField(max_length=100, verbose_name="Name")
+	description = models.TextField(max_length=500, default="", blank=True, null=True, verbose_name="Description")
+	date_time 	= models.DateTimeField(verbose_name="Date")
 
 	lead_block	= models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],

@@ -125,19 +125,26 @@ def receive(request, password=None):
 			except:
 				user = None
 
+			# If user exists and lead is approved
 			if user and approved:
+				# If offer country is in the country_block of the locker object
 				if offer:
 					if offer.flag in locker_obj.country_block:
 						lead_blocked = True
 						response["debug"] = "Country block."
 
+				# If lead_block chance is hit, then block the lead
 				if locker_obj.lead_block > 0:
 					if randint(0, 100) <= (locker_obj.lead_block * 100):
 						lead_blocked = True
 						response["debug"] = "Lead block."
 
+				# If the lead wasn't leadblocked and the type is "Lead" (as opposed to Staff or Paid)
 				if not lead_blocked and typeof == "lead":
-					cut_amount = user.profile.party.cut_amount
+					try:
+						cut_amount = Decimal(user.profile.party.cut_amount)
+					except:
+						cut_amount = Decimal(settings.DEFAULT_CUT_AMOUNT)
 
 					# Locker Object
 					locker_obj.earnings.add(payout, cut_amount, True)

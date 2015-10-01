@@ -26,13 +26,13 @@ class Thread(models.Model):
 
 	user = models.ForeignKey(User)
 	ip_address = models.GenericIPAddressField()
-	date_time = models.DateTimeField()
+	date_time = models.DateTimeField(verbose_name="Date")
 	priority = models.CharField(max_length=20, default="1", choices=PRIORITIES)
 	type = models.CharField(max_length=50, default="other", choices=TYPES)
-	subject = models.CharField(max_length=100)
-	last_reply_user = models.ForeignKey(User, related_name="last_reply_user_id", default=None, blank=True, null=True)
+	subject = models.CharField(max_length=100, verbose_name="Subject")
+	last_reply_user = models.ForeignKey(User, related_name="last_reply_user_id", verbose_name="Last Replier", default=None, blank=True, null=True)
 	last_reply_date_time = models.DateTimeField(default=None, blank=True, null=True)
-	closed = models.BooleanField(default=False)
+	closed = models.BooleanField(default=False, verbose_name="Status")
 	staff_closed = models.BooleanField(default=False)
 	unread = models.BooleanField(default=False)
 

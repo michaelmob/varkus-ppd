@@ -1,6 +1,7 @@
 {% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
+{% load django_tables2 %}
 
 {% block title %}File Locker{% endblock %}
 
@@ -16,37 +17,7 @@
 					Files
 				</div>
 				<div class="content">
-					{% include 'cp/paginate.html' with items=files uri='files-page' %}
-
-					<table class="ui table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Leads</th>
-								<th>Clicks</th>
-								<th>Month</th>
-								<th>Total</th>
-								<th>Date</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if files|length < 1 %}
-								<td colspan="5">You have not uploaded any files, yet.</td></tr>
-							{% else %}
-								{% for file in files %}
-									<tr>
-										<td><a href="{% url 'files-manage' file.code %}">{{ file.name }}</a></td>
-										<td>{{ file.earnings.leads|default:'0' }}</td>
-										<td>{{ file.earnings.clicks|default:'0' }}</td>
-										<td>${{ file.earnings.month|currency }}</td>
-										<td>${{ file.earnings.total|currency }}</td>
-										<td>{{ file.date_time }}</td>
-									</tr>
-								{% endfor %}
-							{% endif %}
-						</tbody>
-					</table>
+					{% render_table table 'cp/table.html' %}
 				</div>
 			</div>
 		</div>

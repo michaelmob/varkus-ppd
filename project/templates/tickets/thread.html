@@ -16,7 +16,7 @@
 					Ticket
 				</div>
 				<div class="content">
-					<table class="ui table">
+					<table class="ui definition two column table">
 						<tbody>
 							<tr>
 								<td>Subject </td>
@@ -113,7 +113,7 @@
 									</div>
 									<div class="actions">
 										{% if request.user == post.user %}
-											<a target="_blank" href="{% url 'tickets-thread-action' thread.pk 'delete' %}?id={{ post.id }}">
+											<a href="{% url 'tickets-thread-action' thread.pk 'delete' %}?id={{ post.id }}">
 												Delete
 											</a>
 										{% endif %}

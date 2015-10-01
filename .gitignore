@@ -3,7 +3,15 @@
 *.sqlite3
 *.mmdb
 *.pid
+*.sublime-project
+*.sublime-workspace
 env/
 __pycache__/
 media/
 private/
+
+migrations/*
+migrations/*.*
+!project/apps/*/migrations/__init__.py
+project/apps/*/migrations/*.*
+project/apps/*/migrations/*

@@ -8,20 +8,17 @@ from django.conf import settings
 
 from ..models import File
 from ..forms import File_Edit
+from ..tables import Table_File
 
-from utils import charts
-from utils import paginate, cache2
+from utils import charts, cache2
 
 
 def display(request, page=1):
-	files = File.objects.filter(user=request.user)
-	files = paginate.pages(files, 15, page)
-
 	return render(
 		request,
 		"lockers/files/display.html",
 		{
-			"files": files,
+			"table": Table_File.create(request),
 			"MAX_FILES": settings.MAX_FILES
 		}
 	)

@@ -1,6 +1,7 @@
 {% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
+{% load django_tables2 %}
 
 {% block title %}List Locker{% endblock %}
 
@@ -76,40 +77,7 @@
 					Lists
 				</div>
 				<div class="content">
-
-					{% include 'cp/paginate.html' with items=lists uri='lists-page' %}
-
-					<table class="ui table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Items</th>
-								<th>Leads</th>
-								<th>Clicks</th>
-								<th>Month</th>
-								<th>Total</th>
-								<th>Date</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if lists|length < 1 %}
-							<td colspan="5">You have not created any lists, yet.</td></tr>
-							{% else %}
-							{% for list in lists %}
-							<tr>
-								<td><a href="{% url 'lists-manage' list.code %}">{{ list.name }}</a></td>
-								<td>{{ list.item_count }}</td>
-								<td>{{ list.earnings.leads|default:'0' }}</td>
-								<td>{{ list.earnings.clicks|default:'0' }}</td>
-								<td>${{ list.earnings.month|currency }}</td>
-								<td>${{ list.earnings.total|currency }}</td>
-								<td>{{ list.date_time }}</td>
-							</tr>
-							{% endfor %}
-							{% endif %}
-						</tbody>
-					</table>
+					{% render_table table 'cp/table.html' %}
 				</div>
 			</div>
 		</div>

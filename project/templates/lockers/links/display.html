@@ -1,6 +1,7 @@
 {% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
+{% load django_tables2 %}
 
 {% block title %}Link Locker{% endblock %}
 
@@ -54,38 +55,7 @@
 					Links
 				</div>
 				<div class="content">
-
-					{% include 'cp/paginate.html' with items=links uri='links-page' %}
-
-					<table class="ui table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Leads</th>
-								<th>Clicks</th>
-								<th>Month</th>
-								<th>Total</th>
-								<th>Date</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if links|length < 1 %}
-								<td colspan="5">You have not created any links, yet.</td></tr>
-							{% else %}
-								{% for link in links %}
-									<tr>
-										<td><a href="{% url 'links-manage' link.code %}">{{ link.name }}</a></td>
-										<td>{{ link.earnings.leads|default:'0' }}</td>
-										<td>{{ link.earnings.clicks|default:'0' }}</td>
-										<td>${{ link.earnings.month|currency }}</td>
-										<td>${{ link.earnings.total|currency }}</td>
-										<td>{{ link.date_time }}</td>
-									</tr>
-								{% endfor %}
-							{% endif %}
-						</tbody>
-					</table>
+					{% render_table table 'cp/table.html' %}
 				</div>
 			</div>
 		</div>

@@ -24,7 +24,7 @@ class List(Locker_Base):
 
 	item_name		= models.CharField(max_length=100)
 	items 			= models.TextField(max_length=6000)
-	item_count 		= models.IntegerField()
+	item_count 		= models.IntegerField(verbose_name="Item Count")
 	unlock_count	= models.IntegerField(default=0)
 	order 			= models.CharField(max_length=20, default="descending", choices=ORDERS)
 	delimeter 		= models.CharField(max_length=5, default="\\n", choices=DELIMETERS)

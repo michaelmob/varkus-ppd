@@ -41,20 +41,20 @@ class Information(models.Model):
 class Earnings_Base(models.Model):
 	leads		= models.IntegerField(default=0)
 
-	today		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	yesterday	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	week		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	month		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	yestermonth	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	year 		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	total		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	today		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
+	yesterday	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
+	week		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Week")
+	month		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Month")
+	yestermonth	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Last Month")
+	year 		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Year")
+	total		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Total")
 
-	real_today 	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	real_month	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	real_today 	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Today")
+	real_month	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Month")
+	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Total")
 
-	clicks		= models.IntegerField(default=0)
-	clicks_hourly = models.CharField(default="", max_length=250, blank=True, null=True)
+	clicks		= models.IntegerField(default=0, verbose_name="Clicks")
+	clicks_hourly = models.CharField(default="", max_length=250, blank=True, null=True, verbose_name="Clicks")
 
 	def reset_today(self):
 		print("Reset Today's Earnings")
@@ -78,7 +78,6 @@ class Earnings_Base(models.Model):
 		cursor.execute("UPDATE `%s` SET year=0 WHERE year>0" % (self._meta.db_table))
 
 	def add(self, amount, cut=0, add_to_real=True):
-		getcontext().prec = 2
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 

@@ -122,12 +122,12 @@ class Deposit(models.Model):
 
 
 class Lead(models.Model):
-	offer 				= models.ForeignKey("offers.Offer", default=None, blank=True, null=True)
+	offer 				= models.ForeignKey("offers.Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	offer_name			= models.CharField(max_length=150, default=None, blank=True, null=True)
 	country 			= models.CharField(max_length=2, default=None, blank=True, null=True)
 
-	token 				= models.ForeignKey(Token, related_name="token_id", default=None, blank=True, null=True)
-	user 				= models.ForeignKey(User, related_name="user_id", default=None, blank=True, null=True)
+	token 				= models.ForeignKey(Token, related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	user 				= models.ForeignKey(User, related_name="user_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 
 	locker				= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
 	locker_id			= models.IntegerField(default=None, blank=True, null=True)

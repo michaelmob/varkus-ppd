@@ -15,8 +15,7 @@ urlpatterns = [
 	url(r"^redirect/(?P<id>[0-9]+)/(?P<token>\w+)/$", redirect.redirect, name="offers-redirect"),
 
 	# Offer Management
-	url(r"^$", login_required(manage.list), name="offers"),
-	url(r"^(?P<page>[0-9]+)/$", login_required(manage.list), name="offers-page"),
+	url(r"^$", login_required(manage.offers), name="offers"),
 	url(r"^manage/(?P<id>[0-9]+)/$", login_required(manage.offer), name="offers-manage"),
 	url(r"^manage/(?P<id>[0-9]+)/chart/line.json$", login_required(manage.line_chart), name="offers-manage-line-chart"),
 

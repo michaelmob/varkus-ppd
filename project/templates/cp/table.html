@@ -1,8 +1,8 @@
 {% load django_tables2 %}
 {% load i18n %}
+{% load static %}
 
 {% spaceless %}
-
 {% block table %}
 	{% include 'cp/pagination.html' %}
 	<table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
@@ -46,6 +46,7 @@
 			{% endblock table.tfoot %}
 		{% endnospaceless %}
 	</table>
+	<script src="{% static 'js/table.js' %}"></script>
 {% endblock table %}
 
 {% if table.page %}
@@ -53,13 +54,4 @@
 		{% include 'cp/pagination.html' with not_inverted=True %}
 	{% endblock pagination %}
 {% endif %}
-
-<script>
-	$(".ui.table th").css("cursor", "pointer").click(function() {
-		window.location = $(this).find("a").attr("href");
-	});
-	$(".asc").addClass("sorted ascending");
-	$(".desc").addClass("sorted descending");
-</script>
-
 {% endspaceless %}

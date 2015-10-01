@@ -5,23 +5,20 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from ..forms import List, List_Create, List_Edit
+from ..tables import Table_List
 
-from utils import charts
-from utils import paginate, cache2
+from utils import charts, cache2
 
 
 def display(request, page=1):
 	if request.POST:
 		return create(request)
 
-	lists = List.objects.filter(user=request.user)
-	lists = paginate.pages(lists, 15, page)
-
 	return render(
 		request,
 		"lockers/lists/display.html",
 		{
-			"lists": lists,
+			"table": Table_List.create(request),
 			"MAX_LISTS": settings.MAX_LISTS,
 			"form": List_Create()
 		}

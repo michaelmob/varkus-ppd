@@ -126,9 +126,16 @@ TIME_ZONE = "America/New_York"
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = False
+
+# Date Formatting
+SHORT_DATETIME_FORMAT = "N j, Y, P"
+DATETIME_FORMAT = "N j, Y, P"
+
+SHORT_DATE_FORMAT = "N j, Y"
+DATE_FORMAT = "N j, Y"
 
 TEMPLATES = [
 	{
@@ -208,7 +215,7 @@ REPORT_MAX_FILE_SIZE = 4 * 1024 * 1024  # 4mb
 # Default Party
 DEFAULT_PARTY_ID = 1
 DEFAULT_PARTY_NAME = "User"
-DEFAULT_CUT_AMOUNT = 0.30  # Developers Cut
+DEFAULT_CUT_AMOUNT = 0.40  # Developers Cut
 DEFAULT_REFERRAL_CUT_AMOUNT = 0.10
 
 # Adgate
@@ -217,9 +224,9 @@ OFFER_REDIRECT_URL = "http://2.quicktrkr.com/cl/%s/%s?s1=%s"
 # Deposits # Default must exist // Always make "-1" default
 DEPOSITS = (
 	# User ID   Company     Aff ID      Deposit Code        Deposit Name        Password
-	(-1,        "ADGATE",   43196,       "DEFAULT_DEPOSIT",  "Default Deposit",  "m20spl0h5jsjryfvg52s"),
-	(1,         "ADGATE",   43196,       "MIKE_DEPOSIT",     "Mike's Deposit",   "54c1v40ivlc7usaumjwx"),
-	(2,         "ADGATE",   2981,        "JOE_DEPOSIT",      "Joe's Deposit",    "jjbm086pcp2mdm00k5mf"),
+	(-1,		"ADGATE",	43196,		"DEFAULT_DEPOSIT",	"Default Deposit",	"m20spl0h5jsjryfvg52s"),
+	(1,			"ADGATE",	43196,		"MIKE_DEPOSIT",		"Mike's Deposit",	"54c1v40ivlc7usaumjwx"),
+	(2,			"ADGATE",	2981,		"JOE_DEPOSIT",		"Joe's Deposit",	"jjbm086pcp2mdm00k5mf"),
 )
 
 DEPOSIT_NAMES = ((d[3], d[4],) for d in DEPOSITS)

@@ -11,6 +11,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from ...leads.models import Lead, Deposit
 from ...offers.models import Offer
 
+from ..tables import Table_Offer, Table_Lead
+
 from utils import charts
 from utils import cache2
 
@@ -22,7 +24,8 @@ def index(request):
 
 	return render(request, "cp/dashboard/index.html", {
 		"offers": offers,
-		"leads": leads,
+		"offers_table": Table_Offer.create(request, offers),
+		"leads_table": Table_Lead.create(request, leads)
 	})
 
 

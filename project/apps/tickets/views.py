@@ -9,24 +9,13 @@ from datetime import datetime, timedelta
 
 from .forms import Form_Ticket_Create, Form_Ticket_Post
 from .models import Thread, Post
+from .tables import Table_Ticket
 
-from utils import dicts, files, paginate
-
-
-@staff_member_required
-def staff_list(request, page=1):
-	threads = paginate.pages(Thread.admin_get(), 15, page)
-	
-	return render(
-		request, "tickets/staff.html",
-		{
-			"threads": threads
-		}
-	)
+from utils import dicts, files
 
 
 def list(request, page=1):
-	threads = paginate.pages(Thread.get(request.user), 15, page)
+	table = Table_Ticket.create(request)
 
 	if request.user.profile.notification_ticket > 0:
 		request.user.profile.notification_ticket = 0
@@ -74,7 +63,7 @@ def list(request, page=1):
 	return render(
 		request, "tickets/list.html",
 		{
-			"threads": threads,
+			"table": table,
 			"form": form,
 			"types": Thread.TYPES,
 			"priorities": Thread.PRIORITIES

@@ -1,6 +1,7 @@
 {% extends 'cp.html' %}
 {% load static %}
 {% load currency %}
+{% load django_tables2 %}
 
 {% block title %}Widget Locker{% endblock %}
 
@@ -52,41 +53,11 @@
 					Widgets
 				</div>
 				<div class="content">
-
-					{% include 'cp/paginate.html' with items=widgets uri='widgets-page' %}
-
-					<table class="ui table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Leads</th>
-								<th>Clicks</th>
-								<th>Month</th>
-								<th>Total</th>
-								<th>Date</th>
-							</tr>
-						</thead>
-
-						<tbody>
-							{% if widgets|length < 1 %}
-								<td colspan="5">You have not created any widgets, yet.</td></tr>
-							{% else %}
-								{% for widget in widgets %}
-									<tr>
-										<td><a href="{% url 'widgets-manage' widget.code %}">{{ widget.name }}</a></td>
-										<td>{{ widget.earnings.leads|default:'0' }}</td>
-										<td>{{ widget.earnings.clicks|default:'0' }}</td>
-										<td>${{ widget.earnings.month|currency }}</td>
-										<td>${{ widget.earnings.total|currency }}</td>
-										<td>{{ widget.date_time }}</td>
-									</tr>
-								{% endfor %}
-							{% endif %}
-						</tbody>
-					</table>
+					{% render_table table 'cp/table.html' %}
 				</div>
 			</div>
 		</div>
+
 		<div class="six wide column">
 			<div class="ui segment box">
 				<div class="title">

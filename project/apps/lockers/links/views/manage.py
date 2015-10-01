@@ -6,23 +6,20 @@ from django.core.urlresolvers import reverse
 
 from ..forms import Link_Create, Link_Edit
 from ..models import Link
+from ..tables import Table_Link
 
-from utils import charts
-from utils import paginate, cache2
+from utils import charts, cache2
 
 
 def display(request, page=1):
 	if request.POST:
 		return create(request)
-
-	links = Link.objects.filter(user=request.user)
-	links = paginate.pages(links, 15, page)
-
+		
 	return render(
 		request,
 		"lockers/links/display.html",
 		{
-			"links": links,
+			"table": Table_Link.create(request),
 			"MAX_LINKS": settings.MAX_LINKS,
 			"form": Link_Create()
 		}

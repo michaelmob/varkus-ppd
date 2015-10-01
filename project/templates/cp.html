@@ -10,10 +10,8 @@
 
 {% block messages %}
 	{% if messages %}
-		<div class="wrapper">
-			<div class="message margin">
-				{% include 'messages.html' %}
-			</div>
+		<div class="message wrapper">
+			{% include 'messages.html' %}
 		</div>
 	{% endif %}
 {% endblock %}
