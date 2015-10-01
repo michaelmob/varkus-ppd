@@ -12,6 +12,7 @@ private/
 
 migrations/*
 migrations/*.*
+
 !project/apps/*/migrations/__init__.py
 project/apps/*/migrations/*.*
 project/apps/*/migrations/*
