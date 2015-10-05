@@ -19,7 +19,7 @@
 			<tbody>
 				{% for lead in leads %}
 				<tr>
-					<td><a href="{% url 'offers-manage' lead.offer.pk %}">{{ lead.offer_name|truncatechars:'50' }}</a></td>
+					<td><a href="{{ lead.offer.get_manage_url }}">{{ lead.offer_name|truncatechars:'50' }}</a></td>
 					<td><i class="{{ lead.country|lower }} flag"></i></td>
 					<td>${{ lead.payout|cut_percent:cut_amount|currency }}</td>
 					<td>{{ lead.date_time|timesince }} ago</td>

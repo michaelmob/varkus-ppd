@@ -23,7 +23,7 @@
 					{% for lead in leads %}
 						<tr>
 							<td>
-								<a href="{% url 'offers-manage' lead.offer.pk %}">
+								<a href="{{ lead.offer.get_manage_url }}">
 									{{ lead.offer.name|truncatechars:25 }}
 								</a>
 							</td>

@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
+from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
 from django_countries import countries
@@ -35,6 +36,12 @@ class Offer(models.Model):
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.name)
+
+	def get_manage_url(self):
+		try:
+			return reverse("offers-manage", args=(self.pk,))
+		except:
+			return "#"
 
 	def get_by_offer_id(offer_id):
 		""" Get offer by its id from the ad company """

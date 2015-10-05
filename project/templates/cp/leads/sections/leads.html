@@ -27,7 +27,7 @@
 								{% with obj=lead.locker_object %}
 									<tr>
 										<td>
-											<a href="{% url 'offers-manage' lead.offer.pk %}">{{ lead.offer_name|truncatechars:'50' }}</a>
+											<a href="{{ lead.offer.get_manage_url }}">{{ lead.offer_name|truncatechars:'50' }}</a>
 										</td>
 										<td>
 											<i class="{{ lead.country|lower }} flag"></i>
