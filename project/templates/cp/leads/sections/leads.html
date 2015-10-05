@@ -20,7 +20,7 @@
 			</thead>
 
 			<tbody>
-				{% cache 3600 user user.earnings.leads %}
+				{% cache 3600 user user.profile.notification_lead %}
 					{% with cut_amount=user.profile.party.cut_amount recent_leads=user.earnings.get_most_recent_leads %}
 						{% if recent_leads|length > 0 %}
 							{% for lead in recent_leads %}

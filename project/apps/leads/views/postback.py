@@ -20,7 +20,7 @@ def send(request):
 	offer = request.GET.get("offer")
 	token = request.GET.get("token")
 	typeof = request.GET.get("typeof")
-	approved = request.GET.get("approved", "off").lower() == "on"
+	approved = request.GET.get("approved", "1") == "1"
 
 	try:
 		token = Token.objects.get(unique=token)
@@ -67,7 +67,7 @@ def receive(request, password=None):
 	user_ip_address = request.GET.get("ip")
 	token			= request.GET.get("token")
 	typeof			= request.GET.get("typeof", "lead").lower()
-	approved 		= request.GET.get("approved", "1") == "0"
+	approved 		= request.GET.get("approved", "1") == "1" # 0 chargeback, 1 approved
 
 	user			= None
 	locker_obj		= None
@@ -158,9 +158,10 @@ def receive(request, password=None):
 							user_payout, user.profile.party.referral_cut_amount, False
 						)
 
-					# Add Lead Notification
-					user.profile.notification_lead += 1
-					user.profile.save()
+			if user:
+				# Add Lead Notification
+				user.profile.notification_lead += 1
+				user.profile.save()
 
 			# Add earnings to offer
 			if offer:
@@ -185,6 +186,7 @@ def receive(request, password=None):
 		token				= token,
 		user				= user,
 		locker_obj			= locker_obj,
+		access_url			= request.build_absolute_uri(),
 		sender_ip_address	= request.META.get("REMOTE_ADDR"),
 		user_ip_address		= user_ip_address,
 		payout 				= payout,
@@ -207,33 +209,33 @@ def receive(request, password=None):
 
 		#cache.delete("charts_line__user_%s" % user.id)
 		# Clear User/Locker Cache
-		"""cache.delete_many((
+		"""cache.delete_many(cache_keys)"""
+
+		# cache.delete_many with memcached doesn't work
+		cache_keys = (
 			"charts_line__user_%s" % user.id,
 			"charts_map__user_%s" % user.id,
 			"recent__user_%s" % user.id,
 			"charts__%s_%s" % locker_reference,
 			"leads__%s_%s" % locker_reference
-		))"""
+		)
 
-		# cache.delete_many with memcached doesn't work
-		cache.delete("charts_line__user_%s" % user.id)
-		cache.delete("charts_map__user_%s" % user.id)
-		cache.delete("recent__user_%s" % user.id)
-		cache.delete("charts__%s_%s" % locker_reference)
-		cache.delete("leads__%s_%s" % locker_reference)
+		for key in cache_keys:
+			cache.delete(key)
 	except:
 		pass
 
 	if token:
 		# Clear Caches
-		"""cache.delete_many([
+		"""cache.delete_many(cache_keys)"""
+		cache_keys = (
 			"charts__offer_%s" % offer.id,
 			"token__%s" % token.unique,
-		])"""
+		)
 
 		# cache.delete_many with memcached doesn't work
-		cache.delete("charts__offer_%s" % offer.id)
-		cache.delete("token__%s" % token.unique)
+		for key in cache_keys:
+			cache.delete(key)
 
 		# if not lead_blocked:
 		# Send Postback if Widget

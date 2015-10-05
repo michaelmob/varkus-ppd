@@ -133,6 +133,7 @@ class Lead(models.Model):
 	locker_id			= models.IntegerField(default=None, blank=True, null=True)
 	locker_code			= models.CharField(max_length=10, default=None, blank=True, null=True)
 
+	access_url 			= models.CharField(max_length=850, default=None, blank=True, null=True)
 	sender_ip_address	= models.GenericIPAddressField(blank=True, null=True)
 	user_ip_address		= models.GenericIPAddressField(blank=True, null=True)
 
@@ -156,19 +157,9 @@ class Lead(models.Model):
 			return None
 
 	def create(
-		offer,
-		token,
-		user,
-		locker_obj,
-		sender_ip_address,
-		user_ip_address,
-		payout,
-		dev_payout,
-		user_payout,
-		referral_payout,
-		deposit="DEFAULT_DEPOSIT",
-		lead_blocked=False,
-		approved=True
+		offer, token, user, locker_obj, sender_ip_address, user_ip_address,
+		payout, dev_payout, user_payout, referral_payout, deposit="DEFAULT_DEPOSIT",
+		access_url="", lead_blocked=False, approved=True
 	):
 		locker = str(type(locker_obj).__name__).upper()
 
@@ -185,6 +176,7 @@ class Lead(models.Model):
 			"user"				: user,
 			"locker"			: locker,
 
+			"access_url"		: access_url,
 			"sender_ip_address"	: sender_ip_address,
 			"user_ip_address"	: user_ip_address,
 
