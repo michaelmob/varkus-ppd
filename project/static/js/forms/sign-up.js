@@ -1,61 +1,51 @@
 $("form").form({
-	first_name: {
-		identifier  : "first_name",
-		rules: [
-			{
+	inline : true,
+	fields: {
+		first_name: {
+			identifier  : "first_name",
+			rules: [{
 				type	: "empty",
-				prompt	: "Please enter your first name."
-			}
-		]
-	},
-	last_name: {
-		identifier  : "last_name",
-		rules: [
-			{
+				prompt	: "Please enter your first name"
+			}]
+		},
+		last_name: {
+			identifier  : "last_name",
+			rules: [{
 				type	: "empty",
-				prompt	: "Please enter your last name."
-			}
-		]
-	},
-	username: {
-		identifier : "username",
-		rules: [
-			{
+				prompt	: "Please enter your last name"
+			}]
+		},
+		username: {
+			identifier : "username",
+			rules: [{
 				type	: "empty",
-				prompt	: "Please enter a username."
-			}
-		]
-	},
-	email: {
-		identifier : "email",
-		rules: [
-			{
+				prompt	: "Please enter a username"
+			}]
+		},
+		email: {
+			identifier : "email",
+			rules: [{
 				type	: "email",
-				prompt	: "Please enter a valid e-mail address."
-			}
-		]
-	},
-	password: {
-		identifier : "password",
-		rules: [
-			{
+				prompt	: "Please enter your e-mail address"
+			}]
+		},
+		password: {
+			identifier : "password",
+			rules: [{
 				type	: "empty",
-				prompt	: "Please enter a password."
-			},
-			{
+				prompt	: "Please enter a password"
+			}, {
 				type	: "length[6]",
-				prompt	: "Your password must be at least 6 characters."
-			}
-		]
-	},
-	confirm: {
-		identifier : "confirm",
-		rules: [
-			{
+				prompt	: "Your password must be at least 6 characters"
+			}]
+		},
+		confirm: {
+			identifier : "confirm",
+			rules: [{
 				type	: "match[password]",
-				prompt	: "Your passwords must match."
-			}
-		]
+				prompt	: "Your passwords must match"
+			}]
+		}
 	}
 });
 

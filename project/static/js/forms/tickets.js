@@ -1,41 +1,36 @@
 $("form").form({
-	subject: {
-		identifier : "subject",
-		rules: [
-			{
+	inline : true,
+	fields: {
+		subject: {
+			identifier : "subject",
+			rules: [{
 				type   : "empty",
-				prompt : "Please enter your name."
-			}
-		]
-	},
+				prompt : "Please enter your name"
+			}]
+		},
 
-	priority: {
-		identifier : "priority",
-		rules: [
-			{
+		priority: {
+			identifier : "priority",
+			rules: [{
 				type   : "empty",
-				prompt : "Please choose a priority."
-			}
-		]
-	},
+				prompt : "Please select a priority"
+			}]
+		},
 
-	type: {
-		identifier : "type",
-		rules: [
-			{
+		type: {
+			identifier : "type",
+			rules: [{
 				type   : "empty",
-				prompt : "Please choose a type."
-			}
-		]
-	},
+				prompt : "Please select a type"
+			}]
+		},
 
-	message: {
-		identifier : "message",
-		rules: [
-			{
+		message: {
+			identifier : "message",
+			rules: [{
 				type   : "length[20]",
-				prompt : "Please enter atleast 20 characters in the message field."
-			}
-		]
+				prompt : "Your message must be at least 20 characters"
+			}]
+		}
 	}
 });

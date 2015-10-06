@@ -1,11 +1,12 @@
 $("form").form({
-	email: {
-		identifier : "email",
-		rules: [
-			{
+	inline : true,
+	fields: {
+		email: {
+			identifier : "email",
+			rules: [{
 				type   : "email",
-				prompt : "Please enter a valid e-mail address."
-			}
-		]
+				prompt : "Please enter your e-mail address"
+			}]
+		}
 	}
 });

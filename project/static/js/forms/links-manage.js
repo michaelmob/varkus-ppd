@@ -12,16 +12,14 @@ $(".ui.modal.delete")
 	.modal("attach events", ".delete.button", "show");
 
 $("form").form({
-	name: {
-		identifier : "name",
-		rules: [
-			{
-				type   : "empty",
-				prompt : "Please enter a name for your list."
-			}
-		]
-	},
-}, {
 	inline : true,
-	on : "blur"
+	fields: {
+		name: {
+			identifier : "name",
+			rules: [{
+				type   : "empty",
+				prompt : "Please enter a name for your list"
+			}]
+		}
+	}
 });

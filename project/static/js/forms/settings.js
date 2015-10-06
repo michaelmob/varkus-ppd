@@ -8,50 +8,41 @@ $(".ui.modal.account")
 
 
 $("form.personal").form({
-	first_name: {
-		identifier : "first_name",
-		rules: [
-			{
-				type   : "empty",
-				prompt : "Please specify your first name."
-			}
-		]
-	},
-	last_name: {
-		identifier : "last_name",
-		rules: [
-			{
-				type   : "empty",
-				prompt : "Please specify your last name."
-			}
-		]
-	},
-	country: {
-		identifier : "country",
-		rules: [
-			{
-				type   : "empty",
-				prompt : "Please choose your country."
-			}
-		]
-	},
-}, {
 	inline : true,
-	on : "blur"
-});
+	fields: {
+		first_name: {
+			identifier : "first_name",
+			rules: [{
+				type   : "empty",
+				prompt : "Please enter your first name"
+			}]
+		},
+		last_name: {
+			identifier : "last_name",
+			rules: [{
+				type   : "empty",
+				prompt : "Please enter your last name"
+			}]
+		},
+		country: {
+			identifier : "country",
+			rules: [{
+				type   : "empty",
+				prompt : "Please select your country"
+			}]
+		},
+	});
 
 
 $("form.account").form({
-	email: {
-		identifier : "email",
-		rules: [
-			{
-				type   : "email",
-				prompt : "Please enter your e-mail address."
-			}
-		]
-	},
-}, {
 	inline : true,
-	on : "blur"
+	fields: {
+		email: {
+			identifier : "email",
+			rules: [{
+				type   : "email",
+				prompt : "Please enter your e-mail address"
+			}]
+		},
+	}
 });

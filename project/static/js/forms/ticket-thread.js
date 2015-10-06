@@ -1,11 +1,12 @@
 $("form").form({
-	message: {
-		identifier : "message",
-		rules: [
-			{
+	inline : true,
+	fields: {
+		message: {
+			identifier : "message",
+			rules: [{
 				type   : "length[5]",
-				prompt : "Please enter atleast 5 characters in the message field."
-			}
-		]
+				prompt : "Your message must be at least 5 characters"
+			}]
+		}
 	}
 });
