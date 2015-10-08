@@ -33,25 +33,19 @@ class Token(models.Model):
 		return "%s: %s" % (self.pk, self.unique)
 
 	def locker_object(self):
+		"""Get Locker object from Token"""
 		try:
 			return Locker(self.locker).objects.get(id=self.locker_id)
 		except:
 			return None
 
-	def get_or_create_request(request, locker_obj):
-		return Token.get_or_create(
-			request.META.get("REMOTE_ADDR"),
-			request.META.get("HTTP_USER_AGENT"),
-			locker_obj
-		)
-
-	def access(self):
-		return (self.lead or self.paid or self.staff)
-
-	def renew(self):
-		cache.delete("token__" + self.unique)
-
 	def get_or_create(ip_address, user_agent, locker_obj):
+		"""Get or create token
+
+		ip_address -- User's IP Address
+		user_agent -- User's User Agent
+		locker_obj -- Locker object to create for
+		"""
 		locker = str(type(locker_obj).__name__).upper()
 
 		token, created = Token.objects.get_or_create(
@@ -68,13 +62,34 @@ class Token(models.Model):
 
 		return token
 
+	def get_or_create_request(request, locker_obj):
+		"""Get or create token from request
+
+		request -- Django request to get IP Address and User Agent from
+		locker_obj -- Locker object to create for
+		"""
+		return Token.get_or_create(
+			request.META.get("REMOTE_ADDR"),
+			request.META.get("HTTP_USER_AGENT"),
+			locker_obj
+		)
+
+	def access(self):
+		"""Check if token has access to continue"""
+		return (self.lead or self.paid or self.staff)
+
+	def renew(self):
+		cache.delete("token__" + self.unique)
+
 	def get_verify(unique, ip_address):
+		"""Verify token for unique and ip_address exists by returning the object"""
 		try:
 			return Token.objects.get(unique=unique, ip_address=ip_address)
 		except Token.DoesNotExist:
 			return None
 
 	def clear():
+		"""Clear/delete all tokens"""
 		return Token.objects.filter(
 			date_time__gt = datetime.now() - timedelta(days=2),
 			paid = False
