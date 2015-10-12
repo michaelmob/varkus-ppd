@@ -1,6 +1,5 @@
 {% extends 'cp.html' %}
 {% load static %}
-{% load currency %}
 {% load django_tables2 %}
 
 {% block title %}Widget Locker{% endblock %}
@@ -67,14 +66,14 @@
 				</div>
 				<div class="padded content">
 
-					<div class="ui left labeled icon fluid basic create button{% if widgets|length >= MAX_WIDGETS %} disabled{% endif %}">
+					<div class="ui left labeled icon fluid basic create button{% if table.rows|length >= MAX %} disabled{% endif %}">
 						<i class="plus icon"></i>
 						Create Widget
 					</div>
 
 					<br/>
 
-					<p>You have created {{ widgets|length }} widget(s) out of your maximum widget limit of {{ MAX_LINKS }}.</p>
+					<p>You have created {{ table.rows|length }} widget(s) out of your maximum widget limit of {{ MAX }}.</p>
 
 					<div class="ui header">Widget Lockers</div>
 					<p>

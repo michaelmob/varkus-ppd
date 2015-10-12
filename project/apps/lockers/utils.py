@@ -16,12 +16,14 @@ def Locker(locker):
 		return None
 
 
-def Locker_Item(locker, code, user=None):
+def Locker_Object(locker, code, user=None):
 	if not locker or not code:
 		return None
 
 	args = {"code": code}
-	if user: args["user"] = user
+	
+	if user:
+		args["user"] = user
 
 	try:
 		return Locker(locker).objects.get(**args)
@@ -29,7 +31,7 @@ def Locker_Item(locker, code, user=None):
 		return None
 
 
-def Locker_Item_Reference(locker_obj):
+def Locker_Object_Reference(locker_obj):
 	try:
 		return (
 			type(locker_obj).__name__,

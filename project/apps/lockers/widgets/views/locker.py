@@ -1,82 +1,64 @@
-from django.shortcuts import render, redirect
-from ..models import Widget
 from django.conf import settings
-from apps.leads.models import Token
-from apps.offers.models import Offer
 from django.core.validators import URLValidator
+from django.shortcuts import render, redirect
 
-from ...files.views.locker import unlock as file_unlock
-from ...links.views.locker import unlock as link_unlock
-from ...lists.views.locker import unlock as list_unlock
-
-
-def get_object(code):
-	try:
-		if not code:
-			raise
-
-		return Widget.objects.get(code=code)
-	except:
-		return None
+from ...bases.lockers import View_Locker, View_Unlock
+from ..models import Widget
 
 
-def locker(request, code=None):
-	obj = get_object(code)
-
-	if not obj:
-		return redirect("locker-404")
-
-	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
-
-	obj.earnings.increment_clicks(request.META["REMOTE_ADDR"])
-
-	return render(
-		request,
-		"offers/widget/external.html",
-		{
-			"obj": obj,
-			"offers": combo.offers,
-			"token": combo.token,
-			"custom_css_url": obj.custom_css_url
-		}
-	)
+class Locker(View_Locker):
+	model = Widget
+	template = "offers/widget/external.html"
 
 
-def unlock(request, code=None):
-	obj = get_object(code)
+class Unlock(View_Unlock):
+	template = "offers/widget/complete.html"
+	model = Widget
 
-	if not obj:
-		return redirect("locker-404")
+	def _return(self, request, obj):
+		# Get Locker object of Widget
+		locker_obj = obj.locker_object()
 
-	token = Token.get_or_create_request(request, obj)
+		# We have locker_obj, so lets let them unlock it
+		if locker_obj:
+			model = locker_obj.get_name()
 
-	# Give access
-	if not token.access():
-		return redirect("home")
+			# Prevent custom exec
+			if not model.upper() in dict(settings.LOCKERS).keys():
+				return render(request, self.template, { })
 
-	locker_obj = obj.locker_object()
+			# Import Unlock class from locker object's view
+			exec("from apps.lockers.%ss.views.locker import Unlock as U1" % model.lower(), globals())
 
-	if locker_obj == None:
-		url = obj.standalone_redirect_url
+			# Use this token in U2 (Unlock2) class
+			token = self.token
 
-		validate = URLValidator()
-		try:
-			validate(url)
-			return redirect(url)
-		except:
-			return redirect("widgets-complete")
+			# Make child class
+			class U2(U1):
+				# Override .access() to use our token to force unlock
+				def access(self, request, obj):
+					self.token = token
+					return True
 
-	else:
-		# You can only break this on the developers side
-		unlock_method = eval(
-			str(locker_obj.get_name().lower() + "_unlock")
-				.replace(" ", "").replace(";", ""))
+			# Set session key so the download knows to
+			# send the file download when you click "Download"
+			request.session["locker__file_force"] = True
 
-		return unlock_method(request, locker_obj.code, token)
+			# Show Unlock view
+			return U2.as_view()(request, locker_obj.code)
 
+		# They didn't have a locker_obj with the widget so
+		# check the redirect_url of the widget, and if that
+		# URL is not valid then pass through, which will
+		# redirect them to a generic survey complete page
+		else:
+			url = obj.standalone_redirect_url
 
-def complete(request):
-	return render(
-		request,
-		"offers/widget/complete.html", { }
-	)
+			try:
+				validate = URLValidator()
+				validate(url)
+				return redirect(url)
+			except:
+				pass
+
+		return render(request, self.template, { })

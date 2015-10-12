@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from utils import strings
 from geoip import lookup
 
-#from ..lockers.models import Earnings_Base
 from ..lockers.utils import Locker
 
 
@@ -23,7 +22,9 @@ class Token(models.Model):
 
 	user_agent 	= models.CharField(max_length=300)
 	ip_address 	= models.GenericIPAddressField()
-	date_time	= models.DateTimeField()
+	country 	= models.CharField(max_length=5)
+	date_time	= models.DateTimeField(auto_now_add=True)
+	last_access	= models.DateTimeField(auto_now=True)
 
 	lead 		= models.BooleanField(default=False)
 	paid 		= models.BooleanField(default=False)
@@ -39,7 +40,36 @@ class Token(models.Model):
 		except:
 			return None
 
-	def get_or_create(ip_address, user_agent, locker_obj):
+	def _get(ip_address, user_agent, locker_obj):
+		"""Get token by identifiers
+
+		ip_address -- User's IP Address
+		user_agent -- User's User Agent
+		locker_obj -- Locker object to create for
+		"""
+		locker = str(type(locker_obj).__name__).upper()
+
+		return Token.objects.get(
+			ip_address 		= ip_address,
+			user_agent 		= user_agent,
+			locker 			= locker,
+			locker_id		= locker_obj.id,
+			locker_code		= locker_obj.code,
+		)
+
+	def get(request, locker_obj):
+		"""Get token using _get method
+
+		request -- django request
+		locker_obj -- Locker object to get for
+		"""
+		return Token._get(
+			request.META.get("REMOTE_ADDR"),
+			request.META.get("HTTP_USER_AGENT"),
+			locker_obj
+		)
+
+	def _get_or_create(ip_address, user_agent, locker_obj):
 		"""Get or create token
 
 		ip_address -- User's IP Address
@@ -48,7 +78,7 @@ class Token(models.Model):
 		"""
 		locker = str(type(locker_obj).__name__).upper()
 
-		token, created = Token.objects.get_or_create(
+		return Token.objects.get_or_create(
 			ip_address 		= ip_address,
 			user_agent 		= user_agent,
 			locker 			= locker,
@@ -60,15 +90,13 @@ class Token(models.Model):
 			}
 		)
 
-		return token
-
-	def get_or_create_request(request, locker_obj):
+	def get_or_create(request, locker_obj):
 		"""Get or create token from request
 
 		request -- Django request to get IP Address and User Agent from
 		locker_obj -- Locker object to create for
 		"""
-		return Token.get_or_create(
+		return Token._get_or_create(
 			request.META.get("REMOTE_ADDR"),
 			request.META.get("HTTP_USER_AGENT"),
 			locker_obj
@@ -78,8 +106,9 @@ class Token(models.Model):
 		"""Check if token has access to continue"""
 		return (self.lead or self.paid or self.staff)
 
-	def renew(self):
-		cache.delete("token__" + self.unique)
+	def renew(request):
+		print(cache.get("o_%s_%s" % (self.ip_address, self.user_agent)))
+		return cache.delete("o_%s_%s" % (self.ip_address, self.user_agent))
 
 	def get_verify(unique, ip_address):
 		"""Verify token for unique and ip_address exists by returning the object"""
@@ -163,7 +192,7 @@ class Lead(models.Model):
 	approved			= models.BooleanField(default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
-	date_time			= models.DateTimeField()
+	date_time			= models.DateTimeField(auto_now_add=True)
 
 	def locker_object(self):
 		try:

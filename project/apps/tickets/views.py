@@ -11,7 +11,7 @@ from .forms import Form_Ticket_Create, Form_Ticket_Post
 from .models import Thread, Post
 from .tables import Table_Ticket
 
-from utils import dicts, files
+from utils import files
 
 
 def list(request, page=1):

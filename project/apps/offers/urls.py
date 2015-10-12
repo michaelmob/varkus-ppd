@@ -12,7 +12,7 @@ urlpatterns = [
 	url(r"^sync/", sync.adgate, name="offers-sync-adgate"),
 
 	# Redirect
-	url(r"^redirect/(?P<id>[0-9]+)/(?P<token>\w+)/$", redirect.redirect, name="offers-redirect"),
+	url(r"^redirect/(?P<id>[0-9]+)/$", redirect.redirect, name="offers-redirect"),
 
 	# Offer Management
 	url(r"^$", login_required(manage.offers), name="offers"),

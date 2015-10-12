@@ -1,20 +1,30 @@
-from django import forms
+from django.forms import ModelForm
+from .models import Link, Earnings
 
 
-class Link_Create(forms.Form):
-	name = forms.CharField(max_length=100)
-	url = forms.URLField(max_length=1000)
+class Form_Create(ModelForm):
+	class Meta:
+		model = Link
+		fields = ["name", "url", "description"]
 
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
+	def create(self, user):
+		obj = super(Form_Create, self).save(commit=False)
+		
+		# Set Fields
+		obj.user = user
+		obj.code = Link().generate_code()
+		obj.name = self.cleaned_data["name"]
+		obj.description = self.cleaned_data["description"]
+		obj.url = self.cleaned_data["url"]
+		obj.save()
+
+		# Create Earnings
+		Earnings.objects.get_or_create(obj=obj)
+
+		return obj
 
 
-class Link_Edit(forms.Form):
-	name = forms.CharField(max_length=100)
-
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
+class Form_Edit(ModelForm):
+	class Meta:
+		model = Link
+		fields = ["name", "description"]

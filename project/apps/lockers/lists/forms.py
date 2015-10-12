@@ -1,38 +1,51 @@
-from django import forms
-from .models import List
+import json
+
+from django.forms import ModelForm
+from .models import List, Earnings
 
 
-class List_Create(forms.Form):
-	name = forms.CharField(max_length=100)
+class Form_Create(ModelForm):
+	class Meta:
+		model = List
+		fields = ["name", "description", "item_name", "items", "order", "delimeter", "reuse"]
 
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
+	def create(self, user):
+		obj = super(Form_Create, self).save(commit=False)
 
-	item_name = forms.CharField(
-		max_length=20,
-		widget=forms.TextInput(attrs={"placeholder": "Examples: Item, Key, Code, Serial"})
-	)
+		# Set Delimeter to correct symbol
+		delimeter = self.cleaned_data["delimeter"]
+		if delimeter == "\\n":
+			delimeter = "\n"
+			
+		elif delimeter == "space":
+			delimeter = " "
 
-	items = forms.CharField(max_length=5000, widget=forms.Textarea)
-	order = forms.ChoiceField(choices=List.ORDERS)
-	delimeter = forms.ChoiceField(choices=List.DELIMETERS)
-	reuse = forms.BooleanField(required=False)
+		# Turn array into json string for database storage
+		items = self.cleaned_data["items"]
+		items = [[item, 0] for item in items.replace("\r", "").split(delimeter)]
+		items_json = json.dumps(items, separators=(",", ":"))
+		
+		# Set Fields
+		obj.user 		= user
+		obj.code 		= List().generate_code()
+		obj.description = self.cleaned_data["description"]
+		obj.name 		= self.cleaned_data["name"]
+		obj.item_name	= self.cleaned_data["item_name"]
+		obj.items 		= items_json
+		obj.item_count	= len(items)
+		obj.order 		= self.cleaned_data["order"]
+		obj.delimeter 	= self.cleaned_data["delimeter"]
+		obj.reuse 		= self.cleaned_data["reuse"]
+		obj.save()
+
+		# Create Earnings
+		Earnings.objects.get_or_create(obj=obj)
+
+		return obj
 
 
-class List_Edit(forms.Form):
-	name = forms.CharField(max_length=100)
-	
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
-
-	item_name = forms.CharField(
-		max_length=20,
-		widget=forms.TextInput(attrs={"placeholder": "Examples: Item, Key, Code, Serial"})
-	)
-
-	order = forms.ChoiceField(choices=List.ORDERS)
-	reuse = forms.BooleanField(required=False)
+class Form_Edit(ModelForm):
+	class Meta:
+		model = List
+		fields = ["name", "description", "item_name", "order", "reuse"]
+		#widget=forms.TextInput(attrs={"placeholder": "Examples: Item, Key, Code, Serial"})

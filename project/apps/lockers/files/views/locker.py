@@ -1,79 +1,42 @@
-from django.shortcuts import render, redirect, HttpResponse
-from django.core.validators import URLValidator
-from django.conf import settings
+from django.shortcuts import HttpResponse
+
+from ...bases.lockers import View_Locker, View_Unlock
 from ..models import File
-from ....leads.models import Token
-from ....offers.models import Offer
+
+from apps.leads.models import Token
 
 
-def get_object(code):
-	try:
-		if not code:
-			raise
-
-		return File.objects.get(code=code)
-	except:
-		return None
-
-def locker(request, code=None):
-	obj = get_object(code)
-
-	if not obj:
-		return redirect("locker-404")
-
-	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
-
-	obj.earnings.increment_clicks(request.META["REMOTE_ADDR"])
-
-	return render(
-		request,
-		"lockers/files/locker.html",
-		{
-			"obj": obj,
-			"offers": combo.offers,
-			"token": combo.token
-		}
-	)
+class Locker(View_Locker):
+	model = File
+	template = "lockers/files/locker.html"
 
 
-def unlock(request, code=None, token=None):
-	obj = get_object(code)
-
-	if not obj:
-		return redirect("locker-404")
-
-	if not token:
-		token = Token.get_or_create_request(request, obj)
-
-	# Give access
-	if not token.access():
-		return redirect("home")
-
-	return render(
-		request,
-		"lockers/files/unlock.html",
-		{
-			"obj": obj,
-			"data": token.data
-		}
-	)
+class Unlock(View_Unlock):
+	model = File
+	template = "lockers/files/unlock.html"
 
 
-def download(request, code=None, token=None):
-	obj = get_object(code)
+class Download(View_Unlock):
+	model = File
 
-	if not obj:
-		return redirect("locker-404")
+	def access(self, request, obj):
+		# if "locker__file_force" is set then return True
+		# as we have internal permission to access the file
+		try:
+			if request.session["locker__file_force"]:
+				del request.session["locker__file_force"]
+				return True
+		except KeyError:
+			pass
 
-	if not token:
-		token = Token.get_or_create_request(request, obj)
+		# Get token using request and the locker object
+		self.token = Token.get(request, obj)
 
-	# Give access
-	if not token.access():
-		return redirect("home")
+		# Return access
+		return self.token.access()
 
-	# Download
-	response = HttpResponse(obj.file, content_type="application/octet-stream")
-	response["Content-Disposition"] = "attachment; filename=\"%s\"" % obj.file_name
+	def _return(self, request, obj):
+		response = HttpResponse(obj.file, content_type="application/octet-stream")
+		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (obj.file_name).replace("\"", "").replace("\\", "")
 
-	return response
+		return response

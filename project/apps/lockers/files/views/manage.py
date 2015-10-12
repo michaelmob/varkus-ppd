@@ -1,100 +1,50 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.core.files import File as Django_File
-from django.core.urlresolvers import reverse
-from django.contrib import messages
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.core.files import File as Django_File
+from django.views.generic import View
+from django.http import JsonResponse
+from django.shortcuts import render
+
+from ...bases.charts import View_Line_Chart, View_Map_Chart
+from ...bases.manage import View_Overview, View_Manage, Delete_Base
 
 from ..models import File
-from ..forms import File_Edit
+from ..forms import Form_Edit
 from ..tables import Table_File
 
-from utils import charts, cache2
+
+class Overview(View_Overview):
+	template 	= "lockers/files/overview.html"
+	table 		= Table_File
+	maximum 	= settings.MAX_FILES
 
 
-def display(request, page=1):
-	return render(
-		request,
-		"lockers/files/display.html",
-		{
-			"table": Table_File.create(request),
-			"MAX_FILES": settings.MAX_FILES
-		}
-	)
+class Manage(View_Manage):
+	template 	= "lockers/files/manage/manage.html"
+	model 		= File
+	form 		= Form_Edit
 
 
-def line_chart(request, code):
-	try:
-		obj = File.objects.get(user=request.user, code=code)
-	except File.DoesNotExist:
-		return JsonResponse({"data": None})
-
-	return charts.line_chart_view(
-		"charts__file_%s" % obj.pk,
-		lambda: obj.earnings.get_leads(),
-		obj.earnings.get_clicks(),
-	)
+class Line_Chart(View_Line_Chart):
+	model 		= File
 
 
-def delete(request, code=None):
-	File.objects.filter(user=request.user, code=code).delete()
-	messages.success(request, "Your file has been deleted.")
-	return redirect("files")
+class Map_Chart(View_Map_Chart):
+	model 		= File
 
 
-def upload(request):
-	return render(
-		request, "lockers/files/upload.html",
-		{"MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE}
-	)
+class Delete(Delete_Base):
+	model 		= File
 
 
-def manage(request, code=None):
-	if not code:
-		return redirect("files")
+class Upload(View):
+	def get(self, request):
+		return render(
+			request, "lockers/files/upload.html",
+			{"MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE}
+		)
 
-	try:
-		obj = File.objects.get(user=request.user, code=code)
-	except File.DoesNotExist:
-		return redirect("files")
-
-	form = File_Edit(
-		request.POST or None,
-		initial={
-			"name": obj.name,
-			"description": obj.description
-		}
-	)
-
-	# Save List Edits
-	if request.POST:
-		if form.is_valid():
-			obj.name = form.cleaned_data["name"]
-			obj.description = form.cleaned_data["description"]
-			obj.save()
-
-	# Cache
-	leads = cache2.get("leads__file_%s" % obj.pk, lambda: obj.earnings.get_leads(None))
-
-	url = request.build_absolute_uri(reverse("files-locker", args=[obj.code]))
-
-	return render(
-		request,
-		"lockers/files/manage/manage.html",
-		{
-			"data_url": reverse("files-manage-line-chart", args=[obj.code]),
-			"form": form,
-			"obj": obj,
-			"leads": leads,
-			"url": url
-		}
-	)
-
-
-@require_POST
-def process(request):
-	try:
+	def post(self, request):
 		success = False
 		value = ""
 		errors = 0
@@ -146,5 +96,3 @@ def process(request):
 			"success": success,
 			"value": value
 		})
-	except Exception as err:
-		print(err)

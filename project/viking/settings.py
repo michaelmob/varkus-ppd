@@ -1,5 +1,5 @@
 """
-Viking 1.1.0
+Viking 1.2.0
 
 Django settings for Viking project.
 
@@ -21,21 +21,18 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 #   anora
 
 
-# The Green Roots - Wait a Million Years
-# The Green Roots - Sooner or Later
 # Quicksilver - Pride of Man
-# 3 Dog Night - Joy to The world
-# Michael Bruce - So Far So Good
+# Quicksilver - Mona
+# Country Joe & the Fish - Flying high
+# Country Joe & the Fish - Death sound blues
 
 # TODO:
 #######
 # Use semantic ui api
-# Make forms represent their models
 # Widget example code
 # Use polling to see active users on page
 # Allow users to see IPs of visitors
 # Referral guide
-# Set all tables to use django-tables2
 
 
 import os, socket
@@ -62,6 +59,7 @@ INSTALLED_APPS = (
 	"django.contrib.messages",
 	"django.contrib.staticfiles",
 
+	"debug_toolbar", 		# django-debug-toolbar
 	"captcha",              # django-recaptcha
 	"storages",             # django-storages
 	"axes",                 # django-axes

@@ -39,8 +39,7 @@ class Widget(Locker_Base):
 			user 			= user,
 			code 			= Widget().generate_code(),
 			name 			= name,
-			description		= description,
-			date_time 		= datetime.now(),
+			description		= description
 		)
 
 		Earnings.objects.get_or_create(obj=obj)

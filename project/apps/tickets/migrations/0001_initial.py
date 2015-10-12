@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Post',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('thread_post', models.BooleanField(default=False)),
                 ('ip_address', models.GenericIPAddressField()),
                 ('date_time', models.DateTimeField()),
@@ -26,16 +26,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Thread',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('ip_address', models.GenericIPAddressField()),
-                ('date_time', models.DateTimeField()),
-                ('priority', models.CharField(default='1', max_length=20, choices=[('1', 'Low'), ('2', 'Normal'), ('3', 'High'), ('4', 'Urgent')])),
-                ('type', models.CharField(default='other', max_length=50, choices=[('help', 'Account Help'), ('billing', 'Billing'), ('bug', 'Bug Report'), ('support', 'Technical Support'), ('other', 'Other (Use if Unsure)')])),
-                ('subject', models.CharField(max_length=100)),
-                ('last_reply_date_time', models.DateTimeField(null=True, blank=True, default=None)),
-                ('closed', models.BooleanField(default=False)),
+                ('date_time', models.DateTimeField(verbose_name='Date')),
+                ('priority', models.CharField(default='1', choices=[('1', 'Low'), ('2', 'Normal'), ('3', 'High'), ('4', 'Urgent')], max_length=20)),
+                ('type', models.CharField(default='other', choices=[('help', 'Account Help'), ('billing', 'Billing'), ('bug', 'Bug Report'), ('support', 'Technical Support'), ('other', 'Other (Use if Unsure)')], max_length=50)),
+                ('subject', models.CharField(verbose_name='Subject', max_length=100)),
+                ('last_reply_date_time', models.DateTimeField(blank=True, null=True, default=None)),
+                ('closed', models.BooleanField(verbose_name='Status', default=False)),
                 ('staff_closed', models.BooleanField(default=False)),
-                ('last_reply_user', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, blank=True, default=None, related_name='last_reply_user_id')),
+                ('unread', models.BooleanField(default=False)),
+                ('last_reply_user', models.ForeignKey(verbose_name='Last Replier', blank=True, null=True, to=settings.AUTH_USER_MODEL, related_name='last_reply_user_id', default=None)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -47,6 +48,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='post',
             name='user',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, blank=True, default=None),
+            field=models.ForeignKey(blank=True, null=True, to=settings.AUTH_USER_MODEL, default=None),
         ),
     ]

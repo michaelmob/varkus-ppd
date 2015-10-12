@@ -46,20 +46,24 @@
 						this limit to be raised.
 					</p>
 
+					{% if False %}
+					<form action="{% url 'files-upload' %}" method="post" enctype="multipart/form-data">
+						{% csrf_token %}
+						<input type="file" id="file" name="file" />
+						<input type="submit" value="Upload" />
+					</form>
+					{% endif %}
+
 					<p>
 						<label for="file" class="ui left labeled icon fluid basic upload button">
 							<i class="file icon"></i>
 							Select File
 						</label>
 							
-						<input class="file upload input"
-							type="file" id="file" name="file"
-							style="display:none" />
+						<input class="file upload input" type="file" id="file" name="file" style="display:none" />
 					</p>
 
-					<p>
-						Keep your file's name clean! Nothing too raunchy or provocative.
-					</p>
+					<p>Keep your file's name clean! Nothing too raunchy or provocative.</p>
 
 					<p>
 						By uploading a file you agree to our
@@ -119,10 +123,17 @@
 
 			onApprove: function() { return false; },
 			onDeny: function() {
-				$(".ui.progress>.label").html("Upload Cancelled");
+				$(".ui.progress>.label")
+					.html("Upload Cancelled");
+
+				$(".ui.progress")
+					.removeClass("success")
+					.addClass("error");
 
 				$(".ui.modal>.actions>.positive")
 					.removeClass("disabled")
+					.removeClass("positive")
+					.addClass("black")
 					.attr("href", window.location);
 
 				$(".ui.modal>.actions>.negative")
@@ -141,7 +152,7 @@
 	};
 
 	$(".file.upload.input").fileupload({
-		url: "{% url 'files-process' %}",
+		url: "{% url 'files-upload' %}",
 		dataType: "json",
 		maxNumberOfFiles: 1,
 		add: function (e, data) {
@@ -165,6 +176,10 @@
 				$(".ui.modal>.actions>.negative").addClass("disabled");
 			} else
 				jqXHR = data.submit();
+		},
+		error: function(e, data) {
+			alert(data.result);
+			alert(data.result.value);
 		},
 		done: function (e, data) {
 			var response = data.result;

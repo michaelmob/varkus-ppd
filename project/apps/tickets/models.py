@@ -26,7 +26,7 @@ class Thread(models.Model):
 
 	user = models.ForeignKey(User)
 	ip_address = models.GenericIPAddressField()
-	date_time = models.DateTimeField(verbose_name="Date")
+	date_time = models.DateTimeField(auto_now_add=True, verbose_name="Date")
 	priority = models.CharField(max_length=20, default="1", choices=PRIORITIES)
 	type = models.CharField(max_length=50, default="other", choices=TYPES)
 	subject = models.CharField(max_length=100, verbose_name="Subject")
@@ -156,7 +156,7 @@ class Post(models.Model):
 	thread_post = models.BooleanField(default=False)
 	user = models.ForeignKey(User, default=None, blank=True, null=True)
 	ip_address = models.GenericIPAddressField()
-	date_time = models.DateTimeField()
+	date_time = models.DateTimeField(auto_now_add=True)
 	content = models.TextField(max_length=1000)
 	image = models.ImageField(upload_to="tickets/%Y/%m/", default=None, blank=True, null=True)
 

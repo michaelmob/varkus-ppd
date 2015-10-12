@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def public(request, locker=None, code=None):
-	'''item = output.Locker_Item("List", "uj4du")
+	'''item = output.Locker_Object("List", "uj4du")
 
 	offers_token = output.offer_token_request_cache(
 		request, item, int(request.GET.get("count")), 0.01

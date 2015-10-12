@@ -10,31 +10,32 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 
 from ..models import Lead, Token, Deposit
+
+from apps.lockers.utils import Locker_Object
 from apps.offers.models import Offer
 
 from apps.api.views.postback import post
 
 
 @staff_member_required
-def send(request):
+def internal(request):
 	offer = request.GET.get("offer")
 	token = request.GET.get("token")
 	typeof = request.GET.get("typeof")
 	approved = request.GET.get("approved", "1") == "1"
 
-	try:
-		token = Token.objects.get(unique=token)
-	except:
-		return HttpResponse("Token does not exist.")
+	obj = request.session["locker_object"]
+	obj = Locker_Object(*obj)
+	token, created = Token.get_or_create(request, obj)
 
 	try:
 		offer = Offer.objects.get(id=offer)
 	except:
 		return HttpResponse("Offer does not exist.")
 
-	print(token.locker_object())
+	print(obj)
 
-	password = Deposit.get_by_user_id(token.locker_object().user.pk).password
+	password = Deposit.get_by_user_id(obj.user.pk).password
 
 	url = "https://" if request.is_secure() else "http://"
 	url += request.get_host()

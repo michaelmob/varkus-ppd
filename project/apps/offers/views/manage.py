@@ -11,7 +11,6 @@ from ..models import Offer
 from ..forms import Form_Offer
 from ..tables import Table_Offer
 
-from utils import paginate
 from utils import charts
 
 

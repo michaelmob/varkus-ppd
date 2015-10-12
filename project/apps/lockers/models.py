@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.urlresolvers import reverse
-from utils import strings
 
+from utils import strings
 from apps.cp.models import Earnings_Base
 
 ''' Base for Lockers '''
@@ -12,7 +12,7 @@ class Locker_Base(models.Model):
 	code 		= models.CharField(max_length=10, verbose_name="Code")
 	name 		= models.CharField(max_length=100, verbose_name="Name")
 	description = models.TextField(max_length=500, default="", blank=True, null=True, verbose_name="Description")
-	date_time 	= models.DateTimeField(verbose_name="Date")
+	date_time 	= models.DateTimeField(auto_now_add=True, verbose_name="Date")
 
 	lead_block	= models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],
@@ -34,28 +34,36 @@ class Locker_Base(models.Model):
 	)
 
 	def get_name(self):
+		"""Get class name (Ex: widget, file, list, link)"""
 		return str(self.__class__.__name__)
 
 	def get_link(self, loc):
+		"""Base function to get link related to class (Ex: file-%s)"""
 		return reverse(self.get_name().lower() + "s-%s" % loc, args=(self.code,))
 
 	def get_manage_url(self):
+		"""Get manage (control panel) url (Ex: file-manage -> /files/manage/code)"""
 		return self.get_link("manage")
 
 	def get_locker_url(self):
+		"""Get locker (locker page) url (Ex: file-locker -> /file/code)"""
 		return self.get_link("locker")
 
 	def generate_code(self, length=5):
+		"""Generate unused code for locker"""
 		runs = 0
-		code = strings.random(length)
+		code = strings.random(length)  # generate code
 
+		# while code is in use
 		while self.__class__.objects.filter(code=code).exists():
 			runs += 1
 
+			# if ran more than twice, add one to length ("code1" -> "code12")
 			if runs > 2:
 				runs = 0
 				length += 1
 
+			# generate new code
 			code = strings.random(length)
 
 		return code

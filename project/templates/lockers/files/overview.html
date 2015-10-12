@@ -1,6 +1,4 @@
 {% extends 'cp.html' %}
-{% load static %}
-{% load currency %}
 {% load django_tables2 %}
 
 {% block title %}File Locker{% endblock %}
@@ -29,14 +27,14 @@
 				</div>
 				<div class="padded content">
 
-					<a href="{% url 'files-upload' %}" class="ui left labeled icon fluid basic create button{% if files|length >= MAX_FILES %} disabled{% endif %}">
+					<a href="{% url 'files-upload' %}" class="ui left labeled icon fluid basic create button{% if table.rows|length >= MAX %} disabled{% endif %}">
 						<i class="upload icon"></i>
 						Upload File
 					</a>
 
 					<br/>
 
-					<p>You have uploaded {{ files|length }} file(s) out of your maximum file limit of {{ MAX_FILES }}.</p>
+					<p>You have uploaded {{ table.rows|length }} file(s) out of your maximum limit of {{ MAX }} files.</p>
 
 					<div class="ui header">File Lockers</div>
 					<p>

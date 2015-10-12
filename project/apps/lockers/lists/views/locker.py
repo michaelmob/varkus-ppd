@@ -1,63 +1,28 @@
-from django.shortcuts import render, redirect
-from django.conf import settings
+from django.shortcuts import render
+
+from ...bases.lockers import View_Locker, View_Unlock
 from ..models import List
-from ....leads.models import Token
-from ....offers.models import Offer
 
 
-def get_object(code):
-	try:
-		if not code:
-			raise
-
-		return List.objects.get(code=code)
-	except:
-		return None
+class Locker(View_Locker):
+	model = List
+	template = "lockers/lists/locker.html"
 
 
-def locker(request, code=None):
-	obj = get_object(code)
+class Unlock(View_Unlock):
+	model = List
+	template = "lockers/lists/unlock.html"
 
-	if not obj:
-		return redirect("locker-404")
+	def _return(self, request, obj):
+		if not self.token.data:
+			self.token.data = obj.get()
+			self.token.save()
 
-	combo = Offer.get_locker_request_cache(request, obj, settings.OFFERS_COUNT, 0.05)
-	
-	obj.earnings.increment_clicks(request.META["REMOTE_ADDR"])
-
-	return render(
-		request,
-		"lockers/lists/locker.html",
-		{
-			"obj": obj,
-			"offers": combo.offers,
-			"token": combo.token
-		}
-	)
-
-
-def unlock(request, code=None, token=None):
-	obj = get_object(code)
-
-	if not obj:
-		return redirect("locker-404")
-
-	if not token:
-		token = Token.get_or_create_request(request, obj)
-
-	# Give access
-	if not token.access():
-		return redirect("home")
-
-	if not token.data:
-		token.data = obj.get()
-		token.save()
-
-	return render(
-		request,
-		"lockers/lists/unlock.html",
-		{
-			"obj": obj,
-			"data": token.data
-		}
-	)
+		return render(
+			request,
+			self.template,
+			{
+				"obj": obj,
+				"data": self.token.data
+			}
+		)

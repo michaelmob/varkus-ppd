@@ -24,7 +24,7 @@ class List(Locker_Base):
 
 	item_name		= models.CharField(max_length=100)
 	items 			= models.TextField(max_length=6000)
-	item_count 		= models.IntegerField(verbose_name="Item Count")
+	item_count 		= models.IntegerField(default=0, verbose_name="Item Count")
 	unlock_count	= models.IntegerField(default=0)
 	order 			= models.CharField(max_length=20, default="descending", choices=ORDERS)
 	delimeter 		= models.CharField(max_length=5, default="\\n", choices=DELIMETERS)
@@ -36,6 +36,7 @@ class List(Locker_Base):
 	def create(user, name, item_name, description, items, delimeter, order, reuse):
 		if delimeter == "\\n":
 			delimeter = "\n"
+			
 		elif delimeter == "space":
 			delimeter = " "
 

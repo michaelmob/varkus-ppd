@@ -27,7 +27,7 @@ class Offer(models.Model):
 	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, blank=True, null=True, verbose_name="Category")
 	earnings_per_click 		= models.DecimalField(max_digits=15, decimal_places=2, verbose_name="EPC")
 	country 				= models.CharField(max_length=747)
-	flag 					= models.CharField(max_length=3, verbose_name="Country")
+	flag 					= models.CharField(max_length=5, verbose_name="Country")
 	country_count 			= models.IntegerField()
 	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Payout")
 	difference				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
@@ -103,46 +103,40 @@ class Offer(models.Model):
 
 		return obj
 
-	def offers_request(
-		request, count=5, min_payout=0.01,
-		offer_priority=None, offer_block=None
-	):
-		""" Get offers by request only """
-		return Offer.get(
-			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
-			count, min_payout, offer_priority, offer_block
-		)
-
-	def get_locker_request(request, locker_obj, count=5, min_payout=0.01):
+	def get(request, locker_obj):
 		""" Get offers by locker object """
 		user = locker_obj.user.profile
-		return Offer.offers_request(
-			request, count, min_payout, user.offer_priority, user.offer_block
+		return Offer._get(
+			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
+			settings.OFFERS_COUNT, 0.01, user.offer_priority, user.offer_block
 		)
 
-	def get_locker_request_cache(request, locker_obj, count=5, min_payout=0.01):
-		""" Get offers by using the request to retrieve the token,
-			user_agent, and user. then if already retrieved... serve
+	def get_cache(request, locker_obj):
+		""" Get offers by using the request to retrieve cached offers,
+			if there are no cached offers then fetch new ones... serve
 			from cache (this is the one you want to use from a view)
-			[call token item .renew() its cached offers] """
+			[call offer item .renew() to renew cached offers] """
 
-		token = Token.get_or_create_request(request, locker_obj).unique
+		# Make key for cache
+		key = "o_%s_%s" % (request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"))
 
 		# Get Offers
-		offers = cache.get("t_" + token)
+		offers = cache.get(key)
 
 		# If no offers then get and set them
 		if not offers:
-			offers = Offer.get_locker_request(
-				request, locker_obj, count, min_payout)
+			offers = Offer.get(request, locker_obj)
 
-			cache.set("t_" + token, offers, 300)  # Cache for 5 minutes
+			cache.set(key, offers, 300)  # Cache for 5 minutes
 			
-		return Combo(offers, token)
+		return offers
 
-	def get_basic_ex(
+	def renew(request):
+		return cache.delete("o_%s_%s" % (request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT")))
+
+	def get_basic(
 		count, category, country, user_agent=None, min_payout=0.01,
-		offer_block=[], offer_exclude=[], extra={}
+		offer_block=[], offer_exclude=[], filters={}
 	):
 		""" Get offers with a bunch of customizable arguments """
 
@@ -161,23 +155,13 @@ class Offer(models.Model):
 				country__icontains 	= country,
 				difference__lte 	= 3,
 				*args,
-				**extra
+				**filters
 			)\
 			.exclude(pk__in=offer_block)\
 			.exclude(pk__in=offer_exclude)\
 			.order_by("-earnings_per_click")[:count]
-		
-	def get_basic(
-		count, category, country, user_agent=None, min_payout=0.01,
-		offer_block=[], offer_exclude=[]
-	):
-		""" Get offers without extra arguments """
-		return Offer.get_basic_ex(
-			count, [category], country, user_agent,
-			min_payout, offer_block, offer_exclude
-		)
 			
-	def get_random(
+	def random(
 		count, country, user_agent=None, min_payout=0.01,
 		offer_block=None, offer_exclude=[]
 	):
@@ -201,7 +185,7 @@ class Offer(models.Model):
 			.exclude(pk__in=offer_exclude)\
 			.order_by("?")[:count]
 
-	def get(
+	def _get(
 		ip_address, user_agent, count=5, min_payout=0.01,
 		offer_priority=None, offer_block=None
 	):
@@ -272,32 +256,32 @@ class Offer(models.Model):
 
 		# Android _offers
 		if user_agent == "Android":
-			_offers += Offer.get_basic(_30, "Android", **kwargs)
+			_offers += Offer.get_basic(_30, ["Android"], **kwargs)
 			
 		# iPhone _offers
 		elif user_agent == "iPhone":
-			_offers += Offer.get_basic_ex(_30, ["iPhone", "iOS Devices"], **kwargs)
+			_offers += Offer.get_basic(_30, ["iPhone", "iOS Devices"], **kwargs)
 			
 		# iPad _offers
 		elif user_agent == "iPad":
-			_offers += Offer.get_basic_ex(_30, ["iPad", "iOS Devices"], **kwargs)
+			_offers += Offer.get_basic(_30, ["iPad", "iOS Devices"], **kwargs)
 			
 		# We'll assume it's Windows
 		elif user_agent == "Windows":
-			_offers += Offer.get_basic(_30, "Downloads", **kwargs)
+			_offers += Offer.get_basic(_30, ["Downloads"], **kwargs)
 		
 		# Email _offers
-		_offers += Offer.get_basic(_30, "Email Submits", **kwargs)
+		_offers += Offer.get_basic(_30, ["Email Submits"], **kwargs)
 
 		# PIN _offers
-		_offers += Offer.get_basic(_20, "PIN Submit", **kwargs)
+		_offers += Offer.get_basic(_20, ["PIN Submit"], **kwargs)
 		
 		# Update _offers in common arguments for no duplicates
 		kwargs["offer_exclude"] = [offer.pk for offer in _offers]
 		
 		# Fill rest of spaces with random surveys
 		if len(_offers) < count:
-			_offers += Offer.get_random(count - len(_offers), **kwargs)
+			_offers += Offer.random(count - len(_offers), **kwargs)
 			
 		# Replace {region} with region
 		for offer in _offers:
@@ -334,11 +318,3 @@ class Earnings(Earnings_Base):
 
 	class Meta:
 		verbose_name_plural = "Earnings"
-
-
-class Combo(object):
-
-	def __init__(self, offers, token):
-		super(Combo, self).__init__()
-		self.offers = offers
-		self.token = token

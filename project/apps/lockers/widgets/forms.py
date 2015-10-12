@@ -1,20 +1,29 @@
-from django import forms
+from django.forms import ModelForm
+from .models import Widget, Earnings
 
 
-class Widget_Create(forms.Form):
-	name = forms.CharField(max_length=100)
+class Form_Create(ModelForm):
+	class Meta:
+		model = Widget
+		fields = ["name", "description"]
 
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
+	def create(self, user):
+		obj = super(Form_Create, self).save(commit=False)
+		
+		# Set Fields
+		obj.user = user
+		obj.code = Widget().generate_code()
+		obj.name = self.cleaned_data["name"]
+		obj.description = self.cleaned_data["description"]
+		obj.save()
+
+		# Create Earnings
+		Earnings.objects.get_or_create(obj=obj)
+
+		return obj
 
 
-
-class Widget_Edit(forms.Form):
-	name = forms.CharField(max_length=100)
-	
-	description = forms.CharField(
-		required=False, max_length=500,
-		widget=forms.Textarea(attrs={"style": "min-height:4rem;height:4rem"})
-	)
+class Form_Edit(ModelForm):
+	class Meta:
+		model = Widget
+		fields = ["name", "description"]
