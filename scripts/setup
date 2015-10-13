@@ -1,5 +1,5 @@
 #!/bin/bash
-# apt-get install build-essential python3.4-dev python-magic rabbitmq-server memcached
-
-#cd $(dirname $0)/../
 ./pip install -r "$(pwd)/requirements.txt"
+
+./manage makemigrations
+./manage migrate
