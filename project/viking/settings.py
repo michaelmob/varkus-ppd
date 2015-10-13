@@ -161,7 +161,7 @@ TEMPLATES = [
 from django.template.base import add_to_builtins
 add_to_builtins("apps.home.templatetags.site")
 
-INVITE_ONLY = False
+INVITE_ONLY = DEBUG
 
 # Gravatar
 GRAVATAR_DEFAULT_IMAGE = "identicon"

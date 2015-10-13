@@ -1,6 +1,7 @@
 import os
 from ..settings import BASE_DIR
 
+# Site Info
 SITE_NAME = "Viking"
 SITE_DOMAIN = "viking.com"
 SITE_URL = "https://" + SITE_DOMAIN
@@ -14,17 +15,24 @@ ADMINS = (
 	("Owner", "me@viking.com"),
 )
 
+# E-mail
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = False
+SERVER_EMAIL = "error@viking.com"
+DEFAULT_FROM_EMAIL = "noreply@viking.com"
 
 # SECURITY WARNING: do not run with debug turned on in production!
 ALLOWED_HOSTS = [".viking.com", SITE_DOMAIN]
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "################################################"
 
-
 # Cache
-# https://docs.djangoproject.com/en/1.8/ref/settings/#cache
+# https://docs.djangoproject.com/en/1.9/ref/settings/#cache
 CACHES = {
 	"default": {
 		"BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
@@ -32,9 +40,8 @@ CACHES = {
 	}
 }
 
-
 # Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
@@ -46,14 +53,12 @@ DATABASES = {
 	}
 }
 
-
 # Media files (User Content)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_URL = "/static/"
 STATIC_ROOT = ""  # os.path.join(BASE_DIR, "static/")
 

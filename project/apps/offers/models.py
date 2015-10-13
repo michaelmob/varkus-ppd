@@ -1,3 +1,5 @@
+import hashlib
+
 from decimal import Decimal
 from datetime import date, datetime, timedelta
 
@@ -118,7 +120,7 @@ class Offer(models.Model):
 			[call offer item .renew() to renew cached offers] """
 
 		# Make key for cache
-		key = "o_%s_%s" % (request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"))
+		key = "o_%s_%s" % (request.META.get("REMOTE_ADDR"), hashlib.sha256(request.META.get("HTTP_USER_AGENT")).hexdigest())
 
 		# Get Offers
 		offers = cache.get(key)
@@ -132,7 +134,7 @@ class Offer(models.Model):
 		return offers
 
 	def renew(request):
-		return cache.delete("o_%s_%s" % (request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT")))
+		return cache.delete("o_%s_%s" % (request.META.get("REMOTE_ADDR"), hashlib.sha256(request.META.get("HTTP_USER_AGENT")).hexdigest())
 
 	def get_basic(
 		count, category, country, user_agent=None, min_payout=0.01,

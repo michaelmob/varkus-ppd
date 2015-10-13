@@ -12,7 +12,7 @@ Viking is a pay-per-unlock service website.
 1. Make sure server is up to date. (apt-get update && apt-get upgrade)
 2. Install required packages.
 ```sh
-apt-get install git build-essential python3-dev postgresql postgresql-contrib memcached rabbitmq-server postfix nginx
+apt-get install git build-essential python3-dev postgresql postgresql-contrib libpq-dev memcached rabbitmq-server postfix nginx libjpeg8-dev
 ```
 2. Git clone this repository on the server into "/var/www/".
 
