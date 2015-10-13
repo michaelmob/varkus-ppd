@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.views.generic import View
 from django.shortcuts import render, redirect
 
+from ..tables import Table_Locker_Lead
+
 
 class View_Overview(View):
 	template = None
@@ -81,6 +83,7 @@ class View_Manage(View):
 		return render(
 			request, self.template,
 			{
+				"leads_table": Table_Locker_Lead.create(request, obj.earnings.get_leads()),
 				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(code,))),
 				"form": self.form(instance=obj),
 				"obj": obj

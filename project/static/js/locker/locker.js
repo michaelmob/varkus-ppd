@@ -1,66 +1,69 @@
-var _s_uri, _s_pollInterval, _s_idleInterval, _s_idleSeconds = 0;
-var _s_confirmLeave = false;
+function Poll(url) {
+	var self = this;
+	this.idleInteval = undefined;
+	this.pollInterval = undefined;
+	this.idleSeconds = 0;
+	this.confirmLeave = false;
 
-function _s_poll(uri) {
-	if(_s_idleSeconds > 900)
-		return;
+	this.sendRequest = function() {
+		if(self.idleSeconds > 900)
+			return;
 
-	var request = new XMLHttpRequest();
-	request.open('GET', uri, true);
+		var request = new XMLHttpRequest();
+		request.open("GET", url, true);
 
-	request.onload = function () {
-		if (request.status >= 200 && request.status < 400) {
-			_s_stop();
-			window.location = request.responseText;
-		}
+		request.onload = function () {
+			if (request.status >= 200 && request.status < 400) {
+				self.stop();
+				window.location = request.responseText;
+			}
+		};
+
+		request.send();
 	};
 
-	request.send();
+	this.start = function() {
+		self.stop();
+
+		self.confirmLeave = true;
+		window.onbeforeunload = self.warning;
+
+		clearInterval(self.pollInterval);
+		clearInterval(self.idleInterval);
+
+		self.pollInterval = setInterval(function() { self.sendRequest() }, 5 * 1000);
+		self.idleInterval = setInterval(function() { self.idleSeconds = document.hidden ? self.idleSeconds + 1 : 0; }, 1000);
+		showProgress();
+	};
+
+	this.stop = function() {
+		self.confirmLeave = false;
+		clearInterval(self.pollInterval);
+		clearInterval(self.idleInterval);
+		hideProgress();
+	};
+
+	this.warning = function(e) {
+		if(!self.confirmLeave)
+			return;
+
+		if(!e) e = window.event;
+
+		e.cancelBubble = true;
+		e.returnValue = "Are you sure you want to leave this page?";
+
+		if (e.stopPropagation) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
+	};
 }
 
-function _s_idle() {
-	_s_idleSeconds = document.hidden ? _s_idleSeconds + 1 : 0;
-}
+var progressIndicator = document.querySelector(".progress.indicator");
+function showProgress() { progressIndicator.style.display = "block"; }
+function hideProgress() { progressIndicator.style.display = "none"; }
 
-function _s_set(uri) {
-	_s_uri = uri;
-}
-
-function _s_start() {
-	_s_confirmLeave = true;
-	_s_pollInterval = setInterval("_s_poll(\"" + _s_uri + "\");", 5 * 1000);
-	_s_idleInterval = setInterval(_s_idle, 1000);
-	_s_progressShow();
-}
-
-function _s_stop() {
-	_s_confirmLeave = false;
-	clearInterval(_s_pollInterval);
-	clearInterval(_s_idleInterval);
-	_s_progressHide();
-}
-
-function _s_warning(e) {
-	if(!_s_confirmLeave)
-		return;
-
-	if(!e)
-		e = window.event;
-
-	e.cancelBubble = true;
-	e.returnValue = "Are you sure you want to leave this page?";
-
-	if (e.stopPropagation) {
-		e.stopPropagation();
-		e.preventDefault();
-	}
-}
-
-var _s_progressIndicator = document.querySelector(".progress.indicator");
-function _s_progressShow() { _s_progressIndicator.style.display = "block"; }
-function _s_progressHide() { _s_progressIndicator.style.display = "none"; }
-
-function _s_paginator(items, per, container) {
+function Paginator(items, per, container) {
 	this.items = items;
 	this.container = container;
 	this.pages = Math.round(this.items.length / per);
@@ -117,11 +120,10 @@ function _s_paginator(items, per, container) {
 	this.showPage(1);
 }
 
-var _s_offers = document.querySelectorAll(".s.wrap>a");
+var offers = document.querySelectorAll(".s.wrap>a");
+poll = new Poll(pollUrl);
 
-for(var i = 0; i < _s_offers.length; i++)
-	_s_offers[i].onclick = _s_start;
+for(var i = 0; i < offers.length; i++)
+	offers[i].onclick = poll.start;
 
-new _s_paginator(_s_offers, 5, document.querySelector(".ui.pagination"));
-
-window.onbeforeunload = _s_warning;
+new Paginator(offers, 5, document.querySelector(".ui.pagination"));

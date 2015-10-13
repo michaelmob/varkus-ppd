@@ -15,6 +15,9 @@ from ..lockers.utils import Locker
 class Token(models.Model):
 	unique 		= models.CharField(max_length=32)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
+	
+	user 		= models.ForeignKey(User, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	offer 		= models.ForeignKey("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 
 	locker		= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
 	locker_id	= models.IntegerField(default=None, blank=True, null=True)
@@ -81,6 +84,7 @@ class Token(models.Model):
 		return Token.objects.get_or_create(
 			ip_address 		= ip_address,
 			user_agent 		= user_agent,
+			user 			= locker_obj.user,
 			locker 			= locker,
 			locker_id		= locker_obj.id,
 			locker_code		= locker_obj.code,
@@ -166,33 +170,33 @@ class Deposit(models.Model):
 
 
 class Lead(models.Model):
-	offer 				= models.ForeignKey("offers.Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	offer_name			= models.CharField(max_length=150, default=None, blank=True, null=True)
-	country 			= models.CharField(max_length=2, default=None, blank=True, null=True)
+	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	offer_name			= models.CharField(max_length=150, verbose_name="Offer", default=None, blank=True, null=True)
+	country 			= models.CharField(max_length=2, verbose_name="Country", default=None, blank=True, null=True)
 
-	token 				= models.ForeignKey(Token, related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	user 				= models.ForeignKey(User, related_name="user_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	user 				= models.ForeignKey(User, verbose_name="User", related_name="user_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 
-	locker				= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
-	locker_id			= models.IntegerField(default=None, blank=True, null=True)
-	locker_code			= models.CharField(max_length=10, default=None, blank=True, null=True)
+	locker				= models.CharField(verbose_name="Locker", max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
+	locker_id			= models.IntegerField(verbose_name="Locker ID", default=None, blank=True, null=True)
+	locker_code			= models.CharField(verbose_name="Locker Code", max_length=10, default=None, blank=True, null=True)
 
-	access_url 			= models.CharField(max_length=850, default=None, blank=True, null=True)
-	sender_ip_address	= models.GenericIPAddressField(blank=True, null=True)
-	user_ip_address		= models.GenericIPAddressField(blank=True, null=True)
+	access_url 			= models.CharField(verbose_name="Access URL", max_length=850, default=None, blank=True, null=True)
+	sender_ip_address	= models.GenericIPAddressField(verbose_name="Sender IP Address", blank=True, null=True)
+	user_ip_address		= models.GenericIPAddressField(verbose_name="IP Address", blank=True, null=True)
 
-	user_user_agent		= models.CharField(max_length=300, default=None, blank=True, null=True)
+	user_user_agent		= models.CharField(verbose_name="User-Agent", max_length=300, default=None, blank=True, null=True)
 
-	payout				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	dev_payout			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	user_payout			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
-	referral_payout		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	payout				= models.DecimalField(verbose_name="Total Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
+	dev_payout			= models.DecimalField(verbose_name="Dev Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
+	user_payout			= models.DecimalField(verbose_name="Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
+	referral_payout		= models.DecimalField(verbose_name="Referral Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 
-	lead_blocked		= models.BooleanField(default=False)
-	approved			= models.BooleanField(default=True)
+	lead_blocked		= models.BooleanField(verbose_name="Lead Blocked", default=False)
+	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
-	date_time			= models.DateTimeField(auto_now_add=True)
+	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
 
 	def locker_object(self):
 		try:

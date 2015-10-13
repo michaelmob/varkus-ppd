@@ -90,5 +90,5 @@
 </div>
 {% endif %}
 
+<script>var pollUrl = "{% url obj.get_name|add:'s-poll' obj.code %}";</script>
 <script src="{% static 'js/locker/locker.js' %}"></script>
-{# <script>_s_set("{% url 'poll-access' token %}");</script> #}

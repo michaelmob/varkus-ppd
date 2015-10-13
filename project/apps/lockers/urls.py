@@ -53,18 +53,22 @@ urlpatterns = [
 	url(r"^file/(?P<code>\w+)/$", files_locker.Locker.as_view(), name="files-locker"),
 	url(r"^file/(?P<code>\w+)/unlock/$", files_locker.Unlock.as_view(), name="files-unlock"),
 	url(r"^file/(?P<code>\w+)/download/$", files_locker.Download.as_view(), name="files-download"),
+	url(r"^file/(?P<code>\w+)/poll/$", files_locker.Poll.as_view(), name="files-poll"),
 
 	# -- Lists
 	url(r"^list/(?P<code>\w+)/$", lists_locker.Locker.as_view(), name="lists-locker"),
 	url(r"^list/(?P<code>\w+)/unlock/$", lists_locker.Unlock.as_view(), name="lists-unlock"),
+	url(r"^list/(?P<code>\w+)/poll/$", lists_locker.Poll.as_view(), name="lists-poll"),
 
 	# -- Links
 	url(r"^link/(?P<code>\w+)/$", links_locker.Locker.as_view(), name="links-locker"),
 	url(r"^link/(?P<code>\w+)/unlock/$", links_locker.Unlock.as_view(), name="links-unlock"),
+	url(r"^link/(?P<code>\w+)/poll/$", links_locker.Poll.as_view(), name="links-poll"),
 
 	# -- Widgets
 	url(r"^widget/(?P<code>\w+)/$", widgets_locker.Locker.as_view(), name="widgets-locker"),
 	url(r"^widget/(?P<code>\w+)/unlock/$", widgets_locker.Unlock.as_view(), name="widgets-unlock"),
+	url(r"^widget/(?P<code>\w+)/poll/$", widgets_locker.Poll.as_view(), name="widgets-poll"),
 
 	# Locker
 	url(r"^lockers/404/$", locker.locker_404, name="locker-404"),

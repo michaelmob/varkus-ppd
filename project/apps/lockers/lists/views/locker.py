@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from ...bases.lockers import View_Locker, View_Unlock
+from ...bases.lockers import View_Locker, View_Unlock, View_Poll
 from ..models import List
 
 
@@ -26,3 +26,6 @@ class Unlock(View_Unlock):
 				"data": self.token.data
 			}
 		)
+
+class Poll(View_Poll):
+	model = List

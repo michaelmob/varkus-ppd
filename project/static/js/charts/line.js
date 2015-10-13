@@ -13,13 +13,13 @@ var tfTickFormatter = function (n, s) {
 
 var flotOptions = {
 	points: {
-		radius: 2,
+		radius: 3.5,
 		symbol: "circle"
 	},
 	colors: ["#f44336", "#2185d0", "#1cb842"],
 	shadowSize: 0,
 	yaxis: {
-		tickSize: 1,
+		minTickSize: 1,
 		min: 0,
 	},
 	xaxis: {
@@ -47,14 +47,14 @@ var flotOptions = {
 				yval = "$" + parseFloat(yval).toFixed(2);
 			}
 			
-			return label + ": " + yval;
+			return label + ": <strong>" + yval + "</strong>";
 		},
 	}
 };
 
 var loadLineChart = function() {
 	$.ajax({
-		url: dataUrl,
+		url: window.location.href.split('?')[0] + "chart/line.json",
 		type: "GET",
 		dataType: "json",
 		success: function(response) {

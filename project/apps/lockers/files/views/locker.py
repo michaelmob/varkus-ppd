@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponse
 
-from ...bases.lockers import View_Locker, View_Unlock
+from ...bases.lockers import View_Locker, View_Unlock, View_Poll
 from ..models import File
 
 from apps.leads.models import Token
@@ -30,7 +30,10 @@ class Download(View_Unlock):
 			pass
 
 		# Get token using request and the locker object
-		self.token = Token.get(request, obj)
+		try:
+			self.token = Token.get(request, obj)
+		except:
+			return False
 
 		# Return access
 		return self.token.access()
@@ -40,3 +43,6 @@ class Download(View_Unlock):
 		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (obj.file_name).replace("\"", "").replace("\\", "")
 
 		return response
+
+class Poll(View_Poll):
+	model = File

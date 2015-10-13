@@ -1,5 +1,7 @@
 from django.views.generic import View
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseForbidden
 
 from apps.offers.models import Offer
 from apps.leads.models import Token
@@ -58,7 +60,10 @@ class View_Unlock(View):
 
 	def access(self, request, obj):
 		# Get token using request and the locker object
-		self.token = Token.get(request, obj)
+		try:
+			self.token = Token.get(request, obj)
+		except:
+			return False
 
 		# Return access
 		return self.token.access()
@@ -82,5 +87,22 @@ class View_Unlock(View):
 		# Check access
 		if not self.access(request, obj):
 			return redirect("home")
+
+		return self._return(request, obj)
+
+
+class View_Poll(View_Unlock):
+	def _return(self, request, obj):
+		return HttpResponse(reverse(obj.get_name() + "s-unlock", args=(obj.code,)))
+
+	def get(self, request, code=None):
+		# Redirect if not existant
+		obj = self.obj(request, code)
+		if not obj:
+			return HttpResponse(reverse("locker-404"))
+
+		# Check access
+		if not self.access(request, obj):
+			return HttpResponseForbidden("0")
 
 		return self._return(request, obj)

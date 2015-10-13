@@ -35,7 +35,7 @@ class Locker_Base(models.Model):
 
 	def get_name(self):
 		"""Get class name (Ex: widget, file, list, link)"""
-		return str(self.__class__.__name__)
+		return str(self.__class__.__name__).lower()
 
 	def get_link(self, loc):
 		"""Base function to get link related to class (Ex: file-%s)"""

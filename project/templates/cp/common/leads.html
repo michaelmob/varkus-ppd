@@ -1,4 +1,4 @@
-{% load currency %}
+{% load django_tables2 %}
 
 <div class="ui segment box">
 	<div class="title">
@@ -6,35 +6,6 @@
 		Leads
 	</div>
 	<div class="content">
-		<table class="ui table">
-			<thead>
-				<tr>
-					<th>Offer</th>
-					<th width="20px"></th>
-					<th>IP Address</th>
-					<th>Payout</th>
-					<th>Date</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% if leads|length < 1 %}
-					<tr><td colspan="6">This locker hasn't received any leads.</td></tr>
-				{% else %}
-					{% for lead in leads %}
-						<tr>
-							<td>
-								<a href="{{ lead.offer.get_manage_url }}">
-									{{ lead.offer.name|truncatechars:25 }}
-								</a>
-							</td>
-							<td><i class="{{ lead.country|lower }} flag"></i></td>
-							<td>{{ lead.user_ip_address }}</td>
-							<td>${{ lead.user_payout|currency }}</td>
-							<td>{{ lead.date_time|timesince }} ago</td>
-						</tr>
-					{% endfor %}
-				{% endif %}
-			</tbody>
-		</table>
+		{% render_table leads_table 'cp/table.html' %}
 	</div>
 </div>

@@ -20,52 +20,50 @@
 			</thead>
 
 			<tbody>
-				{% cache 3600 user user.profile.notification_lead %}
-					{% with cut_amount=user.profile.party.cut_amount recent_leads=user.earnings.get_most_recent_leads %}
-						{% if recent_leads|length > 0 %}
-							{% for lead in recent_leads %}
-								{% with obj=lead.locker_object %}
-									<tr>
-										<td>
-											<a href="{{ lead.offer.get_manage_url }}">{{ lead.offer_name|truncatechars:'50' }}</a>
-										</td>
-										<td>
-											<i class="{{ lead.country|lower }} flag"></i>
-											{{ lead.user_ip_address }}
-										</td>
-										<td>${{ lead.user_payout|currency }}</td>
-										<td>
-											{% if obj.get_name|length > 1 %}
-												{{ obj.get_name }}:
-												<em>
-													<a target="_blank" href="{{ obj.get_manage_url }}">
-														{{ obj.name }}
-													</a>
-												</em>
-											{% else %}
-												<em>Removed</em>
-											{% endif %}
-										</td>
-										<td>
-											<time datetime="{{ lead.date_time|date:'c' }}"></time>
-										</td>
-										<td>
-											{% if lead.approved %}
-												<i class="checkmark icon"></i> Yes
-											{% else %}
-												<i class="cancel icon"></i> No
-											{% endif %}
-										</td>
-									</tr>
-								{% endwith %}
-							{% endfor %}
-						{% else %}
-							<tr>
-								<td colspan="8">You have no recent leads. :-(</td>
-							</tr>
-						{% endif %}
-					{% endwith %}
-				{% endcache %}
+				{% with cut_amount=user.profile.party.cut_amount recent_leads=user.earnings.get_most_recent_leads %}
+					{% if recent_leads|length > 0 %}
+						{% for lead in recent_leads %}
+							{% with obj=lead.locker_object %}
+								<tr>
+									<td>
+										<a href="{{ lead.offer.get_manage_url }}">{{ lead.offer_name|truncatechars:'50' }}</a>
+									</td>
+									<td>
+										<i class="{{ lead.country|lower }} flag"></i>
+										{{ lead.user_ip_address }}
+									</td>
+									<td>${{ lead.user_payout|currency }}</td>
+									<td>
+										{% if obj.get_name|length > 1 %}
+											{{ obj.get_name }}:
+											<em>
+												<a target="_blank" href="{{ obj.get_manage_url }}">
+													{{ obj.name }}
+												</a>
+											</em>
+										{% else %}
+											<em>Removed</em>
+										{% endif %}
+									</td>
+									<td>
+										<time datetime="{{ lead.date_time|date:'c' }}"></time>
+									</td>
+									<td>
+										{% if lead.approved %}
+											<i class="checkmark icon"></i> Yes
+										{% else %}
+											<i class="cancel icon"></i> No
+										{% endif %}
+									</td>
+								</tr>
+							{% endwith %}
+						{% endfor %}
+					{% else %}
+						<tr>
+							<td colspan="8">You have no recent leads. :-(</td>
+						</tr>
+					{% endif %}
+				{% endwith %}
 			</tbody>
 		</table>
 	</div>

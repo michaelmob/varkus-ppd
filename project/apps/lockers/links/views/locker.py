@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from ...bases.lockers import View_Locker, View_Unlock
+from ...bases.lockers import View_Locker, View_Unlock, View_Poll
 from ..models import Link
 
 
@@ -22,3 +22,6 @@ class Unlock(View_Unlock):
 				"data": obj.url
 			}
 		)
+
+class Poll(View_Poll):
+	model = Link

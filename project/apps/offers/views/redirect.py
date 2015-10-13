@@ -35,7 +35,8 @@ def redirect(request, id=None):
 
 		token, created = Token.get_or_create(request, obj)
 
-		print(token)
+		token.offer = offer
+		token.save()
 	
 	except Offer.DoesNotExist:
 		return _redirect(request.META.get("HTTP_REFERER", "home"))

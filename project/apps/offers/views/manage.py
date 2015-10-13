@@ -1,9 +1,6 @@
-from urllib.parse import unquote
-
-from django.http import JsonResponse
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.core.cache import cache
+from django.http import JsonResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 
@@ -11,7 +8,7 @@ from ..models import Offer
 from ..forms import Form_Offer
 from ..tables import Table_Offer
 
-from utils import charts
+from apps.cp.bases.charts import Charts
 
 
 def offers(request):
@@ -85,12 +82,7 @@ def line_chart(request, id=None):
 	except Offer.DoesNotExist:
 		return JsonResponse({"data": None})
 
-	return charts.line_chart_view(
-		"charts__offer_%s" % obj.pk,
-		lambda: obj.earnings.get_leads(),
-		obj.earnings.get_clicks(),
-		no_earnings=True
-	)
+	return JsonResponse(Charts.line_cache(obj))
 
 
 def priority(request):

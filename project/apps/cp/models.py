@@ -100,14 +100,15 @@ class Earnings_Base(models.Model):
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
 
-	def get_leads(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=2147483647, all=False):
+
+	def __get_base(self, search_model, date_range=[date.today(), date.today() + timedelta(days=1)], count=None, every=False):
 		args = {}
 
 		# Typeof would be "user" or "offer" [or even "token" (unnecessary)]
 		model = str(type(self.obj).__name__).lower()
 
 		# So if user in field_names then we know to add the model name to search args
-		if model in apps.leads.models.Lead._meta.get_all_field_names():
+		if model in ["user", "offer"]:
 			args[model] = self.obj
 		
 		# otherwise we know it's a Locker
@@ -122,28 +123,16 @@ class Earnings_Base(models.Model):
 		if not all:
 			args["lead_blocked"] = False
 			
-		return apps.leads.models.Lead.objects.filter(**args).order_by("-date_time")[:count]
-
-	def get_tokens(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=2147483647):
-		args = {}
-
-		# Typeof would be "user" or "offer" [or even "token" (unnecessary)]
-		model = str(type(self.obj).__name__).lower()
-
-		# So if user in field_names then we know to add the model name to search args
-		if model in apps.leads.models.Token._meta.get_all_field_names():
-			args[model] = self.obj
-		
-		# otherwise we know it's a Locker
+		if count:
+			return search_model.objects.filter(**args).order_by("-date_time")[:count]
 		else:
-			args["locker"] = model.upper()
-			args["locker_id"] = self.obj.pk
-			args["locker_code"] = self.obj.code
+			return search_model.objects.filter(**args).order_by("-date_time")
 
-		if date_range:
-			args["date_time__range"] = date_range
-			
-		return apps.leads.models.Token.objects.filter(**args).order_by("-date_time")[:count]
+	def get_leads(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=None, every=False):
+		return self.__get_base(apps.leads.models.Lead, date_range, count, every)
+
+	def get_tokens(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=None):
+		return self.__get_base(apps.leads.models.Token, date_range, count, True)
 
 	def get_most_recent_leads(self, count=25):
 		return self.get_leads(None, count)

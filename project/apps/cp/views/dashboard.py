@@ -3,7 +3,7 @@ import platform
 
 from datetime import timedelta
 
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.cache import cache
 from django.contrib.admin.views.decorators import staff_member_required
@@ -12,15 +12,12 @@ from ...leads.models import Lead, Deposit
 from ...offers.models import Offer
 
 from ..tables import Table_Offer, Table_Lead
-
-from utils import charts
-from utils import cache2
+from ..bases.charts import Charts
 
 
 def index(request):
-	# Cache Newest Offers and Recent Leads
-	offers = cache2.get("newest_offers", lambda: Offer.objects.order_by('-date')[:5])
-	leads = cache2.get("recent__user_%s" % request.user.id, lambda: Lead.objects.filter(lead_blocked=False, user=request.user).order_by("-date_time")[:5])
+	offers = Offer.objects.order_by('-date')[:5]
+	leads = Lead.objects.filter(lead_blocked=False, user=request.user).order_by("-date_time")[:5]
 
 	return render(request, "cp/dashboard/index.html", {
 		"offers": offers,
@@ -30,18 +27,11 @@ def index(request):
 
 
 def line_chart(request):
-	return charts.line_chart_view(
-		"charts_line__user_%s" % request.user.id,
-		lambda: request.user.earnings.get_leads(),
-		request.user.earnings.get_clicks()
-	)
+	return JsonResponse(Charts.line_cache(request.user))
 
 
 def map_chart(request):
-	return charts.map_chart_view(
-		"charts_map__user_%s" % request.user.id,
-		lambda: request.user.earnings.get_leads()
-	)
+	return JsonResponse(Charts.map_cache(request.user))
 
 
 @staff_member_required

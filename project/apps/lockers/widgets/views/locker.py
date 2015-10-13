@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.validators import URLValidator
 from django.shortcuts import render, redirect
 
-from ...bases.lockers import View_Locker, View_Unlock
+from ...bases.lockers import View_Locker, View_Unlock, View_Poll
 from ..models import Widget
 
 
@@ -62,3 +62,7 @@ class Unlock(View_Unlock):
 				pass
 
 		return render(request, self.template, { })
+
+
+class Poll(View_Poll):
+	model = Widget

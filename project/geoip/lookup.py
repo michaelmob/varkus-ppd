@@ -6,7 +6,10 @@ def get(ip_address):
 
 
 def country(ip_address):
-	return get(ip_address).country.iso_code
+	try:
+		return get(ip_address).country.iso_code
+	except:
+		return "US"
 
 
 def country_region(ip_address):
