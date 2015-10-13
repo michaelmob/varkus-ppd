@@ -1,30 +1,16 @@
 """
-Viking 1.2.0
+Viking 1.2.1
 
 Django settings for Viking project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.8/topics/settings/
+https://docs.djangoproject.com/en/1.9/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.8/ref/settings/
+https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-# pip install
-#   django
-#   django-recaptcha
-#   django-storages
-#   django-axes
-#   django-celery
-#   pillow
-#   django-countries
-#   anora
-
-
 # Quicksilver - Pride of Man
-# Quicksilver - Mona
-# Country Joe & the Fish - Flying high
-# Country Joe & the Fish - Death sound blues
 
 # TODO:
 #######
@@ -34,6 +20,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Allow users to see IPs of visitors
 # Referral guide
 
+# Overwrite any setting in ./private/production.py for production servers
+# Overwrite any setting in ./private/development.py for development servers
 
 import os, socket
 from datetime import timedelta
@@ -43,11 +31,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = socket.gethostname() == "pc"
-
-if DEBUG:
-	from .private.development import *
-else:
-	from .private.production import *
 
 # Application definition
 
@@ -109,23 +92,16 @@ ROOT_URLCONF = "viking.urls"
 WSGI_APPLICATION = "viking.wsgi.application"
 
 # Login
+INVITE_ONLY = False
 LOGIN_URL = "/user/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 
-# GeoIP
-GEOIP_PATH = "/home/dev/cb/project/geoip/"
-
 # Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
+# https://docs.djangoproject.com/en/1.9/topics/i18n/
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "America/New_York"
-
 USE_I18N = True
-
 USE_L10N = False
-
 USE_TZ = False
 
 # Date Formatting
@@ -157,11 +133,58 @@ TEMPLATES = [
 	},
 ]
 
+# SMTP
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 25
+
+# SECURITY WARNING: do not run with debug turned on in production!
+ALLOWED_HOSTS = []
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = "1pocfkh#z)llgp&h_t@svn^o3r^x6^g)s#qqx(udo0i7j3hj*e"
+
+# Cache
+# https://docs.djangoproject.com/en/1.9/ref/settings/#cache
+CACHES = {
+	"default": {
+		"BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+		"LOCATION": "unique-snowflake"
+	}
+}
+
+# Database
+# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+DATABASES = {
+	"default": {
+		"ENGINE": "django.db.backends.sqlite3",
+		"NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+	}
+}
+
+# Media files (User Content)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_URL = "/static/"
+STATIC_ROOT = ""  # os.path.join(BASE_DIR, "static/")
+
+STATICFILES_DIRS = (
+	os.path.join(BASE_DIR, "static/"),
+)
+
+# Site Settings
+SITE_NAME = "Development"
+SITE_DOMAIN = "test.com"
+SITE_URL = "https://" + SITE_DOMAIN
+
+# GeoIP
+GEOIP_PATH = "/home/dev/cb/project/geoip/"
+
 # Add Site
 from django.template.base import add_to_builtins
 add_to_builtins("apps.home.templatetags.site")
-
-INVITE_ONLY = DEBUG
 
 # Gravatar
 GRAVATAR_DEFAULT_IMAGE = "identicon"
@@ -275,3 +298,8 @@ CATEGORY_TYPES_ICONS = {
 }
 
 from .private._keys import *
+
+if DEBUG:
+	from .private.development import *
+else:
+	from .private.production import *

@@ -22,6 +22,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 EMAIL_USE_TLS = False
+
 SERVER_EMAIL = "error@viking.com"
 DEFAULT_FROM_EMAIL = "noreply@viking.com"
 
