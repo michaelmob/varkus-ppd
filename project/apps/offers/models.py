@@ -132,7 +132,7 @@ class Offer(models.Model):
 		if not offers:
 			offers = Offer.get(request, locker_obj)
 
-			cache.set(key, offers, 300)  # Cache for 5 minutes
+			cache.set(key, offers, 120)  # Cache for 2 minutes
 			
 		return offers
 

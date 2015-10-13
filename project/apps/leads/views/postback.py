@@ -206,7 +206,8 @@ def receive(request, password=None):
 
 	# No Locker
 	try:
-		locker_reference = (type(locker_obj).__name__.lower(), locker_obj.pk)
+		locker_ref = locker_obj.get_name() + str(locker_obj.id)
+		user_ref = user.__class__.__name__ + str(user.id)
 
 		#cache.delete("charts_line__user_%s" % user.id)
 		# Clear User/Locker Cache
@@ -214,11 +215,13 @@ def receive(request, password=None):
 
 		# cache.delete_many with memcached doesn't work
 		cache_keys = (
-			"charts_line__user_%s" % user.id,
-			"charts_map__user_%s" % user.id,
-			"recent__user_%s" % user.id,
-			"charts__%s_%s" % locker_reference,
-			"leads__%s_%s" % locker_reference
+			# User Charts
+			"lc_" + user_ref,
+			"mc_" + user_ref,
+
+			# Locker Charts
+			"lc_" + locker_ref,
+			"mc_" + locker_ref
 		)
 
 		for key in cache_keys:

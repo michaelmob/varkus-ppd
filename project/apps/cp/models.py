@@ -60,22 +60,22 @@ class Earnings_Base(models.Model):
 	def reset_today(self):
 		print("Reset Today's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE '%s' SET yesterday=today, today=0, real_today=0 WHERE today>0 OR yesterday>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0 WHERE today>0 OR yesterday>0" % (self._meta.db_table))
 
 	def reset_week(self):
 		print("Reset Week's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE '%s' SET week=0 WHERE week>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET week=0 WHERE week>0" % (self._meta.db_table))
 
 	def reset_month(self):
 		print("Reset Month's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE '%s' SET yestermonth=month, month=0, real_month=0 WHERE month>0 OR yestermonth>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET yestermonth=month, month=0, real_month=0 WHERE month>0 OR yestermonth>0" % (self._meta.db_table))
 
 	def reset_year(self):
 		print("Reset Year's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE '%s' SET year=0 WHERE year>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET year=0 WHERE year>0" % (self._meta.db_table))
 
 	def add(self, amount, cut=0, add_to_real=True):
 		amount = Decimal(amount)

@@ -1,3 +1,5 @@
+import hashlib
+
 from datetime import datetime, timedelta
 from decimal import Decimal
 
@@ -111,8 +113,12 @@ class Token(models.Model):
 		return (self.lead or self.paid or self.staff)
 
 	def renew(request):
-		print(cache.get("o_%s_%s" % (self.ip_address, self.user_agent)))
-		return cache.delete("o_%s_%s" % (self.ip_address, self.user_agent))
+		return cache.delete("o_%s_%s" % \
+			(
+				self.ip_address,
+				hashlib.sha256(self.user_agent.encode("utf-8")).hexdigest()
+			)
+		)
 
 	def get_verify(unique, ip_address):
 		"""Verify token for unique and ip_address exists by returning the object"""
