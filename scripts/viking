@@ -5,18 +5,29 @@ source env/bin/activate
 cd project/
 
 case "$1" in
+
 	start)
 		echo "Starting Viking"
-		gunicorn --workers=4 viking.wsgi &
+		# Run Celery Cam
 		../scripts/manage celerycam --frequency=30.0 &
+
+		# Run Celery Worker
 		celery worker --app=viking --beat --events &
+		echo $! > celeryw.pid
+
+		# Run Gunicorn
+		gunicorn --workers=4 viking.wsgi &
+		echo $! > gunicorn.pid
+
+		# Wait for gunicorn to end
+		wait $(cat gunicorn.pid)
 		;;
+
 	stop)
 		echo "Stopping Viking"
-		pkill gunicorn
-		kill -9 $(cat celeryev.pid); rm celeryev.pid
-		kill -9 `ps aux | grep celery | awk '{print $2}'`
+		exit 0
 		;;
+
 	restart)
 		../scripts/viking stop
 		../scripts/viking start
@@ -25,6 +36,20 @@ case "$1" in
 		echo "Usage: viking {start|stop|restart}"
 		exit 1
 		;;
+
 esac
 
+# Kill Celerycam
+kill $(cat celeryev.pid)
+
+# Kill Celery worker
+kill $(cat celeryw.pid)
+
+# Kill Gunicorn
+kill $(cat gunicorn.pid)
+
+# Cleanup
+rm celeryev.pid
+rm celeryw.pid
+rm gunicorn.pidp
 exit 0

@@ -1,0 +1,13 @@
+[Unit]
+Description=Viking (Gunicorn)
+
+[Service]
+User={USER}
+Type=forking
+ExecStart=/bin/bash /var/www/viking/scripts/viking start
+ExecStop=/bin/bash /var/www/viking/scripts/viking stop
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

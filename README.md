@@ -33,8 +33,9 @@ apt-get install git build-essential python3-dev postgresql postgresql-contrib li
 2. Create a new file and symlink it to sites-enabled or you can edit "default" file.
 3. In that file, an example can be found in "_private/nginx.example".
 
-#### Step 5: Run at Startup (Optional)
-1. Edit /etc/local.rc
-2. Modify and add the below code before "exit 0".
-
-```sudo -u {USERNAME} /var/www/viking/scripts/viking start```
+#### Step 5: Run at Startup using SystemD (Optional)
+1. Modify the "viking.service" file in the "project/viking/_private" directory.
+2. Copy the file to "/etc/systemd/system/" directory.
+3. Enable the service ```systemctl enable viking.service```
+4. Do the same for the "nginx.service" file.
+5. The services will start after you reboot the system.
