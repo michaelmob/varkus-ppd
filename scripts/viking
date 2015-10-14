@@ -18,14 +18,24 @@ case "$1" in
 		# Run Gunicorn
 		gunicorn --workers=4 viking.wsgi &
 		echo $! > gunicorn.pid
-
-		# Wait for gunicorn to end
-		wait $(cat gunicorn.pid)
 		;;
 
 	stop)
 		echo "Stopping Viking"
-		exit 0
+
+		# Kill Celerycam
+		kill $(cat celeryev.pid)
+
+		# Kill Celery worker
+		kill $(cat celeryw.pid)
+
+		# Kill Gunicorn
+		kill $(cat gunicorn.pid)
+
+		# Cleanup
+		rm celeryev.pid
+		rm celeryw.pid
+		rm gunicorn.pid
 		;;
 
 	restart)
@@ -39,17 +49,4 @@ case "$1" in
 
 esac
 
-# Kill Celerycam
-kill $(cat celeryev.pid)
-
-# Kill Celery worker
-kill $(cat celeryw.pid)
-
-# Kill Gunicorn
-kill $(cat gunicorn.pid)
-
-# Cleanup
-rm celeryev.pid
-rm celeryw.pid
-rm gunicorn.pidp
 exit 0

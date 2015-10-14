@@ -12,7 +12,7 @@ Viking is a pay-per-unlock service website.
 1. Make sure server is up to date. (apt-get update && apt-get upgrade)
 2. Install required packages.
 ```sh
-apt-get install git build-essential python3-dev postgresql postgresql-contrib libpq-dev memcached rabbitmq-server postfix nginx libjpeg8-dev
+apt-get install git build-essential python3-dev virtualenv postgresql postgresql-contrib libpq-dev memcached rabbitmq-server postfix nginx libjpeg8-dev
 ```
 2. Git clone this repository on the server into "/var/www/".
 
@@ -20,7 +20,10 @@ apt-get install git build-essential python3-dev postgresql postgresql-contrib li
 1. Create a user for your database. ```sudo -u postgres createuser -D -A -P {USERNAME}```
 2. Create a database for Viking and give user full access. ```sudo -u postgres createdb -O {USERNAME} {DATABASE_NAME}```
 
-#### Step 3: Django Setup
+#### Step 3: Setup Environment
+1. Create a virtual environment in the Viking directory. ```virtualenv -p /usr/bin/python3 env```
+
+#### Step 4: Django Setup
 1. Remove underscore from "project/viking/_private" directory.
 2. Make all required changes in renamed "private" directory. (PostgreSQL details)
 3. Navigate to "project/geoip/" directory.
@@ -28,12 +31,12 @@ apt-get install git build-essential python3-dev postgresql postgresql-contrib li
 5. Navigate to "scripts/" directory.
 6. Run "setup" script.
 
-#### Step 4: Setup Nginx
+#### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".
 2. Create a new file and symlink it to sites-enabled or you can edit "default" file.
 3. In that file, an example can be found in "_private/nginx.example".
 
-#### Step 5: Run at Startup using SystemD (Optional)
+#### Step 6: Run at Startup using SystemD (Optional)
 1. Modify the "viking.service" file in the "project/viking/_private" directory.
 2. Copy the file to "/etc/systemd/system/" directory.
 3. Enable the service ```systemctl enable viking.service```
