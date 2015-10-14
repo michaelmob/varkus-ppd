@@ -1,5 +1,5 @@
 """
-Viking 1.2.1
+Viking 1.2.2
 
 Django settings for Viking project.
 
@@ -43,12 +43,12 @@ INSTALLED_APPS = (
 	"django.contrib.staticfiles",
 
 	"debug_toolbar", 		# django-debug-toolbar
-	"captcha",              # django-recaptcha
-	"storages",             # django-storages
-	"axes",                 # django-axes
-	"djcelery",             # django-celery
-	"anora",                # anora
-	"django_countries",     # django-countries
+	"captcha", 				# django-recaptcha
+	"storages", 			# django-storages
+	"axes", 				# django-axes
+	"djcelery", 			# django-celery
+	"anora", 				# anora
+	"django_countries", 	# django-countries
 	"django_gravatar",		# django-gravatar2
 	"django_tables2", 		# django-tables2
 
