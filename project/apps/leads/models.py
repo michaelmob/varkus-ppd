@@ -28,7 +28,7 @@ class Token(models.Model):
 	user_agent 	= models.CharField(max_length=300)
 	ip_address 	= models.GenericIPAddressField()
 	country 	= models.CharField(max_length=5)
-	date_time	= models.DateTimeField(auto_now_add=True)
+	date_time	= models.DateTimeField()
 	last_access	= models.DateTimeField(auto_now=True)
 
 	lead 		= models.BooleanField(default=False)
@@ -86,6 +86,7 @@ class Token(models.Model):
 		return Token.objects.get_or_create(
 			ip_address 		= ip_address,
 			user_agent 		= user_agent,
+			country 		= lookup.country(ip_address),
 			user 			= locker_obj.user,
 			locker 			= locker,
 			locker_id		= locker_obj.id,

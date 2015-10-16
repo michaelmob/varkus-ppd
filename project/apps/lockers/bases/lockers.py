@@ -18,7 +18,7 @@ class View_Locker(View):
 
 		# Get object, otherwise redirect to overview
 		try:
-			return self.model.objects.get(user=request.user, code=code)
+			return self.model.objects.get(code=code)
 		except self.model.DoesNotExist:
 			return None
 
@@ -54,7 +54,7 @@ class View_Unlock(View):
 
 		# Get object, otherwise redirect to overview
 		try:
-			return self.model.objects.get(user=request.user, code=code)
+			return self.model.objects.get(code=code)
 		except self.model.DoesNotExist:
 			return None
 
