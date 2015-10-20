@@ -6,10 +6,10 @@ private/
 **/migrations/*
 !**/migrations/__init__.py
 
+error.txt
 *.pyc
 *.pyo
 *.sqlite3
 *.mmdb
 *.pid
-*.sublime-project
-*.sublime-workspace
+*.sublime*

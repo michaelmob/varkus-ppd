@@ -13,7 +13,7 @@ app = Celery("viking")
 # pickle the object when using Windows.
 app.config_from_object("django.conf:settings")
 app.conf.update(
-	CELERY_ACCEPT_CONTENT = ["json"],
+	CELERY_ACCEPT_CONTENT=["pickle", "json"],
 	CELERY_TIMEZONE="America/New_York",
 	CELERY_RESULT_BACKEND="djcelery.backends.database:DatabaseBackend",
 	CELERYBEAT_SCHEDULER="djcelery.schedulers.DatabaseScheduler",
