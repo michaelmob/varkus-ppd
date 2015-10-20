@@ -1,5 +1,5 @@
 """
-Viking 1.2.2
+Viking 1.2.3
 
 Django settings for Viking project.
 
@@ -238,9 +238,6 @@ DEFAULT_PARTY_ID = 1
 DEFAULT_PARTY_NAME = "User"
 DEFAULT_CUT_AMOUNT = 0.40  # Developers Cut
 DEFAULT_REFERRAL_CUT_AMOUNT = 0.10
-
-# Adgate
-OFFER_REDIRECT_URL = "http://2.quicktrkr.com/cl/%s/%s?s1=%s"
 
 # Deposits # Default must exist // Always make "-1" default
 DEPOSITS = (

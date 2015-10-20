@@ -13,7 +13,7 @@ def redirect(request, id=None):
 		# Retrieve offer if ID is an integer
 		int(id)
 		offer = Offer.objects.get(pk=id)
-		
+
 		# Get from previous page that set the "locker_object" variable
 		# contains (locker_name, id, code)
 		obj = request.session["locker_object"]
@@ -37,8 +37,9 @@ def redirect(request, id=None):
 
 		token.offer = offer
 		token.save()
-	
-	except Offer.DoesNotExist:
+
+	except KeyError, Offer.DoesNotExist:
+		# Offer doesn't exist, or they were directly linked the offer
 		return _redirect(request.META.get("HTTP_REFERER", "home"))
 
 	except Token.DoesNotExist:

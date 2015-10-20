@@ -1,0 +1,6 @@
+User-Agent: *
+Disallow: /file/
+Disallow: /list/
+Disallow: /link/
+Disallow: /widget/
+Disallow: /redirect/

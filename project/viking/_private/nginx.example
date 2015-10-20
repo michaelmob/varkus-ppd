@@ -9,8 +9,12 @@ server {
 	server_name _;
 	client_max_body_size 100m;
 
+	location /robots.txt {
+    alias /var/www/viking/static/robots.txt;
+	}
+
 	location /static/ {
-		alias /var/www/viking/project/static/;
+		alias /var/www/viking/static/;
 		autoindex off;
 	}
 

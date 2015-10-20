@@ -4,7 +4,7 @@
 # npm install -g less less-plugin-clean-css
 
 cd $(dirname $0)/../
-cd project/static/css/_less/
+cd static/css/_less/
 echo
 echo ... Compiling
 #lessc --compress semantic.less > ../semantic.min.css
