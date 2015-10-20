@@ -38,7 +38,7 @@ def redirect(request, id=None):
 		token.offer = offer
 		token.save()
 
-	except KeyError, Offer.DoesNotExist:
+	except (KeyError, Offer.DoesNotExist):
 		# Offer doesn't exist, or they were directly linked the offer
 		return _redirect(request.META.get("HTTP_REFERER", "home"))
 
