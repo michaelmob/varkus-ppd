@@ -79,49 +79,27 @@ class Earnings_Base(models.Model):
 		cursor.execute("UPDATE %s SET year=0 WHERE year>0" % (self._meta.db_table))
 
 	def add(self, amount, cut=0, add_to_real=True):
-		amount_cut = amount - (amount * Decimal(cut))
-
-		self.update(
-			leads 	= F("leads") 	+ 1,
-			today 	= F("today") 	+ amount_cut,
-			week 	= F("week") 	+ amount_cut,
-			month 	= F("month") 	+ amount_cut,
-			year 	= F("year") 	+ amount_cut,
-			total	= F("total")	+ amount_cut
-		)
-
-		if add_to_real:
-			self.update(
-				real_today = F("real_today") + amount,
-				real_month = F("real_month") + amount,
-				real_total = F("real_total") + amount
-			)
-
-		return amount_cut
-
-	'''def add(self, amount, cut=0, add_to_real=True):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
-		self.leads 			+= 1
+		self.leads 	= F("leads") 	+ 1
 
-		self.today 			+= amount_cut
-		self.week 			+= amount_cut
-		self.month 			+= amount_cut
-		self.year 			+= amount_cut
-		self.total 			+= amount_cut
+		self.today 	= F("today") 	+ amount_cut
+		self.week 	= F("week") 	+ amount_cut
+		self.month 	= F("month")	+ amount_cut
+		self.year 	= F("year") 	+ amount_cut
+		self.total 	= F("total") 	+ amount_cut
 
 		if add_to_real:
-			self.real_today 	+= amount
-			self.real_month 	+= amount
-			self.real_total 	+= amount
+			self.real_today = F("real_today") + amount
+			self.real_month = F("real_month") + amount
+			self.real_total = F("real_total") + amount
 
 		self.save()
-		return amount_cut'''
+		return amount_cut
 
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
-
 
 	def __get_base(self, search_model, date_range=[date.today(), date.today() + timedelta(days=1)], count=None, every=False):
 		args = {}

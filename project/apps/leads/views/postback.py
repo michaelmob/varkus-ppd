@@ -54,12 +54,8 @@ def internal(request):
 	data = data.encode("utf-8")
 
 	url += "?" + data.decode("utf-8")
-	print(url)
 
-	request2 = urllib.request.Request(url)
-	response = urllib.request.urlopen(request2)
-
-	return HttpResponse(response.read())
+	return HttpResponse("<a href='%s'>%s</a>" % (url, url))
 
 
 def receive(request, password=None):
@@ -109,10 +105,10 @@ def receive(request, password=None):
 	if token:
 		# Make sure we don't already have a lead
 		# so we don't give double the payment
-		if token.lead:
-			response["error"] = False
-			response["message"] = "Already received."
-			return JsonResponse(response)
+		#if token.lead:
+		#	response["error"] = False
+		#	response["message"] = "Already received."
+		#	return JsonResponse(response)
 
 		# Add earnings to user and locker object
 		locker_obj = token.locker_object()
