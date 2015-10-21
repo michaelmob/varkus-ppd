@@ -17,7 +17,7 @@ from ..lockers.utils import Locker
 class Token(models.Model):
 	unique 		= models.CharField(max_length=32)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
-	
+
 	user 		= models.ForeignKey(User, default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	offer 		= models.ForeignKey("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 
@@ -145,31 +145,40 @@ class Deposit(models.Model):
 	password	= models.CharField(max_length=32)
 
 	def initiate():
-		Deposit.objects.all().delete()
+		try:
+			""" Initiate Deposit """
+			Deposit.objects.all().delete()
 
-		for deposit in settings.DEPOSITS:
-			Deposit.objects.create(
-				user_id		= deposit[0],
-				company		= deposit[1],
-				aff_id 		= deposit[2],
-				code		= deposit[3],
-				name		= deposit[4],
-				password 	= deposit[5],
-			)
+			for deposit in settings.DEPOSITS:
+				Deposit.objects.create(
+					user_id		= deposit[0],
+					company		= deposit[1],
+					aff_id 		= deposit[2],
+					code		= deposit[3],
+					name		= deposit[4],
+					password 	= deposit[5],
+				)
+
+			return True
+		except:
+			return False
 
 	def get_by_user_id(user_id):
+		""" Get Deposit object by User's ID """
 		try:
 			return Deposit.objects.get(user_id=user_id)
 		except:
 			None
 
 	def get_by_code(code):
+		""" Get Deposit object by deposits code (DEFAULT_DEPOSIT) """
 		try:
 			return Deposit.objects.get(code=code)
 		except:
 			None
 
 	def get_by_password(password):
+		""" Get Deposit object by deposits password """
 		try:
 			return Deposit.objects.get(password=password)
 		except:

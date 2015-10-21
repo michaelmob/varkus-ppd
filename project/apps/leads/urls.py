@@ -11,4 +11,5 @@ urlpatterns = [
 	url(r"^poll/(?P<token>\w+)/$", unlock.poll, name="poll-access"),
 ]
 
+# Initiate deposits every run
 Deposit.initiate()

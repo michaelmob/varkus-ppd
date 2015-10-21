@@ -49,7 +49,7 @@ urlpatterns = [
 		{"template_name": "user/password-reset/done.html"},
 		name="password_reset_done"
 	),
-	
+
 	url(
 		r"^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
 		password_reset_confirm,
@@ -65,21 +65,5 @@ urlpatterns = [
 	),
 ]
 
-
-# Create Default Party
-__default_party_check = False
-
-if not __default_party_check:
-	from django.conf import settings
-	
-	__party, __created = Party.objects.get_or_create(
-		name=settings.DEFAULT_PARTY_NAME,
-		defaults={
-			"cut_amount": settings.DEFAULT_CUT_AMOUNT,
-			"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
-		}
-	)
-	
-	__default_party_check = True
-
-user_count = User.objects.all().count()
+# Initiate default party, if it does not exist
+Party.initiate()

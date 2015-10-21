@@ -36,6 +36,20 @@ class Party(models.Model):
 		help_text="This and cut_amount should not sum up to be more than 100% (or 1)"
 	)
 
+	def initiate():
+		""" Initiate default party """
+		try:
+			party, created = Party.objects.get_or_create(
+				name=settings.DEFAULT_PARTY_NAME,
+				defaults={
+					"cut_amount": settings.DEFAULT_CUT_AMOUNT,
+					"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
+				}
+			)
+			return True
+		except:
+			return False
+
 	def default():
 		return Party.objects.get(id=settings.DEFAULT_PARTY_ID)
 
@@ -54,7 +68,7 @@ class Profile(models.Model):
 	birthday		= models.DateField(blank=True, null=True)
 	country			= models.CharField(max_length=100, blank=True, null=True)
 	website			= models.URLField(max_length=100, blank=True, null=True)
-	
+
 	offer_priority	= models.ManyToManyField(Offer, related_name="offer_priority", blank=True)
 	offer_block		= models.ManyToManyField(Offer, related_name="offer_block", blank=True)
 

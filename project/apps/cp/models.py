@@ -3,6 +3,7 @@ from decimal import Decimal, getcontext
 from datetime import datetime, date, timedelta
 
 from django.db import models, connection
+from django.db.models import F
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
@@ -78,6 +79,27 @@ class Earnings_Base(models.Model):
 		cursor.execute("UPDATE %s SET year=0 WHERE year>0" % (self._meta.db_table))
 
 	def add(self, amount, cut=0, add_to_real=True):
+		amount_cut = amount - (amount * Decimal(cut))
+
+		self.update(
+			leads 	= F("leads") 	+ 1,
+			today 	= F("today") 	+ amount_cut,
+			week 	= F("week") 	+ amount_cut,
+			month 	= F("month") 	+ amount_cut,
+			year 	= F("year") 	+ amount_cut,
+			total	= F("total")	+ amount_cut
+		)
+
+		if add_to_real:
+			self.update(
+				real_today = F("real_today") + amount,
+				real_month = F("real_month") + amount,
+				real_total = F("real_total") + amount
+			)
+
+		return amount_cut
+
+	'''def add(self, amount, cut=0, add_to_real=True):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
@@ -95,7 +117,7 @@ class Earnings_Base(models.Model):
 			self.real_total 	+= amount
 
 		self.save()
-		return amount_cut
+		return amount_cut'''
 
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
@@ -110,7 +132,7 @@ class Earnings_Base(models.Model):
 		# So if user in field_names then we know to add the model name to search args
 		if model in ["user", "offer"]:
 			args[model] = self.obj
-		
+
 		# otherwise we know it's a Locker
 		else:
 			args["locker"] = model.upper()
@@ -122,7 +144,7 @@ class Earnings_Base(models.Model):
 
 		if not all:
 			args["lead_blocked"] = False
-			
+
 		if count:
 			return search_model.objects.filter(**args).order_by("-date_time")[:count]
 		else:
@@ -143,4 +165,3 @@ class Earnings_Base(models.Model):
 
 	class Meta:
 		abstract = True
-

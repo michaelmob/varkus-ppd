@@ -2,14 +2,14 @@ __pycache__/
 env/
 media/
 private/
-
+migrations/*
 **/migrations/*
 !**/migrations/__init__.py
-
 error.txt
 *.pyc
 *.pyo
 *.sqlite3
+*.db
 *.mmdb
 *.pid
 *.sublime*
