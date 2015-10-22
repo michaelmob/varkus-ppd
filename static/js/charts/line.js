@@ -46,7 +46,7 @@ var flotOptions = {
 			if(label == "Earnings") {
 				yval = "$" + parseFloat(yval).toFixed(2);
 			}
-			
+
 			return label + ": <strong>" + yval + "</strong>";
 		},
 	}
@@ -73,4 +73,6 @@ var loadLineChart = function() {
 	});
 };
 
-loadLineChart();
+$(function() {
+	loadLineChart();
+});

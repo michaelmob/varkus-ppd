@@ -32,28 +32,7 @@ class Charts():
 		# Result (clicks, leads, earnings)
 		return (list(counter1.items()), list(counter2.items()), list(counter3.items()))
 
-	def line_cache(obj):
-		# Create key (lc_file_4)
-		key = "lc_" + obj.__class__.__name__ + str(obj.id)
-		data = cache.get(key)
-
-		# Cached does not exist, process and set
-		if not data:
-			clicks, leads, earnings = Charts.line_data(obj)
-
-			data = {
-				"data": [
-					{"label": "Clicks", "data": clicks},
-					{"label": "Leads", "data": leads},
-					{"label": "Earnings", "data": earnings},
-				],
-			}
-	
-			cache.set(key, data, 60)
-
-		return data
-
-	def line(obj):
+	def line_output(obj):
 		clicks, leads, earnings = Charts.line_data(obj)
 
 		return {
@@ -61,8 +40,20 @@ class Charts():
 				{"label": "Clicks", "data": clicks},
 				{"label": "Leads", "data": leads},
 				{"label": "Earnings", "data": earnings},
-			],
+			]
 		}
+
+	def line_cache(obj):
+		# Create key (lc_file_4)
+		key = "lc_" + obj.__class__.__name__ + str(obj.id)
+		data = cache.get(key)
+
+		# Cached does not exist, process and set
+		if not data:
+			data = Charts.line_output(obj)
+			cache.set(key, data, 60)
+
+		return data
 
 	def map_data(obj):
 		result = []
@@ -87,7 +78,7 @@ class Charts():
 
 		return result
 
-	def map(obj):
+	def map_output(obj):
 		return {"data": Charts.map_data(obj)}
 
 	def map_cache(obj):
@@ -98,7 +89,7 @@ class Charts():
 		# Cached does not exist, process and set
 		if not data:
 			data = {"data": Charts.map_data(obj)}
-	
-			cache.set(key, data, 60)
+
+			#cache.set(key, data, 60)
 
 		return data

@@ -10,23 +10,6 @@ html, body {
 .main.menu {
 	margin: 0 !important;
 	border-radius: 0 !important;
-
-	.logo {
-		height: 1rem;
-		font-size: 1.5rem;
-
-		&:hover {
-			background-color: @primaryColor !important;
-		}
-	}
-}
-
-.pusher {
-	padding-top: 47px;
-}
-
-.wrapper {
-	padding: 0.5rem;
 }
 
 .message.wrapper {
@@ -41,14 +24,14 @@ html, body {
 	}
 }
 
-/* Computer Screens */
+/* Computer Screens
 @media only screen and (min-width: 992px) {
-	.wrapper {
+	.pusher {
 		margin-left: @sidebarWidth !important;
 	}
 }
+*/
 
 .ui.primary.text {
 	color: @primaryColor;
 }
-

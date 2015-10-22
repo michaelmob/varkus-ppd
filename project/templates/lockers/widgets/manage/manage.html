@@ -6,6 +6,17 @@
 
 {% block tab %}widgets{% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Lockers</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'widgets' %}" class="section">Widgets</a>
+	<i class="right chevron icon divider"></i>
+	<strong>Widget:</strong>
+	<a href="{% url 'widgets-manage' obj.code %}" class="active section">{{ obj.name }}</a>
+</div>
+{% endblock %}
+
 {% block content %}
 {% include 'lockers/widgets/manage/sections/modals.html' %}
 

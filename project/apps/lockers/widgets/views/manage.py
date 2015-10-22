@@ -9,7 +9,7 @@ from ..tables import Table_Widget
 
 
 class Overview(View_Overview):
-	template 	= "lockers/widgets/display.html"
+	template 	= "lockers/widgets/overview.html"
 	model 		= Widget
 	form 		= Form_Create
 	table 		= Table_Widget

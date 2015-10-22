@@ -49,4 +49,4 @@ class Table_Locker_Lead(tables.Table):
 		return mark_safe(result)
 
 	def render_date_time(self, value):
-		return value.strftime("%d/%m/%Y %l:%M %p")
+		return value.strftime("%m/%d/%Y %l:%M%P")

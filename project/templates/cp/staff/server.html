@@ -5,8 +5,16 @@
 
 {% block tab %}server{% endblock %}
 
-{% block head_before %}
+{% block head %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/pages/staff.css' %}" />
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Staff</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'staff-server' %}" class="active section">Server</a>
+</div>
 {% endblock %}
 
 {% block content %}

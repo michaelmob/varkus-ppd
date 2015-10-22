@@ -36,6 +36,9 @@
 --------------------*/
 
 /*---  Colors  ---*/
+@orange            : #F15E2E;
+@lightOrange       : lighten(@orange, 2%);
+
 @red               : #F44336;
 @lightRed          : lighten(@red, 2%);
 
@@ -43,7 +46,7 @@
 @lightGreen        : lighten(@green, 2%);
 
 /*---  Brand Colors  ---*/
-@primaryColor      : @red;
+@primaryColor      : @orange;
 @secondaryColor    : @black;
 
 

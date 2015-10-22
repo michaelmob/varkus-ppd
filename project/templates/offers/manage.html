@@ -7,6 +7,17 @@
 
 {% block tab %}offers{% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'offers' %}" class="section">Offers</a>
+	<i class="right chevron icon divider"></i>
+	<strong>Offer:</strong>
+	<a href="{% url 'offers-manage' offer.pk %}" class="active section">{{ offer.name }}</a>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="wrapper">
 	<div class="ui two column stackable equal width grid">
@@ -136,7 +147,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 
 			<div class="column">
 				<div class="ui segment box">

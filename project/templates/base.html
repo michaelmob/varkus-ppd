@@ -1,0 +1,233 @@
+{% load static %}
+{% load currency %}
+
+{# {% spaceless %} #}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+	<title>{% block full_title %}{% block title %}First Class Monetization Solutions{% endblock %} | {% site_name %}{% endblock %}</title>
+
+	<link rel="icon" type="image/png" href="/static/img/favicon.png">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,700">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/visibility.min.css' %}" />
+
+	{% block head_before %}{% endblock %}
+
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/global.js' %}"></script>
+
+	{% block head %}{% endblock %}
+</head>
+
+<body>
+	{% block aside %}
+		<aside class="ui inverted vertical sidebar{% block sidemenu %}{% endblock %} left fixed menu">
+
+			<a href="{% url 'home' %}" class="logo header item">
+				{% site_name %}
+			</a>
+
+			{% if user.is_authenticated %}
+				<div class="header item mobile tablet only">{{ user.username|title }}'s Account</div>
+				<span class="item mobile tablet only">
+					Today:
+					<span class="ui primary text">
+						${{ user.earnings.today|currency }}
+					</span>
+				</span>
+
+				<span class="item mobile tablet only">
+					Month:
+					<span class="ui primary text">
+						${{ user.earnings.month|currency }}
+					</span>
+				</span>
+
+				<div class="header item">Control Panel</div>
+				<a class="item dashboard" href="{% url 'dashboard' %}">
+					<i class="dashboard icon"></i> Dashboard
+				</a>
+
+				<a class="item leads" href="{% url 'leads' %}">
+					<i class="lightning icon"></i> Leads
+					{% with count=user.profile.notification_lead %}
+						{% if count > 0 %}
+							<div class="ui yellow horizontal circular label">{{ count }}</div>
+						{% endif %}
+					{% endwith %}
+				</a>
+
+				<a class="item offers" href="{% url 'offers' %}">
+					<i class="tags icon"></i> Offers
+				</a>
+
+				{% comment %}
+				<a class="item statistics" href="#">
+					<i class="bar chart icon"></i> Statistics
+				</a>
+				{% endcomment %}
+
+				<div class="header item">Lockers</div>
+				<a class="item widgets" href="{% url 'widgets' %}">
+					<i class="file image outline icon"></i> Widgets
+				</a>
+
+				<a class="item files" href="{% url 'files' %}">
+					<i class="file icon"></i> Files
+				</a>
+
+				<a class="item links" href="{% url 'links' %}">
+					<i class="linkify icon"></i> Links
+				</a>
+
+				<a class="item lists" href="{% url 'lists' %}">
+					<i class="list layout icon"></i> Lists
+				</a>
+
+				<div class="header item">Support</div>
+				<a class="item tickets" href="{% url 'tickets' %}">
+					<i class="ticket icon"></i> Tickets
+					{% with count=user.profile.notification_ticket %}
+						{% if count > 0 %}
+							<div class="ui yellow horizontal circular label">{{ count }}</div>
+						{% endif %}
+					{% endwith %}
+				</a>
+
+				<a class="item billing" href="{% url 'billing' %}">
+					<i class="credit card icon"></i> Billing
+					{% with count=user.profile.notification_billing %}
+						{% if count > 0 %}
+							<div class="ui yellow horizontal circular label">{{ count }}</div>
+						{% endif %}
+					{% endwith %}
+				</a>
+
+				<a class="item account" href="{% url 'user-settings' %}">
+					<i class="cogs icon"></i> Account Settings
+				</a>
+
+				{% if user.is_staff %}
+					<div class="header item">Staff</div>
+
+					{% if user.is_superuser %}
+						<a class="item server" href="{% url 'staff-server' %}">
+							<i class="server icon"></i>
+							Server
+						</a>
+					{% endif %}
+
+					<a class="item staff" href="{% url 'staff' %}">
+						<i class="wizard icon"></i>
+						Staff
+					</a>
+
+					<a target="_blank" class="item admin" href="/admin/">
+						<i class="shield icon"></i>
+						Admin
+					</a>
+				{% endif %}
+
+			{% else %}
+				<a class="item" href="{% url 'login' %}">
+					<i class="sign in icon"></i> Log in
+				</a>
+
+				<a class="item" href="{% url 'signup' %}">
+					<i class="signup icon"></i> Sign up
+				</a>
+
+				<a class="item" href="{% url 'contact' %}">
+					<i class="chat icon"></i> Contact
+				</a>
+			{% endif %}
+		</aside>
+		<script type="text/javascript">$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
+	{% endblock %}
+
+	<section class="pusher">
+		{% block nav %}
+			<nav class="ui sticky main menu">
+				<a class="title item app button mobile tablet only">
+					<i class="content icon"></i>
+				</a>
+
+				<div class="item">
+					{% block breadcrumbs %}
+						<div class="ui breadcrumb">
+							<div class="section">Control Panel</div>
+							<i class="right chevron icon divider"></i>
+							<a href="{% url 'dashboard' %}" class="active section">Dashboard</a>
+						</div>
+					{% endblock %}
+				</div>
+
+				<div class="right menu tablet computer only">
+					{% if user.is_authenticated %}
+
+						{# Earnings #}
+						<a class="item computer only default">
+							<small>Today:&nbsp;</small>
+							<small class="ui primary text">${{ user.earnings.today|currency }}</small>
+						</a>
+
+						<a class="item computer only">
+							<small>Month:&nbsp;</small>
+							<small class="ui primary text">${{ user.earnings.month|currency }}</small>
+						</a>
+
+						<a class="item" href="{% url 'dashboard' %}">
+							<i class="dashboard icon"></i>
+							<small>Dashboard</small>
+						</a>
+
+						<div class="ui dropdown wide item">
+							<i class="basic user icon"></i>
+							<small>{{ user.username|title }}</small>
+							<div class="menu">
+								<a class="item" href="{% url 'user-settings' %}">
+									<i class="settings icon"></i>
+									Account Settings
+								</a>
+								<a class="item" href="{% url 'logout' %}">
+									<i class="sign out icon"></i>
+									Logout
+								</a>
+							</div>
+						</div>
+
+					{% else %}
+						<a class="item" href="{% url 'contact' %}">
+							<i class="chat icon"></i>
+							<small>Contact</small>
+						</a>
+
+						<a class="item" href="{% url 'signup' %}">
+							<i class="signup icon"></i>
+							<small>Sign up</small>
+						</a>
+
+						<a class="item" href="{% url 'login' %}">
+							<i class="sign in icon"></i>
+							<small>Log in</small>
+						</a>
+					{% endif %}
+				</div>
+			</nav>
+		{% endblock %}
+
+		{% block messages %}{% endblock %}
+
+		{% block content %}{% endblock %}
+
+		{% block footer %}{% endblock %}
+	</div>
+</body>
+</html>
+{# {% endspaceless %} #}

@@ -6,6 +6,14 @@
 
 {% block tab %}widgets{% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Lockers</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'widgets' %}" class="active section">Widgets</a>
+</div>
+{% endblock %}
+
 {% block content %}
 <form class="ui modal" method="POST" action="{% url 'widgets' %}">
 	<i class="close icon"></i>

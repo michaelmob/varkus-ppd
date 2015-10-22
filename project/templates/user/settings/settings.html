@@ -8,8 +8,15 @@
 
 {% block tab %}account{% endblock %}
 
-{% block content %}
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Support</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'user-settings' %}" class="active section">Account Settings</a>
+</div>
+{% endblock %}
 
+{% block content %}
 {% include 'user/settings/forms/personal.html' with form=form_personal %}
 {% include 'user/settings/forms/account.html' with form=form_account %}
 

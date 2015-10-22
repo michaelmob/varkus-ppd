@@ -12,7 +12,7 @@ year 	= crontab(minute=0, hour=0, day_of_month="1", month_of_year="1")
 
 CELERYBEAT_SCHEDULE = {
 	# Offer Sync
-	"offer-sync"		: {	"task": "apps.offers.tasks.sync", 			"schedule": half	},
+	"offer-sync"		: {	"task": "apps.offers.tasks.sync", 			"schedule": quarter	},
 
 	# Invoice Creation
 	"user-reset-month"	: {	"task": "apps.billing.tasks.generate", 		"schedule": month	},

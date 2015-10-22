@@ -6,6 +6,14 @@
 
 {% block tab %}tickets{% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Support</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'tickets' %}" class="active section">Tickets</a>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="wrapper">
 

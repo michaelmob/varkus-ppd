@@ -6,10 +6,6 @@ from .files.models import Earnings as File_Earnings
 from .links.models import Earnings as Link_Earnings
 from .lists.models import Earnings as List_Earnings
 
-#@shared_task
-#def increment_click(obj, ip_address):
-#	return obj.earnings.increment_clicks(ip_address)
-
 @shared_task
 def reset_today():
 	return (

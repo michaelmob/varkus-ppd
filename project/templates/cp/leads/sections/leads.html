@@ -20,7 +20,7 @@
 			</thead>
 
 			<tbody>
-				{% with cut_amount=user.profile.party.cut_amount recent_leads=user.earnings.get_most_recent_leads %}
+				{% with cut_amount=user.profile.party.cut_amount recent_leads=user.earnings.get_leads %}
 					{% if recent_leads|length > 0 %}
 						{% for lead in recent_leads %}
 							{% with obj=lead.locker_object %}

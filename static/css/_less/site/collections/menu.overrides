@@ -4,11 +4,21 @@
 .ui.vertical.inverted.menu {
 
 	.item.header {
-		background-color: #111 !important;
+		background-color: rgba(0, 0, 0, 0.4) !important;
 		cursor: default;
 	}
 
-	.item:not(.header) {
+  .item.logo.header {
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 0;
+    height: 46px;
+    line-height: 46px;
+    cursor: pointer;
+    background: @itemBackground !important;
+  }
+
+	.item.logo.header, .item:not(.header) {
 		&:hover {
 			background-color: lighten(@primaryColor, 3%) !important;
 		}
@@ -29,17 +39,17 @@
 }
 
 .ui.main.menu {
-	height: 47px !important;
+  border: 0;
 
-	.item.header {
-		height: 47px;
-	}
+	.item:before {
+    border: 0;
+  }
 }
 
 .ui.left.fixed.menu {
-	top: 47px !important;
+	/*top: 47px !important;
 	height: calc(~"100% - 47px") !important;
-	overflow-y: auto;
+	overflow-y: auto;*/
 
 	.ui.yellow.label {
 		color: #000 !important;

@@ -31,7 +31,8 @@ $("form.personal").form({
 				prompt : "Please select your country"
 			}]
 		},
-	});
+	}
+});
 
 
 $("form.account").form({

@@ -41,7 +41,7 @@ var drawMapChart = function(container, data) {
 		clearTimeout(resizeTimer);
 		resizeTimer = setTimeout(doDrawing(), 100);
 	});
-	
+
 	$(".map.dimmer").removeClass("active");
 };
 

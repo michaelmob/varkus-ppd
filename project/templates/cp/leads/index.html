@@ -11,6 +11,14 @@
 <script type="text/javascript" src="{% static 'js/pages/leads.js' %}"></script>
 {% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'leads' %}" class="active section">Leads</a>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="wrapper">
 	<div class="ui stackable grid">

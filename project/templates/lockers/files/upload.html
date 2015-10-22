@@ -5,6 +5,16 @@
 
 {% block tab %}files{% endblock %}
 
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Lockers</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'files' %}" class="section">Files</a>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'files-upload' %}" class="active section">Upload File</a>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="ui modal">
 	<div class="header">
@@ -59,7 +69,7 @@
 							<i class="file icon"></i>
 							Select File
 						</label>
-							
+
 						<input class="file upload input" type="file" id="file" name="file" style="display:none" />
 					</p>
 

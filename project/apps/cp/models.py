@@ -101,14 +101,14 @@ class Earnings_Base(models.Model):
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
 
-	def __get_base(self, search_model, date_range=[date.today(), date.today() + timedelta(days=1)], count=None, every=False):
+	def __get_base(self, search_model, date_range, show_all=False):
 		args = {}
 
 		# Typeof would be "user" or "offer" [or even "token" (unnecessary)]
 		model = str(type(self.obj).__name__).lower()
 
 		# So if user in field_names then we know to add the model name to search args
-		if model in ["user", "offer"]:
+		if model in ("user", "offer"):
 			args[model] = self.obj
 
 		# otherwise we know it's a Locker
@@ -117,28 +117,29 @@ class Earnings_Base(models.Model):
 			args["locker_id"] = self.obj.pk
 			args["locker_code"] = self.obj.code
 
+		# Include date_range to queryset
 		if date_range:
 			args["date_time__range"] = date_range
 
-		if not all:
+		# Show every lead, including lead blocked ones
+		if not show_all:
 			args["lead_blocked"] = False
 
-		if count:
-			return search_model.objects.filter(**args).order_by("-date_time")[:count]
-		else:
-			return search_model.objects.filter(**args).order_by("-date_time")
+		return search_model.objects.filter(**args).order_by("-date_time")
 
-	def get_leads(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=None, every=False):
-		return self.__get_base(apps.leads.models.Lead, date_range, count, every)
+	def get_leads(self, show_all=False):
+		date_range = (date.today(), date.today() + timedelta(days=1))
+		return self.__get_base(apps.leads.models.Lead, date_range, show_all)
 
-	def get_tokens(self, date_range=[date.today(), date.today() + timedelta(days=1)], count=None):
-		return self.__get_base(apps.leads.models.Token, date_range, count, True)
+	def get_leads_date_range(self, date_range, show_all=False):
+		return self.__get_base(apps.leads.models.Lead, date_range, show_all)
 
-	def get_most_recent_leads(self, count=25):
-		return self.get_leads(None, count)
+	def get_tokens(self):
+		date_range = (date.today(), date.today() + timedelta(days=1))
+		return self.__get_base(apps.leads.models.Token, date_range, True)
 
 	def increment(self):
-		self.clicks += 1
+		self.clicks = F("clicks") + 1
 		self.save()
 
 	class Meta:
