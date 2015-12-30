@@ -1,13 +1,15 @@
+from django.conf import settings
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
 
 from apps.offers.models import Offer
-from apps.leads.models import Token
+from apps.leads.models import Token, Deposit
 
 
-class View_Locker(View):
+
+class View_Locker_Base(View):
 	template = None
 	model = None
 
@@ -29,34 +31,80 @@ class View_Locker(View):
 		if not obj:
 			return redirect("locker-404")
 
-		# Set locker_object for offer click to generate token
-		request.session["locker_object"] = (obj.get_name(), obj.code)
+		# Set unlock if token is set to lead
+		unlocked = False
+		token = Token.get(request, obj)
+		if token:
+			unlocked = token.access()
 
 		return render(
 			request,
 			self.template,
 			{
+				"theme": "default",
 				"obj": obj,
+				"unlocked": unlocked,
 				"offers": Offer.get_cache(request, obj)
 			}
 		)
 
 
-class View_Unlock(View):
+class View_Redirect_Base(View_Locker_Base):
+	model = None
+
+	def get(self, request, code, id=None):
+		# Redirect if not existant
+		obj = self.obj(request, code)
+		if not obj:
+			return redirect("locker-404")
+
+		try:
+			# Retrieve offer if ID is an integer
+			int(id)
+			offer = Offer.objects.get(pk=id)
+
+			# Get or create a unique token
+			token, created = Token.get_or_create(request, obj)
+
+			token.offers.add(offer)
+			token.save()
+
+		except (KeyError, Offer.DoesNotExist):
+			# Offer doesn't exist, or they were directly linked the offer
+			return redirect(request.META.get("HTTP_REFERER", "home"))
+
+		except Token.DoesNotExist:
+			# Offer doesn't exist
+			return redirect("home")
+
+		# Check if there's an Affiliate ID override in settings.py
+		try:
+			user = obj.user
+			aff_id = Deposit.get_by_user_id(user.pk).aff_id
+		except:
+			aff_id = settings.DEFAULT_AFFILIATE_ID
+
+		# Increment offer and user's clicks
+		try:
+			if created:
+				offer.earnings.increment_clicks()
+				obj.earnings.increment_clicks()
+				user.earnings.increment_clicks()
+		except:
+			pass
+
+		url = str(offer.tracking_url) \
+				.replace("{o}", str(offer.offer_id)) \
+				.replace("{a}", str(aff_id)) \
+				.replace("{u}", str(token.unique))
+
+		return redirect(url)
+
+
+class View_Unlock_Base(View_Locker_Base):
 	template = None
 	model = None
 	token = None
-
-	def obj(self, request, code):
-		# Redirect to overview if no code provided
-		if not code:
-			return redirect(model)
-
-		# Get object, otherwise redirect to overview
-		try:
-			return self.model.objects.get(code=code)
-		except self.model.DoesNotExist:
-			return None
 
 	def access(self, request, obj):
 		# Get token using request and the locker object
@@ -73,6 +121,7 @@ class View_Unlock(View):
 			request,
 			self.template,
 			{
+				"theme": "default",
 				"obj": obj,
 				"data": self.token.data
 			}
@@ -91,9 +140,9 @@ class View_Unlock(View):
 		return self._return(request, obj)
 
 
-class View_Poll(View_Unlock):
+class View_Poll_Base(View_Unlock_Base):
 	def _return(self, request, obj):
-		return HttpResponse(reverse(obj.get_name() + "s-unlock", args=(obj.code,)))
+		return HttpResponse(reverse(obj.get_type() + "s-unlock", args=(obj.code,)))
 
 	def get(self, request, code=None):
 		# Redirect if not existant

@@ -1,8 +1,9 @@
 from django.conf.urls import url
 
-from .views import contact, report
+from .views.contact import View_Contact
+from .views.report import View_Report
 
 urlpatterns = [
-	url(r"^contact/", contact.page, name="contact"),
-	url(r"^report/", report.page, name="report"),
+	url(r"^contact/", View_Contact.as_view(), name="contact"),
+	url(r"^report/", View_Report.as_view(), name="report"),
 ]

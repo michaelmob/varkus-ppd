@@ -1,5 +1,5 @@
 #!/bin/bash
-./pip install -r "$(pwd)/requirements.txt"
+./pip install -r "$(pwd)/requirements.txt" $@
 
 ./manage makemigrations
 ./manage migrate

@@ -2,20 +2,17 @@ import hashlib
 
 from decimal import Decimal
 from datetime import date, datetime, timedelta
-
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
-
-from django_countries import countries
+from django.contrib.gis.geoip2 import GeoIP2
 
 from ..cp.models import Earnings_Base
 from ..leads.models import Lead, Token
 
-from celery import shared_task
-from geoip import lookup
+from django_countries import countries as _countries
 from utils.user_agent import get_ua
 
 
@@ -25,16 +22,16 @@ class Offer(models.Model):
 	name 					= models.CharField(max_length=250, verbose_name="Name")
 	anchor 					= models.CharField(max_length=1000, verbose_name="Anchor")
 	requirements 			= models.CharField(max_length=1000, verbose_name="Requirements")
-	user_agent 				= models.CharField(max_length=50, default="", blank=True, verbose_name="User Agent")
+	user_agent 				= models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="User Agent")
 	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, blank=True, null=True, verbose_name="Category")
 	earnings_per_click 		= models.DecimalField(max_digits=15, decimal_places=2, verbose_name="EPC")
 	country 				= models.CharField(max_length=747)
 	flag 					= models.CharField(max_length=5, verbose_name="Country")
 	country_count 			= models.IntegerField()
 	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Payout")
-	difference				= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	success_rate			= models.FloatField(verbose_name="Success Rate")
 	tracking_url 			= models.CharField(max_length=1000)
-	date 					= models.DateField()
+	date 					= models.DateField(auto_now_add=True)
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.name)
@@ -55,17 +52,22 @@ class Offer(models.Model):
 	def pick_flag(country):
 		""" Picks the flag for the offer, if it above 10 then
 			use intl, otherwise US if under 10 with US in it """
-		countries = country.lower().split(',')
-		count = len(countries)
+		country = country.lower().split(',')
+		count = len(country)
+		result = None
 
+		# Less than 10 countries and US is in the country list
 		if (count < 10) and ("us" in country):
-			return "us"
+			result = "us"
+
+		# More than 10 countries or country is "-"
 		elif (count > 10) or (country == "-"):
-			return "intl"
-		elif (count == 1):
-			return country
+			result = "intl"
+
 		else:
-			return countries[0]
+			result = country[0]
+
+		return result
 
 	def clean_name(dirty):
 		""" Clean the name from the useless shit
@@ -88,7 +90,7 @@ class Offer(models.Model):
 			name					= Offer.clean_name(name),
 			anchor					= anchor,
 			requirements			= requirements,
-			user_agent				= user_agent if user_agent else "",
+			user_agent				= user_agent,
 			category				= category,
 			earnings_per_click 		= Decimal(earnings_per_click),
 			country 				= country,
@@ -97,7 +99,6 @@ class Offer(models.Model):
 			payout 					= payout,
 			difference				= payout - Decimal(earnings_per_click),
 			tracking_url 			= tracking_url,
-			date 					= date.today()
 		)
 
 		# Create Earnings Object
@@ -133,7 +134,7 @@ class Offer(models.Model):
 			offers = Offer.get(request, locker_obj)
 
 			cache.set(key, offers, 120)  # Cache for 2 minutes
-			
+
 		return offers
 
 	def renew(request):
@@ -150,46 +151,35 @@ class Offer(models.Model):
 	):
 		""" Get offers with a bunch of customizable arguments """
 
-		args = (Q(user_agent=""),)
+		args = (Q(user_agent=None),)
 
 		if user_agent:
-			args = (
-				Q(user_agent__icontains=user_agent) |
-				Q(user_agent=""),
-			)
-		
+			args = (Q(user_agent__icontains=user_agent) | Q(user_agent=None),)
+
 		return Offer.objects\
 			.filter(
 				category__in 		= category,
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
-				difference__lte 	= 3,
-				*args,
+				success_rate__gte 	= 3,
 				**filters
 			)\
 			.exclude(pk__in=offer_block)\
 			.exclude(pk__in=offer_exclude)\
 			.order_by("-earnings_per_click")[:count]
-			
+
 	def random(
 		count, country, user_agent=None, min_payout=0.01,
 		offer_block=None, offer_exclude=[]
 	):
 		""" Get offers randomly """
-		args = (Q(user_agent=""),)
 
-		if user_agent:
-			args = (
-				Q(user_agent__icontains=user_agent) |
-				Q(user_agent=""),
-			)
-			
-		return Offer.objects\
+		return Offer.objects.all()\
 			.filter(
 				payout__gte 		= min_payout,
 				country__icontains 	= country,
-				difference__lte 	= 3,
-				*args
+				success_rate__gte 	= 3,
+				user_agent			= ""
 			)\
 			.exclude(pk__in=offer_block)\
 			.exclude(pk__in=offer_exclude)\
@@ -205,13 +195,17 @@ class Offer(models.Model):
 			that correspond to given user_agent """
 
 		user_agent = get_ua(user_agent)
-		
+
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
-		
-		c_r = lookup.country_region(
-			ip_address if ip_address != "127.0.0.1" else "173.63.97.160"
-		)
+
+		# GeoIP
+		try:
+			data = GeoIP2().city(ip_address if ip_address != "127.0.0.1" else "173.63.97.160")
+		except:
+			data = {"country_code": "XX", "city": "Unknown"}
+
+		country, region = (data["country_code"], data["city"])
 
 		_offers = []
 
@@ -226,35 +220,35 @@ class Offer(models.Model):
 			offer_block.append(lead.offer.id)
 
 		# User Agent Args
-		args = (Q(user_agent=""),)
+		args = (Q(user_agent=None),)
 		if user_agent:
 			args = (
 				Q(user_agent__icontains=user_agent) |
-				Q(user_agent=""),
+				Q(user_agent=None),
 			)
-		
+
 		# Staff Priority
 		_offers += Offer.objects\
 			.filter(
 				priority 			= True,
 				payout__gte 		= min_payout,
-				country__icontains 	= c_r[0],
+				country__icontains 	= country,
 				*args
 			)\
 			.exclude(pk__in=offer_block)
-			
+
 		# User Priority
 		_offers += Offer.objects\
 			.filter(
 				pk__in 				= offer_priority,
 				payout__gte 		= min_payout,
-				country__icontains 	= c_r[0],
+				country__icontains 	= country,
 				*args
 			)
-			
+
 		# Common arguments
 		kwargs = {
-			"country": c_r[0],
+			"country": country,
 			"offer_block": offer_block,
 			"min_payout": min_payout,
 			"user_agent": user_agent,
@@ -266,53 +260,50 @@ class Offer(models.Model):
 
 		# Android _offers
 		if user_agent == "Android":
-			_offers += Offer.get_basic(_30, ["Android"], **kwargs)
-			
+			_offers += Offer.get_basic(_30, ["Android", "Mobile"], **kwargs)
+
 		# iPhone _offers
 		elif user_agent == "iPhone":
-			_offers += Offer.get_basic(_30, ["iPhone", "iOS Devices"], **kwargs)
-			
+			_offers += Offer.get_basic(_30, ["iPhone", "iOS Devices", "Mobile"], **kwargs)
+
 		# iPad _offers
 		elif user_agent == "iPad":
-			_offers += Offer.get_basic(_30, ["iPad", "iOS Devices"], **kwargs)
-			
+			_offers += Offer.get_basic(_30, ["iPad", "iOS Devices", "Mobile"], **kwargs)
+
 		# We'll assume it's Windows
 		elif user_agent == "Windows":
 			_offers += Offer.get_basic(_30, ["Downloads"], **kwargs)
-		
+
 		# Email _offers
 		_offers += Offer.get_basic(_30, ["Email Submits"], **kwargs)
 
 		# PIN _offers
 		_offers += Offer.get_basic(_20, ["PIN Submit"], **kwargs)
-		
+
 		# Update _offers in common arguments for no duplicates
 		kwargs["offer_exclude"] = [offer.pk for offer in _offers]
-		
+
 		# Fill rest of spaces with random surveys
 		if len(_offers) < count:
 			_offers += Offer.random(count - len(_offers), **kwargs)
-			
+
 		# Replace {region} with region
 		for offer in _offers:
 			if "{region}" in offer.anchor:
-				offer.anchor = offer.anchor.replace("{region}", c_r[1])
+				offer.anchor = offer.anchor.replace("{region}", region)
 
 		return _offers[:count]
 
 	def get_countries(self):
-		""" Countries to List """
+		""" Countries Dictionary """
+		countries = dict(_countries)
+		result = {}
 
-		d = dict(countries)
-		r = {}
+		for country in self.country.upper().split(","):
+			if country in countries:
+				result[country] = countries[country]
 
-		for c in self.country.split(","):
-			try:
-				r[c] = d[c]
-			except:
-				pass
-
-		return r
+		return result
 
 	def get_country(self):
 		""" Get country name from code """
@@ -320,8 +311,8 @@ class Offer(models.Model):
 		if self.flag == "intl":
 			return "International"
 
-		return dict(countries)[self.flag]
-	
+		return dict(_countries)[self.flag.upper()]
+
 
 class Earnings(Earnings_Base):
 	obj = models.OneToOneField(Offer, primary_key=True)

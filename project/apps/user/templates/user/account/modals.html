@@ -1,0 +1,63 @@
+{% load semanticui %}
+
+<form class="ui modal personal" method="POST" action="{% url 'account-settings' %}">
+	<i class="close icon"></i>
+	<div class="header">
+		Modify Personal Details
+	</div>
+	<div class="content">
+		<div class="ui form">
+			{% csrf_token %}
+			<input type="hidden" style="display:none" name="section" value="personal" />
+
+			<div class="two fields">
+				{% render_field form_personal.first_name %}
+				{% render_field form_personal.last_name %}
+			</div>
+
+			{% render_field form_personal.phone_number %}
+			{% render_field form_personal.address %}
+			{% render_field form_personal.city %}
+			{% render_field form_personal.state %}
+			{% render_field_country form_personal.country user.profile.country %}
+			{% render_field form_personal.postal_code %}
+		</div>
+
+	</div>
+	<div class="actions">
+		<div class="ui black deny button">
+			Cancel
+		</div>
+		<div class="ui left labeled icon positive primary submit button">
+			Save
+			<i class="check icon"></i>
+		</div>
+	</div>
+</form>
+
+<form class="ui modal account" method="POST" action="{% url 'account-settings' %}">
+	<i class="close icon"></i>
+	<div class="header">
+		Modify Account Details
+	</div>
+	<div class="content">
+		<div class="ui form">
+			{% csrf_token %}
+			<input type="hidden" style="display:none" name="section" value="account" />
+
+			{% render_field form_account.company %}
+			{% render_field form_account.website %}
+			{% render_field form_account.email %}
+		</div>
+
+	</div>
+	<div class="actions">
+		<div class="ui black deny button">
+			Cancel
+		</div>
+		<div class="ui left labeled icon positive primary submit button">
+			Save
+			<i class="check icon"></i>
+		</div>
+	</div>
+</form>

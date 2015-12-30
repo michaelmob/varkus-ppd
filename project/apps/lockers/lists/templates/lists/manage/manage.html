@@ -1,0 +1,41 @@
+{% extends 'lockers/bases/manage/manage.html' %}
+{% load semanticui %}
+
+{% block modal_edit_content %}
+	{% render_field form.name %}
+	{% render_field form.description %}
+	{% render_field form.item_name %}
+	{% render_field_dropdown form.order %}
+	{% render_field_checkbox form.reuse 'toggle' %}
+{% endblock %}
+
+{% block details %}
+<div class="item">
+	<i class="block layout icon"></i>
+	<div class="content">
+		<div class="header">Item Name</div>
+		{{ obj.item_name }}
+	</div>
+</div>
+<div class="item">
+	<i class="sort content ascending icon"></i>
+	<div class="content">
+		<div class="header">Distribution Order</div>
+		{{ obj.order|title }}
+	</div>
+</div>
+<div class="item">
+	<i class="repeat icon"></i>
+	<div class="content">
+		<div class="header">Reuse Items</div>
+		{{ obj.reuse|yesno:'Yes,No' }}
+	</div>
+</div>
+<div class="item">
+	<i class="calendar icon"></i>
+	<div class="content">
+		<div class="header">Created on</div>
+		{{ obj.date_time }}
+	</div>
+</div>
+{% endblock %}

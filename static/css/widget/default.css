@@ -1,17 +1,14 @@
-/* Text */
-.s.wrap > h3:after {
-	content: "Complete one of the easy offers below to continue";
+/* Header */
+.w .header {
+	text-align: center;
 }
 
-.s.wrap > h3 {
-	display: block;
-	text-align: center;
-	margin: 0 0 0.8rem 0;
-	padding: 0;
+.w .header:after {
+	content: "Complete one of the offers below to continue";
 }
 
 /* Progress Indicator */
-.progress.indicator {
+.w .progress.indicator {
 	display: none;
 	background: url(/static/img/progress.gif) no-repeat;
 	background-position: center;
@@ -19,52 +16,53 @@
 	margin: -10px 0 5px 0;
 }
 
-/* Offer */
-.s.wrap > a {
+/* Continue Button */
+.w .continue.button {
 	display: block;
-	padding: 0.4rem;
+	text-align: center;
+	padding: 1rem;
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #000;
+}
+
+.w .continue.button:hover {
+	background-color: #F7F7F7;
+}
+
+/* Row */
+.w .item {
+	display: table;
+	width: 100%;
 	text-decoration: none;
-	color: rgba(0, 0, 0, 0.8);
+	color: black;
 }
 
-.s.wrap > a:nth-child(even) {
-	background-color: #FFFFFF;
+.w .item:nth-child(odd) {
+	background-color: #F7F7F7;
 }
 
-.s.wrap > a:nth-child(odd) {
-	background-color: #F9F9F9;	
-}
-
-.s.wrap > a:hover {
+.w .item:hover {
+	color: white;
 	background-color: #F44336;
-    color: white;
 }
 
-/* Offer Anchor */
-.s.wrap > a > .anchor {
-	padding-left: 0.5rem;
-}
-
-.s.wrap > a > .icon,
-.s.wrap > a > .icon ~ .anchor {
+/* Default Properties */
+.w .item .anchor,
+.w .item .icon {
 	display: table-cell;
 	vertical-align: middle;
+	padding: .75rem 1rem;
 }
 
-/* Pagination */
-.s.wrap > .s.pagination.container {
-	text-align: center;
-}
-
-/* Offer Category Icon */
-.s.wrap > a > .icon {
+/* Icons */
+.w .item .icon {
 	font-size: 1.5rem;
-	padding: 0.3rem;
-	width: 2rem;
+	width: 4rem;
+	background-color: rgba(0, 0, 0, .025);
 }
 
-/* Gold Star Icon */
-.s.wrap > a > .gold {
+/* Special Icon */
+.w .item .gold.icon {
 	color: gold;
-	text-shadow: 0 0 1px #333;
 }

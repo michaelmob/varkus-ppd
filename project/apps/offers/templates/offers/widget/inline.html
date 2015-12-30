@@ -1,0 +1,42 @@
+{% load offers %}
+{% load static %}
+
+{% if not inline %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
+{% endif %}
+
+{% if custom_css_url %}
+	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
+{% else %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/default.css' %}" />
+{% endif %}
+
+<div class="w">
+	<h3 class="header"></h3>
+
+	<div class="progress indicator"></div>
+
+	{% if unlocked %}
+		<a href="{{ obj.get_unlock_url }}" class="continue button">Click to Continue</a>
+	{% else %}
+		<div class="items">
+			{% with redirect_url=obj.get_type|add:'s-redirect' %}
+				{% for offer in offers %}
+				<a href="{% url redirect_url obj.code offer.pk %}" class="item" target="_blank">
+					{{ offer.category|category_icon|safe }}
+					<div class="anchor">{{ offer.anchor }}</div>
+					{% if offer.priority %}<i class="gold star right icon"></i>{% endif %}
+				</a>
+				{% endfor %}
+			{% endwith %}
+		</div>
+	{% endif %}
+</div>
+
+{% if user.is_staff %}
+	{% include 'offers/widget/staff.html' %}
+{% endif %}
+
+<script>var uri="{{ WEBSOCKET_URI }}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
+<script src="{% static 'js/ws4redis.js' %}"></script>
+<script src="{% static 'js/locker/locker.js' %}"></script>

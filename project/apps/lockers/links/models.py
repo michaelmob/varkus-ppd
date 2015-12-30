@@ -6,9 +6,6 @@ from ..models import Locker_Base, Earnings_Base
 class Link(Locker_Base):
 	url		= models.URLField(max_length=1000)
 
-	def __str__(self):
-		return "%s: %s" % (self.pk, self.name)
-
 	def create(user, name, description, url):
 		obj = Link.objects.create(
 			user 		= user,
@@ -25,8 +22,7 @@ class Link(Locker_Base):
 
 
 class Earnings(Earnings_Base):
-	obj 		= models.OneToOneField(Link, primary_key=True)
+	obj = models.OneToOneField(Link, primary_key=True)
 
 	class Meta:
-		verbose_name = "Earnings"
-		verbose_name_plural = "Earnings"
+		db_table = "links_earnings"

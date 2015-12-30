@@ -9,10 +9,24 @@ Viking is a pay-per-unlock service website.
 **In this setup: Ubuntu will be used for the server, PostgreSQL will be used for the database, and NGINX will be used as a reverse-proxy server for Gunicorn.**
 
 #### Step 1: Server Setup
-1. Make sure server is up to date. (apt-get update && apt-get upgrade)
+1. Make sure server is up to date. (sudo apt update && sudo apt upgrade)
 2. Install required packages.
 ```sh
-apt-get install git build-essential python3-dev virtualenv postgresql postgresql-contrib libpq-dev memcached rabbitmq-server postfix nginx libjpeg8-dev
+sudo apt install git build-essential \
+	python3-dev \
+	python3-setuptools \
+	python-virtualenv \
+	postgresql \
+	postgresql-contrib \
+	libpq-dev \
+	redis-server \
+	rabbitmq-server \
+	postfix \
+	nginx \
+	libjpeg8-dev \
+	libmaxminddb0 \
+	libmaxminddb-dev \
+	mmdb-bin
 ```
 2. Git clone this repository on the server into "/var/www/".
 

@@ -1,17 +1,21 @@
 from django.shortcuts import render
 
-from ...bases.lockers import View_Locker, View_Unlock, View_Poll
+from ...bases.lockers import View_Locker_Base, View_Unlock_Base, View_Poll_Base, View_Redirect_Base
 from ..models import List
 
 
-class Locker(View_Locker):
+class View_Locker(View_Locker_Base):
 	model = List
-	template = "lockers/lists/locker.html"
+	template = "lists/locker/locker.html"
 
 
-class Unlock(View_Unlock):
+class View_Redirect(View_Redirect_Base):
 	model = List
-	template = "lockers/lists/unlock.html"
+
+
+class View_Unlock(View_Unlock_Base):
+	model = List
+	template = "lists/locker/unlock.html"
 
 	def _return(self, request, obj):
 		if not self.token.data:
@@ -27,5 +31,6 @@ class Unlock(View_Unlock):
 			}
 		)
 
-class Poll(View_Poll):
+
+class View_Poll(View_Poll_Base):
 	model = List

@@ -5,42 +5,43 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from ...bases.charts import View_Line_Chart, View_Map_Chart
-from ...bases.manage import View_Overview, View_Manage, Delete_Base
+from ...bases.charts import View_Line_Chart_Base, View_Map_Chart_Base
+from ...bases.manage import View_Overview_Base, View_Manage_Base, View_Delete_Base
 
 from ..models import File
 from ..forms import Form_Edit
 from ..tables import Table_File
 
 
-class Overview(View_Overview):
-	template 	= "lockers/files/overview.html"
+class View_Overview(View_Overview_Base):
+	model 		= File
 	table 		= Table_File
 	maximum 	= settings.MAX_FILES
+	template 	= "files/manage/overview.html"
 
 
-class Manage(View_Manage):
-	template 	= "lockers/files/manage/manage.html"
+class View_Manage(View_Manage_Base):
 	model 		= File
 	form 		= Form_Edit
+	template 	= "files/manage/manage.html"
 
 
-class Line_Chart(View_Line_Chart):
+class View_Line_Chart(View_Line_Chart_Base):
 	model 		= File
 
 
-class Map_Chart(View_Map_Chart):
+class View_Map_Chart(View_Map_Chart_Base):
 	model 		= File
 
 
-class Delete(Delete_Base):
+class View_Delete(View_Delete_Base):
 	model 		= File
 
 
-class Upload(View):
+class View_Upload(View):
 	def get(self, request):
 		return render(
-			request, "lockers/files/upload.html",
+			request, "files/manage/upload.html",
 			{"MAX_UPLOAD_SIZE": settings.MAX_UPLOAD_SIZE}
 		)
 

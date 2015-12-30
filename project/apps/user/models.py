@@ -1,9 +1,12 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from decimal import Decimal
+
+from django_countries.fields import CountryField
 
 from ..offers.models import Offer
 from ..cp.models import Earnings_Base
@@ -17,24 +20,21 @@ class Party(models.Model):
 	minimum_payout = models.DecimalField(
 		max_digits=5,
 		decimal_places=2,
-		default="10.00"
-	)
+		default="10.00")
 
 	cut_amount = models.DecimalField(
 		validators=[MinValueValidator(0), MaxValueValidator(1)],
 		max_digits=5,
 		decimal_places=2,
 		default="0.30",
-		help_text="This percentage is taken off of the users payout -- The developers cut"
-	)
+		help_text="This percentage is taken off of the users payout -- The developers cut")
 
 	referral_cut_amount = models.DecimalField(
 		validators=[MinValueValidator(0), MaxValueValidator(1)],
 		max_digits=5,
 		decimal_places=2,
 		default="0.10",
-		help_text="This and cut_amount should not sum up to be more than 100% (or 1)"
-	)
+		help_text="This and cut_amount should not sum up to be more than 100% (or 1)")
 
 	def initiate():
 		""" Initiate default party """
@@ -57,22 +57,29 @@ class Party(models.Model):
 		return self.name
 
 	class Meta:
+		app_label = "auth"
 		verbose_name_plural = "Parties"
 
 
 class Profile(models.Model):
 	user 			= models.OneToOneField(User, primary_key=True)
-
 	party 			= models.ForeignKey(Party, blank=True, null=True, default=None)
 	referrer 		= models.ForeignKey(User, related_name="referrer_id", blank=True, null=True, default=None)
-	birthday		= models.DateField(blank=True, null=True)
-	country			= models.CharField(max_length=100, blank=True, null=True)
+
+	phone_number	= models.CharField(max_length=100, blank=True, null=True)
+	address			= models.TextField(max_length=200, blank=True, null=True)
+	city			= models.CharField(max_length=100, blank=True, null=True)
+	state			= models.CharField(max_length=100, blank=True, null=True)
+	country			= CountryField()
+	postal_code		= models.CharField(max_length=20, blank=True, null=True)
+
+	company 		= models.CharField(max_length=100, blank=True, null=True)
 	website			= models.URLField(max_length=100, blank=True, null=True)
+	birthday		= models.DateField(blank=True, null=True)
 
 	offer_priority	= models.ManyToManyField(Offer, related_name="offer_priority", blank=True)
 	offer_block		= models.ManyToManyField(Offer, related_name="offer_block", blank=True)
 
-	notification_ticket 	= models.IntegerField(default=0)
 	notification_lead 		= models.IntegerField(default=0)
 	notification_billing 	= models.IntegerField(default=0)
 

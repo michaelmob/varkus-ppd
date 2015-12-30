@@ -6,7 +6,6 @@ from .views import dashboard, leads, staff
 urlpatterns = [
 	url(r"^dashboard/$", login_required(dashboard.index), name="dashboard"),
 
-	url(r"^staff/$", login_required(staff.staff), name="staff"),
 	url(r"^staff/server/$", login_required(staff.server), name="staff-server"),
 
 	url(r"^dashboard/chart/line.json$", login_required(dashboard.line_chart), name="dashboard-chart-line"),

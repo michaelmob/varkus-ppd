@@ -7,61 +7,40 @@ from django.db.models import F
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
-import apps.leads
-from apps.billing.models import Billing
+import apps.leads as leads
 
 getcontext().prec = 2
 
-class Information(models.Model):
-	key 	= models.CharField(max_length=1000, blank=True, null=True, default=None)
-	value 	= models.CharField(max_length=1000, blank=True, null=True, default=None)
-
-	def create(key, value):
-		return Information.objects.create(
-			key=key,
-			value=value
-		)
-
-	def set(key, value):
-		obj, created = Information.objects.get_or_create(key=key, defaults={"value": value})
-
-		if not created:
-			obj.value = value
-			obj.save()
-
-		return obj
-
-	def remove(key):
-		try:
-			return Information.objects.get(key).delete()
-		except:
-			return False
-
-	def has_add_permission(self, request):
-		return False
-
 
 class Earnings_Base(models.Model):
-	leads		= models.IntegerField(default=0)
-	clicks		= models.IntegerField(default=0, verbose_name="Clicks")
+	clicks			= models.IntegerField(default=0, verbose_name="Clicks")
+	leads			= models.IntegerField(default=0)
 
-	today		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
-	yesterday	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
-	week		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Week")
-	month		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Month")
-	yestermonth	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Last Month")
-	year 		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Year")
-	total		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Total")
+	clicks_today	= models.IntegerField(default=0, verbose_name="Today's Clicks")
+	leads_today 	= models.IntegerField(default=0, verbose_name="Today's Leads")
 
-	real_today 	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Today")
-	real_month	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Month")
-	real_total	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Total")
+	today			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
+	yesterday		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
+	week			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Week")
+	month			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Month")
+	yestermonth		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Last Month")
+	year 			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Year")
+	total			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Total")
 
+	real_today 		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Today")
+	real_month		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Month")
+	real_total		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Total")
+
+	def epc(self, today=True):
+		if today:
+			return (Decimal(self.today) / self.clicks_today) if self.clicks_today > 0 else 0
+		else:
+			return (Decimal(self.total) / self.clicks) if self.clicks > 0 else 0
 
 	def reset_today(self):
 		print("Reset Today's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0 WHERE today>0 OR yesterday>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0, clicks_today=0, leads_today=0 WHERE clicks_today>0 OR today>0 OR yesterday>0" % (self._meta.db_table))
 
 	def reset_week(self):
 		print("Reset Week's Earnings")
@@ -82,7 +61,8 @@ class Earnings_Base(models.Model):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
-		self.leads 	= F("leads") 	+ 1
+		self.leads 			= F("leads") 		+ 1
+		self.leads_today 	= F("leads_today") 	+ 1
 
 		self.today 	= F("today") 	+ amount_cut
 		self.week 	= F("week") 	+ amount_cut
@@ -101,7 +81,7 @@ class Earnings_Base(models.Model):
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
 
-	def __get_base(self, search_model, date_range, show_all=False):
+	def __get_base_u(self, search_model, date_range, show_all=False):
 		args = {}
 
 		# Typeof would be "user" or "offer" [or even "token" (unnecessary)]
@@ -109,13 +89,15 @@ class Earnings_Base(models.Model):
 
 		# So if user in field_names then we know to add the model name to search args
 		if model in ("user", "offer"):
-			args[model] = self.obj
+			if model == "offer" and search_model.__name__.lower() == "token":
+				args["offers__in"] = [self.obj.pk]
+
+			else:
+				args[model] = self.obj
 
 		# otherwise we know it's a Locker
 		else:
-			args["locker"] = model.upper()
-			args["locker_id"] = self.obj.pk
-			args["locker_code"] = self.obj.code
+			args["locker"] = self.obj
 
 		# Include date_range to queryset
 		if date_range:
@@ -125,22 +107,36 @@ class Earnings_Base(models.Model):
 		if not show_all:
 			args["lead_blocked"] = False
 
-		return search_model.objects.filter(**args).order_by("-date_time")
+		return search_model.objects.filter(**args)
 
-	def get_leads(self, show_all=False):
-		date_range = (date.today(), date.today() + timedelta(days=1))
-		return self.__get_base(apps.leads.models.Lead, date_range, show_all)
+	def __get_base(self, search_model, date_range, show_all=False):
+		return self.__get_base_u(search_model, date_range, show_all).order_by("-date_time")
 
-	def get_leads_date_range(self, date_range, show_all=False):
-		return self.__get_base(apps.leads.models.Lead, date_range, show_all)
+	def get_leads_u(self, date_range=None, show_all=False):
+		# Unordered
+		return self.__get_base_u(leads.models.Lead, date_range, show_all)
 
-	def get_tokens(self):
-		date_range = (date.today(), date.today() + timedelta(days=1))
-		return self.__get_base(apps.leads.models.Token, date_range, True)
+	def get_leads(self, date_range=None, show_all=False):
+		return self.__get_base(leads.models.Lead, date_range, show_all)
 
-	def increment(self):
-		self.clicks = F("clicks") + 1
+	def get_leads_today(self, show_all=False):
+		return self.get_leads((date.today(), date.today() + timedelta(days=1)), show_all)
+
+	def get_tokens(self, date_range=None):
+		return self.__get_base(leads.models.Token, date_range, True)
+
+	def get_tokens_today(self):
+		return self.get_tokens((date.today(), date.today() + timedelta(days=1)))
+
+	def get_viewers(self, minutes=5):
+		return self.get_tokens((datetime.now() - timedelta(minutes=minutes), datetime.now())).count()
+
+	def increment_clicks(self):
+		self.clicks 		= F("clicks") 		+ 1
+		self.clicks_today 	= F("clicks_today") + 1
 		self.save()
 
 	class Meta:
 		abstract = True
+		verbose_name = "Earnings"
+		verbose_name_plural = "Earnings"

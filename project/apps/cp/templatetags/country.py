@@ -10,6 +10,6 @@ def country(code):
 		return "International"
 
 	try:
-		return dict(countries)[code.upper()]
+		return dict(countries)[str(code).upper()]
 	except:
-		return ""
+		return "Unknown"

@@ -2,37 +2,18 @@ from django.conf import settings
 from datetime import datetime
 from django.db import models
 from ..models import Locker_Base, Earnings_Base
-
-import apps.lockers.utils
+from apps.lockers.fields import LockerField
 
 class Widget(Locker_Base):
-	locker		= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
-	locker_id	= models.IntegerField(default=None, blank=True, null=True)
-	locker_code	= models.CharField(max_length=10, default=None, blank=True, null=True)
+	locker = LockerField()
 
 	postback_url = models.CharField(max_length=300, default=None, blank=True, null=True)
 	custom_css_url = models.CharField(max_length=300, default=None, blank=True, null=True)
 	standalone_redirect_url = models.CharField(max_length=300, default=settings.SITE_URL, blank=True, null=True)
 
-	def __str__(self):
-		return "%s: %s" % (self.pk, self.name)
-
 	def set_locker(self, obj):
-		if not obj:
-			self.locker 		= None
-			self.locker_id 		= None
-			self.locker_code 	= None
-		else:
-			self.locker 		= obj.get_name().upper()
-			self.locker_id 		= obj.id
-			self.locker_code 	= obj.code
+		self.locker = obj or None
 		self.save()
-
-	def locker_object(self):
-		try:
-			return apps.lockers.utils.Locker(self.locker).objects.get(id=self.locker_id)
-		except:
-			return None
 
 	def create(user, name, description):
 		obj = Widget.objects.create(
@@ -48,8 +29,7 @@ class Widget(Locker_Base):
 
 
 class Earnings(Earnings_Base):
-	obj 		= models.OneToOneField(Widget, primary_key=True)
+	obj = models.OneToOneField(Widget, primary_key=True)
 
 	class Meta:
-		verbose_name = "Earnings"
-		verbose_name_plural = "Earnings"
+		db_table = "widgets_earnings"

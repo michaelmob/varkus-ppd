@@ -7,26 +7,19 @@ from .widgets.models import Widget, Earnings as Widget_Earnings
 from apps.cp.templatetags.currency import currency
 
 
-
-###############################
-# Files
-class Inline_File_Earnings(admin.StackedInline):
-	model = File_Earnings
-
-@admin.register(File)
-class Admin_File(admin.ModelAdmin):
+class ModelAdminBase(admin.ModelAdmin):
+	change_form_template = "admin/lockers/locker/change_form.html"
 
 	def leads(s, i): return i.earnings.leads
 	def earnings_today(s, i): return currency(i.earnings.today)
 	def earnings_month(s, i): return currency(i.earnings.month)
 	def earnings_total(s, i): return currency(i.earnings.total)
 
-	inlines = [Inline_File_Earnings]
+	search_fields = ("name", "description")
+
 	list_display = (
-		"name", "file_size", "user", "leads", "earnings_today",
-		"earnings_month", "earnings_total", "date_time"
-	)
-	search_fields = ["name", "description"]
+		"name", "user", "leads", "earnings_today",
+		"earnings_month", "earnings_total", "date_time")
 
 	# Allow ordering
 	leads.admin_order_field = "earnings__leads"
@@ -37,24 +30,28 @@ class Admin_File(admin.ModelAdmin):
 
 
 ###############################
+# Files
+class Inline_File_Earnings(admin.StackedInline):
+	model = File_Earnings
+
+@admin.register(File)
+class Admin_File(ModelAdminBase):
+	inlines = (Inline_File_Earnings,)
+
+	list_display = (
+		"name", "file_size", "user", "leads", "earnings_today",
+		"earnings_month", "earnings_total", "date_time")
+
+
+
+###############################
 # Lists
 class Inline_List_Earnings(admin.StackedInline):
 	model = List_Earnings
 
 @admin.register(List)
-class Admin_List(admin.ModelAdmin):
-
-	def leads(s, i): return i.earnings.leads
-	def earnings_today(s, i): return currency(i.earnings.today)
-	def earnings_month(s, i): return currency(i.earnings.month)
-	def earnings_total(s, i): return currency(i.earnings.total)
-
-	inlines = [Inline_List_Earnings]
-	list_display = (
-		"name", "user", "leads", "earnings_today",
-		"earnings_month", "earnings_total", "date_time"
-	)
-	search_fields = ["name"]
+class Admin_List(ModelAdminBase):
+	inlines = (Inline_List_Earnings,)
 
 
 
@@ -64,18 +61,9 @@ class Inline_Link_Earnings(admin.StackedInline):
 	model = Link_Earnings
 
 @admin.register(Link)
-class Admin_Link(admin.ModelAdmin):
-	def leads(s, i): return i.earnings.leads
-	def earnings_today(s, i): return currency(i.earnings.today)
-	def earnings_month(s, i): return currency(i.earnings.month)
-	def earnings_total(s, i): return currency(i.earnings.total)
+class Admin_Link(ModelAdminBase):
+	inlines = (Inline_Link_Earnings,)
 
-	inlines = [Inline_Link_Earnings]
-	list_display = (
-		"name", "user", "leads", "earnings_today",
-		"earnings_month", "earnings_total", "date_time"
-	)
-	search_fields = ["name"]
 
 
 ###############################
@@ -84,15 +72,5 @@ class Inline_Widget_Earnings(admin.StackedInline):
 	model = Widget_Earnings
 
 @admin.register(Widget)
-class Admin_Widget(admin.ModelAdmin):
-	def leads(s, i): return i.earnings.leads
-	def earnings_today(s, i): return currency(i.earnings.today)
-	def earnings_month(s, i): return currency(i.earnings.month)
-	def earnings_total(s, i): return currency(i.earnings.total)
-
-	inlines = [Inline_Widget_Earnings]
-	list_display = (
-		"name", "user", "leads", "earnings_today",
-		"earnings_month", "earnings_total", "date_time"
-	)
-	search_fields = ["name"]
+class Admin_Widget(ModelAdminBase):
+	inlines = (Inline_Widget_Earnings,)

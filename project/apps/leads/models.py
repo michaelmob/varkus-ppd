@@ -7,107 +7,82 @@ from django.conf import settings
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
+from django.contrib.gis.geoip2 import GeoIP2
 
 from utils import strings
-from geoip import lookup
 
-from ..lockers.utils import Locker
+from ..lockers.fields import LockerField
 
 
 class Token(models.Model):
-	unique 		= models.CharField(max_length=32)
+	unique 		= models.CharField(max_length=32, unique=True)
+	session 	= models.CharField(max_length=64)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
 
 	user 		= models.ForeignKey(User, default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	offer 		= models.ForeignKey("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	offers 		= models.ManyToManyField("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True)
 
-	locker		= models.CharField(max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
-	locker_id	= models.IntegerField(default=None, blank=True, null=True)
-	locker_code	= models.CharField(max_length=10, default=None, blank=True, null=True)
+	locker 		= LockerField()
 
 	user_agent 	= models.CharField(max_length=300)
-	ip_address 	= models.GenericIPAddressField()
+	ip_address 	= models.GenericIPAddressField(verbose_name="IP Address")
 	country 	= models.CharField(max_length=5)
 	date_time	= models.DateTimeField()
-	last_access	= models.DateTimeField(auto_now=True)
+	last_access	= models.DateTimeField(auto_now=True, verbose_name="Last Access")
 
-	lead 		= models.BooleanField(default=False)
+	lead 		= models.BooleanField(default=False, verbose_name="Lead")
 	paid 		= models.BooleanField(default=False)
 	staff 		= models.BooleanField(default=False)
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.unique)
 
-	def locker_object(self):
-		"""Get Locker object from Token"""
-		try:
-			return Locker(self.locker).objects.get(id=self.locker_id)
-		except:
-			return None
-
-	def _get(ip_address, user_agent, locker_obj):
+	def get(request, obj):
 		"""Get token by identifiers
 
 		ip_address -- User's IP Address
 		user_agent -- User's User Agent
-		locker_obj -- Locker object to create for
+		obj -- Locker object to create for
 		"""
-		locker = str(type(locker_obj).__name__).upper()
+		try:
+			return Token.objects.get(
+				ip_address 		= request.META.get("REMOTE_ADDR"),
+				user_agent 		= request.META.get("HTTP_USER_AGENT"),
+				locker 			= obj
+			)
+		except Token.DoesNotExist:
+			return None
 
-		return Token.objects.get(
-			ip_address 		= ip_address,
-			user_agent 		= user_agent,
-			locker 			= locker,
-			locker_id		= locker_obj.id,
-			locker_code		= locker_obj.code,
-		)
-
-	def get(request, locker_obj):
-		"""Get token using _get method
-
-		request -- django request
-		locker_obj -- Locker object to get for
-		"""
-		return Token._get(
-			request.META.get("REMOTE_ADDR"),
-			request.META.get("HTTP_USER_AGENT"),
-			locker_obj
-		)
-
-	def _get_or_create(ip_address, user_agent, locker_obj):
+	def get_or_create(request, obj):
 		"""Get or create token
 
-		ip_address -- User's IP Address
-		user_agent -- User's User Agent
-		locker_obj -- Locker object to create for
+		request -- http request
+		obj -- Locker object to create for
 		"""
-		locker = str(type(locker_obj).__name__).upper()
+		try:
+			country = GeoIP2().country_code(ip_address)
+		except:
+			country = "XX"
 
-		return Token.objects.get_or_create(
-			ip_address 		= ip_address,
-			user_agent 		= user_agent,
-			country 		= lookup.country(ip_address),
-			user 			= locker_obj.user,
-			locker 			= locker,
-			locker_id		= locker_obj.id,
-			locker_code		= locker_obj.code,
+		token, created = Token.objects.get_or_create(
+			ip_address 		= request.META.get("REMOTE_ADDR"),
+			user_agent 		= request.META.get("HTTP_USER_AGENT"),
+			country 		= country,
+			user 			= obj.user,
+			locker 			= obj,
 			defaults 		= {
 				"unique": strings.random(32),
+				"session": request.session.session_key,
 				"date_time": datetime.now()
 			}
 		)
 
-	def get_or_create(request, locker_obj):
-		"""Get or create token from request
+		if not created:
+			if token.session != request.session.session_key:
+				token.session = request.session.session_key
+				token.save()
 
-		request -- Django request to get IP Address and User Agent from
-		locker_obj -- Locker object to create for
-		"""
-		return Token._get_or_create(
-			request.META.get("REMOTE_ADDR"),
-			request.META.get("HTTP_USER_AGENT"),
-			locker_obj
-		)
+		return (token, created)
 
 	def access(self):
 		"""Check if token has access to continue"""
@@ -188,14 +163,12 @@ class Deposit(models.Model):
 class Lead(models.Model):
 	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	offer_name			= models.CharField(max_length=150, verbose_name="Offer", default=None, blank=True, null=True)
-	country 			= models.CharField(max_length=2, verbose_name="Country", default=None, blank=True, null=True)
+	country 			= models.CharField(max_length=3, verbose_name="Country", default=None, blank=True, null=True)
 
 	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	user 				= models.ForeignKey(User, verbose_name="User", related_name="user_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 
-	locker				= models.CharField(verbose_name="Locker", max_length=10, choices=settings.LOCKERS, default=None, blank=True, null=True)
-	locker_id			= models.IntegerField(verbose_name="Locker ID", default=None, blank=True, null=True)
-	locker_code			= models.CharField(verbose_name="Locker Code", max_length=10, default=None, blank=True, null=True)
+	locker				= LockerField()
 
 	access_url 			= models.CharField(verbose_name="Access URL", max_length=850, default=None, blank=True, null=True)
 	sender_ip_address	= models.GenericIPAddressField(verbose_name="Sender IP Address", blank=True, null=True)
@@ -214,18 +187,12 @@ class Lead(models.Model):
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
 	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
 
-	def locker_object(self):
-		try:
-			return Locker(self.locker).objects.get(id=self.locker_id)
-		except:
-			return None
 
 	def create(
-		offer, token, user, locker_obj, sender_ip_address, user_ip_address,
+		offer, token, user, locker, sender_ip_address, user_ip_address,
 		payout, dev_payout, user_payout, referral_payout, deposit="DEFAULT_DEPOSIT",
 		access_url="", lead_blocked=False, approved=True
 	):
-		locker = str(type(locker_obj).__name__).upper()
 
 		try:
 			user_agent = token.user_agent
@@ -258,17 +225,13 @@ class Lead(models.Model):
 			"date_time"			: datetime.now(),
 		}
 
-		# locker_obj may not exist
-		try:
-			args["locker_id"] = locker_obj.id
-			args["locker_code"] = locker_obj.code
-		except:
-			pass
-
 		# Lookup throws error if inexistant
 		try:
-			args["country"] = lookup.country(user_ip_address)
+			args["country"] = GeoIP2().country_code(user_ip_address)
 		except:
 			args["country"] = offer.flag
 
 		return Lead.objects.create(**args)
+
+# Signals
+import apps.leads.signals

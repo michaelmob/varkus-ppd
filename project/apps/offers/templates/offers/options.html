@@ -1,0 +1,36 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load blueprints %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'offers' %}" class="section">Offers</a>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'offers-options' %}" class="active section">Options</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+
+		<div class="column">
+			{% table prioritized 'Prioritized Offers' 'checkmark' %}
+		</div>
+
+		<div class="column">
+			{% table blocked 'Blocked Offers' 'ban' %}
+		</div>
+
+	</div>
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/page/offers/options.js' %}"></script>
+{% endblock %}

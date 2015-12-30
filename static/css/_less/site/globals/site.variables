@@ -8,12 +8,12 @@
        Fonts
 --------------------*/
 
-@headerFont        : 'Arimo', Arial, Helvetica, sans-serif;
-@pageFont          : 'Arimo', Arial, Helvetica, sans-serif;
+@headerFont        : 'Roboto', Arial, Helvetica, sans-serif;
+@pageFont          : 'Roboto', Arial, Helvetica, sans-serif;
 @fontSmoothing     : antialiased;
 
 @importGoogleFonts : true;
-@googleFontName    : 'Arimo';
+@googleFontName    : 'Roboto';
 @googleFontSizes   : '400,700,400italic,700italic';
 @googleSubset      : 'latin';
 
@@ -36,9 +36,6 @@
 --------------------*/
 
 /*---  Colors  ---*/
-@orange            : #F15E2E;
-@lightOrange       : lighten(@orange, 2%);
-
 @red               : #F44336;
 @lightRed          : lighten(@red, 2%);
 
@@ -46,7 +43,7 @@
 @lightGreen        : lighten(@green, 2%);
 
 /*---  Brand Colors  ---*/
-@primaryColor      : @orange;
+@primaryColor      : @red;
 @secondaryColor    : @black;
 
 

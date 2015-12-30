@@ -19,56 +19,59 @@ urlpatterns = [
 
 	# MANAGE
 	# -- Files
-	url(r"^files/$", login_required(files.Overview.as_view()), name="files"),
-	url(r"^files/manage/(?P<code>\w+)/$", login_required(files.Manage.as_view()), name="files-manage"),
-	url(r"^files/manage/(?P<code>\w+)/chart/line.json$", login_required(files.Line_Chart.as_view()), name="files-manage-line-chart"),
-	url(r"^files/manage/(?P<code>\w+)/delete/$", login_required(files.Delete.as_view()), name="files-manage-delete"),
-	url(r"^files/upload/$", login_required(files.Upload.as_view()), name="files-upload"),
+	url(r"^files/$", login_required(files.View_Overview.as_view()), name="files"),
+	url(r"^files/manage/(?P<code>\w+)/$", login_required(files.View_Manage.as_view()), name="files-manage"),
+	url(r"^files/manage/(?P<code>\w+)/chart/line.json$", login_required(files.View_Line_Chart.as_view()), name="files-manage-line-chart"),
+	url(r"^files/manage/(?P<code>\w+)/delete/$", login_required(files.View_Delete.as_view()), name="files-manage-delete"),
+	url(r"^files/upload/$", login_required(files.View_Upload.as_view()), name="files-upload"),
 
 	# -- Lists
-	url(r"^lists/$", login_required(lists.Overview.as_view()), name="lists"),
-	url(r"^lists/manage/(?P<code>\w+)/$", login_required(lists.Manage.as_view()), name="lists-manage"),
-	url(r"^lists/manage/(?P<code>\w+)/chart/line.json$", login_required(lists.Line_Chart.as_view()), name="lists-manage-line-chart"),
-	url(r"^lists/manage/(?P<code>\w+)/delete/$", login_required(lists.Delete.as_view()), name="lists-manage-delete"),
+	url(r"^lists/$", login_required(lists.View_Overview.as_view()), name="lists"),
+	url(r"^lists/manage/(?P<code>\w+)/$", login_required(lists.View_Manage.as_view()), name="lists-manage"),
+	url(r"^lists/manage/(?P<code>\w+)/chart/line.json$", login_required(lists.View_Line_Chart.as_view()), name="lists-manage-line-chart"),
+	url(r"^lists/manage/(?P<code>\w+)/delete/$", login_required(lists.View_Delete.as_view()), name="lists-manage-delete"),
 
 	# -- Links
-	url(r"^links/$", login_required(links.Overview.as_view()), name="links"),
-	url(r"^links/manage/(?P<code>\w+)/$", login_required(links.Manage.as_view()), name="links-manage"),
-	url(r"^links/manage/(?P<code>\w+)/chart/line.json$", login_required(links.Line_Chart.as_view()), name="links-manage-line-chart"),
-	url(r"^links/manage/(?P<code>\w+)/delete/$", login_required(links.Delete.as_view()), name="links-manage-delete"),
+	url(r"^links/$", login_required(links.View_Overview.as_view()), name="links"),
+	url(r"^links/manage/(?P<code>\w+)/$", login_required(links.View_Manage.as_view()), name="links-manage"),
+	url(r"^links/manage/(?P<code>\w+)/chart/line.json$", login_required(links.View_Line_Chart.as_view()), name="links-manage-line-chart"),
+	url(r"^links/manage/(?P<code>\w+)/delete/$", login_required(links.View_Delete.as_view()), name="links-manage-delete"),
 
 	# -- Widgets
-	url(r"^widgets/$", login_required(widgets.Overview.as_view()), name="widgets"),
-	url(r"^widgets/manage/(?P<code>\w+)/$", login_required(widgets.Manage.as_view()), name="widgets-manage"),
+	url(r"^widgets/$", login_required(widgets.View_Overview.as_view()), name="widgets"),
+	url(r"^widgets/manage/(?P<code>\w+)/$", login_required(widgets.View_Manage.as_view()), name="widgets-manage"),
 	url(r"^widgets/manage/(?P<code>\w+)/edit/locker/$", login_required(edit_widgets.locker), name="widgets-edit-locker"),
 	url(r"^widgets/manage/(?P<code>\w+)/edit/postback/$", login_required(edit_widgets.postback), name="widgets-edit-postback"),
 	url(r"^widgets/manage/(?P<code>\w+)/edit/css/$", login_required(edit_widgets.css), name="widgets-edit-css"),
-	url(r"^widgets/manage/(?P<code>\w+)/chart/line.json$", login_required(widgets.Line_Chart.as_view()), name="widgets-manage-line-chart"),
-	url(r"^widgets/manage/(?P<code>\w+)/delete/$", login_required(widgets.Delete.as_view()), name="widgets-manage-delete"),
-
+	url(r"^widgets/manage/(?P<code>\w+)/chart/line.json$", login_required(widgets.View_Line_Chart.as_view()), name="widgets-manage-line-chart"),
+	url(r"^widgets/manage/(?P<code>\w+)/delete/$", login_required(widgets.View_Delete.as_view()), name="widgets-manage-delete"),
 
 
 	# LOCKERS
 	# -- Files
-	url(r"^file/(?P<code>\w+)/$", files_locker.Locker.as_view(), name="files-locker"),
-	url(r"^file/(?P<code>\w+)/unlock/$", files_locker.Unlock.as_view(), name="files-unlock"),
-	url(r"^file/(?P<code>\w+)/download/$", files_locker.Download.as_view(), name="files-download"),
-	url(r"^file/(?P<code>\w+)/poll/$", files_locker.Poll.as_view(), name="files-poll"),
+	url(r"^file/(?P<code>\w+)/$", files_locker.View_Locker.as_view(), name="files-locker"),
+	url(r"^file/(?P<code>\w+)/unlock/$", files_locker.View_Unlock.as_view(), name="files-unlock"),
+	url(r"^file/(?P<code>\w+)/download/$", files_locker.View_Download.as_view(), name="files-download"),
+	url(r"^file/(?P<code>\w+)/poll/$", files_locker.View_Poll.as_view(), name="files-poll"),
+	url(r"^file/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", files_locker.View_Redirect.as_view(), name="files-redirect"),
 
 	# -- Lists
-	url(r"^list/(?P<code>\w+)/$", lists_locker.Locker.as_view(), name="lists-locker"),
-	url(r"^list/(?P<code>\w+)/unlock/$", lists_locker.Unlock.as_view(), name="lists-unlock"),
-	url(r"^list/(?P<code>\w+)/poll/$", lists_locker.Poll.as_view(), name="lists-poll"),
+	url(r"^list/(?P<code>\w+)/$", lists_locker.View_Locker.as_view(), name="lists-locker"),
+	url(r"^list/(?P<code>\w+)/unlock/$", lists_locker.View_Unlock.as_view(), name="lists-unlock"),
+	url(r"^list/(?P<code>\w+)/poll/$", lists_locker.View_Poll.as_view(), name="lists-poll"),
+	url(r"^list/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", lists_locker.View_Redirect.as_view(), name="lists-redirect"),
 
 	# -- Links
-	url(r"^link/(?P<code>\w+)/$", links_locker.Locker.as_view(), name="links-locker"),
-	url(r"^link/(?P<code>\w+)/unlock/$", links_locker.Unlock.as_view(), name="links-unlock"),
-	url(r"^link/(?P<code>\w+)/poll/$", links_locker.Poll.as_view(), name="links-poll"),
+	url(r"^link/(?P<code>\w+)/$", links_locker.View_Locker.as_view(), name="links-locker"),
+	url(r"^link/(?P<code>\w+)/unlock/$", links_locker.View_Unlock.as_view(), name="links-unlock"),
+	url(r"^link/(?P<code>\w+)/poll/$", links_locker.View_Poll.as_view(), name="links-poll"),
+	url(r"^link/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", links_locker.View_Redirect.as_view(), name="links-redirect"),
 
 	# -- Widgets
-	url(r"^widget/(?P<code>\w+)/$", widgets_locker.Locker.as_view(), name="widgets-locker"),
-	url(r"^widget/(?P<code>\w+)/unlock/$", widgets_locker.Unlock.as_view(), name="widgets-unlock"),
-	url(r"^widget/(?P<code>\w+)/poll/$", widgets_locker.Poll.as_view(), name="widgets-poll"),
+	url(r"^widget/(?P<code>\w+)/$", widgets_locker.View_Locker.as_view(), name="widgets-locker"),
+	url(r"^widget/(?P<code>\w+)/unlock/$", widgets_locker.View_Unlock.as_view(), name="widgets-unlock"),
+	url(r"^widget/(?P<code>\w+)/poll/$", widgets_locker.View_Poll.as_view(), name="widgets-poll"),
+	url(r"^widget/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", widgets_locker.View_Redirect.as_view(), name="widgets-redirect"),
 
 	# Locker
 	url(r"^lockers/404/$", locker.locker_404, name="locker-404"),

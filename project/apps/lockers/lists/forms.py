@@ -16,7 +16,7 @@ class Form_Create(ModelForm):
 		delimeter = self.cleaned_data["delimeter"]
 		if delimeter == "\\n":
 			delimeter = "\n"
-			
+
 		elif delimeter == "space":
 			delimeter = " "
 
@@ -24,7 +24,7 @@ class Form_Create(ModelForm):
 		items = self.cleaned_data["items"]
 		items = [[item, 0] for item in items.replace("\r", "").split(delimeter)]
 		items_json = json.dumps(items, separators=(",", ":"))
-		
+
 		# Set Fields
 		obj.user 		= user
 		obj.code 		= List().generate_code()

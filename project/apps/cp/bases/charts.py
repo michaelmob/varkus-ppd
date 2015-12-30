@@ -9,11 +9,11 @@ class Charts():
 		data3 = default()
 
 		# Append small dictionary to chart list -- for clicks
-		for token in obj.earnings.get_tokens():
+		for token in obj.earnings.get_tokens_today():
 			data1.append({token.date_time.hour: 1})
 
 		# Append small dictionary to chart list -- for lead count & earnings
-		for lead in obj.earnings.get_leads():
+		for lead in obj.earnings.get_leads_today():
 			data2.append({lead.date_time.hour: 1})
 			data3.append({lead.date_time.hour: float(lead.user_payout)})
 
@@ -36,6 +36,8 @@ class Charts():
 		clicks, leads, earnings = Charts.line_data(obj)
 
 		return {
+			"success": True,
+			"message": "",
 			"data": [
 				{"label": "Clicks", "data": clicks},
 				{"label": "Leads", "data": leads},
@@ -60,7 +62,7 @@ class Charts():
 		data = {}
 
 		# Loop through leads
-		for obj in obj.earnings.get_leads():
+		for obj in obj.earnings.get_leads_today():
 			obj.country = obj.country.upper()
 
 			# If already exists just add onto the payment
@@ -79,7 +81,11 @@ class Charts():
 		return result
 
 	def map_output(obj):
-		return {"data": Charts.map_data(obj)}
+		return {
+			"success": True,
+			"message": "",
+			"data": Charts.map_data(obj)
+		}
 
 	def map_cache(obj):
 		# Create key (mc_file_4)
@@ -88,8 +94,7 @@ class Charts():
 
 		# Cached does not exist, process and set
 		if not data:
-			data = {"data": Charts.map_data(obj)}
-
-			#cache.set(key, data, 60)
+			data = Charts.map_output(obj)
+			cache.set(key, data, 60)
 
 		return data

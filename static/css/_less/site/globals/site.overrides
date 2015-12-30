@@ -2,14 +2,29 @@
          Site Overrides
 *******************************/
 
-html, body {
+html, body, body > .pusher {
 	font-size: 16px !important;
-	background: #EEE url("/static/img/pattern-bg.png");
+	background: #EEE !important; // url("/static/img/pattern-bg.png")
+	//background: url("/static/img/pattern-bg.png") #EEE !important;
 }
 
 .main.menu {
 	margin: 0 !important;
 	border-radius: 0 !important;
+}
+
+.messages.container {
+	margin-top: 4rem;
+	//margin-bottom: -4.5rem;
+}
+
+.main.container {
+  margin-top: 5rem;
+}
+
+.ui.footer.segment {
+  margin: 2.5em 0em 0em !important;
+  padding: 5em 0em;
 }
 
 .message.wrapper {
@@ -34,4 +49,93 @@ html, body {
 
 .ui.primary.text {
 	color: @primaryColor;
+}
+
+// Recaptcha
+#recaptcha_table {
+  margin: 0 auto !important;
+}
+
+// Scrollbar
+.inverted.sidebar::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+.inverted.sidebar::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.inverted.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.inverted.sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.inverted.sidebar::-webkit-scrollbar-thumb:active {
+  background-color: rgba(255, 255, 255, 0.20);
+}
+
+// Boxes
+.box {
+	box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.25);
+}
+
+.ui.top.attached.inverted.red.menu {
+	color: #FFF !important;
+
+	> .icon.header.item {
+		cursor: default;
+		min-width: 3.35rem;
+		box-shadow: 0 0 2rem rgba(0, 0, 0, .15) inset;
+	}
+
+	.inverted.item {
+		color: #FFF;
+		background: rgba(0, 0, 0, 0.09);
+	}
+
+	.inverted.item:hover {
+		background: rgba(0, 0, 0, 0.15);
+	}
+
+	> .header.item:not(.icon):before {
+	    width: 0;
+	}
+
+	~ .bottom {
+		margin-bottom: 0;
+
+		.table {
+			margin: 0;
+			border: 0;
+			border-top-left-radius: 0;
+			border-top-right-radius: 0;
+		}
+
+		.relaxed.divided.list {
+			margin: -0.5rem 0 !important;
+		}
+	}
+
+	~ .compact {
+		padding: 0;
+
+		.pagination {
+			border-radius: 0;
+		}
+	}
+
+	~ .stretch {
+		height: 200px;
+	}
+
+	~ .side.compact {
+		padding: 0.2rem 0.8rem;
+	}
+}
+
+.chart.container {
+	min-height: 12.5rem;
 }

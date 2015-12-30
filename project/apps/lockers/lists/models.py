@@ -1,12 +1,10 @@
 import json
 import random
 from datetime import datetime
-from django.db import models
-from ..models import Locker_Base, Earnings_Base
+from ..models import models, Locker_Base, Earnings_Base
 
 
 class List(Locker_Base):
-
 	ORDERS = (
 		("descending", "Descending"),
 		("ascending", "Ascending"),
@@ -28,10 +26,7 @@ class List(Locker_Base):
 	unlock_count	= models.IntegerField(default=0)
 	order 			= models.CharField(max_length=20, default="descending", choices=ORDERS)
 	delimeter 		= models.CharField(max_length=5, default="\\n", choices=DELIMETERS)
-	reuse 			= models.BooleanField(default=False)
-
-	def __str__(self):
-		return "%s: %s" % (self.pk, self.name)
+	reuse 			= models.BooleanField(default=False, verbose_name="Allow re-use of items")
 
 	def create(user, name, item_name, description, items, delimeter, order, reuse):
 		if delimeter == "\\n":
@@ -150,8 +145,7 @@ class List(Locker_Base):
 
 
 class Earnings(Earnings_Base):
-	obj 		= models.OneToOneField(List, primary_key=True)
-
+	obj = models.OneToOneField(List, primary_key=True)
+	
 	class Meta:
-		verbose_name = "Earnings"
-		verbose_name_plural = "Earnings"
+		db_table = "lists_earnings"

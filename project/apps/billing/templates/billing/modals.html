@@ -1,0 +1,43 @@
+{% load billing %}
+{% load semanticui %}
+
+<div class="ui modal edit">
+	<i class="close icon"></i>
+	<div class="header">
+		Modify Billing Information
+	</div>
+	<div class="content">
+		<div class="ui tabular large menu">
+			<a class="active item" data-tab="paypal"><i class="paypal icon"></i> Paypal</a>
+			<a class="item" data-tab="check"><i class="pencil icon"></i> Check</a>
+			<a class="item" data-tab="wire"><i class="credit card icon"></i> Wire</a>
+			<a class="item" data-tab="direct"><i class="fast forward icon"></i> Direct Deposit/ACH</a>
+		</div>
+
+		{% for choice in payment_choices %}
+		<div class="ui {% if choice == 'paypal' %}active {% endif %}tab" data-tab="{{ choice }}">
+			<form name="{{ choice }}" action="{% url 'billing' %}" method="POST" class="ui {{ choice }} form">
+				{% csrf_token %}
+				<input type="hidden" style="display:none" name="payment_method" value="{{ choice }}" />
+
+				{% if choice == "paypal" %}
+					{% render_form form_paypal %}
+
+				{% elif choice == "check" %}
+					{% render_form form_check %}
+
+				{% elif choice == "wire" %}
+					{% render_form form_wire %}
+
+				{% elif choice == "direct" %}
+					{% render_form form_direct %}
+				{% endif %}
+
+				<div class="field">
+					<button class="ui positive submit button fluid">Save Billing Information</button>
+				</div>
+			</form>
+		</div>
+		{% endfor %}
+	</div>
+</div>
