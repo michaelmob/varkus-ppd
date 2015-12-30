@@ -6,13 +6,15 @@ Viking is a pay-per-unlock service website.
 ----
 
 ## Production Setup
-**In this setup: Ubuntu will be used for the server, PostgreSQL will be used for the database, and NGINX will be used as a reverse-proxy server for Gunicorn.**
+**In this setup: Ubuntu will be used for the server, PostgreSQL will be used for the database, and NGINX will be used as a reverse-proxy server for uWSGI.**
 
 #### Step 1: Server Setup
 1. Make sure server is up to date. (sudo apt update && sudo apt upgrade)
 2. Install required packages.
-```sh
-sudo apt install git build-essential \
+```
+
+sudo apt install git \
+	build-essential \
 	python3-dev \
 	python3-setuptools \
 	python-virtualenv \
@@ -23,8 +25,14 @@ sudo apt install git build-essential \
 	rabbitmq-server \
 	postfix \
 	nginx \
-	libjpeg8-dev \
-	libmaxminddb0 \
+	libffi-dev \
+	libjpeg8-dev
+
+# Install Maxmind GeoIP Database
+sudo add-apt-repository ppa:maxmind/ppa
+sudo apt update
+
+sudo apt install libmaxminddb0 \
 	libmaxminddb-dev \
 	mmdb-bin
 ```
@@ -40,10 +48,9 @@ sudo apt install git build-essential \
 #### Step 4: Django Setup
 1. Remove underscore from "project/viking/_private" directory.
 2. Make all required changes in renamed "private" directory. (PostgreSQL details)
-3. Navigate to "project/geoip/" directory.
-4. Run "update.sh" script.
-5. Navigate to "scripts/" directory.
-6. Run "setup" script.
+3. Navigate to "scripts/" directory.
+4. Run "setup" and "geoip" script.
+5. Run "./manage makemigrations" and "./manage migrate" (Very axes table was created)
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".

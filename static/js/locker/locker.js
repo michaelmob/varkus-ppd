@@ -12,6 +12,7 @@ var openSocket = function() {
 
 	socket = WS4Redis({
 		uri: uri + "locker?subscribe-session",
+		heartbeat_msg: "--heartbeat--",
 		receive_message: function(data) {
 			data = $.parseJSON(data);
 

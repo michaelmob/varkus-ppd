@@ -139,6 +139,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Websockets
 WEBSOCKET_URL = "/ws/"
+WS4REDIS_HEARTBEAT = "--heartbeat--"
 
 # Media files (User Content)
 MEDIA_URL = "/media/"

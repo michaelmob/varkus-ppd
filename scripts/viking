@@ -12,12 +12,11 @@ case "$1" in
 		../scripts/manage celerycam --frequency=30.0 &
 
 		# Run Celery Worker
-		celery worker --app=viking --beat --events &
-		echo $! > celeryw.pid
+		celery worker --app=viking --beat --events --pidfile=celeryw.pid &
 
-		# Run Gunicorn
-		gunicorn --workers=4 viking.wsgi &
-		echo $! > gunicorn.pid
+		# Run uWSGI
+		uwsgi --pidfile uwsgi.pid --socket 127.0.0.1:8000 --protocol=http --buffer-size=32768 --workers=5 --master --module viking.wsgi &
+		uwsgi --pidfile uwsgi_ws.pid --http-socket 127.0.0.1:8001 --gevent 1000 --http-websockets --workers=2 --master --module viking.wsgi_websocket
 		;;
 
 	stop)
@@ -29,13 +28,15 @@ case "$1" in
 		# Kill Celery worker
 		kill $(cat celeryw.pid)
 
-		# Kill Gunicorn
-		kill $(cat gunicorn.pid)
+		# Kill uWSGI
+		kill -9 $(cat uwsgi.pid)
+		kill -9 $(cat uwsgi_ws.pid)
 
 		# Cleanup
 		rm celeryev.pid
 		rm celeryw.pid
-		rm gunicorn.pid
+		rm uwsgi.pid
+		rm uwsgi_ws.pid
 		;;
 
 	restart)

@@ -1,4 +1,9 @@
+git+https://github.com/thetarkus/anora
+git+git://github.com/gevent/gevent.git#egg=gevent
+
 setuptools
+cython
+uwsgi
 psycopg2
 django
 django-recaptcha
@@ -14,6 +19,4 @@ django-websocket-redis
 pillow
 pysocks
 geoip2
-gunicorn
 psutil
-git+https://github.com/thetarkus/anora
