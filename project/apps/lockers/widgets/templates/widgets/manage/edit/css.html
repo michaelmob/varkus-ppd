@@ -1,0 +1,73 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load currency %}
+
+{% block title %}Widget Locker{% endblock %}
+
+{% block tab %}widgets{% endblock %}
+
+{% block content %}
+{% include 'lockers/widgets/manage/sections/modals.html' %}
+
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="code icon"></i>
+					Custom CSS
+				</div>
+				<div class="padded content">
+					<form class="ui form" action="{% url 'widgets-edit-css' obj.code %}" method="POST">
+						{% csrf_token %}
+						<div class="field">
+							<label>Custom CSS URL</label>
+							<input type="url" name="css" value="{{ url }}" placeholder="https://example.com/stylesheet.css" />
+						</div>
+						<div class="field">
+							<div class="ui fluid buttons">
+								<button class="ui primary submit button">
+									Set Custom CSS URL
+								</button>
+								<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+									Cancel
+								</a>
+							</div>
+						</div>
+					</form>
+
+					<p></p>
+					<p>
+						Only use stylesheets on HTTPS.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="info circle icon"></i>
+					Information
+				</div>
+				<div class="padded content">
+					<div class="ui header">Custom CSS</div>
+
+					<p>
+						Making a widget look native to your site is what makes
+						it unique. For your widget to stick out and to not belong
+						may make your widget look sketchy.
+					</p>
+
+					<div class="ui header">JSFiddle</div>
+					<div class="ui list">
+						<div class="item">
+							<a href="https://jsfiddle.net/s26kxp0o/">Default CSS Template</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

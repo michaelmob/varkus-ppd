@@ -5,7 +5,6 @@ from django.core.validators import URLValidator
 
 from ..models import Widget
 from .manage import verify
-from ....lockers.utils import Locker_Object
 
 from apps.lockers.files.models import File
 from apps.lockers.links.models import Link
@@ -28,8 +27,6 @@ def locker(request, code=None):
 			obj.standalone_redirect_url = request.POST.get("redirect", settings.SITE_URL).strip()
 			obj.save()
 
-		obj.set_locker(Locker_Object(locker, code, request.user))
-
 		messages.success(request, "This widget's locker has been updated.")
 		return redirect("widgets-manage", obj.code)
 
@@ -39,7 +36,7 @@ def locker(request, code=None):
 
 	return render(
 		request,
-		"lockers/widgets/manage/edit/locker.html",
+		"widgets/manage/edit/locker.html",
 		{
 			"obj": obj,
 			"files": files,
@@ -71,7 +68,7 @@ def postback(request, code=None):
 
 	return render(
 		request,
-		"lockers/widgets/manage/edit/postback.html",
+		"widgets/manage/edit/postback.html",
 		{
 			"obj": obj,
 			"url": url,
@@ -105,7 +102,7 @@ def css(request, code=None):
 
 	return render(
 		request,
-		"lockers/widgets/manage/edit/css.html",
+		"widgets/manage/edit/css.html",
 		{
 			"obj": obj,
 			"url": url,

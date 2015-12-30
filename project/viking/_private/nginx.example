@@ -19,12 +19,12 @@ server {
 	}
 
 	location /media/ {
-		alias /var/www/viking/project/media/;
+		alias /var/www/viking/media/;
 		autoindex off;
 	}
 
 	location /media/files/ {
-		alias /var/www/viking/project/media/files/;
+		alias /var/www/viking/media/files/;
 		internal;
 	}
 

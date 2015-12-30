@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block object-tools-items %}
+<li><a href="{% url 'admin:leads_lead_changelist' %}?user={{ original.pk }}">{% trans "Leads" %}</a></li>
+<li><a href="{% url 'admin:billing_invoice_changelist' %}?user={{ original.pk }}">{% trans "Invoices" %}</a></li>
+<li><a href="{% url 'admin:auth_user_changelist' %}?profile__referrer={{ original.pk }}">{% trans "Referrals" %}</a></li>
+<li><a href="{% url 'admin:lockers_file_changelist' %}?user={{ original.pk }}">{% trans "Files" %}</a></li>
+<li><a href="{% url 'admin:lockers_link_changelist' %}?user={{ original.pk }}">{% trans "Links" %}</a></li>
+<li><a href="{% url 'admin:lockers_list_changelist' %}?user={{ original.pk }}">{% trans "Lists" %}</a></li>
+
+<li>
+	{% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
+	<a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a>
+</li>
+{% if has_absolute_url %}<li><a href="{{ absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
+{% endblock %}

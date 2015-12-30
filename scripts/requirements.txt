@@ -1,3 +1,4 @@
+setuptools
 psycopg2
 django
 django-recaptcha
@@ -8,12 +9,11 @@ django-countries
 django-tables2
 django-gravatar2
 django-debug-toolbar
-python-memcached
+django-redis
+django-websocket-redis
 pillow
-filemagic
 pysocks
 geoip2
 gunicorn
-python-magic
 psutil
 git+https://github.com/thetarkus/anora

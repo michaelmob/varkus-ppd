@@ -1,5 +1,5 @@
 /*******************************
-         Site Overrides
+		Site Overrides
 *******************************/
 .ui.vertical.inverted.menu {
 
@@ -8,15 +8,15 @@
 		cursor: default;
 	}
 
-  .item.logo.header {
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 0;
-    height: 46px;
-    line-height: 46px;
-    cursor: pointer;
-    background: @itemBackground !important;
-  }
+	.item.logo.header {
+		font-size: 1.5rem;
+		text-align: center;
+		padding: 0;
+		height: 46px;
+		line-height: 46px;
+		cursor: pointer;
+		background: @itemBackground !important;
+	}
 
 	.item.logo.header, .item:not(.header) {
 		&:hover {
@@ -34,16 +34,16 @@
 }
 
 .ui.inverted.menu {
-    border-left: 0;
-    border-right: 0;
+	border-left: 0;
+	border-right: 0;
 }
 
 .ui.main.menu {
-  border: 0;
+	border: 0;
 
 	.item:before {
-    border: 0;
-  }
+		border: 0;
+	}
 }
 
 .ui.left.fixed.menu {
@@ -57,7 +57,7 @@
 }
 
 @media only screen and (min-width: 992px) {
-	.ui.left.fixed.menu.xvisible {
+	.ui.left.fixed.sidebar.menu.default {
 		visibility: visible !important;
 		transform: initial !important;
 	}

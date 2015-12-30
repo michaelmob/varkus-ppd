@@ -16,6 +16,6 @@ class Admin_Offer(admin.ModelAdmin):
 	list_display = (
 		"name", "anchor", "category", "user_agent",
 		"date", "country_count", "flag", "earnings_per_click",
-		"payout", "difference"
+		"payout", "success_rate"
 	)
 	search_fields = ["name", "country", "anchor"]

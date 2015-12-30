@@ -1,0 +1,70 @@
+/* Text */
+.wall.wrapper > h3:after {
+	content: "Complete one of the easy offers below to continue";
+}
+
+.wall.wrapper > h3 {
+	display: block;
+	text-align: center;
+	margin: 0 0 0.8rem 0;
+	padding: 0;
+}
+
+/* Progress Indicator */
+.wall.wrapper .progress.indicator {
+	display: none;
+	background: url(/static/img/progress.gif) no-repeat;
+	background-position: center;
+	height: 20px;
+	margin: -10px 0 5px 0;
+}
+
+/* Offer */
+.wall.wrapper a {
+	display: block;
+	padding: 1rem;
+	text-decoration: none;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+.wall.wrapper a:nth-child(even) {
+	background-color: #FFFFFF;
+}
+
+.wall.wrapper a:nth-child(odd) {
+	background-color: #F9F9F9;	
+}
+
+.wall.wrapper a:hover {
+	background-color: #F44336;
+    //color: white;
+}
+
+/* Offer Anchor */
+.wall.wrapper .anchor {
+	padding-left: 0.5rem;
+}
+
+.wall.wrapper .icon,
+.wall.wrapper .icon ~ .anchor {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+/* Pagination */
+.wall.wrapper > .s.pagination.container {
+	text-align: center;
+}
+
+/* Offer Category Icon */
+.wall.wrapper .icon {
+	font-size: 1.5rem;
+	padding: 0.3rem;
+	width: 2rem;
+}
+
+/* Gold Star Icon */
+.wall.wrapper .gold {
+	color: gold;
+	text-shadow: 0 0 1px #333;
+}

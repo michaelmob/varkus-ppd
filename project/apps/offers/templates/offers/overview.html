@@ -1,0 +1,51 @@
+{% extends 'base-panel.html' %}
+{% load django_tables2 %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	{% if query|length > 0 %}
+		<a href="{% url 'offers' %}" class="section">Offers</a>
+		<i class="right chevron icon divider"></i>
+		<span class="active section">Search</span>
+	{% else %}
+		<a href="{% url 'offers' %}" class="active section">Offers</a>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui one column grid stackable">
+		<div class="column">
+			<div class="box">
+				<div class="ui top attached inverted red menu">
+					<div class="icon header item"><i class="tags icon"></i></div>
+					<div class="header item">Offers</div>
+
+					<div class="right menu">
+						<form class="inverted item">
+							<div class="ui inverted transparent icon input">
+								<input name="query" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
+								<i class="search link icon"></i>
+							</div>
+						</form>
+						<a class="inverted item" href="{% url 'offers-options' %}">
+							<i class="options icon"></i> Options
+						</a>
+					</div>
+				</div>
+				<div class="ui bottom attached compact segment">
+					{% render_table offers '_blueprint/_table.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>$(".search").click(function() { $("form").submit(); });</script>
+{% endblock %}

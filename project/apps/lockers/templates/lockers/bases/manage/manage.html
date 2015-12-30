@@ -1,0 +1,215 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load currency %}
+{% load blueprints %}
+
+{% block title %}{{ locker|title }}s{% endblock %}
+
+{% block tab %}{{ locker }}s{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url locker|add:'s' %}" class="section">{{ locker|title }}s</a>
+	<i class="right chevron icon divider"></i>
+	<strong>{{ locker|title }}:</strong>
+	<a href="{% url locker|add:'s-manage' obj.code %}" class="active section">{{ obj.name }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+
+{% block modals %}
+	{% block modal_delete %}
+	<form class="ui basic modal delete" method="POST" action="{% url locker|add:'s-manage-delete' obj.code %}">
+		<i class="close icon"></i>
+		<div class="header">
+			Confirm
+		</div>
+		<div class="content">
+			{% csrf_token %}
+			<p>Are you sure you want to delete this {{ locker }}?</p>
+		</div>
+		<div class="actions">
+			<div class="ui black deny button">
+				No
+			</div>
+			<div class="ui left labeled icon primary submit button">
+				<i class="delete icon"></i>
+				Yes
+			</div>
+		</div>
+	</form>
+	{% endblock %}
+
+	{% block modal_edit %}
+	<form class="ui modal edit" method="POST" action="{% url locker|add:'s-manage' obj.code %}">
+		<i class="close icon"></i>
+		<div class="header">
+			Edit {{ locker|title }}
+		</div>
+		<div class="content">
+			<div class="ui form">
+				{% csrf_token %}
+				
+				{% block modal_edit_content %}
+				
+				{% endblock %}
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui left labeled icon negative delete button">
+				<i class="delete icon"></i>
+				Delete
+			</div>
+			<div class="ui black deny button">
+				Cancel
+			</div>
+			<div class="ui left labeled icon positive submit button">
+				<i class="checkmark icon"></i>
+				Save
+			</div>
+		</div>
+	</form>
+	{% endblock %}
+{% endblock %}
+
+<div class="wrapper">
+	<div class="ui two column stackable grid">
+		<div class="column">
+			<div class="ui one column grid">
+
+				<div class="column">
+					<div class="ui two column stretched grid">
+						{# Data Blocks #}
+						<div class="column">
+							{% data_block_two 'red' obj.earnings.clicks_today 'Clicks' obj.earnings.clicks 'Total' 'pointing up' 'locker clicks today' 'locker clicks total' %}
+						</div>
+
+						<div class="column">
+							{% data_block_two 'blue' obj.earnings.leads_today 'Leads' obj.earnings.leads 'Total' 'lightning' 'locker leads today' 'locker leads total' %}
+						</div>
+
+						<div class="column">
+							{% data_block_two 'green' obj.earnings.today 'Earnings' obj.earnings.total 'Total' 'dollar' 'locker earnings today' 'locker earnings total' %}
+						</div>
+
+						<div class="column">
+							{% data_block 'orange' obj.earnings.epc|currency 'Earnings per Click' 'bullseye' 'locker epc today' %}
+						</div>
+
+						{# View Locker Page and Share Buttons #}
+						<div class="one column row">
+							<div class="column">
+								<div class="ui inverted black segment">
+									<div class="ui stackable middle aligned two column grid">
+
+										<div class="column">
+											<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
+										</div>
+
+										<div class="column">
+											<div class="center aligned column">
+												<strong>Share on...</strong>
+											</div>
+
+											<div class="ui four buttons">
+												<a href="https://twitter.com/share?text=Check%20out%20my%20{{ locker }}!&url={{ url }}" target="popup" class="ui fluid twitter icon button">
+													<i class="twitter icon"></i>
+												</a>
+
+												<a href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="popup" class="ui fluid facebook icon button">
+													<i class="facebook icon"></i>
+												</a>
+
+												<a href="https://plus.google.com/share?url={{ url }}" target="popup" class="ui fluid google plus icon button">
+													<i class="google plus icon"></i>
+												</a>
+
+												<a href="https://vk.com/share.php?url={{ url }}" target="popup" class="ui fluid vk icon button">
+													<i class="vk icon"></i>
+												</a>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+				{# Locker Information #}
+				<div class="column">
+					<div class="box">
+						<div class="ui top attached inverted red menu">
+							<div class="icon header item"><i class="tag icon"></i></div>
+							<div class="header item">
+								{{ locker|title }}:&nbsp;<strong>{{ obj.name }}</strong>
+							</div>
+
+							<div class="right menu">
+								<a class="inverted item edit button">
+									<i class="edit icon"></i>
+									Edit
+								</a>
+							</div>
+						</div>
+
+						<div class="ui bottom attached segment">
+							<div class="ui divided relaxed list">
+							{% block information %}
+								<div class="item">
+									<i class="quote left icon"></i>
+									<div class="content">
+										<div class="header">Name</div>
+										{{ obj.name }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="ellipsis horizontal icon"></i>
+									<div class="content">
+										<div class="header">Description</div>
+										{{ obj.description|default:'<i>None</i>' }}
+									</div>
+								</div>
+
+								{% block details %}
+
+								{% endblock %}
+
+							{% endblock %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui one column grid">
+				
+				{# Chart #}
+				<div class="column">
+					{% line_chart dataUrl %}
+				</div>
+
+				{# Leads #}
+				<div class="column">
+					{% table clicks viewers|safe 'pointing up' %}
+				</div>
+
+				{# Leads #}
+				<div class="column">
+					{% table leads 'Leads' 'lightning' %}
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/page/lockers/'|add:locker|add:'s/manage.js' %}"></script>
+{% endblock %}

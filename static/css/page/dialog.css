@@ -1,0 +1,13 @@
+.pusher, .ui.main.container {
+	height: calc(100% - 5rem) !important;
+}
+
+.ui.grid {
+	height: 100%;
+}
+
+label {
+	text-align: left;
+	color: #666 !important;
+	font-weight: normal !important;
+}

@@ -1,0 +1,59 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load currency %}
+{% load blueprints %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	{# Information Blocks #}
+	<div class="ui four column stackable grid">
+		<div class="column">
+			{% data_block_two 'red' user.earnings.clicks_today 'Clicks' user.earnings.clicks 'Total' 'pointing up' 'user clicks today' 'user clicks total' %}
+		</div>
+
+		<div class="column">
+			{% data_block_two 'blue' user.earnings.leads_today 'Leads' user.earnings.leads 'Total' 'lightning' 'user leads today' 'user leads total' %}
+		</div>
+
+		<div class="column">
+			{% data_block_two 'green' user.earnings.today 'Earnings' user.earnings.total 'Total' 'dollar' 'user earnings today' 'user earnings total' %}
+		</div>
+
+		<div class="column">
+			{% data_block 'orange' user.earnings.epc|currency 'Earnings per Click' 'bullseye' 'user epc today' %}
+		</div>
+	</div>
+
+	<div class="ui stackable grid">
+	
+		{# Charts #}
+		<div class="seven wide column">
+			<div class="ui one column stackable grid">
+				<div class="column">
+					{% line_chart '/dashboard/chart/line.json' %}
+				</div>
+
+				<div class="column">
+					{% map_chart '/dashboard/chart/map.json' %}
+				</div>
+			</div>
+		</div>
+
+		{# Tables #}
+		<div class="nine wide column">
+			<div class="ui one column stackable grid">
+				<div class="column">
+					{% table offers 'Newest Offers' 'tags' %}
+				</div>
+
+				<div class="column">
+					{% table top_offers 'Top Performing Offers' 'thumbs up' %}
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+{% endblock %}

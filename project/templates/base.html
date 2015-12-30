@@ -9,225 +9,206 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-	<title>{% block full_title %}{% block title %}First Class Monetization Solutions{% endblock %} | {% site_name %}{% endblock %}</title>
+	<title>{% block titlefull %}{% block title %}{% endblock %} | {% site_name %}{% endblock %}</title>
 
-	<link rel="icon" type="image/png" href="/static/img/favicon.png">
+	<link rel="icon" type="image/png" href="/static/img/logo/32.png">
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,700">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/visibility.min.css' %}" />
 
-	{% block head_before %}{% endblock %}
+	{% block headstylebase %}<link rel="stylesheet" type="text/css" href="{% static 'css/page/base.css' %}" />{% endblock %}
+	{% block headstyle %}{% endblock headstyle %}
 
-	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-	<script type="text/javascript" src="{% static 'js/semantic.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/global.js' %}"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-noty/2.3.7/jquery.noty.min.js"></script>
+	<script src="{% static 'js/semantic.min.js' %}"></script>
+	<script src="{% static 'js/page/global.js' %}"></script>
 
-	{% block head %}{% endblock %}
+	{% block headjsbase %}{% endblock %}
+	{% block headjs %}{% endblock %}
+	{% block headextra %}{% endblock %}
 </head>
 
 <body>
 	{% block aside %}
-		<aside class="ui inverted vertical sidebar{% block sidemenu %}{% endblock %} left fixed menu">
+	<aside class="ui left fixed inverted vertical sidebar menu{% block sidemenu %}{% endblock %}">
 
-			<a href="{% url 'home' %}" class="logo header item">
+		<a href="{% url 'home' %}" class="logo header item">
+			{% site_name %}
+		</a>
+
+		{% if user.is_authenticated %}
+		<div class="mobile tablet only">
+			<div class="header item">
+				{{ user.username|title }}'s Account
+			</div>
+			<span class="item"> Today:
+				<span class="ui primary text">
+					${{ user.earnings.today|currency }}
+				</span>
+			</span>
+			<span class="item"> Month:
+				<span class="ui primary text">
+					${{ user.earnings.month|currency }}
+				</span>
+			</span>
+		</div>
+
+		<div class="header item">Control Panel</div>
+		<a class="item dashboard" href="{% url 'dashboard' %}">
+			<i class="dashboard icon"></i> Dashboard
+		</a>
+
+		<a class="item offers" href="{% url 'offers' %}">
+			<i class="tags icon"></i> Offers
+		</a>
+
+		{% comment %}
+		<a class="item statistics" href="#">
+			<i class="bar chart icon"></i> Statistics
+		</a>
+		{% endcomment %}
+
+		<div class="header item">Lockers</div>
+		{% comment %}
+		<a class="item widgets" href="{% url 'widgets' %}">
+			<i class="file image outline icon"></i> Widgets
+		</a>
+		{% endcomment %}
+
+		<a class="item files" href="{% url 'files' %}">
+			<i class="file icon"></i> Files
+		</a>
+
+		<a class="item links" href="{% url 'links' %}">
+			<i class="linkify icon"></i> Links
+		</a>
+
+		<a class="item lists" href="{% url 'lists' %}">
+			<i class="list layout icon"></i> Lists
+		</a>
+
+		<div class="header item">Support</div>
+		<a class="item billing" href="{% url 'billing' %}">
+			<i class="credit card icon"></i> Billing
+			{% with count=user.profile.notification_billing %}
+				{% if count > 0 %}
+					<div class="ui yellow horizontal circular label">{{ count }}</div>
+				{% endif %}
+			{% endwith %}
+		</a>
+
+		<a class="item account" href="{% url 'account-settings' %}">
+			<i class="settings icon"></i>
+			Account
+		</a>
+
+		{% if user.is_staff %}
+		<div class="header item">Staff</div>
+
+		{% if user.is_superuser %}
+		<a class="item server" href="{% url 'staff-server' %}">
+			<i class="server icon"></i>
+			Server
+		</a>
+		{% endif %}
+
+		<a target="_blank" class="item admin" href="/admin/">
+			<i class="shield icon"></i>
+			Admin
+		</a>
+		{% endif %}
+
+		{% else %}
+		<div class="header item">Account</div>
+		<a class="item" href="{% url 'login' %}">
+			<i class="sign in icon"></i> Log in
+		</a>
+
+		<a class="item" href="{% url 'signup' %}">
+			<i class="signup icon"></i> Sign up
+		</a>
+		{% endif %}
+	</aside>
+	<script>$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
+	{% endblock %}
+
+	<section class="pusher" style="overflow-y:auto">
+		{% block nav %}
+		<div class="ui fixed inverted menu">
+			<a class="hamburger icon item mobile tablet only">
+				<i class="content icon"></i>
+			</a>
+
+			<a href="{% url 'home' %}" class="item header">
 				{% site_name %}
 			</a>
 
-			{% if user.is_authenticated %}
-				<div class="header item mobile tablet only">{{ user.username|title }}'s Account</div>
-				<span class="item mobile tablet only">
-					Today:
-					<span class="ui primary text">
-						${{ user.earnings.today|currency }}
-					</span>
-				</span>
-
-				<span class="item mobile tablet only">
-					Month:
-					<span class="ui primary text">
-						${{ user.earnings.month|currency }}
-					</span>
-				</span>
-
-				<div class="header item">Control Panel</div>
-				<a class="item dashboard" href="{% url 'dashboard' %}">
-					<i class="dashboard icon"></i> Dashboard
+			<div class="right menu">
+				{% if user.is_authenticated %}
+				<a class="icon item popup" href="{% url 'dashboard' %}" data-content="Dashboard" data-variation="inverted">
+					<i class="dashboard icon"></i>
+				</a>
+				<a class="icon item popup" href="{% url 'logout' %}" data-content="Logout" data-variation="inverted">
+					<i class="sign out icon"></i>
+				</a>
+				{% else %}
+				<a class="icon item popup" href="{% url 'login' %}" data-content="Login" data-variation="inverted">
+					<i class="sign in icon"></i>
 				</a>
 
-				<a class="item leads" href="{% url 'leads' %}">
-					<i class="lightning icon"></i> Leads
-					{% with count=user.profile.notification_lead %}
-						{% if count > 0 %}
-							<div class="ui yellow horizontal circular label">{{ count }}</div>
-						{% endif %}
-					{% endwith %}
+				<a class="icon item popup" href="{% url 'signup' %}" data-content="Signup" data-variation="inverted">
+					<i class="signup icon"></i>
 				</a>
-
-				<a class="item offers" href="{% url 'offers' %}">
-					<i class="tags icon"></i> Offers
-				</a>
-
-				{% comment %}
-				<a class="item statistics" href="#">
-					<i class="bar chart icon"></i> Statistics
-				</a>
-				{% endcomment %}
-
-				<div class="header item">Lockers</div>
-				<a class="item widgets" href="{% url 'widgets' %}">
-					<i class="file image outline icon"></i> Widgets
-				</a>
-
-				<a class="item files" href="{% url 'files' %}">
-					<i class="file icon"></i> Files
-				</a>
-
-				<a class="item links" href="{% url 'links' %}">
-					<i class="linkify icon"></i> Links
-				</a>
-
-				<a class="item lists" href="{% url 'lists' %}">
-					<i class="list layout icon"></i> Lists
-				</a>
-
-				<div class="header item">Support</div>
-				<a class="item tickets" href="{% url 'tickets' %}">
-					<i class="ticket icon"></i> Tickets
-					{% with count=user.profile.notification_ticket %}
-						{% if count > 0 %}
-							<div class="ui yellow horizontal circular label">{{ count }}</div>
-						{% endif %}
-					{% endwith %}
-				</a>
-
-				<a class="item billing" href="{% url 'billing' %}">
-					<i class="credit card icon"></i> Billing
-					{% with count=user.profile.notification_billing %}
-						{% if count > 0 %}
-							<div class="ui yellow horizontal circular label">{{ count }}</div>
-						{% endif %}
-					{% endwith %}
-				</a>
-
-				<a class="item account" href="{% url 'user-settings' %}">
-					<i class="cogs icon"></i> Account Settings
-				</a>
-
-				{% if user.is_staff %}
-					<div class="header item">Staff</div>
-
-					{% if user.is_superuser %}
-						<a class="item server" href="{% url 'staff-server' %}">
-							<i class="server icon"></i>
-							Server
-						</a>
-					{% endif %}
-
-					<a class="item staff" href="{% url 'staff' %}">
-						<i class="wizard icon"></i>
-						Staff
-					</a>
-
-					<a target="_blank" class="item admin" href="/admin/">
-						<i class="shield icon"></i>
-						Admin
-					</a>
 				{% endif %}
-
-			{% else %}
-				<a class="item" href="{% url 'login' %}">
-					<i class="sign in icon"></i> Log in
-				</a>
-
-				<a class="item" href="{% url 'signup' %}">
-					<i class="signup icon"></i> Sign up
-				</a>
-
-				<a class="item" href="{% url 'contact' %}">
-					<i class="chat icon"></i> Contact
-				</a>
-			{% endif %}
-		</aside>
-		<script type="text/javascript">$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
-	{% endblock %}
-
-	<section class="pusher">
-		{% block nav %}
-			<nav class="ui sticky main menu">
-				<a class="title item app button mobile tablet only">
-					<i class="content icon"></i>
-				</a>
-
-				<div class="item">
-					{% block breadcrumbs %}
-						<div class="ui breadcrumb">
-							<div class="section">Control Panel</div>
-							<i class="right chevron icon divider"></i>
-							<a href="{% url 'dashboard' %}" class="active section">Dashboard</a>
-						</div>
-					{% endblock %}
-				</div>
-
-				<div class="right menu tablet computer only">
-					{% if user.is_authenticated %}
-
-						{# Earnings #}
-						<a class="item computer only default">
-							<small>Today:&nbsp;</small>
-							<small class="ui primary text">${{ user.earnings.today|currency }}</small>
-						</a>
-
-						<a class="item computer only">
-							<small>Month:&nbsp;</small>
-							<small class="ui primary text">${{ user.earnings.month|currency }}</small>
-						</a>
-
-						<a class="item" href="{% url 'dashboard' %}">
-							<i class="dashboard icon"></i>
-							<small>Dashboard</small>
-						</a>
-
-						<div class="ui dropdown wide item">
-							<i class="basic user icon"></i>
-							<small>{{ user.username|title }}</small>
-							<div class="menu">
-								<a class="item" href="{% url 'user-settings' %}">
-									<i class="settings icon"></i>
-									Account Settings
-								</a>
-								<a class="item" href="{% url 'logout' %}">
-									<i class="sign out icon"></i>
-									Logout
-								</a>
-							</div>
-						</div>
-
-					{% else %}
-						<a class="item" href="{% url 'contact' %}">
-							<i class="chat icon"></i>
-							<small>Contact</small>
-						</a>
-
-						<a class="item" href="{% url 'signup' %}">
-							<i class="signup icon"></i>
-							<small>Sign up</small>
-						</a>
-
-						<a class="item" href="{% url 'login' %}">
-							<i class="sign in icon"></i>
-							<small>Log in</small>
-						</a>
-					{% endif %}
-				</div>
-			</nav>
+			</div>
+		</div>
 		{% endblock %}
 
-		{% block messages %}{% endblock %}
+		{% block wrapper %}
+		<div class="ui main {% block type %}text{% endblock %} container">
+			{% block messages %}
+				{% if messages %}
+					{% for message in messages %}
+						<div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
+							<i class="close icon"></i>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endblock %}
 
-		{% block content %}{% endblock %}
+			{% block content %}
+			<div class="ui segment">
+				<p>Content goes here!</p>
+			</div>
+			{% endblock %}
+		</div>
+		{% endblock %}
 
-		{% block footer %}{% endblock %}
-	</div>
+		{% block footer %}
+		<div class="ui main inverted vertical footer segment">
+			<div class="ui container">
+				<div class="ui two column grid">
+					<div class="column">
+						<p>{% site_name %} &copy; {% now 'Y' %}</p>
+						<div class="ui horizontal inverted small divided link list">
+							<a class="item" href="{% url 'contact' %}">Contact Us</a>
+							<a class="item" href="{% url 'terms' %}">Terms and Conditions</a>
+							<a class="item" href="{% url 'dmca' %}">DMCA Policy</a>
+							<a class="item" href="{% url 'privacy' %}">Privacy Policy</a>
+						</div>
+					</div>
+					<div class="ui middle aligned right aligned column">
+						<a href="https://twitter.com/varkus_com/">
+							<i class="inverted large twitter icon link"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endblock %}
+	</section>
 </body>
 </html>
 {# {% endspaceless %} #}

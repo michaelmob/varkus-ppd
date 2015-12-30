@@ -2,26 +2,27 @@ from django.conf import settings
 from django.core.validators import URLValidator
 from django.shortcuts import render, redirect
 
-from ...bases.lockers import View_Locker, View_Unlock, View_Poll
+from ...bases.lockers import View_Locker_Base, View_Unlock_Base, View_Poll_Base, View_Redirect_Base
 from ..models import Widget
 
 
-class Locker(View_Locker):
+class View_Locker(View_Locker_Base):
 	model = Widget
 	template = "offers/widget/external.html"
 
 
-class Unlock(View_Unlock):
+class View_Redirect(View_Redirect_Base):
+	model = Widget
+
+
+class View_Unlock(View_Unlock_Base):
 	template = "offers/widget/complete.html"
 	model = Widget
 
 	def _return(self, request, obj):
-		# Get Locker object of Widget
-		locker_obj = obj.locker_object()
-
 		# We have locker_obj, so lets let them unlock it
-		if locker_obj:
-			model = locker_obj.get_name()
+		if obj:
+			model = obj.get_type()
 
 			# Prevent custom exec
 			if not model.upper() in dict(settings.LOCKERS).keys():
@@ -45,7 +46,7 @@ class Unlock(View_Unlock):
 			request.session["locker__file_force"] = True
 
 			# Show Unlock view
-			return U2.as_view()(request, locker_obj.code)
+			return U2.as_view()(request, obj.code)
 
 		# They didn't have a locker_obj with the widget so
 		# check the redirect_url of the widget, and if that
@@ -64,5 +65,5 @@ class Unlock(View_Unlock):
 		return render(request, self.template, { })
 
 
-class Poll(View_Poll):
+class View_Poll(View_Poll_Base):
 	model = Widget

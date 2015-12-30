@@ -1,27 +1,9 @@
 """
-Viking 1.2.3
-
-Django settings for Viking project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.9/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.9/ref/settings/
+Viking 2.0.0
 """
 
-# Quicksilver - Pride of Man
-
-# TODO:
-#######
-# Use semantic ui api
-# Widget example code
-# Use polling to see active users on page
-# Allow users to see IPs of visitors
-# Referral guide
-
-# Overwrite any setting in ./private/production.py for production servers
-# Overwrite any setting in ./private/development.py for development servers
+# Overwrite any setting in ./private/settings_prod.py for production servers
+# Overwrite any setting in ./private/settings_dev.py for development servers
 
 import os, socket
 from datetime import timedelta
@@ -33,7 +15,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 DEBUG = socket.gethostname() == "pc"
 
 # Application definition
-
 INSTALLED_APPS = (
 	"django.contrib.admin",
 	"django.contrib.auth",
@@ -51,13 +32,13 @@ INSTALLED_APPS = (
 	"django_countries", 	# django-countries
 	"django_gravatar",		# django-gravatar2
 	"django_tables2", 		# django-tables2
+	"ws4redis",				# django-websocket-redis
 
 	"apps.user",
 	"apps.offers",
 	"apps.cp",
 	"apps.home",
 	"apps.support",
-	"apps.tickets",
 	"apps.leads",
 	"apps.billing",
 
@@ -71,6 +52,8 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+	"django.middleware.cache.UpdateCacheMiddleware",
+	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
@@ -80,6 +63,7 @@ MIDDLEWARE_CLASSES = (
 	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
 	"viking.middleware.cloudflare.CFMiddleware",
+	#"django.middleware.cache.FetchFromCacheMiddleware"
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -93,16 +77,12 @@ WSGI_APPLICATION = "viking.wsgi.application"
 
 # Login
 INVITE_ONLY = False
-LOGIN_URL = "/user/login/"
+LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
-LANGUAGE_CODE = "en-us"
 TIME_ZONE = "America/New_York"
-USE_I18N = True
-USE_L10N = False
-USE_TZ = False
 
 # Date Formatting
 SHORT_DATETIME_FORMAT = "N j, Y, P"
@@ -123,12 +103,14 @@ TEMPLATES = [
 				"django.template.context_processors.request",
 				"django.contrib.auth.context_processors.auth",
 				"django.contrib.messages.context_processors.messages",
-				"django.core.context_processors.request"
+				"django.core.context_processors.request",
+				"ws4redis.context_processors.default"
 			],
 			"loaders": [
 				"django.template.loaders.filesystem.Loader",
 				"django.template.loaders.app_directories.Loader",
-			]
+			],
+			"builtins": ["apps.home.templatetags.site"],
 		},
 	},
 ]
@@ -143,15 +125,6 @@ ALLOWED_HOSTS = []
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "1pocfkh#z)llgp&h_t@svn^o3r^x6^g)s#qqx(udo0i7j3hj*e"
 
-# Cache
-# https://docs.djangoproject.com/en/1.9/ref/settings/#cache
-CACHES = {
-	"default": {
-		"BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-		"LOCATION": "unique-snowflake"
-	}
-}
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 DATABASES = {
@@ -161,9 +134,15 @@ DATABASES = {
 	}
 }
 
+# Session
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+# Websockets
+WEBSOCKET_URL = "/ws/"
+
 # Media files (User Content)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "..", "media/")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -179,19 +158,11 @@ SITE_NAME = "Development"
 SITE_DOMAIN = "test.com"
 SITE_URL = "https://" + SITE_DOMAIN
 
-# GeoIP
-GEOIP_PATH = "/home/dev/cb/project/geoip/"
-
-# Add Site
-from django.template.base import add_to_builtins
-add_to_builtins("apps.home.templatetags.site")
-
 # Gravatar
 GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 # GeoIP
-import geoip2.database
-GEOIP = geoip2.database.Reader(os.path.join(BASE_DIR, "geoip/GeoLite2-City.mmdb"))
+GEOIP_PATH = os.path.join(BASE_DIR, "viking")
 
 # E-mailing
 SEND_EMAILS = True
@@ -264,6 +235,7 @@ CATEGORY_TYPES = (
 	("iPad", "iPad"),
 	("iPhone", "iPhone"),
 	("Lead Gen", "Lead Gen"),
+	("Mobile Subscription", "Mobile Subscription"),
 	("Mobile WAP", "Mobile WAP"),
 	("Online Services", "Online Services"),
 	("PIN Submit", "PIN Submit"),
@@ -286,7 +258,9 @@ CATEGORY_TYPES_ICONS = {
 	"iPad": "tablet",
 	"iPhone": "mobile",
 	"Lead Gen": "lightning",
+	"Mobile Subscription": "mobile",
 	"Mobile WAP": "mobile",
+	"Mobile Content": "mobile",
 	"Online Services": "desktop",
 	"PIN Submit": "mobile",
 	"Samsung devices": "mobile",
@@ -294,9 +268,9 @@ CATEGORY_TYPES_ICONS = {
 	"Surveys": "checkmark",
 }
 
-from .private._keys import *
+from .private.keys import *
 
 if DEBUG:
-	from .private.development import *
+	from .private.settings_dev import *
 else:
-	from .private.production import *
+	from .private.settings_prod import *

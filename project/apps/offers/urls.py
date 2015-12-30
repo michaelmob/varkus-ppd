@@ -2,23 +2,38 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls import url
 
 from .utils import sync
-from .views import manage, output, redirect
+from .views import manage
 
 urlpatterns = [
-	# Output Offers - Standard
-	url(r"^output/$", output.public, name="offers-output"),
 
 	# Staff Offer Management
-	url(r"^sync/", sync.adgate, name="offers-sync-adgate"),
+	url(r"^sync/",
+		sync.adgate,
+		name="offers-sync-adgate"),
 
-	# Redirect
-	url(r"^redirect/(?P<id>[0-9]+)/$", redirect.redirect, name="offers-redirect"),
+	# Options
+	url(r"^options/$",
+		login_required(manage.View_Options.as_view()),
+		name="offers-options"),
 
 	# Offer Management
-	url(r"^$", login_required(manage.offers), name="offers"),
-	url(r"^manage/(?P<id>[0-9]+)/$", login_required(manage.offer), name="offers-manage"),
-	url(r"^manage/(?P<id>[0-9]+)/chart/line.json$", login_required(manage.line_chart), name="offers-manage-line-chart"),
+	url(r"^$",
+		login_required(manage.View_Overview.as_view()),
+		name="offers"),
 
-	# Priority
-	url(r"^manage/$", login_required(manage.priority), name="offers-priority"),
+	# -- Manage
+	url(r"^manage/(?P<id>[0-9]+)/$",
+		login_required(manage.View_Manage.as_view()),
+		name="offers-manage"),
+
+	# -- Set Importance
+	url(r"^manage/(?P<id>[0-9]+)/(?P<importance>\w+)/$",
+		login_required(manage.View_Importance.as_view()),
+		name="offers-manage-priority"),
+	
+	# -- Line Charts
+	url(r"^manage/(?P<id>[0-9]+)/chart/line.json$",
+		login_required(manage.View_Line_Chart.as_view()),
+		name="offers-manage-line-chart"),
+
 ]

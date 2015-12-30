@@ -1,0 +1,43 @@
+{% extends 'base-dialog.html' %}
+{% load static %}
+{% load semanticui %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block content %}
+<div class="ui middle aligned center aligned grid">
+	<div class="column" style="max-width:450px">
+		{% if invite_only %}
+		<div class="ui message error">
+			<i class="close icon"></i>
+			{% site_name %} is currently closed to new registration. Your account
+			will be created but it will not be activated. You will be
+			notified via e-mail when your account has been activated.
+		</div>
+		{% endif %}
+
+		<h2 class="ui image header">
+			<div class="content">
+				Sign-up for a {% site_name %} account
+			</div>
+		</h2>
+
+		<form class="ui large form" method="POST" action="{% url 'signup' %}">
+			{% csrf_token %}
+			<div class="ui segment">
+				{% render_field_icon form.name 'write' 'right' %}
+				{% render_field_icon form.email 'at' 'right' %}
+				{% render_field_icon form.username 'user' 'right' %}
+				{% render_field_icon form.password1 'lock' 'right' %}
+				{% render_field_icon form.password2 'repeat' 'right' %}
+				{% render_field form.birthday %}
+				{% render_field_checkbox form.agree 'toggle' _noRequired=True %}
+
+				<div class="ui fluid large primary submit button">Continue</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script src="{% static 'js/page/user/sign-up.js' %}"></script>
+{% endblock %}

@@ -1,95 +1,120 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.views.generic import View
+from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 
+from apps.leads.models import Lead
+
 from ..models import Offer
 from ..forms import Form_Offer
-from ..tables import Table_Offer
+from ..tables import Table_Offer_All, Table_Offer_Leads, Table_Offer_Options
 
 from apps.cp.bases.charts import Charts
 
 
-def offers(request):
-	query = request.GET.get("query", None)
 
-	if query:
-		offers = Offer.objects.filter(earnings_per_click__gt="0.01").filter(
-			Q(name__icontains=query) | Q(anchor__icontains=query)
-		).order_by("-earnings_per_click")
-	else:
-		offers = Offer.objects.all().filter(earnings_per_click__gt="0.01").order_by("-earnings_per_click")
+class View_Overview(View):
+	def get(self, request):
+		query = request.GET.get("query", None)
 
-	return render(
-		request, "offers/offers.html",
-		{
+		if query:
+			offers = Offer.objects.filter(earnings_per_click__gt=0.01) \
+				.filter(Q(name__icontains=query) | Q(anchor__icontains=query))
+		else:
+			offers = Offer.objects.filter(earnings_per_click__gt=0.01)
+
+		return render(request, "offers/overview.html", {
 			"query": query,
-			"table": Table_Offer.create(request, offers)
+			"offers": Table_Offer_All.create(request, offers)
+		})
+
+
+
+class View_Manage(View):
+	def get(self, request, id):
+		# Get offer if exists, or redirect to Offers page
+		try:
+			int(id)
+			obj = Offer.objects.get(id=id)
+		except (ValueError, Offer.DoesNotExist):
+			return redirect("offers")
+
+		leads = Lead.objects.filter(offer=obj, user=request.user).order_by("-date_time")
+
+		# Set offer importance
+		importance = "neutral"
+		
+		if obj in request.user.profile.offer_block.all():
+			importance = "block"
+		elif obj in request.user.profile.offer_priority.all():
+			importance = "priority"
+
+		return render(request, "offers/manage.html", {
+			"obj": obj,
+			"leads": Table_Offer_Leads.create(request, leads),
+			"importance": importance
+		})
+
+
+
+class View_Options(View):
+	def get(self, request):
+		return render(request, "offers/options.html", {
+			"prioritized": Table_Offer_Options.create(
+				request, request.user.profile.offer_priority.all()),
+			
+			"blocked": Table_Offer_Options.create(
+				request, request.user.profile.offer_block.all())
+		})
+
+
+
+class View_Importance(View):
+	def get(self, request, id, importance):
+		result = {
+			"success": True,
+			"message": "Offer importance has been set to neutral.",
+			"data": {
+				"importance": "neutral"
+			}
 		}
-	)
 
+		try:
+			int(id)
+			obj = Offer.objects.get(id=id)
+		except (ValueError, Offer.DoesNotExist):
+			result["success"] = False
+			result["message"] = "Offer does not exist."
 
-def offer(request, id=None):
-	if not id:
-		return redirect("offers")
-
-	try:
-		offer = Offer.objects.get(id=id)
-	except Offer.DoesNotExist:
-		return redirect("offers")
-
-	# Get initial
-	if offer in request.user.profile.offer_block.all():
-		priority = "1"
-	elif offer in request.user.profile.offer_priority.all():
-		priority = "2"
-	else:
-		priority = "0"
-
-	form = Form_Offer(request.POST or None, initial={"priority": priority})
-
-	# Set Priority
-	if request.POST:
-		if form.is_valid():
-			priority = form.cleaned_data["priority"]
-
-			request.user.profile.offer_block.remove(offer)
-			request.user.profile.offer_priority.remove(offer)
-
-			if priority == "1":
-				request.user.profile.offer_block.add(offer)
-				messages.success(request, "This offer has been blocked from your lockers.")
-			elif priority == "2":
-				request.user.profile.offer_priority.add(offer)
-				messages.success(request, "This offer has been prioritized in your lockers.")
-			else:
-				messages.info(request, "This offer has been set to neutral.")
-
-	return render(
-		request, "offers/manage.html",
-		{
-			"data_url": reverse("offers-manage-line-chart", args=[offer.pk]),
-			"offer": offer,
-			"form": form
-		}
-	)
-
-
-def line_chart(request, id=None):
-	try:
-		obj = Offer.objects.get(id=id)
-	except Offer.DoesNotExist:
-		return JsonResponse({"data": None})
-
-	return JsonResponse(Charts.line_cache(obj))
-
-
-def priority(request):
-	id = request.GET.get("remove", None)
-
-	if(id):
+		# Remove Offer
 		request.user.profile.offer_block.remove(id)
 		request.user.profile.offer_priority.remove(id)
 
-	return render(request, "offers/priority.html", {})
+		# Priority
+		if importance == "priority":
+			request.user.profile.offer_priority.add(obj)
+			result["message"] = "Offer importance has been set to priority."
+			result["data"]["importance"] = "priority"
+
+		# Block
+		elif importance == "block":
+			request.user.profile.offer_block.add(obj)
+			result["message"] = "Offer importance has been set to blocked."
+			result["data"]["importance"] = "block"
+
+		return JsonResponse(result)
+
+
+
+class View_Line_Chart(View):
+	def get(self, request, id):
+		# Get offer if exists, or return None
+		try:
+			int(id)
+			obj = Offer.objects.get(id=id)
+		except (ValueError, Offer.DoesNotExist):
+			return JsonResponse({"data": None})
+
+		return JsonResponse(Charts.line_cache(obj))

@@ -1,0 +1,41 @@
+{% load billing %}
+{% load cache %}
+
+{% with method=user.billing.method %}
+
+	<div class="item">
+		{{ method|payment_icon|safe }}
+		<div class="content">
+			<div class="header">Payment Method</div>
+			{% if method == 'none' %}
+				<em>None</em>, set up your payment method now to receive payments.
+			{% else %}
+				{{ method|payment_method }}
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="item">
+		<i class="calendar outline icon"></i>
+		<div class="content">
+			<div class="header">Payment Frequency</div>
+			<p>
+				Monthly <em>(Net 15)</em>
+			</p>
+		</div>
+	</div>
+
+	{% if method == 'paypal' %}
+		{% include 'billing/details/paypal.html' %}
+
+	{% elif method == 'check' %}
+		{% include 'billing/details/check.html' %}
+
+	{% elif method == 'wire' %}
+		{% include 'billing/details/wire.html' %}
+
+	{% elif method == 'direct' %}
+		{% include 'billing/details/direct.html' %}
+	{% endif %}
+
+{% endwith %}

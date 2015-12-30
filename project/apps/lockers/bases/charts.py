@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 
 from apps.cp.bases.charts import Charts
 
-class View_Line_Chart(View):
+
+class View_Line_Chart_Base(View):
 	model = None
 
 	def obj(self, request, code):
@@ -30,7 +31,7 @@ class View_Line_Chart(View):
 		return JsonResponse(data)
 
 
-class View_Map_Chart(View):
+class View_Map_Chart_Base(View):
 	model = None
 
 	def obj(self, request, code):

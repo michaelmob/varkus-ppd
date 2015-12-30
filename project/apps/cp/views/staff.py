@@ -37,15 +37,6 @@ def server(request):
 
 
 @staff_member_required
-def staff(request):
-	return render(request, "cp/staff/staff.html",
-		{
-			"deposits": Deposit.objects.all()
-		}
-	)
-
-
-@staff_member_required
 def info(request):
 	output = "<h1>META</h1>"
 	for k, v in request.META.items():

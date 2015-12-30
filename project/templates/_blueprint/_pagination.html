@@ -1,0 +1,31 @@
+{% load django_tables2 %}
+{% load pagination %}
+
+{% with num=table.paginator.page_range %}
+	{% if num|length > 1 %}
+		<div class="ui pagination fluid {% if not not_inverted %}inverted{% endif %} menu">
+
+			{% if table.page.number > 4 %}
+				<a href="{% querystring table.prefixed_page_field=1 %}" class="item">1</a>
+				<a class="disabled item">...</a>
+			{% endif %}
+
+			{% for page in num|paginate:table.page.number %}
+				<a href="{% querystring table.prefixed_page_field=page %}" class="{% if page == table.page.number %}active {% endif %}item">
+					{{ page }}
+				</a>
+			{% endfor %}
+
+
+			{% if table.page.number < num|length|add:"-3" %}
+				<a class="disabled item">...</a>
+				<a href="{% querystring table.prefixed_page_field=num|length %}" class="item">{{ num|length }}</a>
+			{% endif %}
+
+			<div class="item float right">
+				Page {{ table.page.number }} / {{ num|length }}
+			</div>
+
+		</div>
+	{% endif %}
+{% endwith %}

@@ -3,8 +3,11 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.urlresolvers import reverse
 
-from utils import strings
 from apps.cp.models import Earnings_Base
+from utils import strings
+
+from .fields import LockerField
+
 
 ''' Base for Lockers '''
 class Locker_Base(models.Model):
@@ -22,32 +25,34 @@ class Locker_Base(models.Model):
 		help_text 		= """Chance of a lead block happening.<br/>
 			Divide by 100 (example: 0.30 == 30%)<br/>
 			1 for guaranteed lead block.<br/>
-			0 for no lead block."""
-	)
+			0 for no lead block.""")
 
 	country_block	= models.CharField(
 		max_length 		= 100,
 		default 		= "",
 		blank 			= True,
 		null 			= True,
-		help_text 		= "ISO 3166-1 alpha-2 (example: \"US,FR,\")"
-	)
+		help_text 		= "ISO 3166-1 alpha-2 (example: \"US,FR,\")")
 
-	def get_name(self):
+	def get_type(self):
 		"""Get class name (Ex: widget, file, list, link)"""
 		return str(self.__class__.__name__).lower()
 
 	def get_link(self, loc):
 		"""Base function to get link related to class (Ex: file-%s)"""
-		return reverse(self.get_name().lower() + "s-%s" % loc, args=(self.code,))
+		return reverse(self.get_type() + "s-%s" % loc, args=(self.code,))
 
 	def get_manage_url(self):
-		"""Get manage (control panel) url (Ex: file-manage -> /files/manage/code)"""
+		"""Get manage (control panel) url (Ex: file-manage -> /files/manage/code/)"""
 		return self.get_link("manage")
 
 	def get_locker_url(self):
-		"""Get locker (locker page) url (Ex: file-locker -> /file/code)"""
+		"""Get locker (locker page) url (Ex: file-locker -> /file/code/)"""
 		return self.get_link("locker")
+
+	def get_unlock_url(self):
+		"""Get unlock (locker page) url (Ex: file-locker -> /file/code/unlock/)"""
+		return self.get_link("unlock")
 
 	def generate_code(self, length=5):
 		"""Generate unused code for locker"""
@@ -69,7 +74,8 @@ class Locker_Base(models.Model):
 		return code
 
 	def __str__(self):
-		return "%s: %s" % (self.pk, self.name)
+		return "%s %s: %s" % (self.__class__.__name__, self.pk, self.name)
 
 	class Meta:
+		app_label = "lockers"
 		abstract = True

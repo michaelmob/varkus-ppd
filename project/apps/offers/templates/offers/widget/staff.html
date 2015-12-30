@@ -1,0 +1,56 @@
+<div>
+	<h3></h3>
+	<input type="button" class="ui mini fluid toggle button" value="Staff" />
+	<div class="staff postback" style="display:none">
+		<h3></h3>
+		<form action="{% url 'postback-send' %}" method="GET" target="_blank">
+			{% csrf_token %}
+			<input type="hidden" name="obj" value="{{ obj.get_type }},{{ obj.id }}" />
+
+			<div>
+				<select class="ui dropdown offers" name="offer">
+					{% for offer in offers %}
+						<option value="{{ offer.pk }}">
+							{{ offer.pk }}:
+							{{ offer.anchor }}
+							[${{ offer.earnings_per_click }}]
+							(${{ offer.payout }})
+						</option>
+					{% endfor %}
+				</select>
+
+				<select class="ui dropdown" name="typeof">
+					<option value="staff">Staff</option>
+					<option value="paid">Paid</option>
+					<option value="lead">Lead (Do not use)</option>
+				</select>
+			</div>
+
+			<div class="ui toggle checkbox">
+				<br/>
+				<input type="checkbox" name="approved" id="approved" checked />
+				<label for="approved">Approved</label>
+			</div>
+
+			<div>
+				<br/>
+				<input type="submit" class="ui mini primary button" value="Send Postback" />
+				<button class="ui mini offer button">Offer Page</button>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript">
+		document.querySelector(".toggle.button").onclick = function() {
+			var e = document.querySelector(".staff.postback");
+			e.style.display = (e.style.display == "none") ? "block" : "none";
+		};
+
+		document.querySelector(".offer.button").onclick = function() {
+			var e = document.querySelector("[name='offer']");
+			var val = e.options[e.selectedIndex].value;
+			window.open("/admin/offers/offer/" + val, "_blank");
+			return false;
+		};
+	</script>
+</div>

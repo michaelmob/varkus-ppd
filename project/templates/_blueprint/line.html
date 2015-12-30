@@ -1,0 +1,16 @@
+{% load static %}
+
+<div class="box">
+	<div class="ui top attached inverted red menu">
+		<div class="icon header item"><i class="line chart icon"></i></div>
+		<div class="header item">{{ title }}</div>
+	</div>
+	<div class="ui bottom attached line segment loading">
+		<div class="line chart container"></div>
+	</div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.tooltip.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/comp/jquery.flot.resize.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/assist/line.js' %}"></script>

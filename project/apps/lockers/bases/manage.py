@@ -4,10 +4,10 @@ from django.contrib import messages
 from django.views.generic import View
 from django.shortcuts import render, redirect
 
-from ..tables import Table_Locker_Lead
+from ..tables import Table_Locker_Lead, Table_Locker_Click
 
 
-class View_Overview(View):
+class View_Overview_Base(View):
 	template = None
 	model = None
 	form = None
@@ -21,6 +21,7 @@ class View_Overview(View):
 			request,
 			self.template,
 			{
+				"locker": self.table.Meta.model.__name__.lower(),
 				"table": self.table.create(request),
 				"MAX": self.maximum,
 				"form": self.form
@@ -29,7 +30,7 @@ class View_Overview(View):
 
 	# Creation
 	def post(self, request):
-		# Verify we haven't went over the maximum
+		# Verify we haven't went over the maximum object count
 		if(self.model.objects.filter(user=request.user).count() >= self.maximum):
 			messages.error(request, "You have reached the " + self.model.__name__.lower() + " limit. Delete some to create a new one.")
 			#request.POST = None
@@ -54,10 +55,10 @@ class View_Overview(View):
 
 			return self.get(request)
 
-		return redirect(obj.get_name().lower() + "s-manage", obj.code)
+		return redirect(obj.get_type() + "s-manage", obj.code)
 
 
-class View_Manage(View):
+class View_Manage_Base(View):
 	template = None
 	model = None
 	form = None
@@ -75,7 +76,7 @@ class View_Manage(View):
 
 	def get(self, request, code=None):
 		obj = self.obj(request, code)
-		
+
 		# Redirect if not existant
 		if not obj:
 			return redirect(self.model.__name__.lower() + "s")
@@ -83,16 +84,22 @@ class View_Manage(View):
 		return render(
 			request, self.template,
 			{
-				"leads_table": Table_Locker_Lead.create(request, obj.earnings.get_leads()),
-				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(code,))),
+				"locker": self.model.__name__.lower(),
 				"form": self.form(instance=obj),
-				"obj": obj
+				"obj": obj,
+
+				"leads": Table_Locker_Lead.create(request, obj.earnings.get_leads()),
+
+				"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
+				"clicks": Table_Locker_Click.create(request, obj.earnings.get_tokens()),
+				
+				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(code,))),
 			}
 		)
 
 	def post(self, request, code=None):
 		obj = self.obj(request, code)
-		
+
 		# Redirect if not existant
 		if not obj:
 			return redirect(self.model.__name__.lower() + "s")
@@ -101,10 +108,12 @@ class View_Manage(View):
 		form = self.form(request.POST, instance=obj)
 		form.save()
 
+		messages.success(request, "Your changes have been saved.")
+
 		return self.get(request, code)
 
 
-class Delete_Base(View):
+class View_Delete_Base(View):
 	model = None
 
 	def get(self, request):

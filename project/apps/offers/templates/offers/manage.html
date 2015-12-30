@@ -1,0 +1,179 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load currency %}
+{% load cache %}
+{% load blueprints %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'offers' %}" class="section">Offers</a>
+	<i class="right chevron icon divider"></i>
+	<strong>Offer:</strong>
+	<a href="{% url 'offers-manage' obj.pk %}" class="active section">{{ obj.name }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui two column stackable grid">
+		<div class="column">
+			<div class="ui one column grid">
+
+				{# Data Blocks #}
+				<div class="column">
+					<div class="ui two column grid">
+						<div class="column">
+							{% data_block 'red' obj.earnings.clicks_today 'Clicks' 'pointing up' 'user clicks today' %}
+						</div>
+
+						<div class="column">
+							{% data_block 'blue' obj.earnings.leads_today 'Leads' 'lightning' 'user leads today' %}
+						</div>
+						
+						<div class="column">
+							{% data_block 'orange' obj.earnings.epc|currency 'Earnings per Click' 'bullseye' 'user epc today' %}
+						</div>
+
+						<div class="column">
+							{% data_block 'teal' obj.success_rate|percentage 'Success Rate' 'checkmark' 'user success rate' %}
+						</div>
+					</div>
+				</div>
+
+				{# Offer Information #}
+				<div class="column">
+					<div class="box">
+						<div class="ui top attached inverted red menu">
+							<div class="icon header item"><i class="tag icon"></i></div>
+							<div class="header item">Offer:&nbsp;<strong>{{ obj.name }}</strong></div>
+
+							<div class="right menu">
+								<div class="ui item dropdown button">
+									<i class="options icon"></i> Options
+									<div class="menu">
+										<div class="header">Importance</div>
+										<div data-id="{{ obj.pk }}" data-importance="priority" class="ui importance item radio checkbox">
+											<input class="hidden" tabindex="0" name="importance" type="radio" {% if importance == 'priority' %}checked {% endif %}/>
+											<label>Priority</label>
+										</div>
+
+										<div data-id="{{ obj.pk }}" data-importance="neutral" class="ui importance item radio checkbox">
+											<input class="hidden" tabindex="0" name="importance" type="radio" {% if importance == 'neutral' %}checked {% endif %}/>
+											<label>Neutral</label>
+										</div>
+
+										<div data-id="{{ obj.pk }}" data-importance="block" class="ui importance item radio checkbox">
+											<input class="hidden" tabindex="0" name="importance" type="radio" {% if importance == 'block' %}checked {% endif %}/>
+											<label>Block</label>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="ui bottom attached segment">
+							<div class="ui divided relaxed list">
+								<div class="item">
+									<i class="quote left icon"></i>
+									<div class="content">
+										<div class="header">Name</div>
+										{{ obj.name }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="ellipsis horizontal icon"></i>
+									<div class="content">
+										<div class="header">Anchor</div>
+										{{ obj.anchor }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="grid layout icon"></i>
+									<div class="content">
+										<div class="header">Category</div>
+										{{ obj.category }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="asterisk icon"></i>
+									<div class="content">
+										<div class="header">Requirements</div>
+										{{ obj.requirements }}
+									</div>
+								</div>
+								{% if obj.user_agent %}
+									<div class="item">
+										<i class="disk outline icon"></i>
+										<div class="content">
+											<div class="header">User Agent</div>
+											{{ obj.user_agent }}
+										</div>
+									</div>
+								{% endif %}
+								<div class="item">
+									<i class="world icon"></i>
+									<div class="content">
+										{% cache 7200 offers_manage obj.pk %}
+											<div class="header">Countr{{ obj.country_count|pluralize:'y,ies' }}</div>
+											{% if obj.country_count > 1 %}
+												{% for code, country in obj.get_countries.items %}
+													<i class="{{ code|lower }} flag popup" data-content="{{ country }}" data-variation="inverted"></i>
+												{% endfor %}
+											{% else %}
+												<i class="{{ obj.flag|lower }} flag"></i>{{ obj.get_country }}
+											{% endif %}
+										{% endcache %}
+									</div>
+								</div>
+								<div class="item">
+									<i class="calendar icon"></i>
+									<div class="content">
+										<div class="header">Added on</div>
+										{{ obj.date }}
+									</div>
+								</div>
+
+								{% if user.is_staff %}
+									<div class="item">
+										<i class="shield icon"></i>
+										<div class="content">
+											<div class="header">Admin</div>
+											<a target="_blank" href="/admin/offers/offer/{{ obj.pk }}">Edit</a>
+										</div>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="column">
+			<div class="ui one column grid">
+				
+				{# Chart #}
+				<div class="column">
+					{% line_chart dataUrl %}
+				</div>
+
+				{# Leads #}
+				<div class="column">
+					{% table leads 'Your Leads&nbsp;<small>(with this offer)</small>' 'lightning' %}
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/page/offers/manage.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load pagination %}
+{% load currency %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui two column grid stackable">
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="checkmark icon"></i>
+					Priority Offers
+				</div>
+				<div class="content">
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Offer</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% with offers=user.profile.offer_priority.all %}
+								{% if offers|length < 1 %}
+									<tr>
+										<td colspan="3">You have not prioritized any offers.</td>
+									</tr>
+								{% else %}
+									{% for offer in offers %}
+										<tr>
+											<td>
+												<a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a>
+											</td>
+											<td>
+												<a href="{% url 'offers-priority' %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
+											</td>
+										</tr>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="column">
+			<div class="ui segment box">
+				<div class="title">
+					<i class="cancel icon"></i>
+					Block Offers
+				</div>
+				<div class="content">
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th>Offer</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% with offers=user.profile.offer_block.all %}
+								{% if offers|length < 1 %}
+									<tr>
+										<td colspan="3">You have not blocked any offers.</td>
+									</tr>
+								{% else %}
+									{% for offer in offers %}
+										<tr>
+											<td>
+												<a href="{% url 'offers-manage' offer.pk %}">{{ offer.name }}</a>
+											</td>
+											<td>
+												<a href="{% url 'offers-priority' %}?remove={{ offer.pk }}" class="ui right floated mini button">Remove</a>
+											</td>
+										</tr>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
