@@ -1,5 +1,5 @@
 """
-Viking 2.0.1
+Viking 2.0.2
 """
 
 # Overwrite any setting in ./private/settings_prod.py for production servers
@@ -60,7 +60,6 @@ MIDDLEWARE_CLASSES = (
 	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
 	"viking.middleware.cloudflare.CFMiddleware",
-	#"django.middleware.cache.FetchFromCacheMiddleware"
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -70,7 +69,7 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = "viking.urls"
 
-WSGI_APPLICATION = "viking.wsgi.application"
+WSGI_APPLICATION = "ws4redis.django_runserver.application"
 
 # Login
 INVITE_ONLY = False
@@ -100,7 +99,7 @@ TEMPLATES = [
 				"django.template.context_processors.request",
 				"django.contrib.auth.context_processors.auth",
 				"django.contrib.messages.context_processors.messages",
-				"django.core.context_processors.request",
+				"django.template.context_processors.request",
 				"ws4redis.context_processors.default"
 			],
 			"loaders": [

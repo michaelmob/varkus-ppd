@@ -106,15 +106,15 @@ class Offer(models.Model):
 
 		return obj
 
-	def get(request, locker_obj):
+	def get(request, obj):
 		""" Get offers by locker object """
-		user = locker_obj.user.profile
+		profile = obj.user.profile
+
 		return Offer._get(
 			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
-			settings.OFFERS_COUNT, 0.01, user.offer_priority, user.offer_block
-		)
+			settings.OFFERS_COUNT, 0.01, profile.offer_priority, profile.offer_block)
 
-	def get_cache(request, locker_obj):
+	def get_cache(request, obj):
 		""" Get offers by using the request to retrieve cached offers,
 			if there are no cached offers then fetch new ones... serve
 			from cache (this is the one you want to use from a view)
@@ -123,16 +123,14 @@ class Offer(models.Model):
 		# Make key for cache
 		key = "o_%s_%s" % (
 			request.META.get("REMOTE_ADDR"),
-			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest()
-		)
+			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest())
 
 		# Get Offers
 		offers = cache.get(key)
 
 		# If no offers then get and set them
 		if not offers:
-			offers = Offer.get(request, locker_obj)
-
+			offers = Offer.get(request, obj)
 			cache.set(key, offers, 120)  # Cache for 2 minutes
 
 		return offers

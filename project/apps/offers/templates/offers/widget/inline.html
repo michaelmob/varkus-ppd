@@ -17,8 +17,9 @@
 	<div class="progress indicator"></div>
 
 	{% if unlocked %}
-		<a href="{{ obj.get_unlock_url }}" class="continue button">Click to Continue</a>
+		<a href="{{ obj.get_unlock_url }}" class="centered continue">Click to Continue</a>
 	{% else %}
+		<!-- {{ ip_address }} -->
 		<div class="items">
 			{% with redirect_url=obj.get_type|add:'s-redirect' %}
 				{% for offer in offers %}
@@ -27,6 +28,8 @@
 					<div class="anchor">{{ offer.anchor }}</div>
 					{% if offer.priority %}<i class="gold star right icon"></i>{% endif %}
 				</a>
+				{% empty %}
+					<div class="centered">There are no offers that you can currently participate in.</div>
 				{% endfor %}
 			{% endwith %}
 		</div>

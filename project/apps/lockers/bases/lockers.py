@@ -41,6 +41,7 @@ class View_Locker_Base(View):
 			request,
 			self.template,
 			{
+				"ip_address": request.META.get("REMOTE_ADDR"),
 				"theme": "default",
 				"obj": obj,
 				"unlocked": unlocked,

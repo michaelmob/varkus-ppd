@@ -17,16 +17,19 @@
 }
 
 /* Continue Button */
-.w .continue.button {
+.w .centered {
 	display: block;
 	text-align: center;
 	padding: 1rem;
+}
+
+.w .continue {
 	font-size: 1.5rem;
 	font-weight: bold;
 	color: #000;
 }
 
-.w .continue.button:hover {
+.w .continue:hover {
 	background-color: #F7F7F7;
 }
 
