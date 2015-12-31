@@ -1,5 +1,5 @@
 """
-Viking 2.0.0
+Viking 2.0.1
 """
 
 # Overwrite any setting in ./private/settings_prod.py for production servers
@@ -10,9 +10,6 @@ from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = socket.gethostname() == "pc"
 
 # Application definition
 INSTALLED_APPS = (
@@ -270,6 +267,7 @@ CATEGORY_TYPES_ICONS = {
 }
 
 from .private.keys import *
+from .private.settings_both import *
 
 if DEBUG:
 	from .private.settings_dev import *

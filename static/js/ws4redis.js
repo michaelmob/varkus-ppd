@@ -1,0 +1,1 @@
+/home/michael/Dropbox/Workspace/Python/Django/viking/env/lib/python3.4/site-packages/ws4redis/static/js/ws4redis.js

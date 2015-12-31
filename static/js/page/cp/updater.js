@@ -3,6 +3,8 @@ $(function() {
 		uri: uri + "cp?subscribe-user",
 		heartbeat_msg: "--heartbeat--",
 		receive_message: function(data) {
+			alert(data);
+
 			data = $.parseJSON(data);
 
 			if(!data.success) {

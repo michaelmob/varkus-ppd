@@ -15,8 +15,8 @@ case "$1" in
 		celery worker --app=viking --beat --events --pidfile=celeryw.pid &
 
 		# Run uWSGI
-		uwsgi --pidfile uwsgi.pid --socket 127.0.0.1:8000 --protocol=http --buffer-size=32768 --workers=5 --master --module viking.wsgi &
-		uwsgi --pidfile uwsgi_ws.pid --http-socket 127.0.0.1:8001 --gevent 1000 --http-websockets --workers=2 --master --module viking.wsgi_websocket
+		uwsgi --ini viking/uwsgi/django.ini &
+		uwsgi --ini viking/uwsgi/websocket.ini &
 		;;
 
 	stop)
