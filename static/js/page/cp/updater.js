@@ -3,7 +3,6 @@ $(function() {
 		uri: uri + "cp?subscribe-user",
 		heartbeat_msg: "--heartbeat--",
 		receive_message: function(data) {
-			alert(data);
 
 			data = $.parseJSON(data);
 
@@ -18,6 +17,9 @@ $(function() {
 
 				case "TOKEN":
 					return updateClicks(data.data.user);
+
+				case "ALERT":
+					return alert(data);
 				
 				default:
 					return null;

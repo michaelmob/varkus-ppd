@@ -36,21 +36,25 @@ SECRET_KEY = "################################################"
 # https://docs.djangoproject.com/en/1.9/ref/settings/#cache
 CACHES = {
 	"default": {
-		"BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
-		"LOCATION": "127.0.0.1:11211",
+		"BACKEND": "django_redis.cache.RedisCache",
+		"LOCATION": "redis://127.0.0.1:6379/1",
+		"OPTIONS": {
+			"CLIENT_CLASS": "django_redis.client.DefaultClient",
+		}
 	}
 }
+
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': 'viking',
-		'USER': 'viking_user',
-		'PASSWORD': 'viking_password',
-		'HOST': 'localhost',
-		'PORT': '3306',
+	"default": {
+		"ENGINE": "django.db.backends.postgresql_psycopg2",
+		"NAME": "viking",
+		"USER": "username",
+		"PASSWORD": "password",
+		"HOST": "127.0.0.1",
+		"PORT": "5432",
 	}
 }
 

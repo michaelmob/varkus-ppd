@@ -1,5 +1,3 @@
 #!/bin/bash
-cd $(dirname $0)/../
-source env/bin/activate
-cd project/
+cd $(dirname $0)/../; source env/bin/activate; cd project/
 python manage.py $@

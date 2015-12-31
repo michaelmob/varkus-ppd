@@ -85,7 +85,9 @@ def render_field_dropdown(field, initial=None, **kwargs):
 	if not initial:
 		field.initial = initial
 
-	return mark_safe(generic_field(field, {"class": "ui dropdown"}, **kwargs))
+	kwargs["class"] = "ui dropdown"
+
+	return mark_safe(generic_field(field, None, **kwargs))
 
 
 @register.simple_tag()

@@ -2,3 +2,10 @@
 cd $(dirname $0)
 py3clean ../project/
 py3clean ../env/
+echo "Cleaned python files"
+
+if [ "$1" = "migrations" ]; then
+	cd ../project/
+	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+	echo "Cleaned migration files"
+fi

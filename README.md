@@ -50,7 +50,7 @@ sudo apt install libmaxminddb0 \
 2. Make all required changes in renamed "private" directory. (PostgreSQL details)
 3. Navigate to "scripts/" directory.
 4. Run "setup" and "geoip" script.
-5. Run "./manage makemigrations" and "./manage migrate" (Very axes table was created)
+5. Run "./manage makemigrations" and "./manage migrate" (Verify that "axes" table was created)
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".

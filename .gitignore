@@ -13,3 +13,5 @@ error.txt
 *.mmdb
 *.pid
 *.sublime*
+nohup.out
+nohup.log

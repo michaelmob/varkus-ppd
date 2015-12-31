@@ -6,7 +6,6 @@
 cd $(dirname $0)/../
 cd static/css/_less/
 echo
-echo ... Compiling
-#lessc --compress semantic.less > ../semantic.min.css
+echo Compiling Less
 lessc semantic.less --clean-css="--s1 --advanced --compatibility=ie8" > ../semantic.min.css
-echo ... Done
+echo Done

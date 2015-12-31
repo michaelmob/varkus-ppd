@@ -267,7 +267,7 @@ CATEGORY_TYPES_ICONS = {
 }
 
 from .private.keys import *
-from .private.settings_both import *
+from .private.settings_common import *
 
 if DEBUG:
 	from .private.settings_dev import *
