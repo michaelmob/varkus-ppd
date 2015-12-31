@@ -58,8 +58,8 @@ sudo apt install libmaxminddb0 \
 3. In that file, an example can be found in "_private/nginx.example".
 
 #### Step 6: Run at Startup using SystemD (Optional)
-1. Modify the "viking.service" file in the "project/viking/_private" directory.
-2. Copy the file to "/etc/systemd/system/" directory.
+1. Modify the "viking.service" file in the "project/viking/_private/extras/" directory.
+2. Copy the file to "/etc/systemd/system/" directory. (Set {USER} variable!)
 3. Enable the service ```systemctl enable viking.service```
 4. Do the same for the "nginx.service" file.
 5. The services will start after you reboot the system.

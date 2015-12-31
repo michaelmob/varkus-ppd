@@ -24,8 +24,5 @@ def websocket_uri(context):
 	"""
 	Adds additional context variables to the default context.
 	"""
-	request = context["request"]
-	protocol = request.is_secure() and "wss://" or "ws://"
-	host = settings.WEBSOCKET_HOST or request.get_host()
-
-	return protocol + host + settings.WEBSOCKET_URL
+	host = settings.WEBSOCKET_HOST or context["request"].get_host()
+	return host + settings.WEBSOCKET_URL
