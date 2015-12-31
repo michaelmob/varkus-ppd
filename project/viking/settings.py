@@ -1,5 +1,5 @@
 """
-Viking 2.0.2
+Viking 2.0.3
 """
 
 # Overwrite any setting in ./private/settings_prod.py for production servers

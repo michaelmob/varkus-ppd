@@ -15,10 +15,8 @@ def adgate(request):
 	out = adgate_sync()
 
 	return HttpResponse(
-		"Added: %s | Removed: %s | Updated: %s | Count: %s | Elapsed: %s | OKAY @ %s" %
-		(
-			out["added"], out["removed"], out["updated"], out["count"], out["elapsed"], out["date_time"]
-		)
+		"Added: %s | Removed: %s | Updated: %s | Count: %s | Elapsed: %s | OKAY @ %s" % (
+			out["added"], out["removed"], out["updated"], out["count"], out["elapsed"], out["date_time"])
 	)
 
 

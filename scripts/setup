@@ -3,5 +3,7 @@ cd $(dirname $0)
 
 ./pip install -r "$(pwd)/requirements.txt" $@
 
+./geoip
+
 ./manage makemigrations
 ./manage migrate
