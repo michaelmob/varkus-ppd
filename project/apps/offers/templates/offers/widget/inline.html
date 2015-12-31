@@ -37,6 +37,6 @@
 	{% include 'offers/widget/staff.html' %}
 {% endif %}
 
-<script>var uri="{{ WEBSOCKET_URI }}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
+<script>var uri="{% websocket_uri %}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
 <script src="{% static 'js/ws4redis.js' %}"></script>
 <script src="{% static 'js/locker/locker.js' %}"></script>

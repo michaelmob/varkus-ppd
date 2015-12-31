@@ -135,6 +135,7 @@ DATABASES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
 # Websockets
+WEBSOCKET_HOST = None
 WEBSOCKET_URL = "/ws/"
 WS4REDIS_HEARTBEAT = "--heartbeat--"
 

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block headjsbase %}
-<script type="text/javascript">var uri="{{ WEBSOCKET_URI }}";var hour={% now "H" %};</script>
+<script type="text/javascript">var uri="{% websocket_uri %}";var hour={% now "H" %};</script>
 <script type="text/javascript" src="{% static 'js/ws4redis.js' %}"></script>
 {# <script type="text/javascript" src="{% static 'js/page/cp/options.js' %}"></script> #}
 <script type="text/javascript" src="{% static 'js/page/cp/updater.js' %}"></script>
