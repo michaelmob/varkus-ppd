@@ -16,7 +16,7 @@ from ..lockers.fields import LockerField
 
 class Token(models.Model):
 	unique 		= models.CharField(max_length=32, unique=True)
-	session 	= models.CharField(max_length=64)
+	session 	= models.CharField(max_length=64, null=True, blank=True)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
 
 	user 		= models.ForeignKey(User, default=None, blank=True, null=True, on_delete=models.SET_NULL)

@@ -89,8 +89,8 @@ class View_Redirect_Base(View_Locker_Base):
 		try:
 			if created:
 				offer.earnings.increment_clicks()
-				obj.earnings.increment_clicks()
 				user.earnings.increment_clicks()
+				obj.earnings.increment_clicks()
 		except:
 			pass
 
