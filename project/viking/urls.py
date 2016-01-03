@@ -7,9 +7,14 @@ from django.contrib import admin
 
 admin.site.login = login_required(admin.site.login)
 
+handler400 = "site.errors.bad_request_400"
+handler403 = "site.errors.permission_denied_403"
+handler404 = "site.errors.page_not_found_404"
+handler500 = "site.errors.internal_server_error_500"
+
 urlpatterns = [
 	# Home
-	url(r"^", include("apps.home.urls")),
+	url(r"^", include("apps.site.urls")),
 
 	# Control Panel / Dashboard
 	url(r"^", include("apps.cp.urls")),

@@ -1,12 +1,12 @@
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
+	listen 80;
+	listen 443 default_server ssl;
 
 	root /var/www/viking/project/;
 
 	index index.html;
 
-	server_name _;
+	server_name {DOMAIN};
 	client_max_body_size 100m;
 
 	# Robots.txt
@@ -17,6 +17,12 @@ server {
 	# Static Files
 	location /static/ {
 		alias /var/www/viking/static/;
+		autoindex on;
+	}
+
+	location /static/admin/ {w
+		#alias /var/www/viking/env/lib/python3.4/site-packages/django/contrib/admin/static/;
+		alias /var/www/viking/env/lib/python{VERSION}/site-packages/django/contrib/admin/static/;
 		autoindex on;
 	}
 
@@ -52,6 +58,4 @@ server {
 		proxy_read_timeout 60;
 		proxy_pass http://127.0.0.1:8000;
 	}
-
-	#error_page 500 502 503 504 /var/www/viking/project/templates/errors/500.html;
 }

@@ -34,7 +34,7 @@ INSTALLED_APPS = (
 	"apps.user",
 	"apps.offers",
 	"apps.cp",
-	"apps.home",
+	"apps.site",
 	"apps.support",
 	"apps.leads",
 	"apps.billing",
@@ -106,7 +106,7 @@ TEMPLATES = [
 				"django.template.loaders.filesystem.Loader",
 				"django.template.loaders.app_directories.Loader",
 			],
-			"builtins": ["apps.home.templatetags.site"],
+			"builtins": ["apps.site.templatetags.site"],
 		},
 	},
 ]
@@ -132,6 +132,7 @@ DATABASES = {
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Websockets
 WEBSOCKET_HOST = None
@@ -184,6 +185,7 @@ LOCKERS = (
 	("LIST", "List"),
 )
 
+# Offers
 OFFERS_COUNT = 10
 
 # Widgets Locker

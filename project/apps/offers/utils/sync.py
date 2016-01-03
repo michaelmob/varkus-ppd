@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import HttpResponse
+from django.core.exceptions import MultipleObjectsReturned
 
 from html import unescape
 from decimal import Decimal
@@ -50,23 +51,27 @@ def adgate_sync():
 			.replace("/" + str(settings.ADGATE_API_ID),	"/{a}") \
 			.replace("?s1=", 							"?s1={u}")
 
-		obj, created = Offer.objects.update_or_create(
-			offer_id	= int(offer["id"]),
-			defaults	= {
-				"name"					: Offer.clean_name(unescape(offer["name"])),
-				"anchor"				: unescape(offer["anchor"]),
-				"requirements"			: unescape(offer["requirements"]),
-				"user_agent"			: format_ua(offer["ua"]),
-				"category"				: offer["category"],
-				"earnings_per_click"	: offer["epc"],
-				"country"				: country,
-				"flag" 					: Offer.pick_flag(country),
-				"country_count" 		: len(country.split(',')),
-				"payout" 				: payout,
-				"success_rate"			: float((epc / payout) * 100),
-				"tracking_url" 			: tracking_url,
-			}
-		)
+		try:
+			obj, created = Offer.objects.update_or_create(
+				offer_id	= int(offer["id"]),
+				defaults	= {
+					"name"					: Offer.clean_name(unescape(offer["name"])),
+					"anchor"				: unescape(offer["anchor"]),
+					"requirements"			: unescape(offer["requirements"]),
+					"user_agent"			: format_ua(offer["ua"]),
+					"category"				: offer["category"],
+					"earnings_per_click"	: offer["epc"],
+					"country"				: country,
+					"flag" 					: Offer.pick_flag(country),
+					"country_count" 		: len(country.split(',')),
+					"payout" 				: payout,
+					"success_rate"			: float((epc / payout) * 100),
+					"tracking_url" 			: tracking_url,
+				}
+			)
+		except MultipleObjectsReturned:
+			Offer.objects.filter(offer_id=int(offer["id"])).first().delete()
+			continue
 
 		if created:
 			Earnings.objects.get_or_create(obj=obj)
