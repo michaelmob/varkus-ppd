@@ -8,7 +8,6 @@ from apps.offers.models import Offer
 from apps.leads.models import Token, Deposit
 
 
-
 class View_Locker_Base(View):
 	template = None
 	model = None

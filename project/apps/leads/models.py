@@ -64,6 +64,9 @@ class Token(models.Model):
 		except:
 			country = "XX"
 
+		if not request.session.exists(request.session.session_key):
+			request.session.create()
+
 		token, created = Token.objects.get_or_create(
 			ip_address 		= request.META.get("REMOTE_ADDR"),
 			user_agent 		= request.META.get("HTTP_USER_AGENT"),

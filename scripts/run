@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $(dirname $0)
-./manage celery worker --app=viking --beat --events --loglevel=INFO &
-./manage celerycam --frequency=30.0 &
+#./manage celery worker --app=viking --beat --events --loglevel=INFO &
+#./manage celerycam --frequency=30.0 &
 ./manage runserver 0.0.0.0:8000
 kill `ps ax| grep -v awk| awk '/celerycam/{print $1}'`
 pkill python

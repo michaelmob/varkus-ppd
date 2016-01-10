@@ -7,10 +7,10 @@ from django.contrib import admin
 
 admin.site.login = login_required(admin.site.login)
 
-handler400 = "site.errors.bad_request_400"
-handler403 = "site.errors.permission_denied_403"
-handler404 = "site.errors.page_not_found_404"
-handler500 = "site.errors.internal_server_error_500"
+handler400 = "apps.site.errors._400"
+handler403 = "apps.site.errors._403"
+handler404 = "apps.site.errors._404"
+handler500 = "apps.site.errors._500"
 
 urlpatterns = [
 	# Home
@@ -42,5 +42,4 @@ urlpatterns = [
 
 	# Admin
 	url(r"^admin/", include(admin.site.urls)),
-
 ]

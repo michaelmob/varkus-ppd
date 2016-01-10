@@ -54,8 +54,10 @@ sudo apt install libmaxminddb0 \
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".
-2. Create a new file and symlink it to sites-enabled or you can edit "default" file.
-3. In that file, an example can be found in "_private/nginx.example".
+2. Create a new file named "varkus_com" and symlink it to "/etc/nginx/sites-enabled".
+3. In that file make your nginx config. An example can be found in "_private/nginx.example".
+4. EXTRA: Generate or buy an SSL Certificate and redirect HTTP requests to HTTPS.
+5. EXTRA: You cannot connect to websockets in a browser from HTTP to HTTPS or vice-versa.
 
 #### Step 6: Run at Startup using SystemD (Optional)
 1. Modify the "viking.service" file in the "project/viking/_private/extras/" directory.

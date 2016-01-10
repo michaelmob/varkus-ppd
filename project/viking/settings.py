@@ -116,6 +116,7 @@ EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
 
 # SECURITY WARNING: do not run with debug turned on in production!
+#SECURE_SSL_REDIRECT = True  # Let Nginx do this
 ALLOWED_HOSTS = []
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -132,10 +133,10 @@ DATABASES = {
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_SAVE_EVERY_REQUEST = True
+#SESSION_SAVE_EVERY_REQUEST = True
 
 # Websockets
-WEBSOCKET_HOST = None
+WEBSOCKET_HOST = "" # "wss://viking.com"
 WEBSOCKET_URL = "/ws/"
 WS4REDIS_HEARTBEAT = "--heartbeat--"
 

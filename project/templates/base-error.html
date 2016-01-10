@@ -1,1 +1,23 @@
 {% extends 'base-dialog.html' %}
+
+{% block content %}
+<div class="ui middle aligned center aligned grid">
+	<div class="row">
+		<div class="column" style="max-width:450px">
+			<h1 class="ui huge header">
+				<div class="header">{% block error-header %}{% endblock %}</div>
+				<div class="sub header">{% block error-message %}{% endblock %}</div>
+			</h1>
+
+			{% block error-footer %}{% endblock %}
+
+			<br/>
+
+			<a class="ui primary labeled icon large button" href="{% url 'home' %}">
+				<i class="home icon"></i>
+				Go to the Home Page
+			</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
