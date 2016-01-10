@@ -25,12 +25,12 @@ server {
 	# Static Files
 	location /static/ {
 		alias /var/www/viking/static/;
-		autoindex on;
+		autoindex off;
 	}
 
 	location /static/admin/ {
-		#alias /var/www/viking/env/lib/python3.4/site-packages/django/contrib/admin/static/;
-		alias /var/www/viking/env/lib/python{VERSION}/site-packages/django/contrib/admin/static/;
+		#alias /var/www/viking/env/lib/python3.4/site-packages/django/contrib/admin/static/admin/;
+		alias /var/www/viking/env/lib/python{VERSION}/site-packages/django/contrib/admin/static/admin/;
 		autoindex off;
 	}
 
