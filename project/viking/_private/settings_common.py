@@ -1,4 +1,4 @@
-DEBUG = False
+DEBUG = True
 
 # Deposits # Default must exist // Always make "-1" default
 DEPOSITS = (

@@ -17,7 +17,7 @@ def keep_wanted(obj, wanted):
 	for key, val in vars(obj).items():
 		if key in wanted:
 			if isinstance(val, Decimal):
-				val = "%.2f" % val 
+				val = "%.2f" % val
 			result[key] = val
 
 	return result
@@ -87,6 +87,9 @@ def lead_created(sender, **kwargs):
 			"url": lead.locker.get_unlock_url()
 		}
 	}
+
+	if not lead.token.session:
+		return
 
 	locker = RedisPublisher(facility="locker", sessions=[lead.token.session])
 	locker.publish_message(RedisMessage(json.dumps(response)))
