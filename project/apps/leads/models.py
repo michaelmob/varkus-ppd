@@ -209,11 +209,10 @@ class Lead(models.Model):
 			"token" 			: token,
 			"user"				: user,
 			"locker"			: locker,
-
 			"access_url"		: access_url,
+
 			"sender_ip_address"	: sender_ip_address,
 			"user_ip_address"	: user_ip_address,
-
 			"user_user_agent" 	: user_agent,
 
 			"payout"			: payout,

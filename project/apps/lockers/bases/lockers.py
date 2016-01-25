@@ -25,10 +25,14 @@ class View_Locker_Base(View):
 
 	def get(self, request, code=None):
 		obj = self.obj(request, code)
-		
+
 		# Redirect if not existant
 		if not obj:
 			return redirect("locker-404")
+
+		# Create Session
+		if not request.session.exists(request.session.session_key):
+			request.session.create()
 
 		# Set unlock if token is set to lead
 		unlocked = False
