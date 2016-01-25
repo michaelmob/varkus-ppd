@@ -60,10 +60,11 @@ class Token(models.Model):
 		obj -- Locker object to create for
 		"""
 		try:
-			country = GeoIP2().country_code(ip_address)
+			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR"))
 		except:
 			country = "XX"
 
+		# Create Session
 		if not request.session.exists(request.session.session_key):
 			request.session.create()
 

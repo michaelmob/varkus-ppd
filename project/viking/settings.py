@@ -138,7 +138,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # Websockets
 WEBSOCKET_HOST = "" # "wss://viking.com"
 WEBSOCKET_URL = "/ws/"
-WS4REDIS_HEARTBEAT = "--heartbeat--"
+WS4REDIS_HEARTBEAT = "PING"
 
 # Media files (User Content)
 MEDIA_URL = "/media/"

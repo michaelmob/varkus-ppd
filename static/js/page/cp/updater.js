@@ -1,7 +1,7 @@
 $(function() {
 	var ws4redis = WS4Redis({
 		uri: uri + "cp?subscribe-user",
-		heartbeat_msg: "--heartbeat--",
+		heartbeat_msg: "PING",
 		receive_message: function(data) {
 
 			data = $.parseJSON(data);

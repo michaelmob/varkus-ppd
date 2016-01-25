@@ -94,11 +94,12 @@ def receive(request, password=None):
 	offer = Offer.get_by_offer_id(offer)
 
 	# Verify Token, but continue
-	token = Token.get_verify(token, user_ip_address)
+	token = Token.objects.filter(unique=token).first()
 	if settings.DEBUG:
 		if not token:
 			response["debug"] = "Token does not exist"
 
+	token_locker = None
 	if token:
 		# Make sure we don't already have a lead
 		# so we don't give double the payment
@@ -116,6 +117,8 @@ def receive(request, password=None):
 				user = token.locker.user
 			except:
 				user = None
+
+			token_locker = token.locker
 
 			# If user exists and lead is approved
 			if user and approved:
@@ -176,7 +179,7 @@ def receive(request, password=None):
 		offer				= offer,
 		token				= token,
 		user				= user,
-		locker				= token.locker,
+		locker				= token_locker,
 		access_url			= request.build_absolute_uri(),
 		sender_ip_address	= request.META.get("REMOTE_ADDR"),
 		user_ip_address		= user_ip_address,

@@ -6,7 +6,7 @@
 {% block table %}
 	{% include '_blueprint/_pagination.html' %}
 	<table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
-		{% nospaceless %}
+		{# nospaceless #}
 			{% block table.thead %}
 			<thead>
 				<tr>
@@ -44,7 +44,7 @@
 			{% block table.tfoot %}
 				<tfoot></tfoot>
 			{% endblock table.tfoot %}
-		{% endnospaceless %}
+		{# endnospaceless #}
 	</table>
 	<script src="{% static 'js/assist/table.js' %}"></script>
 {% endblock table %}

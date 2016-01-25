@@ -39,6 +39,7 @@ class Table_Offer_Base(tables.Table):
 		return mark_safe(result)
 
 	def render_ip_address(self, value, record):
+		print(record)
 		country = record.country.lower()
 		result = "<i class='%s flag' alt='%s'></i> %s" % (country, country.upper(), value)
 
