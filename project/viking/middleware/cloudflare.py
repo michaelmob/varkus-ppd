@@ -1,7 +1,7 @@
 """
 https://github.com/sevennineteen/django-cloudflare/blob/master/middleware.py
 
-This middleware class updates REMOTE_ADDR request metadata 
+This middleware class updates REMOTE_ADDR request metadata
 with the HTTP_CF_CONNECTING_IP value added by CloudFlare in order
 to make the end-user's actual IP address available to the application.
 Activate by adding the module to MIDDLEWARE_CLASSES in your Django project's settings.
@@ -9,7 +9,7 @@ Activate by adding the module to MIDDLEWARE_CLASSES in your Django project's set
 
 class CFMiddleware(object):
 	""" Updates REMOTE_ADDR for requests proxied through CloudFlare. """
-	
+
 	def __init__(self):
 		self.cloudflare_ip_header = "HTTP_CF_CONNECTING_IP"
 		self.x_real_ip_header = "HTTP_X_REAL_IP"
@@ -24,6 +24,9 @@ class CFMiddleware(object):
 
 	def process_request(self, request):
 		""" Overwrites REMOTE_ADDR with user's real IP from CloudFlare header. """
+		if not request.session.exists(request.session.session_key):
+			request.session.create()
+
 		if self.has_real_ip_header(request):
 			request.META["REMOTE_ADDR"] = request.META[self.x_real_ip_header]
 
