@@ -1,24 +1,23 @@
-from django.conf import settings
-from django.shortcuts import HttpResponse
-from django.core.exceptions import MultipleObjectsReturned
-
 from html import unescape
 from decimal import Decimal
 from datetime import datetime
 from json import loads
 from urllib.request import urlopen
 
+from django.conf import settings
+from django.shortcuts import HttpResponse
+from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.admin.views.decorators import staff_member_required
+
 from ..models import Offer, Earnings
 from utils.user_agent import format_ua
 
-
-def adgate(request):
+@staff_member_required
+def sync(request):
 	out = adgate_sync()
-
 	return HttpResponse(
 		"Added: %s | Removed: %s | Updated: %s | Count: %s | Elapsed: %s | OKAY @ %s" % (
-			out["added"], out["removed"], out["updated"], out["count"], out["elapsed"], out["date_time"])
-	)
+			out["added"], out["removed"], out["updated"], out["count"], out["elapsed"], out["date_time"]))
 
 
 def adgate_sync():

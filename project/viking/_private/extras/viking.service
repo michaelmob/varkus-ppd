@@ -2,7 +2,7 @@
 Description=Viking (uWSGI)
 
 [Service]
-User={USER}
+User=$USER
 Type=forking
 ExecStart=/bin/bash /var/www/viking/scripts/viking start
 ExecStop=/bin/bash /var/www/viking/scripts/viking stop

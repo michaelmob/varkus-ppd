@@ -1,21 +1,24 @@
+# Non-SSL Server (Redirect to SSL)
 server {
 	listen 80;
-	server_name .viking.com;
-	return 301 https://$host$request_uri;
+	server_name viking.com www.viking.com;
+	return 301 https://$server_name$request_uri;
 }
 
+# SSL Server
 server {
+	listen 80;
 	listen 443 ssl;
 
-	ssl_certificate_key /etc/ssl/sites/viking.key;
-	ssl_certificate /etc/ssl/sites/viking.crt;
+	ssl_certificate /etc/ssl/viking.crt;
+	ssl_certificate_key /etc/ssl/viking.key;
 
 	root /var/www/viking/project/;
 
 	index index.html;
 
-	server_name .viking.com;
-	client_max_body_size 100m;
+	server_name viking.com www.viking.com insecure.viking.com;
+	client_max_body_size 500m;
 
 	# Robots.txt
 	location /robots.txt {
@@ -29,8 +32,8 @@ server {
 	}
 
 	location /static/admin/ {
-		#alias /var/www/viking/env/lib/python3.4/site-packages/django/contrib/admin/static/admin/;
-		alias /var/www/viking/env/lib/python{VERSION}/site-packages/django/contrib/admin/static/admin/;
+		#alias /var/www/viking/env/lib/python $VERSION /site-packages/django/contrib/admin/static/admin/;
+		alias /var/www/viking/env/lib/python3.4/site-packages/django/contrib/admin/static/admin/;
 		autoindex off;
 	}
 

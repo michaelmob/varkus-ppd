@@ -8,8 +8,8 @@ urlpatterns = [
 
 	# Staff Offer Management
 	url(r"^sync/",
-		sync.adgate,
-		name="offers-sync-adgate"),
+		sync.sync,
+		name="offers-sync"),
 
 	# Options
 	url(r"^options/$",
@@ -30,7 +30,7 @@ urlpatterns = [
 	url(r"^manage/(?P<id>[0-9]+)/(?P<importance>\w+)/$",
 		login_required(manage.View_Importance.as_view()),
 		name="offers-manage-priority"),
-	
+
 	# -- Line Charts
 	url(r"^manage/(?P<id>[0-9]+)/chart/line.json$",
 		login_required(manage.View_Line_Chart.as_view()),
