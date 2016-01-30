@@ -7,6 +7,3 @@ urlpatterns = [
 	url(r"^postback-send/$", postback.internal, name="postback-send"),
 	url(r"^postback-receive/(?P<password>\w+)/$", postback.receive, name="postback-receive"),
 ]
-
-# Initiate deposits every run
-Deposit.initiate()

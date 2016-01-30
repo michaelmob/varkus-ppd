@@ -9,7 +9,7 @@
 
 {% block breadcrumbs %}
 <div class="ui breadcrumb">
-	<div class="section">Control Panel</div>
+	<div class="section">Lockers</div>
 	<i class="right chevron icon divider"></i>
 	<a href="{% url locker|add:'s' %}" class="section">{{ locker|title }}s</a>
 	<i class="right chevron icon divider"></i>
@@ -52,9 +52,9 @@
 		<div class="content">
 			<div class="ui form">
 				{% csrf_token %}
-				
+
 				{% block modal_edit_content %}
-				
+
 				{% endblock %}
 			</div>
 		</div>
@@ -190,7 +190,7 @@
 
 		<div class="column">
 			<div class="ui one column grid">
-				
+
 				{# Chart #}
 				<div class="column">
 					{% line_chart dataUrl %}

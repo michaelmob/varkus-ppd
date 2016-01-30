@@ -66,7 +66,7 @@ class Table_Offer_All(Table_Offer_Base):
 	def create(request, objects):
 		table = __class__(objects)
 		tables.RequestConfig(request, paginate={"per_page": 30}).configure(table)
-		table.cut_amount = request.user.profile.party.cut_amount
+		table.cut_amount = request.user.profile.party.cut_amount or settings.DEFAULT_CUT_AMOUNT
 		return table
 
 

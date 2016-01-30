@@ -60,6 +60,7 @@ MIDDLEWARE_CLASSES = (
 	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
 	"viking.middleware.cloudflare.CFMiddleware",
+	"viking.middleware.session_verify.SessionVerifyMiddleware",
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -213,15 +214,9 @@ DEFAULT_REFERRAL_CUT_AMOUNT = 0.10
 
 # Deposits # Default must exist // Always make "-1" default
 DEPOSITS = (
-	# User ID   Company     Aff ID      Deposit Code        Deposit Name        Password
-	(-1,		"ADGATE",	43196,		"DEFAULT_DEPOSIT",	"Default Deposit",	"m20spl0h5jsjryfvg52s"),
-	(1,			"ADGATE",	43196,		"MIKE_DEPOSIT",		"Mike's Deposit",	"54c1v40ivlc7usaumjwx"),
-	(2,			"ADGATE",	2981,		"JOE_DEPOSIT",		"Joe's Deposit",	"jjbm086pcp2mdm00k5mf"),
+	# User ID   Company     	Aff ID	Deposit Code        Deposit Name        Password
+	(-1,		"ADGATEMEDIA",	1,		"DEFAULT_DEPOSIT",	"Default Deposit",	"PASSWORD"),
 )
-
-DEPOSIT_NAMES = ((d[3], d[4],) for d in DEPOSITS)
-POSTBACK_PASSWORD = DEPOSITS[0][5]
-DEFAULT_AFFILIATE_ID = DEPOSITS[0][2]
 
 CATEGORY_TYPES = (
 	("Android", "Android"),

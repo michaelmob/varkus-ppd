@@ -24,9 +24,6 @@ class CFMiddleware(object):
 
 	def process_request(self, request):
 		""" Overwrites REMOTE_ADDR with user's real IP from CloudFlare header. """
-		if not request.session.exists(request.session.session_key):
-			request.session.create()
-
 		if self.has_real_ip_header(request):
 			request.META["REMOTE_ADDR"] = request.META[self.x_real_ip_header]
 

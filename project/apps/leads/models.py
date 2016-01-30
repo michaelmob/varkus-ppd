@@ -1,5 +1,4 @@
 import hashlib
-
 from datetime import datetime, timedelta
 from decimal import Decimal
 
@@ -10,8 +9,60 @@ from django.contrib.auth.models import User
 from django.contrib.gis.geoip2 import GeoIP2
 
 from utils import strings
-
 from ..lockers.fields import LockerField
+
+
+class Deposit():
+	user_id		= None
+	company		= None
+	aff_id		= None
+	code		= None
+	name		= None
+	password	= None
+
+	def search(column, value):
+		result = None
+
+		for deposit in settings.DEPOSITS:
+			if deposit[column] == value:
+				result = deposit
+
+		if not result:
+			result = settings.DEPOSITS[0]
+
+		deposit	= Deposit()
+		deposit.user_id 	= result[0]
+		deposit.company 	= result[1]
+		deposit.aff_id 		= result[2]
+		deposit.code 		= result[3]
+		deposit.name 		= result[4]
+		deposit.password 	= result[5]
+
+		return deposit
+
+	def names():
+		""" List all deposit names """
+		return ((d[3], d[4]) for d in settings.DEPOSITS)
+
+	def default_aff_id():
+		""" Default affiliate ID """
+		return settings.DEPOSITS[0][2]
+
+	def default_password():
+		""" Default postback password """
+		return settings.DEPOSITS[0][5]
+
+	def get_by_user_id(user_id):
+		""" Get Deposit object by User's ID """
+		return Deposit.search(0, user_id)
+
+	def get_by_code(code):
+		""" Get Deposit object by deposits code (DEFAULT_DEPOSIT) """
+		return Deposit.search(3, code)
+
+	def get_by_password(password):
+		""" Get Deposit object by deposits password """
+		return Deposit.search(5, password)
 
 
 class Token(models.Model):
@@ -115,55 +166,6 @@ class Token(models.Model):
 		)
 
 
-class Deposit(models.Model):
-	user_id		= models.IntegerField()
-	company		= models.CharField(max_length=32)
-	aff_id		= models.IntegerField()
-	code		= models.CharField(max_length=32)
-	name		= models.CharField(max_length=32)
-	password	= models.CharField(max_length=32)
-
-	def initiate():
-		try:
-			""" Initiate Deposit """
-			Deposit.objects.all().delete()
-
-			for deposit in settings.DEPOSITS:
-				Deposit.objects.create(
-					user_id		= deposit[0],
-					company		= deposit[1],
-					aff_id 		= deposit[2],
-					code		= deposit[3],
-					name		= deposit[4],
-					password 	= deposit[5],
-				)
-
-			return True
-		except:
-			return False
-
-	def get_by_user_id(user_id):
-		""" Get Deposit object by User's ID """
-		try:
-			return Deposit.objects.get(user_id=user_id)
-		except:
-			None
-
-	def get_by_code(code):
-		""" Get Deposit object by deposits code (DEFAULT_DEPOSIT) """
-		try:
-			return Deposit.objects.get(code=code)
-		except:
-			None
-
-	def get_by_password(password):
-		""" Get Deposit object by deposits password """
-		try:
-			return Deposit.objects.get(password=password)
-		except:
-			None
-
-
 class Lead(models.Model):
 	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	offer_name			= models.CharField(max_length=150, verbose_name="Offer", default=None, blank=True, null=True)
@@ -188,7 +190,7 @@ class Lead(models.Model):
 	lead_blocked		= models.BooleanField(verbose_name="Lead Blocked", default=False)
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
-	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=settings.DEPOSIT_NAMES)
+	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=Deposit.names())
 	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
 
 

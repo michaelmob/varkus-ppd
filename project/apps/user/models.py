@@ -5,12 +5,10 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-
 from django_countries.fields import CountryField
 
 from ..offers.models import Offer
 from ..cp.models import Earnings_Base
-
 from apps.billing.models import Billing
 
 

@@ -86,7 +86,7 @@ class View_Redirect_Base(View_Locker_Base):
 			user = obj.user
 			aff_id = Deposit.get_by_user_id(user.pk).aff_id
 		except:
-			aff_id = settings.DEFAULT_AFFILIATE_ID
+			aff_id = Deposit.default_aff_id()
 
 		# Increment offer and user's clicks
 		try:
