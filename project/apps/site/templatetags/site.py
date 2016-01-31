@@ -21,9 +21,8 @@ def site_domain():
 
 @register.simple_tag(takes_context=True)
 def websocket_uri(context):
-	"""
-	Adds additional context variables to the default context.
-	"""
-	host = settings.WEBSOCKET_HOST or (
-		("wss" if context["request"].is_secure() else "ws") + "://" + context["request"].get_host())
+	""" Adds additional context variables to the default context. """
+	host = settings.WEBSOCKET_HOST or "ws%s://%s" % (
+		("s" if context["request"].is_secure() else ""),
+		context["request"].get_host())
 	return host + settings.WEBSOCKET_URL

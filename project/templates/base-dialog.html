@@ -5,4 +5,19 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/page/dialog.css' %}" />
 {% endblock %}
 
+{% block wrapper %}
+  {% block messages %}
+    {% for message in messages %}
+      <div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
+        <i class="close icon"></i>
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endblock %}
+
+  {% block content %}
+
+  {% endblock %}
+{% endblock %}
+
 {% block footer %}{% endblock %}

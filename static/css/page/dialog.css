@@ -1,8 +1,4 @@
-.pusher, .ui.main.container {
-	height: calc(100% - 5rem) !important;
-}
-
-.ui.grid {
+.pusher, .middle.aligned {
 	height: 100%;
 }
 

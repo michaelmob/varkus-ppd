@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [".viking.com", SITE_DOMAIN]
 SECRET_KEY = "################################################"
 
 # Cache
-# https://docs.djangoproject.com/en/1.9/ref/settings/#cache
+# https://docs.djangoproject.com/en/dev/ref/settings/#cache
 CACHES = {
 	"default": {
 		"BACKEND": "django_redis.cache.RedisCache",
@@ -46,7 +46,7 @@ CACHES = {
 
 
 # Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
 	"default": {
 		"ENGINE": "django.db.backends.postgresql_psycopg2",

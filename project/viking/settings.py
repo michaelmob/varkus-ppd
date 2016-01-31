@@ -117,14 +117,14 @@ EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
 
 # SECURITY WARNING: do not run with debug turned on in production!
-#SECURE_SSL_REDIRECT = True  # Let Nginx do this
 ALLOWED_HOSTS = []
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_SCHEME", "https")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "1pocfkh#z)llgp&h_t@svn^o3r^x6^g)s#qqx(udo0i7j3hj*e"
 
 # Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
 	"default": {
 		"ENGINE": "django.db.backends.sqlite3",
@@ -134,10 +134,9 @@ DATABASES = {
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-#SESSION_SAVE_EVERY_REQUEST = True
 
 # Websockets
-WEBSOCKET_HOST = "" # "wss://viking.com"
+WEBSOCKET_HOST = None
 WEBSOCKET_URL = "/ws/"
 WS4REDIS_HEARTBEAT = "PING"
 
