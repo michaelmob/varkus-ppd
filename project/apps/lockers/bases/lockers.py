@@ -7,6 +7,8 @@ from django.http import HttpResponse, HttpResponseForbidden
 from apps.offers.models import Offer
 from apps.leads.models import Token, Deposit
 
+CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
+	"baiduspider", "speedy spider", "dotbot")
 
 class View_Locker_Base(View):
 	template = None
@@ -24,6 +26,15 @@ class View_Locker_Base(View):
 			return None
 
 	def get(self, request, code=None):
+		# Deny webcrwalers and people with a user-agent
+		UA = request.META.get("HTTP_USER_AGENT", None)
+		if not UA:
+			return HttpResponseForbidden("Requests without a User-Agent is not allowed.")
+		for c in CRAWLERS:
+			if c in UA.lower():
+				return HttpResponseForbidden("View \"robots.txt\".")
+
+		# Get locker object
 		obj = self.obj(request, code)
 
 		# Redirect if not existant

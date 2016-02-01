@@ -38,9 +38,7 @@ INSTALLED_APPS = (
 	"apps.support",
 	"apps.leads",
 	"apps.billing",
-
 	"apps.api",
-
 	"apps.lockers",
 	"apps.lockers.widgets",
 	"apps.lockers.lists",
