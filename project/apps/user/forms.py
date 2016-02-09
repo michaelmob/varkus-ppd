@@ -7,20 +7,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from django_countries import countries
-
+from django_countries.fields import CountryField
 from .models import Party
 
 YEARS = range(date.today().year, 1900, -1)
 
 class Form_Sign_Up(UserCreationForm):
-	referrer = forms.IntegerField(widget=forms.HiddenInput(), label="", required=False)
-	name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Full Name"}), label="")
-	username = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Username"}), label="")
-	email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "E-mail"}), label="")
-	password1 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Password"}), label="")
-	password2 = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}), label="")
-	birthday = forms.DateField(widget=SelectDateWidget(years=YEARS, attrs={"class": "ui fluid compact dropdown"}), label="Birthday <small>This is permanent!</small>")
-	agree = forms.BooleanField(error_messages={"required": "You must agree to the Terms and Conditions"},
+	referrer 	= forms.IntegerField(widget=forms.HiddenInput(), label="", required=False)
+	name 		= forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Full Name"}), label="")
+	username 	= forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Username"}), label="")
+	email 		= forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "E-mail"}), label="")
+	password1 	= forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Password"}), label="")
+	password2 	= forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm Password"}), label="")
+	birthday 	= forms.DateField(widget=SelectDateWidget(years=YEARS, attrs={"class": "ui fluid compact dropdown"}), label="Birthday <small>This is permanent!</small>")
+	agree 		= forms.BooleanField(error_messages={"required": "You must agree to the Terms and Conditions"},
 		label="I agree to the <a target='_blank' href='/terms/'>Terms of Service</a>.")
 
 	class Meta:
@@ -100,7 +100,7 @@ class Form_Personal_Details(forms.Form):
 	city 		= forms.CharField(max_length=100)
 	state 		= forms.CharField(max_length=100, label="State / Region")
 
-	country 		= forms.ChoiceField()
+	country 		= forms.ChoiceField(choices=countries)
 	postal_code 	= forms.RegexField(regex=r"^[0-9]+$", max_length=100, label="Postal Code")
 	phone_number 	= forms.RegexField(regex=r"^[0-9\+\-\ ]+$", max_length=100, label="Phone Number")
 
@@ -126,7 +126,7 @@ class Form_Personal_Details(forms.Form):
 		user = self.request.user
 
 		user.first_name = self.cleaned_data["first_name"]
-		user.last_name = self.cleaned_data["last_name"]
+		user.last_name 	= self.cleaned_data["last_name"]
 		user.save()
 
 		user.profile.address 		= self.cleaned_data["address"]

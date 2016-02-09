@@ -92,8 +92,12 @@
 									<i class="world icon"></i>
 									<div class="content">
 										<div class="header">Country</div>
-										<i class="{{ user.profile.country|lower }} flag"></i><!--
-										!-->{{ user.profile.country|country }}
+										{% if not user.profile.country %}
+											{{ DEFAULT_TEXT }}
+										{% else %}
+											<i class="{{ user.profile.country|lower }} flag"></i><!--
+											!-->{{ user.profile.country|country }}
+										{% endif %}
 									</div>
 								</div>
 
@@ -231,7 +235,7 @@
 							<p>
 								There are more pros than cons to referring someone; in fact, there are
 								no cons at all. You earn <b>{{ percent }}%</b> of your referral's
-								earnings for every lead they get.
+								earnings for each and every lead that they receive.
 							</p>
 						</div>
 					</div>

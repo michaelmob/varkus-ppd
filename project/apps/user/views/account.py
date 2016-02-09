@@ -22,8 +22,8 @@ class View_Settings(View):
 				"url": request.build_absolute_uri(reverse("signup-referral", args=(request.user.id,))),
 				"percent": referral_amount,
 				"referrals": Table_Referrals.create(request),
-				"form_personal": Form_Personal_Details.create(request),
 				"form_account": Form_Account_Details.create(request),
+				"form_personal": Form_Personal_Details.create(request),
 			}
 		)
 

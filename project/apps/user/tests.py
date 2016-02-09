@@ -12,13 +12,7 @@ class Test_User(TestCase):
 	# Not a test by itself, use in other tests to
 	# create user
 	def create():
-		Party.objects.get_or_create(
-			name=settings.DEFAULT_PARTY_NAME,
-			defaults={
-				"cut_amount": settings.DEFAULT_CUT_AMOUNT,
-				"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
-			}
-		)
+		Party.initiate()
 
 		user = User.objects.create_user(username="tester", email="tester@tester.com", password="tester")
 		user.is_active = True
@@ -34,6 +28,7 @@ class Test_User(TestCase):
 
 	def test_sign_up(self):
 		user = Test_User.create()
+		user.earnings.add(30, 0.30)
 
 		resp = self.client.post(
 			reverse(signup),
@@ -54,8 +49,6 @@ class Test_User(TestCase):
 				"year": "1990"
 			}
 		)
-
-		user.earnings.add(30, 0.30)
 
 		self.assertEqual(resp.status_code, 302)
 		self.assertNotEqual(user.profile.party, None)

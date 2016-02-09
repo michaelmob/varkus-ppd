@@ -8,6 +8,4 @@ from .models import Offer
 class Test(TestCase):
 
 	def test_offers(self):
-		print(
-			Offer.get("173.69.12.31", "iPad")
-		)
+		print(Offer.get("173.69.12.31", "iPad"))

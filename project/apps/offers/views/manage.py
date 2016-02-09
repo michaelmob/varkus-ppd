@@ -14,7 +14,6 @@ from ..tables import Table_Offer_All, Table_Offer_Leads, Table_Offer_Options
 from apps.cp.bases.charts import Charts
 
 
-
 class View_Overview(View):
 	def get(self, request):
 		query = request.GET.get("query", None)
@@ -31,7 +30,6 @@ class View_Overview(View):
 		})
 
 
-
 class View_Manage(View):
 	def get(self, request, id):
 		# Get offer if exists, or redirect to Offers page
@@ -45,7 +43,7 @@ class View_Manage(View):
 
 		# Set offer importance
 		importance = "neutral"
-		
+
 		if obj in request.user.profile.offer_block.all():
 			importance = "block"
 		elif obj in request.user.profile.offer_priority.all():
@@ -58,17 +56,15 @@ class View_Manage(View):
 		})
 
 
-
 class View_Options(View):
 	def get(self, request):
 		return render(request, "offers/options.html", {
 			"prioritized": Table_Offer_Options.create(
 				request, request.user.profile.offer_priority.all()),
-			
+
 			"blocked": Table_Offer_Options.create(
 				request, request.user.profile.offer_block.all())
 		})
-
 
 
 class View_Importance(View):
@@ -105,7 +101,6 @@ class View_Importance(View):
 			result["data"]["importance"] = "block"
 
 		return JsonResponse(result)
-
 
 
 class View_Line_Chart(View):

@@ -6,10 +6,8 @@ pillow
 pysocks
 geoip2
 psutil
-
 git+https://github.com/thetarkus/anora
 git+git://github.com/gevent/gevent.git#egg=gevent
-
 django
 django-recaptcha
 django-storages
