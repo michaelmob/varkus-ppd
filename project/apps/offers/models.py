@@ -98,8 +98,7 @@ class Offer(models.Model):
 			country_count 			= len(country.split(',')),
 			payout 					= payout,
 			difference				= payout - Decimal(earnings_per_click),
-			tracking_url 			= tracking_url,
-		)
+			tracking_url 			= tracking_url)
 
 		# Create Earnings Object
 		Earnings.objects.get_or_create(obj=obj)
@@ -112,7 +111,8 @@ class Offer(models.Model):
 
 		return Offer._get(
 			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
-			settings.OFFERS_COUNT, 0.01, profile.offer_priority, profile.offer_block)
+			obj.offers_count if 0 < obj.offers_count < 51 else settings.OFFERS_COUNT,
+			0.01, profile.offer_priority, profile.offer_block)
 
 	def get_cache(request, obj):
 		""" Get offers by using the request to retrieve cached offers,
@@ -121,9 +121,10 @@ class Offer(models.Model):
 			[call offer item .renew() to renew cached offers] """
 
 		# Make key for cache
-		key = "o_%s_%s" % (
+		key = "o_%s_%s_%s" % (
 			request.META.get("REMOTE_ADDR"),
-			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest())
+			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest(),
+			obj.code)
 
 		# Get Offers
 		offers = cache.get(key)
@@ -136,12 +137,9 @@ class Offer(models.Model):
 		return offers
 
 	def renew(request):
-		return cache.delete("o_%s_%s" % \
-			(
-				request.META.get("REMOTE_ADDR"),
-				hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest()
-			)
-		)
+		return cache.delete("o_%s_%s" % (
+			request.META.get("REMOTE_ADDR"),
+			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest()))
 
 	def get_basic(
 		count, category, country, user_agent=None, min_payout=0.01,

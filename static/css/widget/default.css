@@ -1,71 +1,111 @@
-/* Header */
-.w .header {
-	text-align: center;
+/* Page */
+html, body {
+	font-family: Arial;
 }
 
-.w .header:after {
+/* Header */
+.widget .header {
+	font-size: 1.1rem;
+	text-align: center;
+	margin-bottom: 0.5rem;
+}
+
+.widget .header:after {
 	content: "Complete one of the offers below to continue";
 }
 
+/* Tooltips/Popups */
+.widget .popup::before {
+	position: absolute;
+	top: -.325em;
+	left: 50%;
+	margin-left: -.325em;
+	width: .75em;
+	height: .75em;
+	content: '';
+	-ms-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	transform: rotate(45deg);
+	background-color: #222;
+}
+
+.widget .popup {
+	position: absolute;
+	margin-top: 5em;
+	font-size: 1rem;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.2rem;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	color: white;
+	text-align: center;
+	background-color: #222;
+}
+
 /* Progress Indicator */
-.w .progress.indicator {
+.widget .progress.indicator {
 	display: none;
-	background: url(/static/img/progress.gif) no-repeat;
+	background: url(https://i.imgur.com/4EUgkH4.gif) no-repeat;
 	background-position: center;
 	height: 20px;
 	margin: -10px 0 5px 0;
 }
 
 /* Continue Button */
-.w .centered {
+.widget .centered {
 	display: block;
 	text-align: center;
 	padding: 1rem;
 }
 
-.w .continue {
+.widget .continue {
 	font-size: 1.5rem;
 	font-weight: bold;
 	color: #000;
 }
 
-.w .continue:hover {
+.widget .continue:hover {
 	background-color: #F7F7F7;
 }
 
 /* Row */
-.w .item {
+.widget .item {
 	display: table;
 	width: 100%;
 	text-decoration: none;
 	color: black;
 }
 
-.w .item:nth-child(odd) {
+.widget .item:nth-child(odd) {
 	background-color: #F7F7F7;
 }
 
-.w .item:hover {
+.widget .item:hover {
 	color: white;
 	background-color: #F44336;
 }
 
 /* Default Properties */
-.w .item .anchor,
-.w .item .icon {
+.widget .item .anchor,
+.widget .item .icon {
 	display: table-cell;
 	vertical-align: middle;
-	padding: .75rem 1rem;
+	padding: 1rem 1rem;
 }
 
 /* Icons */
-.w .item .icon {
+.widget .item .icon {
 	font-size: 1.5rem;
 	width: 4rem;
+	padding: 0;
 	background-color: rgba(0, 0, 0, .025);
 }
 
 /* Special Icon */
-.w .item .gold.icon {
+.widget .item .gold.icon {
 	color: gold;
 }

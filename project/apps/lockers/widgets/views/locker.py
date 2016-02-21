@@ -8,7 +8,7 @@ from ..models import Widget
 
 class View_Locker(View_Locker_Base):
 	model = Widget
-	template = "offers/widget/external.html"
+	template = "offers/widget/widget.html"
 
 
 class View_Redirect(View_Redirect_Base):
@@ -19,7 +19,7 @@ class View_Unlock(View_Unlock_Base):
 	template = "offers/widget/complete.html"
 	model = Widget
 
-	def _return(self, request, obj):
+	def get_return(self, request, obj):
 		# We have locker_obj, so lets let them unlock it
 		if obj:
 			model = obj.get_type()
@@ -29,7 +29,7 @@ class View_Unlock(View_Unlock_Base):
 				return render(request, self.template, { })
 
 			# Import Unlock class from locker object's view
-			exec("from apps.lockers.%ss.views.locker import Unlock as U1" % model.lower(), globals())
+			exec("from apps.lockers.%ss.views.locker import View_Unlock as U1" % model.lower(), globals())
 
 			# Use this token in U2 (Unlock2) class
 			token = self.token

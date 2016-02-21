@@ -18,7 +18,7 @@
 				<i class="ellipsis horizontal icon"></i>
 				<div class="content">
 					<div class="header">Description</div>
-					{{ obj.description|default:'<em>None</em>' }}
+					{{ obj.description|default:'<em>Not Specified</em>' }}
 				</div>
 			</div>
 
@@ -46,7 +46,7 @@
 					{% else %}
 						<em>Not set</em>
 					{% endif %}
-					(<a href="{% url 'widgets-edit-postback' obj.code %}">Edit Postback URL</a>)
+					(<a href="{% url 'widgets-edit-http-notifications' obj.code %}">Edit Postback URL</a>)
 				</div>
 			</div>
 

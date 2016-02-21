@@ -28,27 +28,4 @@ class Test_User(TestCase):
 
 	def test_sign_up(self):
 		user = Test_User.create()
-		user.earnings.add(30, 0.30)
-
-		resp = self.client.post(
-			reverse(signup),
-			{
-				# Personal
-				"first_name": "tester",
-				"last_name": "tester",
-				"username": "username",
-				
-				# Account
-				"email": "email@email.com",
-				"password": "password",
-				"confirm": "password",
-
-				# Birthday
-				"day": "1",
-				"month": "1",
-				"year": "1990"
-			}
-		)
-
-		self.assertEqual(resp.status_code, 302)
-		self.assertNotEqual(user.profile.party, None)
+		self.assertEqual(user.profile.party, Party.default())

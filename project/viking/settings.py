@@ -156,11 +156,27 @@ SITE_NAME = "Development"
 SITE_DOMAIN = "test.com"
 SITE_URL = "https://" + SITE_DOMAIN
 
+MESSAGE_TAGS = {
+    10: "orange",
+    20: "blue",
+    25: "green",
+    30: "warning",
+    40: "red",
+    50: "red"
+}
+
 # Gravatar
 GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 # GeoIP
 GEOIP_PATH = os.path.join(BASE_DIR, "viking")
+
+# HTTP Notification Proxy
+HTTP_NOTIFICATION_USE_PROXY = False
+SOCKS5_SERVER = ""
+SOCKS5_PORT = 1080
+SOCKS5_USERNAME = None
+SOCKS5_PASSWORD = None
 
 # E-mailing
 SEND_EMAILS = True
@@ -182,6 +198,11 @@ LOCKERS = (
 	("FILE", "File"),
 	("LINK", "Link"),
 	("LIST", "List"),
+)
+
+LOCKER_THEMES = (
+	("DEFAULT", "Default"),
+	("BLANK", "Blank"),
 )
 
 # Offers

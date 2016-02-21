@@ -17,7 +17,7 @@ class View_Unlock(View_Unlock_Base):
 	model = List
 	template = "lists/locker/unlock.html"
 
-	def _return(self, request, obj):
+	def get_return(self, request, obj):
 		if not self.token.data:
 			self.token.data = obj.get()
 			self.token.save()

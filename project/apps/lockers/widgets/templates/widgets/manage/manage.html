@@ -1,83 +1,40 @@
-{% extends 'base-panel.html' %}
-{% load static %}
-{% load currency %}
+{% extends 'lockers/bases/manage/manage.html' %}
+{% load semanticui %}
 
-{% block title %}Widget Locker{% endblock %}
-
-{% block tab %}widgets{% endblock %}
-
-{% block breadcrumbs %}
-<div class="ui breadcrumb">
-	<div class="section">Lockers</div>
-	<i class="right chevron icon divider"></i>
-	<a href="{% url 'widgets' %}" class="section">Widgets</a>
-	<i class="right chevron icon divider"></i>
-	<strong>Widget:</strong>
-	<a href="{% url 'widgets-manage' obj.code %}" class="active section">{{ obj.name }}</a>
-</div>
+{% block modal_edit_content %}
+	{% render_field form.name %}
+	{% render_field form.description %}
 {% endblock %}
 
-{% block content %}
-{% include 'lockers/widgets/manage/sections/modals.html' %}
-
-<div class="wrapper">
-	<div class="ui two column grid stackable">
-		<div class="column">
-			<div class="ui one column grid">
-				<div class="column">
-					{% include 'lockers/widgets/manage/sections/info.html' %}
-				</div>
-				<div class="column">
-					<div class="ui two column grid">
-						<div class="column">
-							{% include 'lockers/common/earnings.html' %}
-						</div>
-
-						<div class="column">
-							<div class="ui segment box">
-								<div class="title">
-									<i class="lock icon"></i>
-									Locker
-								</div>
-								<div class="side padded content no min height">
-									<div class="ui divided relaxed list">
-										<div class="item">
-											<i class="unlock alternate icon"></i>
-											<div class="content">
-												<div class="header">Times Unlocked</div>
-												{{ obj.earnings.leads }}
-											</div>
-										</div>
-
-										<div class="item">
-											<i class="linkify icon"></i>
-											<div class="content">
-												<div class="header">Widget Link</div>
-												<a href="{{ url }}" target="_blank">{{ url }}</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<a class="ui bottom attached button" href="{{ url }}" target="_blank">Go to Widget Locker</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="column">
-			<div class="ui one column grid">
-				<div class="column">
-					{% include 'cp/common/line_chart.html' %}
-				</div>
-				<div class="column">
-					{% include 'cp/common/leads.html' %}
-				</div>
-			</div>
-		</div>
+{% block details %}
+<div class="item">
+	<i class="anchor icon"></i>
+	<div class="content">
+		<div class="header">Locker</div>
+		{% with lo=obj.locker %}
+			{% if lo %}
+				{{ lo.get_type }}: <a target="_blank" href="{{ lo.get_manage_url }}">{{ lo.name }}</a>
+			{% else %}
+				<em>Standalone</em>
+			{% endif %}
+			(<a href="{% url 'widgets-edit-locker' obj.code %}">Edit Locker</a>)
+		{% endwith %}
 	</div>
 </div>
-
-<script src="{% static 'js/page/lockers/widgets/manage.js' %}"></script>
+<div class="item">
+	<i class="code icon"></i>
+	<div class="content">
+		<div class="header">Custom CSS</div>
+		{{ obj.custom_css_url|default:"<em>Not Set</em>" }}
+		(<a href="{% url 'widgets-edit-css' obj.code %}">Edit Custom CSS</a>)
+	</div>
+</div>
+<div class="item">
+	<i class="exchange icon"></i>
+	<div class="content">
+		<div class="header">HTTP Notifications</div>
+		{{ obj.http_notification_url|yesno:"<em>Enabled</em>,<em>Disabled</em>"|safe }}
+		(<a href="{% url 'widgets-edit-http-notifications' obj.code %}">Edit Notification URL</a>)
+	</div>
+</div>
 {% endblock %}

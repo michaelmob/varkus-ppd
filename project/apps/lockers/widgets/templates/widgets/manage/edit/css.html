@@ -1,73 +1,69 @@
-{% extends 'base-panel.html' %}
-{% load static %}
-{% load currency %}
-
+{% extends 'lockers/bases/manage/manage.html' %}
 {% block title %}Widget Locker{% endblock %}
 
-{% block tab %}widgets{% endblock %}
-
 {% block content %}
-{% include 'lockers/widgets/manage/sections/modals.html' %}
-
 <div class="wrapper">
 	<div class="ui two column grid stackable">
-		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="code icon"></i>
-					Custom CSS
-				</div>
-				<div class="padded content">
-					<form class="ui form" action="{% url 'widgets-edit-css' obj.code %}" method="POST">
-						{% csrf_token %}
-						<div class="field">
-							<label>Custom CSS URL</label>
-							<input type="url" name="css" value="{{ url }}" placeholder="https://example.com/stylesheet.css" />
-						</div>
-						<div class="field">
-							<div class="ui fluid buttons">
-								<button class="ui primary submit button">
-									Set Custom CSS URL
-								</button>
-								<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-									Cancel
-								</a>
-							</div>
-						</div>
-					</form>
 
-					<p></p>
-					<p>
-						Only use stylesheets on HTTPS.
-					</p>
+		{# Custom CSS #}
+		<div class="column">
+			<form class="ui form box" action="{% url 'widgets-edit-css' obj.code %}" method="POST">
+				<div class="ui top attached inverted red menu">
+					<div class="icon header item"><i class="code icon"></i></div>
+					<div class="header item">Custom CSS</div>
 				</div>
-			</div>
+				<div class="ui bottom attached segment">
+					{% csrf_token %}
+					<div class="field">
+						<label>Custom CSS URL
+							<small style="font-weight:normal">
+								(Only use stylesheets from a server that uses the HTTPS protocol)
+							</small>
+						</label>
+						<input type="url" name="css" value="{{ url|default:'' }}" placeholder="https://example.com/stylesheet.css" />
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui bottom attached fluid buttons">
+						<button class="ui primary submit button">
+							Set Custom CSS URL
+						</button>
+						<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+							Cancel
+						</a>
+					</div>
+				</div>
+			</form>
 		</div>
 
+		{# Information #}
 		<div class="column">
-			<div class="ui segment box">
-				<div class="title">
-					<i class="info circle icon"></i>
-					Information
+			<div class="box">
+				<div class="ui top attached inverted red menu">
+					<div class="icon header item"><i class="info circle icon"></i></div>
+					<div class="header item">Information</div>
 				</div>
-				<div class="padded content">
+				<div class="ui bottom attached segment">
 					<div class="ui header">Custom CSS</div>
 
 					<p>
-						Making a widget look native to your site is what makes
-						it unique. For your widget to stick out and to not belong
-						may make your widget look sketchy.
+						Using a cascading style sheet to make your widget
+						look native to your website is a huge advantage in
+						gaining a client. A widget that does not match your site
+						makes it look like it should not be there and may deter
+						your client from filling out your offer.
 					</p>
 
 					<div class="ui header">JSFiddle</div>
 					<div class="ui list">
 						<div class="item">
-							<a href="https://jsfiddle.net/s26kxp0o/">Default CSS Template</a>
+							<a href="https://jsfiddle.net/t1Ljyaav/">Default CSS Template</a>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
 </div>
 {% endblock %}

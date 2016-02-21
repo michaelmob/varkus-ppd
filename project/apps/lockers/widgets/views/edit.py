@@ -3,108 +3,106 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.core.validators import URLValidator
 
-from ..models import Widget
+from ...bases.manage import View_Overview_Base, View_Manage_Base
 from .manage import verify
+from apps.lockers.fields import locker_ref_to_object
 
+from ..models import Widget
 from apps.lockers.files.models import File
 from apps.lockers.links.models import Link
 from apps.lockers.lists.models import List
 
-def locker(request, code=None):
-	obj = verify(request.user, code)
-	if not obj:
-		return redirect("widgets")
 
-	if request.POST:
-		locker_code = request.POST["locker"].lower().split(',')
+class View_Set_Locker(View_Manage_Base):
+	template = "widgets/manage/edit/locker.html"
+	model = Widget
 
-		try:
-			locker = locker_code[0]
-			code = locker_code[1]
-		except:
-			locker = None
-			code = None
+	def get_return(self, request, obj):
+		files = File.objects.filter(user=request.user)
+		links = Link.objects.filter(user=request.user)
+		lists = List.objects.filter(user=request.user)
+
+		return render(
+			request, self.template,
+			{
+				"locker": self.model.__name__.lower(),
+				"obj": obj,
+				"files": files,
+				"links": links,
+				"lists": lists,
+			}
+		)
+
+	def post_return(self, request, obj):
+		ref = request.POST.get("locker", None)
+
+		if not ref:
+			messages.error(request, "Error pairing a locker to this widget.")
+			return self.get_return(request, obj)
+
+		# Standalone Locker
+		if ref == "standalone":
+			obj.locker = None
 			obj.standalone_redirect_url = request.POST.get("redirect", settings.SITE_URL).strip()
 			obj.save()
+			messages.success(request, "This widget's locker pair has been updated.")
 
-		messages.success(request, "This widget's locker has been updated.")
-		return redirect("widgets-manage", obj.code)
+		# Paired Locker
+		else:
+			locker = locker_ref_to_object(ref, code=True)
 
-	files = File.objects.filter(user=request.user)
-	links = Link.objects.filter(user=request.user)
-	lists = List.objects.filter(user=request.user)
+			if locker and locker.user == request.user:
+				obj.locker = locker
+				obj.save()
+				messages.success(request, "This widget's locker pair has been updated.")
 
-	return render(
-		request,
-		"widgets/manage/edit/locker.html",
-		{
-			"obj": obj,
-			"files": files,
-			"links": links,
-			"lists": lists,
-		}
-	)
+		return self.get_return(request, obj)
 
 
-def postback(request, code=None):
-	obj = verify(request.user, code)
-	if not obj:
-		return redirect("widgets")
+class View_Set_HTTP_Notifications(View_Manage_Base):
+	template = "widgets/manage/edit/http-notifications.html"
+	model = Widget
 
-	url = obj.postback_url
+	def get_return(self, request, obj):
+		return render(
+			request, self.template,
+			{
+				"locker": self.model.__name__.lower(),
+				"obj": obj
+			}
+		)
 
-	if request.POST:
-		url = request.POST.get("postback", "").strip()
+	def post_return(self, request, obj):
+		url = request.POST.get("http_notification_url", "").strip()
 
 		validate = URLValidator()
 		try:
 			validate(url)
-			obj.postback_url = url
-			obj.save()
-			messages.success(request, "This widget's Postback URL has been updated.")
-			return redirect("widgets-manage", obj.code)
+			obj.http_notification_url = url
 		except:
-			messages.error(request, "The Postback URL entered is invalid.")
+			obj.http_notification_url = None
 
-	return render(
-		request,
-		"widgets/manage/edit/postback.html",
-		{
-			"obj": obj,
-			"url": url,
-		}
-	)
+		obj.save()
+		messages.success(request, "This widget's Postback URL has been updated.")
+
+		return redirect("widgets-manage", obj.code)
 
 
-def css(request, code=None):
-	obj = verify(request.user, code)
-	if not obj:
-		return redirect("widgets")
+class View_Set_CSS(View_Set_HTTP_Notifications):
+	template = "widgets/manage/edit/css.html"
+	model = Widget
 
-	url = obj.custom_css_url
-
-	if request.POST:
+	def post_return(self, request, obj):
 		url = request.POST.get("css", "").strip()
 
-		if len(url) > 5:
-			validate = URLValidator()
-			try:
-				validate(url)
-				obj.custom_css_url = url
-				obj.save()
-				messages.success(request, "This widget's Custom CSS URL has been updated.")
-				return redirect("widgets-manage", obj.code)
-			except:
-				messages.error(request, "The Custom CSS URL entered is invalid.")
-		else:
-			obj.custom_css_url = ""
-			obj.save()
+		validate = URLValidator()
+		try:
+			validate(url)
+			obj.custom_css_url = url
+		except:
+			obj.custom_css_url = None
 
-	return render(
-		request,
-		"widgets/manage/edit/css.html",
-		{
-			"obj": obj,
-			"url": url,
-		}
-	)
+		obj.save()
+		messages.success(request, "This widget's Custom CSS URL has been updated.")
+
+		return redirect("widgets-manage", obj.code)

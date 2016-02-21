@@ -13,7 +13,7 @@ from ..models import Lead, Token, Deposit
 
 from apps.lockers.fields import locker_ref_to_object
 from apps.offers.models import Offer
-from apps.api.views.postback import post
+from apps.api.views.notifications import notify
 
 
 @staff_member_required

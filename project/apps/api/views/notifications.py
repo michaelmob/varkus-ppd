@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from datetime import datetime
 from random import randint
@@ -8,7 +9,7 @@ from sockshandler import SocksiPyHandler
 from urllib.parse import quote_plus
 
 
-def post(lead_obj, locker_obj, token_obj, proxy=True):
+def notify(lead_obj, debug=False):
 	# offer_id 			- ID of Offer
 	# offer_name 		- offer_name, url encoded
 	# ip 				- IP that created token
@@ -20,7 +21,7 @@ def post(lead_obj, locker_obj, token_obj, proxy=True):
 	# date 				- date
 	# time 				- time
 	# datetime 			- datetime
-	# rand 				- Random number 1-99999
+	# rand 				- Random number 1-1000000
 	# custom			- custom text
 	# custom2			- custom text2
 	# custom3			- custom text3
@@ -28,6 +29,10 @@ def post(lead_obj, locker_obj, token_obj, proxy=True):
 	# custom5			- custom text5
 
 	#http://varkus.com/postback/?offer_id={offer_id}&offer_name={offer_name}&ip={ip}&user_agent={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&date={date}&time={time}&datetime={datetime}&rand={rand}
+
+	# Get Locker and Token from Lead Object
+	locker_obj = lead_obj.locker
+	token_obj = lead_obj.token
 
 	date = datetime.now()
 
@@ -45,17 +50,22 @@ def post(lead_obj, locker_obj, token_obj, proxy=True):
 		.replace("{datetime}", 		str(date.strftime("%Y-%m-%d %H:%i:%S")))\
 		.replace("{rand}", 			str(randint(1, 1000000)))
 
-	try:
-		throw
-
-		opener = urllib.request.build_opener(
-			SocksiPyHandler(
-				socks.SOCKS5, "proxy-nl.privateinternetaccess.com",
-				1080, True, "x1284892", "sN9QittrGv"
+	if settings.HTTP_NOTIFICATION_USE_PROXY:
+		try:
+			opener = urllib.request.build_opener(
+				SocksiPyHandler(
+					socks.SOCKS5, settings.SOCKS5_SERVER,
+					settings.SOCKS5_PORT, True,
+					settings.SOCKS5_USERNAME, settings.SOCKS5_PASSWORD
+				)
 			)
-		)
 
-		urllib.request.install_opener(opener)
+			urllib.request.install_opener(opener)
+		except:
+			print("Proxy error")
+			return False
+
+	try:
 		html = str(urllib.request.urlopen(url).read(), "utf-8")
 	except:
 		return False

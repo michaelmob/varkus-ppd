@@ -4,12 +4,15 @@ from django.db import models
 from ..models import Locker_Base, Earnings_Base
 from apps.lockers.fields import LockerField
 
+
+D = { "max_length": 300, "blank": True, "null": True }
+
 class Widget(Locker_Base):
 	locker = LockerField()
 
-	postback_url = models.CharField(max_length=300, default=None, blank=True, null=True)
-	custom_css_url = models.CharField(max_length=300, default=None, blank=True, null=True)
-	standalone_redirect_url = models.CharField(max_length=300, default=settings.SITE_URL, blank=True, null=True)
+	custom_css_url 			= models.CharField(default=None, **D)
+	http_notification_url 	= models.CharField(default=None, **D)
+	standalone_redirect_url = models.CharField(default=settings.SITE_URL, **D)
 
 	def set_locker(self, obj):
 		self.locker = obj or None
@@ -20,8 +23,7 @@ class Widget(Locker_Base):
 			user 			= user,
 			code 			= Widget().generate_code(),
 			name 			= name,
-			description		= description
-		)
+			description		= description)
 
 		Earnings.objects.get_or_create(obj=obj)
 

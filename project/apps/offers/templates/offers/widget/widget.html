@@ -8,10 +8,10 @@
 {% if custom_css_url %}
 	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
 {% else %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/default.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
 {% endif %}
 
-<div class="w">
+<div class="widget">
 	<h3 class="header"></h3>
 
 	<div class="progress indicator"></div>
@@ -23,7 +23,7 @@
 		<div class="items">
 			{% with redirect_url=obj.get_type|add:'s-redirect' %}
 				{% for offer in offers %}
-				<a href="{% url redirect_url obj.code offer.pk %}" class="item" target="_blank">
+				<a class="item" href="{% url redirect_url obj.code offer.pk %}" target="_blank" data-content="{{ offer.requirements }}">
 					{{ offer.category|category_icon|safe }}
 					<div class="anchor">{{ offer.anchor }}</div>
 					{% if offer.priority %}<i class="gold star right icon"></i>{% endif %}
@@ -36,9 +36,11 @@
 	{% endif %}
 </div>
 
+{% comment %}
 {% if user.is_staff %}
 	{% include 'offers/widget/staff.html' %}
 {% endif %}
+{% endcomment %}
 
 <script>var uri="{% websocket_uri %}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
 <script src="{% static 'js/ws4redis.js' %}"></script>

@@ -8,7 +8,7 @@ $(function() {
 		position : "top center",
 		delay: { show: 0, hide: 0 } });
 
-	$(".message .close").on("click", function() {
+	$(".message.wrapper > .message, .message .close").on("click", function() {
 		$(this).closest(".message").slideUp(100); });
 
 	$(".ui.sidebar").sidebar("attach events", ".hamburger.icon");

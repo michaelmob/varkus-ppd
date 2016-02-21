@@ -74,6 +74,7 @@ class View_Manage_Base(View):
 		except self.model.DoesNotExist:
 			return None
 
+
 	def get(self, request, code=None):
 		obj = self.obj(request, code)
 
@@ -81,21 +82,23 @@ class View_Manage_Base(View):
 		if not obj:
 			return redirect(self.model.__name__.lower() + "s")
 
+		return self.get_return(request, obj)
+
+
+	def get_return(self, request, obj):
 		return render(
 			request, self.template,
 			{
 				"locker": self.model.__name__.lower(),
 				"form": self.form(instance=obj),
 				"obj": obj,
-
 				"leads": Table_Locker_Lead.create(request, obj.earnings.get_leads()),
-
 				"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
 				"clicks": Table_Locker_Click.create(request, obj.earnings.get_tokens()),
-				
-				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(code,))),
+				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(obj.code,))),
 			}
 		)
+
 
 	def post(self, request, code=None):
 		obj = self.obj(request, code)
@@ -104,13 +107,16 @@ class View_Manage_Base(View):
 		if not obj:
 			return redirect(self.model.__name__.lower() + "s")
 
+		# Pass to _return
+		return self.post_return(request, obj)
+
+
+	def post_return(self, request, obj):
 		# Save form data
-		form = self.form(request.POST, instance=obj)
-		form.save()
-
+		self.form(request.POST, instance=obj).save()
 		messages.success(request, "Your changes have been saved.")
-
-		return self.get(request, code)
+		
+		return self.get_return(request, obj)
 
 
 class View_Delete_Base(View):

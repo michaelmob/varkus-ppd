@@ -42,7 +42,7 @@ class View_Download(View_Unlock_Base):
 		# Return access
 		return self.token.access()
 
-	def _return(self, request, obj):
+	def get_return(self, request, obj):
 		response = HttpResponse(obj.file, content_type="application/octet-stream")
 		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (obj.file_name).replace("\"", "").replace("\\", "")
 

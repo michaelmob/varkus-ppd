@@ -26,7 +26,7 @@ class View_Locker_Base(View):
 			return None
 
 	def get(self, request, code=None):
-		# Deny webcrwalers and people with a user-agent
+		# Deny webcrwalers and people with no user-agent
 		UA = request.META.get("HTTP_USER_AGENT", None)
 		if not UA:
 			return HttpResponseForbidden("Requests without a User-Agent is not allowed.")
@@ -56,7 +56,7 @@ class View_Locker_Base(View):
 			self.template,
 			{
 				"ip_address": request.META.get("REMOTE_ADDR"),
-				"theme": "default",
+				"theme": obj.theme,
 				"obj": obj,
 				"unlocked": unlocked,
 				"offers": Offer.get_cache(request, obj)
@@ -131,17 +131,6 @@ class View_Unlock_Base(View_Locker_Base):
 		# Return access
 		return self.token.access()
 
-	def _return(self, request, obj):
-		return render(
-			request,
-			self.template,
-			{
-				"theme": "default",
-				"obj": obj,
-				"data": self.token.data
-			}
-		)
-
 	def get(self, request, code=None):
 		# Redirect if not existant
 		obj = self.obj(request, code)
@@ -152,13 +141,21 @@ class View_Unlock_Base(View_Locker_Base):
 		if not self.access(request, obj):
 			return redirect("home")
 
-		return self._return(request, obj)
+		return self.get_return(request, obj)
+
+	def get_return(self, request, obj):
+		return render(
+			request,
+			self.template,
+			{
+				"theme": obj.theme,
+				"obj": obj,
+				"data": self.token.data
+			}
+		)
 
 
 class View_Poll_Base(View_Unlock_Base):
-	def _return(self, request, obj):
-		return HttpResponse(reverse(obj.get_type() + "s-unlock", args=(obj.code,)))
-
 	def get(self, request, code=None):
 		# Redirect if not existant
 		obj = self.obj(request, code)
@@ -169,4 +166,7 @@ class View_Poll_Base(View_Unlock_Base):
 		if not self.access(request, obj):
 			return HttpResponseForbidden("0")
 
-		return self._return(request, obj)
+		return self.get_return(request, obj)
+
+	def get_return(self, request, obj):
+		return HttpResponse(reverse(obj.get_type() + "s-unlock", args=(obj.code,)))

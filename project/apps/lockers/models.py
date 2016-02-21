@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -11,13 +12,16 @@ from .fields import LockerField
 
 ''' Base for Lockers '''
 class Locker_Base(models.Model):
-	user 		= models.ForeignKey(User)
-	code 		= models.CharField(max_length=10, verbose_name="Code")
-	name 		= models.CharField(max_length=100, verbose_name="Name")
-	description = models.TextField(max_length=500, default="", blank=True, null=True, verbose_name="Description")
-	date_time 	= models.DateTimeField(auto_now_add=True, verbose_name="Date")
+	user 			= models.ForeignKey(User)
+	code 			= models.CharField(max_length=10, verbose_name="Code")
+	name 			= models.CharField(max_length=100, verbose_name="Name")
+	description 	= models.TextField(max_length=500, default=None, blank=True, null=True, verbose_name="Description")
+	date_time 		= models.DateTimeField(auto_now_add=True, verbose_name="Date")
 
-	lead_block	= models.DecimalField(
+	theme			= models.CharField(max_length=64, default="DEFAULT", choices=settings.LOCKER_THEMES)
+	offers_count	= models.IntegerField(default=8)
+
+	lead_block		= models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],
 		max_digits 		= 5,
 		decimal_places 	= 2,
