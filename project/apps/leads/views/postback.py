@@ -215,10 +215,6 @@ def receive(request, password=None):
 		locker_ref = token.locker.get_type() + str(token.locker.id)
 		user_ref = user.__class__.__name__ + str(user.id)
 
-		#cache.delete("charts_line__user_%s" % user.id)
-		# Clear User/Locker Cache
-		"""cache.delete_many(cache_keys)"""
-
 		# cache.delete_many with memcached doesn't work
 		cache_keys = (
 			# User Charts
@@ -230,26 +226,15 @@ def receive(request, password=None):
 			"mc_" + locker_ref
 		)
 
-		for key in cache_keys:
-			cache.delete(key)
+		cache.delete_many(cache_keys)
 	except:
 		pass
 
 	# Clear Caches
-	"""cache.delete_many(cache_keys)"""
 	cache_keys = (
 		"charts__offer_%s" % offer.id,
 		"token__%s" % token.unique,
 	)
 
-	# cache.delete_many with memcached doesn't work
-	for key in cache_keys:
-		cache.delete(key)
-
-	# if not lead_blocked:
-	# Send Postback if Widget
-	if token.locker.get_type() == "Widget":
-		if token.locker.postback_url and len(token.locker.postback_url) > 20:
-			post(lead, token.locker, token)
-
+	cache.delete_many(cache_keys)
 	return JsonResponse(response)

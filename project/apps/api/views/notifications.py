@@ -9,7 +9,7 @@ from sockshandler import SocksiPyHandler
 from urllib.parse import quote_plus
 
 
-def notify(lead_obj, debug=False):
+def notify(lead_obj, test=False):
 	# offer_id 			- ID of Offer
 	# offer_name 		- offer_name, url encoded
 	# ip 				- IP that created token
@@ -27,8 +27,9 @@ def notify(lead_obj, debug=False):
 	# custom3			- custom text3
 	# custom4			- custom text4
 	# custom5			- custom text5
+	# test				- test
 
-	#http://varkus.com/postback/?offer_id={offer_id}&offer_name={offer_name}&ip={ip}&user_agent={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&date={date}&time={time}&datetime={datetime}&rand={rand}
+	#http://varkus.com/notify/?offer_id={offer_id}&offer_name={offer_name}&ip={ip}&user_agent={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&date={date}&time={time}&datetime={datetime}&rand={rand}
 
 	# Get Locker and Token from Lead Object
 	locker_obj = lead_obj.locker
@@ -36,7 +37,7 @@ def notify(lead_obj, debug=False):
 
 	date = datetime.now()
 
-	url = str(locker_obj.postback_url)\
+	url = str(locker_obj.http_notification_url)\
 		.replace("{offer_id}", 		str(lead_obj.offer.pk))\
 		.replace("{offer_name}", 	quote_plus(str(lead_obj.offer_name)))\
 		.replace("{ip}", 			str(lead_obj.user_ip_address))\
@@ -48,15 +49,18 @@ def notify(lead_obj, debug=False):
 		.replace("{date}", 			str(date.strftime("%Y-%m-%d")))\
 		.replace("{time}", 			str(date.strftime("%H:%i:%S")))\
 		.replace("{datetime}", 		str(date.strftime("%Y-%m-%d %H:%i:%S")))\
-		.replace("{rand}", 			str(randint(1, 1000000)))
+		.replace("{rand}", 			str(randint(1, 1000000)))\
+		.replace("{test}", 			str(test))
 
 	if settings.HTTP_NOTIFICATION_USE_PROXY:
 		try:
 			opener = urllib.request.build_opener(
 				SocksiPyHandler(
-					socks.SOCKS5, settings.SOCKS5_SERVER,
+					socks.SOCKS5,
+					settings.SOCKS5_SERVER,
 					settings.SOCKS5_PORT, True,
-					settings.SOCKS5_USERNAME, settings.SOCKS5_PASSWORD
+					settings.SOCKS5_USERNAME,
+					settings.SOCKS5_PASSWORD
 				)
 			)
 

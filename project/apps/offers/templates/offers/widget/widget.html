@@ -36,11 +36,9 @@
 	{% endif %}
 </div>
 
-{% comment %}
 {% if user.is_staff %}
 	{% include 'offers/widget/staff.html' %}
 {% endif %}
-{% endcomment %}
 
 <script>var uri="{% websocket_uri %}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
 <script src="{% static 'js/ws4redis.js' %}"></script>

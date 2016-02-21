@@ -24,7 +24,7 @@ def keep_wanted(obj, wanted):
 
 
 @receiver(post_save, sender=Token)
-def token_created(sender, **kwargs):
+def send_click_notification(sender, **kwargs):
 	if not kwargs["created"]:
 		return
 
@@ -47,7 +47,7 @@ def token_created(sender, **kwargs):
 
 
 @receiver(post_save, sender=Lead)
-def lead_created(sender, **kwargs):
+def send_lead_notification(sender, **kwargs):
 	if not kwargs["created"]:
 		return
 

@@ -21,32 +21,30 @@ class View_Unlock(View_Unlock_Base):
 
 	def get_return(self, request, obj):
 		# We have locker_obj, so lets let them unlock it
-		if obj:
-			model = obj.get_type()
+		if obj.locker:
+			model = obj.locker.get_type()
 
-			# Prevent custom exec
+			# Prevent cust1m exec
 			if not model.upper() in dict(settings.LOCKERS).keys():
 				return render(request, self.template, { })
 
 			# Import Unlock class from locker object's view
 			exec("from apps.lockers.%ss.views.locker import View_Unlock as U1" % model.lower(), globals())
 
-			# Use this token in U2 (Unlock2) class
+			# Use this token in U2 class
 			token = self.token
 
 			# Make child class
 			class U2(U1):
-				# Override .access() to use our token to force unlock
-				def access(self, request, obj):
+				def __init__(self):
 					self.token = token
-					return True
 
 			# Set session key so the download knows to
-			# send the file download when you click "Download"
+			# send the file download when the client clicks "Download"
 			request.session["locker__file_force"] = True
 
 			# Show Unlock view
-			return U2.as_view()(request, obj.code)
+			return U2().get_return(request, obj.locker)
 
 		# They didn't have a locker_obj with the widget so
 		# check the redirect_url of the widget, and if that

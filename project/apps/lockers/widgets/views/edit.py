@@ -63,7 +63,17 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 	template = "widgets/manage/edit/http-notifications.html"
 	model = Widget
 
+	disable_message = "HTTP Notifications have been disabled for this widget."
+	edit_message = "This widget's HTTP Notification URL has been updated."
+
+	field = "http_notification_url"
+
 	def get_return(self, request, obj):
+		if(request.GET.get("disable", None) == "1"):
+			self.modify_object(obj, None)
+			messages.success(request, self.disable_message)
+			return redirect("widgets-manage", obj.code)
+
 		return render(
 			request, self.template,
 			{
@@ -73,36 +83,33 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 		)
 
 	def post_return(self, request, obj):
-		url = request.POST.get("http_notification_url", "").strip()
+		url = request.POST.get(self.field, "").strip()
 
 		validate = URLValidator()
 		try:
 			validate(url)
-			obj.http_notification_url = url
+			self.modify_object(obj, url)
 		except:
-			obj.http_notification_url = None
+			self.modify_object(obj, None)
 
-		obj.save()
-		messages.success(request, "This widget's Postback URL has been updated.")
+		messages.success(request, self.edit_message)
 
 		return redirect("widgets-manage", obj.code)
+
+	def modify_object(self, obj, value):
+		obj.http_notification_url = value
+		obj.save()
 
 
 class View_Set_CSS(View_Set_HTTP_Notifications):
 	template = "widgets/manage/edit/css.html"
 	model = Widget
+	
+	disable_message = "This widget's Custom CSS will no longer be used."
+	edit_message = "This widget's Custom CSS URL has been updated."
+	
+	field = "custom_css_url"
 
-	def post_return(self, request, obj):
-		url = request.POST.get("css", "").strip()
-
-		validate = URLValidator()
-		try:
-			validate(url)
-			obj.custom_css_url = url
-		except:
-			obj.custom_css_url = None
-
+	def modify_object(self, obj, value):
+		obj.custom_css_url = value
 		obj.save()
-		messages.success(request, "This widget's Custom CSS URL has been updated.")
-
-		return redirect("widgets-manage", obj.code)

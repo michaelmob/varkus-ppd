@@ -240,3 +240,4 @@ class Lead(models.Model):
 
 # Signals
 import apps.leads.signals
+import apps.lockers.widgets.signals
