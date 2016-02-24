@@ -18,7 +18,7 @@ var openSocket = function() {
 	});
 };
 
-var items = document.querySelectorAll(".item");
+var items = document.querySelectorAll(".widget .item");
 
 for (var i = 0; i < items.length; i++) {
 	items[i].onclick = function() {
@@ -38,6 +38,6 @@ for (var i = 0; i < items.length; i++) {
 	};
 
 	items[i].onmouseout = function(e) {
-		e.target.parentNode.querySelector(".popup").remove();
+		e.target.parentNode.querySelector(".widget .popup").remove();
 	};
 }

@@ -62,7 +62,7 @@ $(".line.chart.container").api({
 		if(!desktopScreen) {
 			for (var i = 0; i < response.data.length; i++) {
 				if(response.data[i].data) {
-					response.data[i].data.splice(hour > 1 ? 0 : 12, 12);
+					response.data[i].data.splice(hour < 1 ? 0 : 12, 12);
 				}
 			};
 		}

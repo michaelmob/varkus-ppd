@@ -64,14 +64,14 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 	model = Widget
 
 	disable_message = "HTTP Notifications have been disabled for this widget."
-	edit_message = "This widget's HTTP Notification URL has been updated."
+	edit_message = "HTTP Notifications have been enabled."
 
 	field = "http_notification_url"
 
 	def get_return(self, request, obj):
 		if(request.GET.get("disable", None) == "1"):
 			self.modify_object(obj, None)
-			messages.success(request, self.disable_message)
+			messages.error(request, self.disable_message)
 			return redirect("widgets-manage", obj.code)
 
 		return render(
@@ -105,8 +105,8 @@ class View_Set_CSS(View_Set_HTTP_Notifications):
 	template = "widgets/manage/edit/css.html"
 	model = Widget
 	
-	disable_message = "This widget's Custom CSS will no longer be used."
-	edit_message = "This widget's Custom CSS URL has been updated."
+	disable_message = "This widget will no longer use a custom stylesheet."
+	edit_message = "This widget's will use a custom stylesheet."
 	
 	field = "custom_css_url"
 
