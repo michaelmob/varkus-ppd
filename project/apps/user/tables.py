@@ -43,7 +43,7 @@ class Table_Statistics_Base(Table_Offer_Base):
 		self.field = field
 		self.cut_amount = request.user.profile.party.cut_amount
 		self.args = {"user": request.user}
-		if date_range != None:
+		if date_range != None and date_range[0] != None:
 			self.args["date_time__range"] = date_range
 
 		# Distinct only works in Postgres
@@ -74,9 +74,9 @@ class Table_Statistics_Base(Table_Offer_Base):
 
 
 class Table_Statistics_Offers(Table_Statistics_Base):
-	clicks = tables.Column(empty_values=())
-	leads = tables.Column(empty_values=())
-	chargebacks = tables.Column(empty_values=())
+	clicks = tables.Column(empty_values=(), orderable=False)
+	leads = tables.Column(empty_values=(), orderable=False)
+	chargebacks = tables.Column(empty_values=(), orderable=False)
 
 	class Meta(Table_Statistics_Base.Meta):
 		fields = ("offer", "clicks", "leads", "user_payout", "chargebacks")
@@ -89,9 +89,9 @@ class Table_Statistics_Offers(Table_Statistics_Base):
 
 
 class Table_Statistics_Countries(Table_Statistics_Base):
-	clicks = tables.Column(empty_values=())
-	leads = tables.Column(empty_values=())
-	chargebacks = tables.Column(empty_values=())
+	clicks = tables.Column(empty_values=(), orderable=False)
+	leads = tables.Column(empty_values=(), orderable=False)
+	chargebacks = tables.Column(empty_values=(), orderable=False)
 
 	class Meta(Table_Statistics_Base.Meta):
 		fields = ("country", "clicks", "leads")
@@ -100,4 +100,4 @@ class Table_Statistics_Countries(Table_Statistics_Base):
 		super(__class__, self).__init__("country", request, date_range)
 
 	def render_country(self, value):
-		return mark_safe("<i class='%s flag'></i> %s" % (value, COUNTRIES[value.upper()]))
+		return mark_safe("<i class='%s flag'></i>%s" % (value.lower(), COUNTRIES[value.upper()]))
