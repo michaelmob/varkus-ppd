@@ -111,9 +111,9 @@ class Token(models.Model):
 		obj -- Locker object to create for
 		"""
 		try:
-			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR"))
+			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR") if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
 		except:
-			country = "XX"
+			country = "xx"
 
 		# Create Session
 		if not request.session.exists(request.session.session_key):

@@ -199,7 +199,7 @@ class Offer(models.Model):
 		try:
 			data = GeoIP2().city(ip_address if ip_address != "127.0.0.1" else "173.63.97.160")
 		except:
-			data = {"country_code": "XX", "city": "Unknown"}
+			data = {"country_code": "xx", "city": "Unknown"}
 
 		country, region = (data["country_code"], data["city"])
 

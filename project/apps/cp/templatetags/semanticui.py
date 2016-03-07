@@ -10,7 +10,7 @@ def generic_field(field, wrapper=None, **kwargs):
 	"""
 	Generic Field for Semantic UI inputs
 		field -> formset field
-		wrapper -> text surrounding, use %(widget)s for the field
+		wrapper -> text surrounding, use %(widget)s for the field's widget
 		kwargs -> extra fields added to attributes
 	"""
 	# Default wrapper
@@ -62,8 +62,7 @@ def render_field_icon(field, icon, align="left", **kwargs):
 	"""
 	# Top wrapper
 	wrapper = "<div class='ui %s%sinput'>" % (
-		align + " ",
-		"icon " if icon else "" )
+		align + " ", "icon " if icon else "" )
 
 	# Widget
 	wrapper += "%(widget)s"
@@ -142,6 +141,28 @@ def render_field_checkbox(field, style="", **kwargs):
 	wrapper += "<label>%s</label></div>" % field.label
 
 	kwargs.update({"_noLabel": True})
+
+	return mark_safe(generic_field(field, wrapper, **kwargs))
+
+
+@register.simple_tag()
+def render_field_date(field, initial=None, icon="calendar", align="left", **kwargs):
+	"""
+	Render date field
+		field -> formset field
+		initial -> initial value
+	"""
+	# Set initial value if set
+	if not initial:
+		field.initial = initial
+
+	wrapper = """
+	<div class="ui calendar" id="%s">
+		<div class="ui input %s icon">
+			<i class="%s icon"></i>
+	""" % (field.name, align, icon)
+
+	wrapper += "%(widget)s</div></div>"""
 
 	return mark_safe(generic_field(field, wrapper, **kwargs))
 

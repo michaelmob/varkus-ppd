@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django import forms
 from django.conf import settings
@@ -11,6 +11,13 @@ from django_countries.fields import CountryField
 from .models import Party
 
 YEARS = range(date.today().year, 1900, -1)
+
+DATE_RANGES = {
+	"today": (date.today(), date.today() + timedelta(days=1)),
+	"week": (date.today() - timedelta(days=7), date.today()),
+	"month": (date.today() - timedelta(days=30), date.today()),
+	"year": (date.today() - timedelta(days=365), date.today())
+}
 
 class Form_Sign_Up(UserCreationForm):
 	referrer 	= forms.IntegerField(widget=forms.HiddenInput(), label="", required=False)
@@ -145,7 +152,7 @@ class Form_Account_Details(forms.Form):
 
 	company = forms.CharField(max_length=100, required=False)
 	website = forms.URLField(max_length=100, required=False)
-	email = forms.EmailField(max_length=100,  label="E-mail")
+	email = forms.EmailField(max_length=100, label="E-mail")
 
 	def create(request):
 		user = request.user
@@ -172,3 +179,23 @@ class Form_Account_Details(forms.Form):
 		user.profile.save()
 
 		return True
+
+
+class Form_Statistics(forms.Form):
+	r = None
+	t = forms.DateField(label="To Date", required=False)
+	f = forms.DateField(label="From Date", required=False)
+
+	def create(request_GET):
+		form = __class__(request_GET or None)
+		form.r = request_GET.get("r", None)
+		return form
+
+	def date_range(self):
+		if self.r != None and self.r in DATE_RANGES:
+			return DATE_RANGES[self.r]
+
+		if not self.is_valid():
+			return None
+
+		return (self.cleaned_data["f"], self.cleaned_data["t"])

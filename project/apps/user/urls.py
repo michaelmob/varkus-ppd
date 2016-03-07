@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import login, logout
 from .views.signup import View_Sign_Up
 from .views.account import View_Settings
+from .views.statistics import View_Offers, View_Countries
 from .models import Party
 
 urlpatterns = [
@@ -17,6 +18,11 @@ urlpatterns = [
 
 	# Settings
 	url(r"^account/settings/$", login_required(View_Settings.as_view()), name="account-settings"),
+
+	# Statistics
+	url(r"^statistics/$", login_required(View_Offers.as_view()), name="statistics"),
+	url(r"^statistics/offers/$", login_required(View_Offers.as_view()), name="statistics-offers"),
+	url(r"^statistics/countries/", login_required(View_Countries.as_view()), name="statistics-countries"),
 ]
 
 # Initiate default party, if it does not exist

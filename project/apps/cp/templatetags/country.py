@@ -1,8 +1,7 @@
 from django import template
-from django_countries import countries
+from utils.country import COUNTRIES
 
 register = template.Library()
-
 
 @register.filter
 def country(code):
@@ -10,6 +9,6 @@ def country(code):
 		return "International"
 
 	try:
-		return dict(countries)[str(code).upper()]
+		return COUNTRIES[str(code).upper()]
 	except:
 		return "Unknown"
