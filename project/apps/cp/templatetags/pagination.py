@@ -5,17 +5,14 @@ register = template.Library()
 
 @register.filter
 def paginate(value, index):
-	m = value[-1] + 1	# Max
-	f = index - 3		# From
-	t = index + 3 + 1	# To
+	last_ = value[-1]
+	from_ = index - 3
+	to_ = index + 3
 
-	if f < 1:
-		t += 1 - f
-		f = 1
+	if from_ < 1:
+		from_ = 1
 
-	if t > m:
-		if f > 1:
-			f -= 3 + 1 + (index - m)
-		t = m
+	if to_ > last_:
+		to_ = last_
 
-	return range(f, t)
+	return range(from_, to_ + 1)

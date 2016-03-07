@@ -40,7 +40,7 @@ class Table_Offer_Base(tables.Table):
 
 	def render_ip_address(self, value, record):
 		country = record.country.lower()
-		result = "<i class='%s flag' alt='%s'></i> %s" % (country, country.upper(), value)
+		result = "<i class='%s flag' alt='%s'></i>%s" % (country, country.upper(), value)
 
 		return mark_safe(result)
 
@@ -64,7 +64,7 @@ class Table_Offer_All(Table_Offer_Base):
 
 	def create(request, objects):
 		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": 30}).configure(table)
+		tables.RequestConfig(request, paginate={"per_page": 53}).configure(table)
 		table.cut_amount = request.user.profile.party.cut_amount or settings.DEFAULT_CUT_AMOUNT
 		return table
 

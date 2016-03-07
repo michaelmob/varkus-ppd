@@ -16,7 +16,6 @@
 				</a>
 			{% endfor %}
 
-
 			{% if table.page.number < num|length|add:"-3" %}
 				<a class="disabled item">...</a>
 				<a href="{% querystring table.prefixed_page_field=num|length %}" class="item">{{ num|length }}</a>
