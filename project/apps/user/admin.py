@@ -45,7 +45,7 @@ class Inline_Referral_Earnings(admin.StackedInline):
 @admin.register(User)
 class Admin_User(UserAdmin):
 
-	def leads(s, i): return i.earnings.leads
+	def conversions(s, i): return i.earnings.conversions
 
 	def earnings_today(s, i): return currency(i.earnings.today)
 
@@ -61,12 +61,12 @@ class Admin_User(UserAdmin):
 	]
 
 	list_display = (
-		"id", "username", "email", "last_login", "leads",
+		"id", "username", "email", "last_login", "conversions",
 		"earnings_today", "earnings_month", "earnings_total"
 	)
 
 	# Allow ordering
-	leads.admin_order_field = "earnings__leads"
+	conversions.admin_order_field = "earnings__conversions"
 	earnings_today.admin_order_field = "earnings__today"
 	earnings_month.admin_order_field = "earnings__month"
 	earnings_total.admin_order_field = "earnings__total"

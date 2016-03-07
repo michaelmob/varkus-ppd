@@ -10,7 +10,7 @@ from apps.cp.templatetags.currency import currency
 class ModelAdminBase(admin.ModelAdmin):
 	change_form_template = "admin/lockers/locker/change_form.html"
 
-	def leads(s, i): return i.earnings.leads
+	def conversions(s, i): return i.earnings.conversions
 	def earnings_today(s, i): return currency(i.earnings.today)
 	def earnings_month(s, i): return currency(i.earnings.month)
 	def earnings_total(s, i): return currency(i.earnings.total)
@@ -18,11 +18,11 @@ class ModelAdminBase(admin.ModelAdmin):
 	search_fields = ("name", "description")
 
 	list_display = (
-		"name", "user", "leads", "earnings_today",
+		"name", "user", "conversions", "earnings_today",
 		"earnings_month", "earnings_total", "date_time")
 
 	# Allow ordering
-	leads.admin_order_field = "earnings__leads"
+	conversions.admin_order_field = "earnings__conversions"
 	earnings_today.admin_order_field = "earnings__today"
 	earnings_month.admin_order_field = "earnings__month"
 	earnings_total.admin_order_field = "earnings__total"
@@ -39,7 +39,7 @@ class Admin_File(ModelAdminBase):
 	inlines = (Inline_File_Earnings,)
 
 	list_display = (
-		"name", "file_size", "user", "leads", "earnings_today",
+		"name", "file_size", "user", "conversions", "earnings_today",
 		"earnings_month", "earnings_total", "date_time")
 
 

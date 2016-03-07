@@ -2,7 +2,7 @@
 {% load i18n admin_urls static admin_modify %}
 
 {% block object-tools-items %}
-<li><a href="{% url 'admin:leads_lead_changelist' %}?token={{ original.pk }}">{% trans "Lead" %}</a></li>
+<li><a href="{% url 'admin:conversions_conversion_changelist' %}?token={{ original.pk }}">{% trans "Conversion" %}</a></li>
 
 <li>
 	{% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}

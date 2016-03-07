@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseForbidden
 
 from apps.offers.models import Offer
-from apps.leads.models import Token, Deposit
+from apps.conversions.models import Token, Deposit
 
 CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
 	"baiduspider", "speedy spider", "dotbot")
@@ -45,7 +45,7 @@ class View_Locker_Base(View):
 		if not request.session.exists(request.session.session_key):
 			request.session.create()
 
-		# Set unlock if token is set to lead
+		# Set unlock if token is set to conversion
 		unlocked = False
 		token = Token.get(request, obj)
 		if token:

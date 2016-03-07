@@ -78,7 +78,7 @@ class Profile(models.Model):
 	offer_priority	= models.ManyToManyField(Offer, related_name="offer_priority", blank=True)
 	offer_block		= models.ManyToManyField(Offer, related_name="offer_block", blank=True)
 
-	notification_lead 		= models.IntegerField(default=0)
+	notification_conversion = models.IntegerField(default=0)
 	notification_billing 	= models.IntegerField(default=0)
 
 

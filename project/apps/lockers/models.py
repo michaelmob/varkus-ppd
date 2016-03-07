@@ -21,15 +21,15 @@ class Locker_Base(models.Model):
 	theme			= models.CharField(max_length=64, default="DEFAULT", choices=settings.LOCKER_THEMES)
 	offers_count	= models.IntegerField(default=8)
 
-	lead_block		= models.DecimalField(
+	conversion_block		= models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],
 		max_digits 		= 5,
 		decimal_places 	= 2,
 		default 		= "0",
-		help_text 		= """Chance of a lead block happening.<br/>
+		help_text 		= """Chance of a conversion block happening.<br/>
 			Divide by 100 (example: 0.30 == 30%)<br/>
-			1 for guaranteed lead block.<br/>
-			0 for no lead block.""")
+			1 for guaranteed conversion block.<br/>
+			0 for no conversion block.""")
 
 	country_block	= models.CharField(
 		max_length 		= 100,

@@ -81,7 +81,7 @@ class Token(models.Model):
 	date_time	= models.DateTimeField()
 	last_access	= models.DateTimeField(auto_now=True, verbose_name="Last Access")
 
-	lead 		= models.BooleanField(default=False, verbose_name="Lead")
+	conversion 		= models.BooleanField(default=False, verbose_name="Conversion")
 	paid 		= models.BooleanField(default=False)
 	staff 		= models.BooleanField(default=False)
 
@@ -141,7 +141,7 @@ class Token(models.Model):
 
 	def access(self):
 		"""Check if token has access to continue"""
-		return (self.lead or self.paid or self.staff)
+		return (self.conversion or self.paid or self.staff)
 
 	def renew(request):
 		return cache.delete("o_%s_%s" % \
@@ -166,7 +166,7 @@ class Token(models.Model):
 		)
 
 
-class Lead(models.Model):
+class Conversion(models.Model):
 	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
 	offer_name			= models.CharField(max_length=150, verbose_name="Offer", default=None, blank=True, null=True)
 	country 			= models.CharField(max_length=3, verbose_name="Country", default=None, blank=True, null=True)
@@ -187,7 +187,7 @@ class Lead(models.Model):
 	user_payout			= models.DecimalField(verbose_name="Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 	referral_payout		= models.DecimalField(verbose_name="Referral Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 
-	lead_blocked		= models.BooleanField(verbose_name="Lead Blocked", default=False)
+	conversion_blocked		= models.BooleanField(verbose_name="Conversion Blocked", default=False)
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=Deposit.names())
@@ -197,7 +197,7 @@ class Lead(models.Model):
 	def create(
 		offer, token, user, locker, sender_ip_address, user_ip_address,
 		payout, dev_payout, user_payout, referral_payout, deposit="DEFAULT_DEPOSIT",
-		access_url="", lead_blocked=False, approved=True
+		access_url="", conversion_blocked=False, approved=True
 	):
 
 		try:
@@ -223,7 +223,7 @@ class Lead(models.Model):
 			"user_payout"		: user_payout,
 			"referral_payout"	: referral_payout,
 
-			"lead_blocked"		: lead_blocked,
+			"conversion_blocked"		: conversion_blocked,
 			"approved"			: approved,
 
 			"deposit"			: deposit,
@@ -236,8 +236,8 @@ class Lead(models.Model):
 		except:
 			args["country"] = offer.flag
 
-		return Lead.objects.create(**args)
+		return Conversion.objects.create(**args)
 
 # Signals
-import apps.leads.signals
+import apps.conversions.signals
 import apps.lockers.widgets.signals

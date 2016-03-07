@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.views.generic import View
 from django.shortcuts import render, redirect
 
-from ..tables import Table_Locker_Lead, Table_Locker_Click
+from ..tables import Table_Locker_Conversion, Table_Locker_Click
 
 
 class View_Overview_Base(View):
@@ -92,7 +92,7 @@ class View_Manage_Base(View):
 				"locker": self.model.__name__.lower(),
 				"form": self.form(instance=obj),
 				"obj": obj,
-				"leads": Table_Locker_Lead.create(request, obj.earnings.get_leads()),
+				"conversions": Table_Locker_Conversion.create(request, obj.earnings.get_conversions()),
 				"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
 				"clicks": Table_Locker_Click.create(request, obj.earnings.get_tokens()),
 				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(obj.code,))),

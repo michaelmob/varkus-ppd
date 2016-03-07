@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 import django_tables2 as tables
 from utils.country import COUNTRIES
 
-from apps.leads.models import Lead, Token
+from apps.conversions.models import Conversion, Token
 from apps.offers.models import Offer
 from apps.offers.tables import Table_Offer_Base
 
@@ -32,11 +32,11 @@ class Table_Referrals(tables.Table):
 class Table_Statistics_Base(Table_Offer_Base):
 
 	class Meta:
-		model = Lead
+		model = Conversion
 		orderable = True
-		empty_text = "There doesn't seem to be any leads here for this category or date range."
+		empty_text = "There doesn't seem to be any conversions here for this category or date range."
 		attrs = {"class": "ui sortable table"}
-		fields = ("clicks", "leads")
+		fields = ("clicks", "conversions")
 
 	def __init__(self, field, request, date_range=None):
 		# Filter Args
@@ -48,9 +48,9 @@ class Table_Statistics_Base(Table_Offer_Base):
 
 		# Distinct only works in Postgres
 		if is_postgres():
-			data = Lead.objects.filter(**self.args).distinct(field)
+			data = Conversion.objects.filter(**self.args).distinct(field)
 		else:
-			data = distinct_column(Lead.objects.filter(**self.args), field)
+			data = distinct_column(Conversion.objects.filter(**self.args), field)
 
 		# Create Table
 		super(__class__, self).__init__(data)
@@ -66,20 +66,20 @@ class Table_Statistics_Base(Table_Offer_Base):
 	def render_clicks(self, record):
 		return self._render_(Token, record)
 
-	def render_leads(self, record):
-		return self._render_(Lead, record)
+	def render_conversions(self, record):
+		return self._render_(Conversion, record)
 
 	def render_chargebacks(self, record):
-		return self._render_(Lead, record, {"approved": False})
+		return self._render_(Conversion, record, {"approved": False})
 
 
 class Table_Statistics_Offers(Table_Statistics_Base):
 	clicks = tables.Column(empty_values=(), orderable=False)
-	leads = tables.Column(empty_values=(), orderable=False)
+	conversions = tables.Column(empty_values=(), orderable=False)
 	chargebacks = tables.Column(empty_values=(), orderable=False)
 
 	class Meta(Table_Statistics_Base.Meta):
-		fields = ("offer", "clicks", "leads", "user_payout", "chargebacks")
+		fields = ("offer", "clicks", "conversions", "user_payout", "chargebacks")
 
 	def __init__(self, request, date_range=None):
 		super(__class__, self).__init__("offer", request, date_range)
@@ -90,11 +90,11 @@ class Table_Statistics_Offers(Table_Statistics_Base):
 
 class Table_Statistics_Countries(Table_Statistics_Base):
 	clicks = tables.Column(empty_values=(), orderable=False)
-	leads = tables.Column(empty_values=(), orderable=False)
+	conversions = tables.Column(empty_values=(), orderable=False)
 	chargebacks = tables.Column(empty_values=(), orderable=False)
 
 	class Meta(Table_Statistics_Base.Meta):
-		fields = ("country", "clicks", "leads")
+		fields = ("country", "clicks", "conversions")
 
 	def __init__(self, request, date_range=None):
 		super(__class__, self).__init__("country", request, date_range)

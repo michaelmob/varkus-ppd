@@ -7,17 +7,17 @@ from django.db.models import F
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
-import apps.leads as leads
+import apps.conversions as conversions
 
 getcontext().prec = 2
 
 
 class Earnings_Base(models.Model):
 	clicks			= models.IntegerField(default=0, verbose_name="Clicks")
-	leads			= models.IntegerField(default=0)
+	conversions			= models.IntegerField(default=0)
 
 	clicks_today	= models.IntegerField(default=0, verbose_name="Today's Clicks")
-	leads_today 	= models.IntegerField(default=0, verbose_name="Today's Leads")
+	conversions_today 	= models.IntegerField(default=0, verbose_name="Today's Conversions")
 
 	today			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
 	yesterday		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
@@ -40,7 +40,7 @@ class Earnings_Base(models.Model):
 	def reset_today(self):
 		print("Reset Today's Earnings")
 		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0, clicks_today=0, leads_today=0 WHERE clicks_today>0 OR today>0 OR yesterday>0" % (self._meta.db_table))
+		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0, clicks_today=0, conversions_today=0 WHERE clicks_today>0 OR today>0 OR yesterday>0" % (self._meta.db_table))
 
 	def reset_week(self):
 		print("Reset Week's Earnings")
@@ -61,8 +61,8 @@ class Earnings_Base(models.Model):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
-		self.leads 			= F("leads") 		+ 1
-		self.leads_today 	= F("leads_today") 	+ 1
+		self.conversions 			= F("conversions") 		+ 1
+		self.conversions_today 	= F("conversions_today") 	+ 1
 
 		self.today 	= F("today") 	+ amount_cut
 		self.week 	= F("week") 	+ amount_cut
@@ -103,27 +103,27 @@ class Earnings_Base(models.Model):
 		if date_range:
 			args["date_time__range"] = date_range
 
-		# Show every lead, including lead blocked ones
+		# Show every conversion, including conversion blocked ones
 		if not show_all:
-			args["lead_blocked"] = False
+			args["conversion_blocked"] = False
 
 		return search_model.objects.filter(**args)
 
 	def __get_base(self, search_model, date_range, show_all=False):
 		return self.__get_base_u(search_model, date_range, show_all).order_by("-date_time")
 
-	def get_leads_u(self, date_range=None, show_all=False):
+	def get_conversions_u(self, date_range=None, show_all=False):
 		# Unordered
-		return self.__get_base_u(leads.models.Lead, date_range, show_all)
+		return self.__get_base_u(conversions.models.Conversion, date_range, show_all)
 
-	def get_leads(self, date_range=None, show_all=False):
-		return self.__get_base(leads.models.Lead, date_range, show_all)
+	def get_conversions(self, date_range=None, show_all=False):
+		return self.__get_base(conversions.models.Conversion, date_range, show_all)
 
-	def get_leads_today(self, show_all=False):
-		return self.get_leads((date.today(), date.today() + timedelta(days=1)), show_all)
+	def get_conversions_today(self, show_all=False):
+		return self.get_conversions((date.today(), date.today() + timedelta(days=1)), show_all)
 
 	def get_tokens(self, date_range=None):
-		return self.__get_base(leads.models.Token, date_range, True)
+		return self.__get_base(conversions.models.Token, date_range, True)
 
 	def get_tokens_today(self):
 		return self.get_tokens((date.today(), date.today() + timedelta(days=1)))

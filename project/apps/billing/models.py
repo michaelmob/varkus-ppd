@@ -6,7 +6,7 @@ from django.db.models import Q, Sum
 
 from django.contrib.auth.models import User
 
-from apps.leads.models import Lead
+from apps.conversions.models import Conversion
 
 
 PAYMENT_CHOICES = (
@@ -114,13 +114,13 @@ class Invoice(models.Model):
 		if Invoice.objects.filter(user=user, due_date=due_date).exists():
 			return
 
-		# Sum all of user's leads up to get user_earnings
-		user_earnings = user.earnings.get_leads_u((start, end)) \
+		# Sum all of user's conversions up to get user_earnings
+		user_earnings = user.earnings.get_conversions_u((start, end)) \
 			.aggregate(e=Sum("user_payout"))["e"] or 0
 
 		# Sum all of user's referral earnings up
 		if user.profile.referrer:
-			referral_earnings = user.profile.referrer.earnings.get_leads_u((start, end)) \
+			referral_earnings = user.profile.referrer.earnings.get_conversions_u((start, end)) \
 				.aggregate(e=Sum("referral_payout"))["e"] or 0
 		else:
 			referral_earnings = 0

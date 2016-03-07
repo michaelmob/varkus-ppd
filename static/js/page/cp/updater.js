@@ -11,7 +11,7 @@ $(function() {
 			}
 
 			switch(data.type) {
-				case "LEAD":
+				case "CONVERSION":
 					playSound();
 					return updateEarnings(data.data.user);
 
@@ -51,8 +51,8 @@ $(function() {
 			".user.clicks.today": user.clicks_today,
 			".user.clicks.total": user.clicks,
 
-			".user.leads.today": user.leads_today,
-			".user.leads.total": user.leads,
+			".user.conversions.today": user.conversions_today,
+			".user.conversions.total": user.conversions,
 
 			".user.earnings.today": user.today,
 			".user.earnings.week": user.week,

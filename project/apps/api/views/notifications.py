@@ -9,7 +9,7 @@ from sockshandler import SocksiPyHandler
 from urllib.parse import quote_plus
 
 
-def notify(lead_obj, test=False):
+def notify(conversion_obj, test=False):
 	# offer_id 			- ID of Offer
 	# offer_name 		- offer_name, url encoded
 	# ip 				- IP that created token
@@ -31,21 +31,21 @@ def notify(lead_obj, test=False):
 
 	#http://varkus.com/notify/?offer_id={offer_id}&offer_name={offer_name}&ip={ip}&user_agent={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&date={date}&time={time}&datetime={datetime}&rand={rand}
 
-	# Get Locker and Token from Lead Object
-	locker_obj = lead_obj.locker
-	token_obj = lead_obj.token
+	# Get Locker and Token from Conversion Object
+	locker_obj = conversion_obj.locker
+	token_obj = conversion_obj.token
 
 	date = datetime.now()
 
 	url = str(locker_obj.http_notification_url)\
-		.replace("{offer_id}", 		str(lead_obj.offer.pk))\
-		.replace("{offer_name}", 	quote_plus(str(lead_obj.offer_name)))\
-		.replace("{ip}", 			str(lead_obj.user_ip_address))\
-		.replace("{user_agent}", 	quote_plus(str(lead_obj.user_user_agent)))\
+		.replace("{offer_id}", 		str(conversion_obj.offer.pk))\
+		.replace("{offer_name}", 	quote_plus(str(conversion_obj.offer_name)))\
+		.replace("{ip}", 			str(conversion_obj.user_ip_address))\
+		.replace("{user_agent}", 	quote_plus(str(conversion_obj.user_user_agent)))\
 		.replace("{token}", 		str(token_obj.unique))\
 		.replace("{widget}", 		str(locker_obj.code))\
-		.replace("{payout}", 		str(lead_obj.user_payout))\
-		.replace("{approved}", 		str(lead_obj.approved))\
+		.replace("{payout}", 		str(conversion_obj.user_payout))\
+		.replace("{approved}", 		str(conversion_obj.approved))\
 		.replace("{date}", 			str(date.strftime("%Y-%m-%d")))\
 		.replace("{time}", 			str(date.strftime("%H:%i:%S")))\
 		.replace("{datetime}", 		str(date.strftime("%Y-%m-%d %H:%i:%S")))\

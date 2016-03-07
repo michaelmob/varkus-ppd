@@ -33,7 +33,7 @@
 						</div>
 
 						<div class="column">
-							{% data_block 'blue' obj.earnings.leads_today 'Leads' 'lightning' 'user leads today' %}
+							{% data_block 'blue' obj.earnings.conversions_today 'Conversions' 'lightning' 'user conversions today' %}
 						</div>
 
 						<div class="column">
@@ -164,9 +164,9 @@
 					{% line_chart dataUrl %}
 				</div>
 
-				{# Leads #}
+				{# Conversions #}
 				<div class="column">
-					{% table leads 'Your Leads&nbsp;<small>(with this offer)</small>' 'lightning' %}
+					{% table conversions 'Your Conversions&nbsp;<small>(with this offer)</small>' 'lightning' %}
 				</div>
 
 			</div>

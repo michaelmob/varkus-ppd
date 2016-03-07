@@ -1,6 +1,6 @@
 from celery import shared_task
 from .models import Earnings, Referral_Earnings
-from apps.leads.models import Token
+from apps.conversions.models import Token
 from django.core.cache import cache
 
 

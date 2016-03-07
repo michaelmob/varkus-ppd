@@ -9,7 +9,7 @@ from apps.cp.templatetags.currency import currency
 
 class Table_Link(tables.Table):
 	name = tables.Column(accessor="name", verbose_name="Name")
-	earnings_leads = tables.Column(accessor="earnings.leads", verbose_name="Leads")
+	earnings_conversions = tables.Column(accessor="earnings.conversions", verbose_name="Conversions")
 	earnings_clicks = tables.Column(accessor="earnings.clicks", verbose_name="Clicks")
 	earnings_month = tables.Column(accessor="earnings.month", verbose_name="Month")
 	earnings_total = tables.Column(accessor="earnings.total", verbose_name="Total")
@@ -19,7 +19,7 @@ class Table_Link(tables.Table):
 		orderable = True
 		empty_text = "You have not added any links."
 		attrs = {"class": "ui sortable table"}
-		fields = ("name", "earnings_leads", "earnings_clicks", "earnings_month", "earnings_total", "date_time")
+		fields = ("name", "earnings_conversions", "earnings_clicks", "earnings_month", "earnings_total", "date_time")
 
 	def create(request):
 		table = Table_Link(Link.objects.filter(user=request.user))

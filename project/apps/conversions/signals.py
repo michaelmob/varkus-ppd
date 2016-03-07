@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
-from .models import Lead, Token
+from .models import Conversion, Token
 
 
 def keep_wanted(obj, wanted):
@@ -46,50 +46,50 @@ def send_click_notification(sender, **kwargs):
 	redis_publisher.publish_message(RedisMessage(json.dumps(response)), expire=0)
 
 
-@receiver(post_save, sender=Lead)
-def send_lead_notification(sender, **kwargs):
+@receiver(post_save, sender=Conversion)
+def send_conversion_notification(sender, **kwargs):
 	if not kwargs["created"]:
 		return
 
-	# Lead object
-	lead = kwargs["instance"]
+	# Conversion object
+	conversion = kwargs["instance"]
 
-	# Add wanted data to lead_data
-	lead_data = keep_wanted(lead, (
+	# Add wanted data to conversion_data
+	conversion_data = keep_wanted(conversion, (
 		"user_payout", "referral_payout", "approved"))
 
 	# Keep wanted user data
-	user_data = keep_wanted(User.objects.get(id=lead.user.id).earnings, (
-		"clicks", "leads", "clicks_today", "leads_today", "today",
+	user_data = keep_wanted(User.objects.get(id=conversion.user.id).earnings, (
+		"clicks", "conversions", "clicks_today", "conversions_today", "today",
 		"week", "month", "year", "total"))
 
 	# Send response to Control Panel
 	response = {
 		"success": True,
-		"message": "Lead",
-		"type": "LEAD",
+		"message": "Conversion",
+		"type": "CONVERSION",
 		"data": {
-			"lead": lead_data,
+			"conversion": conversion_data,
 			"user": user_data
 		}
 	}
 
-	cp = RedisPublisher(facility="cp", users=[lead.user.username])
+	cp = RedisPublisher(facility="cp", users=[conversion.user.username])
 	cp.publish_message(RedisMessage(json.dumps(response)), expire=0)
 
 	# Send response to Locker
 	response = {
 		"success": True,
-		"message": "Unlocked " + lead.locker.get_type().title(),
+		"message": "Unlocked " + conversion.locker.get_type().title(),
 		"data": {
-			"locker": lead.locker.get_type(),
-			"code": lead.locker.code,
-			"url": lead.locker.get_unlock_url()
+			"locker": conversion.locker.get_type(),
+			"code": conversion.locker.code,
+			"url": conversion.locker.get_unlock_url()
 		}
 	}
 
-	if not lead.token.session:
+	if not conversion.token.session:
 		return
 
-	locker = RedisPublisher(facility="locker", sessions=[lead.token.session])
+	locker = RedisPublisher(facility="locker", sessions=[conversion.token.session])
 	locker.publish_message(RedisMessage(json.dumps(response)))

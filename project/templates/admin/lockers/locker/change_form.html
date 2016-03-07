@@ -5,8 +5,8 @@
 
 {% with obj_name=opts.object_name|upper %}
 	{% with args='q='|add:obj_name %}
-		<li><a href="{% url 'admin:leads_lead_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Leads" %}</a></li>
-		<li><a href="{% url 'admin:leads_token_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Tokens" %}</a></li>
+		<li><a href="{% url 'admin:conversions_conversion_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Conversions" %}</a></li>
+		<li><a href="{% url 'admin:conversions_token_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Tokens" %}</a></li>
 	{% endwith %}
 {% endwith %}
 

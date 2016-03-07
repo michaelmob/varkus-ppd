@@ -8,7 +8,7 @@ var drawMapChart = function(data) {
 	var table = new google.visualization.DataTable();
 	table.addColumn("string", "Country");
 	table.addColumn("number", "Earnings");
-	table.addColumn("number", "Leads");
+	table.addColumn("number", "Conversions");
 	table.addRows(data);
 
 	// Format second column

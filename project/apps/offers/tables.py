@@ -3,7 +3,7 @@ import django_tables2 as tables
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
-from apps.leads.models import Lead
+from apps.conversions.models import Conversion
 from .models import Offer
 from apps.cp.templatetags.currency import currency, cut_percent
 
@@ -56,7 +56,7 @@ class Table_Offer_All(Table_Offer_Base):
 	cut_amount = 1
 
 	class Meta:
-		model = Lead
+		model = Conversion
 		attrs = {"class": "ui sortable table"}
 		empty_text = "No offers matching your search exist."
 		fields = ("name", "category", "flag",
@@ -69,11 +69,11 @@ class Table_Offer_All(Table_Offer_Base):
 		return table
 
 
-class Table_Offer_Leads(Table_Offer_Base):
+class Table_Offer_Conversions(Table_Offer_Base):
 	class Meta:
-		model = Lead
+		model = Conversion
 		attrs = {"class": "ui sortable table"}
-		empty_text = "You haven't received any leads with this offer."
+		empty_text = "You haven't received any conversions with this offer."
 		fields = ("user_ip_address", "user_payout", "date_time", "approved")
 
 	def create(request, objects):
@@ -86,7 +86,7 @@ class Table_Offer_Options(Table_Offer_Base):
 	remove = tables.Column(empty_values=(), orderable=False)
 
 	class Meta:
-		model = Lead
+		model = Conversion
 		attrs = {"class": "ui sortable table"}
 		empty_text = "There are no offers in this list."
 		fields = ("name", "category", "flag")

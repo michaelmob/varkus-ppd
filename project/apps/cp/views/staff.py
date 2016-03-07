@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core.cache import cache
 
-from ...leads.models import Deposit
+from ...conversions.models import Deposit
 
 
 @user_passes_test(lambda u: u.is_superuser)

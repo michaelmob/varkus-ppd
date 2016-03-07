@@ -38,6 +38,11 @@
 						<a class="inverted item" href="{% url 'offers-options' %}">
 							<i class="options icon"></i> Options
 						</a>
+						{% if user.is_superuser %}
+						<a class="inverted item" href="{% url 'offers-sync' %}">
+							<i class="refresh icon"></i> Sync
+						</a>
+						{% endif %}
 					</div>
 				</div>
 				<div class="ui bottom attached compact segment">

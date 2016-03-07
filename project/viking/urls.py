@@ -22,8 +22,8 @@ urlpatterns = [
 	# User
 	url(r"^", include("apps.user.urls")),
 
-	# Leads
-	url(r"^leads/", include("apps.leads.urls")),
+	# Conversions
+	url(r"^conversions/", include("apps.conversions.urls")),
 
 	# API
 	url(r"^api/", include("apps.api.urls")),

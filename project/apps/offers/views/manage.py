@@ -5,11 +5,11 @@ from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 
-from apps.leads.models import Lead
+from apps.conversions.models import Conversion
 
 from ..models import Offer
 from ..forms import Form_Offer
-from ..tables import Table_Offer_All, Table_Offer_Leads, Table_Offer_Options
+from ..tables import Table_Offer_All, Table_Offer_Conversions, Table_Offer_Options
 
 from apps.cp.bases.charts import Charts
 
@@ -39,7 +39,7 @@ class View_Manage(View):
 		except (ValueError, Offer.DoesNotExist):
 			return redirect("offers")
 
-		leads = Lead.objects.filter(offer=obj, user=request.user).order_by("-date_time")
+		conversions = Conversion.objects.filter(offer=obj, user=request.user).order_by("-date_time")
 
 		# Set offer importance
 		importance = "neutral"
@@ -51,7 +51,7 @@ class View_Manage(View):
 
 		return render(request, "offers/manage.html", {
 			"obj": obj,
-			"leads": Table_Offer_Leads.create(request, leads),
+			"conversions": Table_Offer_Conversions.create(request, conversions),
 			"importance": importance
 		})
 

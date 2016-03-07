@@ -2,7 +2,7 @@
 {% load i18n admin_urls static admin_modify %}
 
 {% block object-tools-items %}
-<li><a href="{% url 'admin:leads_lead_changelist' %}?user={{ original.pk }}">{% trans "Leads" %}</a></li>
+<li><a href="{% url 'admin:conversions_conversion_changelist' %}?user={{ original.pk }}">{% trans "Conversions" %}</a></li>
 <li><a href="{% url 'admin:billing_invoice_changelist' %}?user={{ original.pk }}">{% trans "Invoices" %}</a></li>
 <li><a href="{% url 'admin:auth_user_changelist' %}?profile__referrer={{ original.pk }}">{% trans "Referrals" %}</a></li>
 <li><a href="{% url 'admin:lockers_file_changelist' %}?user={{ original.pk }}">{% trans "Files" %}</a></li>

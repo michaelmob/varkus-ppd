@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
 
-from ..models import Lead, Token, Deposit
+from ..models import Conversion, Token, Deposit
 
 from apps.lockers.fields import locker_ref_to_object
 from apps.offers.models import Offer
@@ -70,14 +70,14 @@ def receive(request, password=None):
 	payout 			= Decimal(request.GET.get("payout", 0))
 	user_ip_address = request.GET.get("ip")
 	unique			= request.GET.get("token")
-	typeof			= request.GET.get("typeof", "lead").lower()
+	typeof			= request.GET.get("typeof", "conversion").lower()
 	approved 		= request.GET.get("approved", "1") == "1" # 0 chargeback, 1 approved
 
 	user			= None
 	locker_obj		= None
 	user_payout 	= 0
 	referral_payout = 0
-	lead_blocked	= False
+	conversion_blocked	= False
 
 	response = {
 		"success": False,
@@ -117,9 +117,9 @@ def receive(request, password=None):
 		response["debug"] = "Token does not exist"
 		return JsonResponse(response)
 
-	# Make sure we don't already have a lead
+	# Make sure we don't already have a conversion
 	# so we don't give double the payment
-	if not settings.DEBUG and token.lead:
+	if not settings.DEBUG and token.conversion:
 		response["success"] = True
 		response["message"] = "Already received"
 		return JsonResponse(response)
@@ -134,22 +134,22 @@ def receive(request, password=None):
 		except:
 			user = None
 
-		# If user exists and lead is approved
+		# If user exists and conversion is approved
 		if user and approved:
 			# If offer country is in the country_block of the locker object
 			if offer:
 				if offer.flag in token.locker.country_block:
-					lead_blocked = True
+					conversion_blocked = True
 					response["debug"] = "Country block"
 
-			# If lead_block chance is hit, then block the lead
-			if token.locker.lead_block > 0:
-				if randint(0, 100) <= (token.locker.lead_block * 100):
-					lead_blocked = True
-					response["debug"] = "Lead block"
+			# If conversion_block chance is hit, then block the conversion
+			if token.locker.conversion_block > 0:
+				if randint(0, 100) <= (token.locker.conversion_block * 100):
+					conversion_blocked = True
+					response["debug"] = "Conversion block"
 
-			# If the lead wasn't leadblocked and the type is "Lead" (as opposed to Staff or Paid)
-			if not lead_blocked and typeof == "lead":
+			# If the conversion wasn't conversionblocked and the type is "Conversion" (as opposed to Staff or Paid)
+			if not conversion_blocked and typeof == "conversion":
 				try:
 					cut_amount = Decimal(user.profile.party.cut_amount)
 				except:
@@ -167,29 +167,29 @@ def receive(request, password=None):
 						user_payout, user.profile.party.referral_cut_amount, False)
 
 		if user:
-			# Add Lead Notification
-			user.profile.notification_lead += 1
+			# Add Conversion Notification
+			user.profile.notification_conversion += 1
 			user.profile.save()
 
 		# Add earnings to offer
 		if offer:
-			offer.earnings.add(payout, cut_amount, typeof == "lead")
+			offer.earnings.add(payout, cut_amount, typeof == "conversion")
 		elif settings.DEBUG:
 			response["debug"] = "Offer does not exist"
 
-	# Set token as a lead
+	# Set token as a conversion
 	if typeof == "staff":
 		token.staff = True
-		lead_blocked = True
+		conversion_blocked = True
 	elif typeof == "paid":
 		token.paid = True
 	else:
-		token.lead = True
+		token.conversion = True
 
 	token.save()
 
-	# Create Lead
-	lead = Lead.create(
+	# Create Conversion
+	conversion = Conversion.create(
 		offer				= offer,
 		token				= token,
 		user				= user,
@@ -201,7 +201,7 @@ def receive(request, password=None):
 		dev_payout 			= payout - user_payout,
 		user_payout 		= user_payout,
 		referral_payout 	= referral_payout,
-		lead_blocked		= lead_blocked,
+		conversion_blocked		= conversion_blocked,
 		deposit 			= deposit.code,
 		approved 			= approved
 	)

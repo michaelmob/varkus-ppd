@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.contrib.gis.geoip2 import GeoIP2
 
 from ..cp.models import Earnings_Base
-from ..leads.models import Lead, Token
+from ..conversions.models import Conversion, Token
 
 from django_countries import countries as _countries
 from utils.user_agent import get_ua
@@ -206,14 +206,14 @@ class Offer(models.Model):
 		_offers = []
 
 		# Block Completed Offers
-		leads = Lead.objects\
+		conversions = Conversion.objects\
 			.filter(
 				user_ip_address = ip_address,
 				date_time__gt 	= datetime.now() - timedelta(hours=6)
 			)
 
-		for lead in leads:
-			offer_block.append(lead.offer.id)
+		for conversion in conversions:
+			offer_block.append(conversion.offer.id)
 
 		# User Agent Args
 		args = (Q(user_agent=None),)

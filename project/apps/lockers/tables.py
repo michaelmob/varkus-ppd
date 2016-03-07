@@ -1,16 +1,16 @@
 import django_tables2 as tables
 
-from apps.leads.models import Token, Lead
+from apps.conversions.models import Token, Conversion
 from apps.offers.tables import Table_Offer_Base
 
 
-class Table_Locker_Lead(Table_Offer_Base):
+class Table_Locker_Conversion(Table_Offer_Base):
 	cut_amount = 1
 
 	class Meta:
 		orderable = True
-		model = Lead
-		empty_text = "This locker has not received any leads."
+		model = Conversion
+		empty_text = "This locker has not received any conversions."
 		attrs = {"class": "ui sortable table"}
 		fields = ("offer", "user_ip_address", "user_payout", "date_time", "approved")
 

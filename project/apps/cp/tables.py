@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 from apps.offers.models import Offer
 from apps.offers.tables import Table_Offer_Base
-from apps.leads.models import Lead
+from apps.conversions.models import Conversion
 from apps.cp.templatetags.currency import currency, cut_percent
 
 
@@ -24,14 +24,14 @@ class Table_Offer(Table_Offer_Base):
 		return table
 
 
-class Table_Lead(tables.Table):
+class Table_Conversion(tables.Table):
 	name = tables.Column(accessor="name")
 	cut_amount = 1
 
 	class Meta:
 		orderable = False
-		model = Lead
-		empty_text = "No leads exist."
+		model = Conversion
+		empty_text = "No conversions exist."
 		attrs = {"class": "ui sortable table"}
 		fields = ("name", "category", "flag",
 			"user_agent", "earnings_per_click", "payout")
