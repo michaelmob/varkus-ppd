@@ -1,5 +1,6 @@
 import django_tables2 as tables
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
@@ -38,7 +39,7 @@ class Table_Conversion(tables.Table):
 
 	def create(request, objects):
 		table = Table_Offer(objects)
-		tables.RequestConfig(request, paginate={"per_page": 30}).configure(table)
+		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
 		table.cut_amount = request.user.profile.party.cut_amount
 		return table
 

@@ -1,5 +1,6 @@
 import django_tables2 as tables
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.formats import date_format
 from django.utils.safestring import mark_safe
@@ -23,7 +24,7 @@ class Table_Invoice(tables.Table):
 
 	def create(request):
 		table = __class__(Invoice.objects.filter(user=request.user).order_by("-creation_date"))
-		tables.RequestConfig(request, paginate={"per_page": 30}).configure(table)
+		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
 		return table
 
 	def render_total_amount(self, value):

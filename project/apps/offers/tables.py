@@ -1,5 +1,6 @@
 import django_tables2 as tables
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
@@ -64,7 +65,7 @@ class Table_Offer_All(Table_Offer_Base):
 
 	def create(request, objects):
 		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": 53}).configure(table)
+		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
 		table.cut_amount = request.user.profile.party.cut_amount or settings.DEFAULT_CUT_AMOUNT
 		return table
 
@@ -93,7 +94,7 @@ class Table_Offer_Options(Table_Offer_Base):
 
 	def create(request, objects):
 		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": 30}).configure(table)
+		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
 		return table
 
 	def render_remove(self, record):

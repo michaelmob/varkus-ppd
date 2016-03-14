@@ -51,14 +51,14 @@ def internal(request):
 
 	url += "?" + data.decode("utf-8")
 
-	return HttpResponse("<a href='%s'>%s</a>" % (url, url))
+	return HttpResponse("<a href='{0}'>{0}</a>".format(url))
 
 
 def log(request, typeof):
 	# Log attempt
 	try:
 		with open("/tmp/postbacks.txt", "a") as f:
-		    f.write("{1}\t{0}\t{1}\n" % (typeof,
+			f.write("{1}\t{0}\t{1}\n" % (typeof,
 				request.META.get("REMOTE_ADDR"),
 				request.build_absolute_uri()))
 	except:

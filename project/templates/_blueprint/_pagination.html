@@ -3,7 +3,7 @@
 
 {% with num=table.paginator.page_range %}
 	{% if num|length > 1 %}
-		<div class="ui pagination fluid {% if not not_inverted %}inverted{% endif %} menu">
+		<div class="ui {% if class %}{{ class }} {% endif %}pagination fluid {% if inverted %}inverted {% endif %}menu">
 
 			{% if table.page.number > 4 %}
 				<a href="{% querystring table.prefixed_page_field=1 %}" class="item">1</a>

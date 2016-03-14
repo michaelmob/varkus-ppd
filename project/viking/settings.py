@@ -205,6 +205,9 @@ LOCKER_THEMES = (
 	("BLANK", "Blank"),
 )
 
+# Tables
+ITEMS_PER_PAGE = 20
+
 # Offers
 OFFERS_COUNT = 10
 

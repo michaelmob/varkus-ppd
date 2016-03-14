@@ -14,10 +14,10 @@ getcontext().prec = 2
 
 class Earnings_Base(models.Model):
 	clicks			= models.IntegerField(default=0, verbose_name="Clicks")
-	conversions			= models.IntegerField(default=0)
+	conversions		= models.IntegerField(default=0)
 
 	clicks_today	= models.IntegerField(default=0, verbose_name="Today's Clicks")
-	conversions_today 	= models.IntegerField(default=0, verbose_name="Today's Conversions")
+	conversions_today = models.IntegerField(default=0, verbose_name="Today's Conversions")
 
 	today			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
 	yesterday		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
@@ -61,8 +61,8 @@ class Earnings_Base(models.Model):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
-		self.conversions 			= F("conversions") 		+ 1
-		self.conversions_today 	= F("conversions_today") 	+ 1
+		self.conversions 		= F("conversions") + 1
+		self.conversions_today 	= F("conversions_today") + 1
 
 		self.today 	= F("today") 	+ amount_cut
 		self.week 	= F("week") 	+ amount_cut

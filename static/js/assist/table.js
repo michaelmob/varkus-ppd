@@ -1,5 +1,13 @@
-$(".ui.sortable.table th.sortable").click(function() {
-	window.location = $(this).find("a").attr("href"); return false;
+$(".ui.sortable.table th.orderable").click(function() {
+	window.location = $(this).find("a").attr("href");
+	return false;
 });
-$("th.desc").addClass("sorted descending");
-$("th.asc").addClass("sorted ascending");
+$("th.desc,th.asc").addClass("sorted");
+
+$(".ui." + n + ".pagination").twbsPagination({
+	startPage: s,
+	totalPages: t,
+	onPageClick: function(event, page) {
+		$("." + n + ".dimmer").addClass("active");
+	}
+});

@@ -1,12 +1,17 @@
 {% load django_tables2 %}
 {% load i18n %}
+{% load  %}
 {% load static %}
 
+{% with table_name=table|class_name|lower|random:5 pages=table.paginator.page_range|length %}
 {% spaceless %}
 {% block table %}
-	{% include '_blueprint/_pagination.html' %}
-	<table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
-		{# nospaceless #}
+	{% if pages > 1 %}<div class="ui {{ table_name }} pagination fluid inverted menu"></div>{% endif %}
+	<div style="position:relative">
+		<div class="ui {{ table_name }} inverted dimmer">
+			<div class="ui small text loader">Loading</div>
+		</div>
+		<table{% if table.attrs %} {{ table.attrs.as_html }}{% endif %}>
 			{% block table.thead %}
 			<thead>
 				<tr>
@@ -44,14 +49,13 @@
 			{% block table.tfoot %}
 				<tfoot></tfoot>
 			{% endblock table.tfoot %}
-		{# endnospaceless #}
-	</table>
+		</table>
+	</div>
+	{% if pages > 1 %}<div class="ui {{ table_name }} pagination fluid menu"></div>{% endif %}
+
+	<script>var n="{{ table_name }}",s={{ table.page.number }},t={{ table.paginator.page_range|length }};</script>
+	<script src="{% static 'js/comp/jquery.twbsPagination.min.js' %}"></script>
 	<script src="{% static 'js/assist/table.js' %}"></script>
 {% endblock table %}
-
-{% if table.page %}
-	{% block pagination %}
-		{% include '_blueprint/_pagination.html' with not_inverted=True %}
-	{% endblock pagination %}
-{% endif %}
 {% endspaceless %}
+{% endwith %}

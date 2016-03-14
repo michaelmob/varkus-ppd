@@ -1,5 +1,6 @@
 from datetime import date, datetime, timedelta
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
@@ -54,7 +55,7 @@ class Table_Statistics_Base(Table_Offer_Base):
 
 		# Create Table
 		super(__class__, self).__init__(data)
-		tables.RequestConfig(request, paginate={"per_page": 30}).configure(self)
+		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(self)
 
 	def _render_(self, model, record, extra=None):
 		args = self.args.copy()

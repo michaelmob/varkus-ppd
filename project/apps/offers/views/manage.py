@@ -16,7 +16,7 @@ from apps.cp.bases.charts import Charts
 
 class View_Overview(View):
 	def get(self, request):
-		query = request.GET.get("query", None)
+		query = request.GET.get("q", None)
 
 		if query:
 			offers = Offer.objects.filter(earnings_per_click__gt=0.01) \

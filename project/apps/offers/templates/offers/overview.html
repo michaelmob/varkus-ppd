@@ -26,12 +26,12 @@
 			<div class="box">
 				<div class="ui top attached inverted red menu">
 					<div class="icon header item"><i class="tags icon"></i></div>
-					<div class="header item">Offers</div>
+					<div class="header item">Offers{% if query|length > 0 %}&nbsp;<small>[Filter: "{{ query }}"]{% endif %}</small></div>
 
 					<div class="right menu">
 						<form class="inverted item">
 							<div class="ui inverted transparent icon input">
-								<input name="query" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
+								<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
 								<i class="search link icon"></i>
 							</div>
 						</form>

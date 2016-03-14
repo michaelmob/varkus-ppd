@@ -1,8 +1,6 @@
 google.load("visualization", "1", { packages: ["geochart"] });
 
-var colors = [
-	"#FFCDD2", "#EF9A9A", "#E57373", "#EF5350", "F44336"
-];
+var colors = ["#FFCDD2", "#EF9A9A", "#E57373", "#EF5350", "F44336"];
 
 var drawMapChart = function(data) {
 	var table = new google.visualization.DataTable();

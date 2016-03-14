@@ -81,7 +81,7 @@ class Token(models.Model):
 	date_time	= models.DateTimeField()
 	last_access	= models.DateTimeField(auto_now=True, verbose_name="Last Access")
 
-	conversion 		= models.BooleanField(default=False, verbose_name="Conversion")
+	conversion 	= models.BooleanField(default=False, verbose_name="Conversion")
 	paid 		= models.BooleanField(default=False)
 	staff 		= models.BooleanField(default=False)
 
@@ -187,7 +187,7 @@ class Conversion(models.Model):
 	user_payout			= models.DecimalField(verbose_name="Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 	referral_payout		= models.DecimalField(verbose_name="Referral Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 
-	conversion_blocked		= models.BooleanField(verbose_name="Conversion Blocked", default=False)
+	conversion_blocked	= models.BooleanField(verbose_name="Conversion Blocked", default=False)
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=Deposit.names())
@@ -223,7 +223,7 @@ class Conversion(models.Model):
 			"user_payout"		: user_payout,
 			"referral_payout"	: referral_payout,
 
-			"conversion_blocked"		: conversion_blocked,
+			"conversion_blocked": conversion_blocked,
 			"approved"			: approved,
 
 			"deposit"			: deposit,
