@@ -47,7 +47,7 @@ class Charts():
 
 	def line_cache(obj):
 		# Create key (lc_file_4)
-		key = "lc_" + obj.__class__.__name__ + str(obj.id)
+		key = "lc_" + obj.__class__.__name__.lower() + str(obj.id)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set
@@ -89,7 +89,7 @@ class Charts():
 
 	def map_cache(obj):
 		# Create key (mc_file_4)
-		key = "mc_" + obj.__class__.__name__ + str(obj.id)
+		key = "mc_" + obj.__class__.__name__.lower() + str(obj.id)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set

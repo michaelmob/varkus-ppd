@@ -39,7 +39,7 @@ class View_Manage(View):
 		except (ValueError, Offer.DoesNotExist):
 			return redirect("offers")
 
-		conversions = Conversion.objects.filter(offer=obj, user=request.user).order_by("-date_time")
+		conversions = Conversion.objects.filter(offer=obj, user=request.user, blocked=False).order_by("-date_time")
 
 		# Set offer importance
 		importance = "neutral"

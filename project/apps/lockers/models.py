@@ -83,3 +83,8 @@ class Locker_Base(models.Model):
 	class Meta:
 		app_label = "lockers"
 		abstract = True
+
+
+# Signals
+from . import signals
+from .widgets import signals

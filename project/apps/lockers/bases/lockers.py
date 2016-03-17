@@ -56,7 +56,7 @@ class View_Locker_Base(View):
 			self.template,
 			{
 				"ip_address": request.META.get("REMOTE_ADDR"),
-				"theme": obj.theme,
+				"theme": obj.theme or "DEFAULT",
 				"obj": obj,
 				"unlocked": unlocked,
 				"offers": Offer.get_cache(request, obj)
@@ -109,9 +109,9 @@ class View_Redirect_Base(View_Locker_Base):
 			pass
 
 		url = str(offer.tracking_url) \
-				.replace("{o}", str(offer.offer_id)) \
-				.replace("{a}", str(aff_id)) \
-				.replace("{u}", str(token.unique))
+			.replace("{o}", str(offer.offer_id)) \
+			.replace("{a}", str(aff_id)) \
+			.replace("{u}", str(token.unique))
 
 		return redirect(url)
 
@@ -148,11 +148,14 @@ class View_Unlock_Base(View_Locker_Base):
 			request,
 			self.template,
 			{
-				"theme": obj.theme,
+				"theme": obj.theme or "DEFAULT",
 				"obj": obj,
-				"data": self.token.data
+				"data": self.data(obj)
 			}
 		)
+
+	def data(self, obj):
+		return self.token.data
 
 
 class View_Poll_Base(View_Unlock_Base):

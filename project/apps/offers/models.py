@@ -315,3 +315,7 @@ class Earnings(Earnings_Base):
 
 	class Meta:
 		verbose_name_plural = "Earnings"
+
+
+# Signals
+from . import signals

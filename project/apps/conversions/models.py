@@ -11,6 +11,7 @@ from django.contrib.gis.geoip2 import GeoIP2
 from utils import strings
 from ..lockers.fields import LockerField
 
+import apps.offers.models
 
 class Deposit():
 	user_id		= None
@@ -168,7 +169,7 @@ class Token(models.Model):
 
 class Conversion(models.Model):
 	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	offer_name			= models.CharField(max_length=150, verbose_name="Offer", default=None, blank=True, null=True)
+	offer_name			= models.CharField(max_length=150, verbose_name="Offer Name", default=None, blank=True, null=True)
 	country 			= models.CharField(max_length=3, verbose_name="Country", default=None, blank=True, null=True)
 
 	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
@@ -187,57 +188,49 @@ class Conversion(models.Model):
 	user_payout			= models.DecimalField(verbose_name="Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 	referral_payout		= models.DecimalField(verbose_name="Referral Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
 
-	conversion_blocked	= models.BooleanField(verbose_name="Conversion Blocked", default=False)
+	blocked				= models.BooleanField(verbose_name="Blocked", default=False)
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=Deposit.names())
 	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
 
 
-	def create(
-		offer, token, user, locker, sender_ip_address, user_ip_address,
-		payout, dev_payout, user_payout, referral_payout, deposit="DEFAULT_DEPOSIT",
-		access_url="", conversion_blocked=False, approved=True
-	):
+	def get_or_create(offer, token, payout, sender_ip_address, user_ip_address,
+		deposit="DEFAULT_DEPOSIT", blocked=False, approved=True):
+		""" Create Conversion Row """
+		if not offer:
+			offer = apps.offers.models.Offer()
 
-		try:
-			user_agent = token.user_agent
-		except:
-			user_agent = ""
+		if not token:
+			token = Token()
 
 		args = {
-			"offer" 			: offer,
+			"offer" 			: offer if offer.pk else None,
+			"token" 			: token if token.pk else None,
+			"user"				: token.user,
+			"locker"			: token.locker,
+		}
+
+		defaults = {
 			"offer_name"		: offer.name,
-
-			"token" 			: token,
-			"user"				: user,
-			"locker"			: locker,
-			"access_url"		: access_url,
-
 			"sender_ip_address"	: sender_ip_address,
 			"user_ip_address"	: user_ip_address,
-			"user_user_agent" 	: user_agent,
-
+			"user_user_agent" 	: token.user_agent,
 			"payout"			: payout,
-			"dev_payout"		: dev_payout,
-			"user_payout"		: user_payout,
-			"referral_payout"	: referral_payout,
-
-			"conversion_blocked": conversion_blocked,
+			"blocked"			: blocked,
 			"approved"			: approved,
-
 			"deposit"			: deposit,
 			"date_time"			: datetime.now(),
 		}
 
-		# Lookup throws error if inexistant
+		# Find IP address country, use Offer's country if not found
 		try:
-			args["country"] = GeoIP2().country_code(user_ip_address)
+			defaults["country"] = GeoIP2().country_code(user_ip_address)
 		except:
-			args["country"] = offer.flag
+			defaults["country"] = offer.flag
 
-		return Conversion.objects.create(**args)
+		return Conversion.objects.get_or_create(defaults=defaults, **args)
+
 
 # Signals
-import apps.conversions.signals
-import apps.lockers.widgets.signals
+from . import signals

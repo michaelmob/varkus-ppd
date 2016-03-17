@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 
 from ..offers.models import Offer
@@ -44,9 +43,9 @@ class Party(models.Model):
 					"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
 				}
 			)
-			return True
+			return party
 		except:
-			return False
+			return None
 
 	def default():
 		return Party.objects.get(id=settings.DEFAULT_PARTY_ID)
@@ -81,6 +80,16 @@ class Profile(models.Model):
 	notification_conversion = models.IntegerField(default=0)
 	notification_billing 	= models.IntegerField(default=0)
 
+	def party_cut_amounts(self):
+		if not self.party:
+			self.party = self.party.default()
+			self.save()
+
+		a = Decimal(self.party.cut_amount)
+		b = Decimal(self.party.referral_cut_amount)
+
+		return (a, b)
+
 
 class Earnings(Earnings_Base):
 	obj 		= models.OneToOneField(User, primary_key=True)
@@ -100,13 +109,5 @@ class Referral_Earnings(Earnings_Base):
 		verbose_name = "Referral Earnings"
 		verbose_name_plural = "Referral Earnings"
 
-
-def create_user(sender, instance, created, **kwargs):
-	if created:
-		Profile.objects.get_or_create(user=instance)
-		Billing.objects.get_or_create(user=instance)
-		Earnings.objects.get_or_create(obj=instance)
-		Referral_Earnings.objects.get_or_create(obj=instance)
-
-
-post_save.connect(create_user, sender=User, dispatch_uid="create_user_profile")
+# Signals
+from . import signals

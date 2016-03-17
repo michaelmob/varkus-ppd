@@ -23,7 +23,7 @@ var items = document.querySelectorAll(".widget .item");
 for (var i = 0; i < items.length; i++) {
 	items[i].onclick = function() {
 		document.querySelector(".progress.indicator").style.display = "block";
-		items[i].onclick = openSocket;
+		openSocket();
 	};
 
 	items[i].onmouseover = function(e) {

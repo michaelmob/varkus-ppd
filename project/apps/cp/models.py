@@ -78,6 +78,18 @@ class Earnings_Base(models.Model):
 		self.save()
 		return amount_cut
 
+	def subtract(self, amount):
+		amount = Decimal(amount)
+
+		self.today 	= F("today") 	- amount
+		self.week 	= F("week") 	- amount
+		self.month 	= F("month")	- amount
+		self.year 	= F("year") 	- amount
+		self.total 	= F("total") 	- amount
+
+		self.save()
+		return amount
+
 	def difference(self, amount, cut=0, add_to_real=False):
 		return self.add(amount, 1 - cut, add_to_real)
 
@@ -105,7 +117,7 @@ class Earnings_Base(models.Model):
 
 		# Show every conversion, including conversion blocked ones
 		if not show_all:
-			args["conversion_blocked"] = False
+			args["blocked"] = False
 
 		return search_model.objects.filter(**args)
 
@@ -140,3 +152,7 @@ class Earnings_Base(models.Model):
 		abstract = True
 		verbose_name = "Earnings"
 		verbose_name_plural = "Earnings"
+
+
+# Signals
+from . import signals

@@ -2,13 +2,14 @@
 {% load static %}
 
 {% if not inline %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 {% endif %}
 
 {% if custom_css_url %}
-	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
+<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
 {% else %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
 {% endif %}
 
 <div class="widget">
@@ -35,10 +36,6 @@
 		</div>
 	{% endif %}
 </div>
-
-{% if user.is_staff %}
-	{% include 'offers/widget/staff.html' %}
-{% endif %}
 
 <script>var uri="{% websocket_uri %}",locker="{{ obj.get_type }}",code="{{ obj.code }}";</script>
 <script src="{% static 'js/ws4redis.js' %}"></script>

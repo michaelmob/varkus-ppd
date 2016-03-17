@@ -1,12 +1,13 @@
 {% extends 'lockers/bases/locker/unlock.html' %}
 {% load anora %}
 
-
 {% block content %}
 <h1>You have unlocked {{ obj.item_name|anora }} from {{ obj.name }}</h1>
 
-<div class="field">
-	<label>Your {{ obj.item_name }}:</label>
-	<input type="text" readonly="readonly" value="{{ data }}" />
+<div class="ui form">
+	<div class="field">
+		<label>Your {{ obj.item_name }}:</label>
+		<input type="text" readonly="readonly" value="{{ data }}" />
+	</div>
 </div>
 {% endblock %}

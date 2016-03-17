@@ -1,5 +1,4 @@
 import json
-from decimal import Decimal
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -9,26 +8,50 @@ from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
 from .models import Conversion, Token
-
-
-def keep_wanted(obj, wanted):
-	result = {}
-
-	for key, val in vars(obj).items():
-		if key in wanted:
-			if isinstance(val, Decimal):
-				val = "%.2f" % val
-			result[key] = val
-
-	return result
+from utils.dicts import keep_wanted
+from apps.lockers.fields import locker_ref_to_object
 
 
 @receiver(post_save, sender=Token)
-def send_click_notification(sender, **kwargs):
-	if not kwargs["created"]:
+def unlock_signal(sender, instance, created, **kwargs):
+	""" Signal for after a token is saved, this signal is responsible
+		for publishing details of the locker to the redis queue but only if
+		the token is marked as accessible (meaning the user has access to the
+		locker that is attached) """
+	if not (instance.locker and instance.session and instance.access()):
 		return
 
-	earnings = kwargs["instance"].user.earnings
+	# Sometimes instance.locker is the reference, and sometimes it's the object
+	if isinstance(instance.locker, str):
+		instance.locker = locker_ref_to_object(instance.locker)
+		
+		if not instance.locker:
+			return
+
+	# Send response to Locker
+	response = {
+		"success": True,
+		"message": "Unlocked " + instance.locker.get_type().title(),
+		"data": {
+			"locker": instance.locker.get_type(),
+			"code": instance.locker.code,
+			"url": instance.locker.get_unlock_url()
+		}
+	}
+
+	locker = RedisPublisher(facility="locker", sessions=[instance.session])
+	locker.publish_message(RedisMessage(json.dumps(response)))
+
+
+@receiver(post_save, sender=Token)
+def notify_click_signal(sender, instance, created, **kwargs):
+	""" Signal for when a token is created, this signal is responsible
+		for publishing details of the token to the redis queue that will,
+		in turn, notify the user a click has went through """
+	if not (created and instance.user):
+		return
+
+	earnings = instance.user.earnings
 
 	response = {
 		"success": True,
@@ -42,24 +65,24 @@ def send_click_notification(sender, **kwargs):
 		}
 	}
 
-	redis_publisher = RedisPublisher(facility="cp", users=[kwargs["instance"].user.username])
+	redis_publisher = RedisPublisher(facility="cp", users=[instance.user.username])
 	redis_publisher.publish_message(RedisMessage(json.dumps(response)), expire=0)
 
 
 @receiver(post_save, sender=Conversion)
-def send_conversion_notification(sender, **kwargs):
-	if not kwargs["created"]:
+def notify_conversion_signal(sender, instance, created, **kwargs):
+	""" Signal for when a conversion is created, this signal is responsible
+		for publishing details of the conversion to the redis queue that will,
+		in turn, notify the user a conversion has went through """
+	if not (created and instance.user and not instance.blocked):
 		return
 
-	# Conversion object
-	conversion = kwargs["instance"]
-
 	# Add wanted data to conversion_data
-	conversion_data = keep_wanted(conversion, (
+	conversion_data = keep_wanted(instance, (
 		"user_payout", "referral_payout", "approved"))
 
 	# Keep wanted user data
-	user_data = keep_wanted(User.objects.get(id=conversion.user.id).earnings, (
+	user_data = keep_wanted(User.objects.get(id=instance.user.id).earnings, (
 		"clicks", "conversions", "clicks_today", "conversions_today", "today",
 		"week", "month", "year", "total"))
 
@@ -74,22 +97,5 @@ def send_conversion_notification(sender, **kwargs):
 		}
 	}
 
-	cp = RedisPublisher(facility="cp", users=[conversion.user.username])
+	cp = RedisPublisher(facility="cp", users=[instance.user.username])
 	cp.publish_message(RedisMessage(json.dumps(response)), expire=0)
-
-	# Send response to Locker
-	response = {
-		"success": True,
-		"message": "Unlocked " + conversion.locker.get_type().title(),
-		"data": {
-			"locker": conversion.locker.get_type(),
-			"code": conversion.locker.code,
-			"url": conversion.locker.get_unlock_url()
-		}
-	}
-
-	if not conversion.token.session:
-		return
-
-	locker = RedisPublisher(facility="locker", sessions=[conversion.token.session])
-	locker.publish_message(RedisMessage(json.dumps(response)))

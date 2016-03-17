@@ -22,14 +22,7 @@ class View_Unlock(View_Unlock_Base):
 			self.token.data = obj.get()
 			self.token.save()
 
-		return render(
-			request,
-			self.template,
-			{
-				"obj": obj,
-				"data": self.token.data
-			}
-		)
+		return super(View_Unlock, self).get_return(request, obj)
 
 
 class View_Poll(View_Poll_Base):

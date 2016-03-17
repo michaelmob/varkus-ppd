@@ -17,16 +17,8 @@ class View_Unlock(View_Unlock_Base):
 	model = Link
 	template = "links/locker/unlock.html"
 
-	def get_return(self, request, obj):
-		return render(
-			request,
-			self.template,
-			{
-				"obj": obj,
-				"data": obj.url
-			}
-		)
-
+	def data(self, obj):
+		return obj.url
 
 class View_Poll(View_Poll_Base):
 	model = Link

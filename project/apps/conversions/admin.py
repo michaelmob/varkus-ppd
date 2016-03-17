@@ -4,7 +4,7 @@ from .models import Conversion, Token
 
 @admin.register(Conversion)
 class Admin_Conversion(admin.ModelAdmin):
-	list_display = ("offer_name", "user", "token", "locker", "sender_ip_address", "user_ip_address", "deposit", "payout", "date_time")
+	list_display = ("offer", "user", "token", "locker", "sender_ip_address", "user_ip_address", "deposit", "payout", "date_time")
 	search_fields = ("user_ip_address", "locker")
 
 
