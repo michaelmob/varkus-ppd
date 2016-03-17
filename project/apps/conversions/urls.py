@@ -1,6 +1,4 @@
 from django.conf.urls import url
-
-from .views import postback
 from .views import notifications
 from .models import Deposit
 
