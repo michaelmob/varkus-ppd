@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponse
 
-from ...bases.lockers import View_Locker_Base, View_Unlock_Base, View_Redirect_Base, View_Poll_Base
+from ...bases.lockers import View_Locker_Base, View_Unlock_Base, View_Redirect_Base
 from ..models import File
 
 from apps.conversions.models import Token
@@ -23,30 +23,26 @@ class View_Unlock(View_Unlock_Base):
 class View_Download(View_Unlock_Base):
 	model = File
 
-	def access(self, request, obj):
-		# if "locker__file_force" is set then return True
-		# as we have internal permission to access the file
+	def access(self):
+		# Test if internal is set to True, if it's True then return as true,
+		# otherwise we want it to keep moving down the line
 		try:
-			if request.session["locker__file_force"]:
-				del request.session["locker__file_force"]
+			if self.internal:
 				return True
-		except KeyError:
+		except:
 			pass
 
 		# Get token using request and the locker object
 		try:
-			self.token = Token.get(request, obj)
+			self.token = Token.get(self._request, self._obj)
 		except:
 			return False
 
 		# Return access
 		return self.token.access()
 
-	def get_return(self, request, obj):
-		response = HttpResponse(obj.file, content_type="application/octet-stream")
-		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (obj.file_name).replace("\"", "").replace("\\", "")
+	def get_return(self):
+		response = HttpResponse(self._obj.file, content_type="application/octet-stream")
+		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (self._obj.file_name).replace("\"", "").replace("\\", "")
 
 		return response
-
-class View_Poll(View_Poll_Base):
-	model = File

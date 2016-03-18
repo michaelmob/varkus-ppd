@@ -52,25 +52,21 @@ urlpatterns = [
 	url(r"^file/(?P<code>\w+)/$", files_locker.View_Locker.as_view(), name="files-locker"),
 	url(r"^file/(?P<code>\w+)/unlock/$", files_locker.View_Unlock.as_view(), name="files-unlock"),
 	url(r"^file/(?P<code>\w+)/download/$", files_locker.View_Download.as_view(), name="files-download"),
-	url(r"^file/(?P<code>\w+)/poll/$", files_locker.View_Poll.as_view(), name="files-poll"),
 	url(r"^file/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", files_locker.View_Redirect.as_view(), name="files-redirect"),
 
 	# -- Lists
 	url(r"^list/(?P<code>\w+)/$", lists_locker.View_Locker.as_view(), name="lists-locker"),
 	url(r"^list/(?P<code>\w+)/unlock/$", lists_locker.View_Unlock.as_view(), name="lists-unlock"),
-	url(r"^list/(?P<code>\w+)/poll/$", lists_locker.View_Poll.as_view(), name="lists-poll"),
 	url(r"^list/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", lists_locker.View_Redirect.as_view(), name="lists-redirect"),
 
 	# -- Links
 	url(r"^link/(?P<code>\w+)/$", links_locker.View_Locker.as_view(), name="links-locker"),
 	url(r"^link/(?P<code>\w+)/unlock/$", links_locker.View_Unlock.as_view(), name="links-unlock"),
-	url(r"^link/(?P<code>\w+)/poll/$", links_locker.View_Poll.as_view(), name="links-poll"),
 	url(r"^link/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", links_locker.View_Redirect.as_view(), name="links-redirect"),
 
 	# -- Widgets
 	url(r"^widget/(?P<code>\w+)/$", widgets_locker.View_Locker.as_view(), name="widgets-locker"),
 	url(r"^widget/(?P<code>\w+)/unlock/$", widgets_locker.View_Unlock.as_view(), name="widgets-unlock"),
-	url(r"^widget/(?P<code>\w+)/poll/$", widgets_locker.View_Poll.as_view(), name="widgets-poll"),
 	url(r"^widget/(?P<code>\w+)/redirect/(?P<id>[0-9]+)$", widgets_locker.View_Redirect.as_view(), name="widgets-redirect"),
 
 	# Locker

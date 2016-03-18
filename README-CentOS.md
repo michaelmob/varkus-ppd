@@ -5,6 +5,7 @@ Viking is a pay-per-unlock service website.
 
 ----
 
+## NOT SUPPORTED
 ## Production Setup
 **In this setup: CentOS will be used for the server, PostgreSQL will be used for the database, and NGINX will be used as a reverse-proxy server for uWSGI.**
 
@@ -12,7 +13,7 @@ Viking is a pay-per-unlock service website.
 1. Make sure server is up to date. (sudo apt update && sudo apt upgrade)
 2. Install required packages.
 ```
-sudo dnf install git \
+sudo yum install git \
 	python3-devel \
 	python3-setuptools \
 	python-virtualenv \

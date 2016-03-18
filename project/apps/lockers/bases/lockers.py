@@ -14,7 +14,10 @@ class View_Locker_Base(View):
 	template = None
 	model = None
 
-	def obj(self, request, code):
+	_request = None
+	_obj = None
+
+	def obj(self, code):
 		# Redirect to overview if no code provided
 		if not code:
 			return redirect(model)
@@ -34,11 +37,12 @@ class View_Locker_Base(View):
 			if c in UA.lower():
 				return HttpResponseForbidden("View \"robots.txt\".")
 
-		# Get locker object
-		obj = self.obj(request, code)
+		# Set class variables
+		self._request = request
+		self._obj = self.obj(code)
 
 		# Redirect if not existant
-		if not obj:
+		if not self._obj:
 			return redirect("locker-404")
 
 		# Create Session
@@ -47,7 +51,7 @@ class View_Locker_Base(View):
 
 		# Set unlock if token is set to conversion
 		unlocked = False
-		token = Token.get(request, obj)
+		token = Token.get(request, self._obj)
 		if token:
 			unlocked = token.access()
 
@@ -56,10 +60,10 @@ class View_Locker_Base(View):
 			self.template,
 			{
 				"ip_address": request.META.get("REMOTE_ADDR"),
-				"theme": obj.theme or "DEFAULT",
-				"obj": obj,
+				"theme": self._obj.theme or "DEFAULT",
+				"obj": self._obj,
 				"unlocked": unlocked,
-				"offers": Offer.get_cache(request, obj)
+				"offers": Offer.get_cache(request, self._obj)
 			}
 		)
 
@@ -68,9 +72,9 @@ class View_Redirect_Base(View_Locker_Base):
 	model = None
 
 	def get(self, request, code, id=None):
-		# Redirect if not existant
-		obj = self.obj(request, code)
-		if not obj:
+		# Redirect if non-existant
+		self._obj = self.obj(code)
+		if not self._obj:
 			return redirect("locker-404")
 
 		try:
@@ -79,7 +83,7 @@ class View_Redirect_Base(View_Locker_Base):
 			offer = Offer.objects.get(pk=id)
 
 			# Get or create a unique token
-			token, created = Token.get_or_create(request, obj)
+			token, created = Token.get_or_create(request, self._obj)
 
 			token.offers.add(offer)
 			token.save()
@@ -121,10 +125,10 @@ class View_Unlock_Base(View_Locker_Base):
 	model = None
 	token = None
 
-	def access(self, request, obj):
+	def access(self):
 		# Get token using request and the locker object
 		try:
-			self.token = Token.get(request, obj)
+			self.token = Token.get(self._request, self._obj)
 		except:
 			return False
 
@@ -132,44 +136,30 @@ class View_Unlock_Base(View_Locker_Base):
 		return self.token.access()
 
 	def get(self, request, code=None):
+		# Set class variables
+		self._request = request
+		self._obj = self.obj(code)
+
 		# Redirect if not existant
-		obj = self.obj(request, code)
-		if not obj:
+		if not self._obj:
 			return redirect("locker-404")
 
 		# Check access
-		if not self.access(request, obj):
+		if not self.access():
 			return redirect("home")
 
-		return self.get_return(request, obj)
+		return self.get_return()
 
-	def get_return(self, request, obj):
+	def get_return(self):
 		return render(
-			request,
+			self._request,
 			self.template,
 			{
-				"theme": obj.theme or "DEFAULT",
-				"obj": obj,
-				"data": self.data(obj)
+				"theme": self._obj.theme or "DEFAULT",
+				"obj": self._obj,
+				"data": self.data()
 			}
 		)
 
-	def data(self, obj):
+	def data(self):
 		return self.token.data
-
-
-class View_Poll_Base(View_Unlock_Base):
-	def get(self, request, code=None):
-		# Redirect if not existant
-		obj = self.obj(request, code)
-		if not obj:
-			return HttpResponse(reverse("locker-404"))
-
-		# Check access
-		if not self.access(request, obj):
-			return HttpResponseForbidden("0")
-
-		return self.get_return(request, obj)
-
-	def get_return(self, request, obj):
-		return HttpResponse(reverse(obj.get_type() + "s-unlock", args=(obj.code,)))

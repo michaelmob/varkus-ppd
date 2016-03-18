@@ -57,7 +57,6 @@ class Form_Check(forms.Form):
 
 	def save(self):
 		if not self.is_valid():
-			print("Here", self.errors())
 			return False
 
 		b = self.request.user.billing

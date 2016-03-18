@@ -54,7 +54,7 @@ sudo apt install libmaxminddb0 \
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".
-2. Create a new file named "varkus_com" and symlink it to "/etc/nginx/sites-enabled".
+2. Create a new file named "viking_com" and symlink it to "/etc/nginx/sites-enabled".
 3. In that file make your nginx config. An example can be found in "\_private/nginx.example".
 
 Generate or buy an SSL Certificate. ```sudo openssl req -x509 -nodes -days 365 -out /etc/ssl/viking.crt -newkey rsa:2048 -keyout /etc/ssl/viking.key```
@@ -69,4 +69,5 @@ PRIMARILY for the HTTP notifications/postbacks.
 2. Copy the file to "/etc/systemd/system/" directory. (Set $USER variable!)
 3. Enable the service ```systemctl enable viking.service```
 4. Do the same for the "nginx.service" file.
-5. The services will start after you reboot the system.
+5. Enable Redis service ```systemctl enable redis-server.service```
+6. The services will start after you reboot the system.
