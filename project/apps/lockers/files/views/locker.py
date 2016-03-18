@@ -33,16 +33,14 @@ class View_Download(View_Unlock_Base):
 			pass
 
 		# Get token using request and the locker object
-		try:
-			self.token = Token.get(self._request, self._obj)
-		except:
-			return False
+		self.token = Token.get(self._request, self._obj)
 
 		# Return access
 		return self.token.access()
 
 	def get_return(self):
 		response = HttpResponse(self._obj.file, content_type="application/octet-stream")
-		response["Content-Disposition"] = "attachment; filename=\"%s\"" % (self._obj.file_name).replace("\"", "").replace("\\", "")
+		response["Content-Disposition"] = "attachment; filename=\"%s\"" % \
+			(self._obj.file_name).replace("\"", "").replace("\\", "")
 
 		return response

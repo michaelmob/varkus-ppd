@@ -92,14 +92,13 @@ class Token(models.Model):
 	def get(request, obj):
 		"""Get token by identifiers
 
-		ip_address -- User's IP Address
-		user_agent -- User's User Agent
+		request -- Get User's IP Address and User Agent
 		obj -- Locker object to create for
 		"""
 		try:
 			return Token.objects.get(
 				ip_address 		= request.META.get("REMOTE_ADDR"),
-				user_agent 		= request.META.get("HTTP_USER_AGENT"),
+				#user_agent 	= request.META.get("HTTP_USER_AGENT"),
 				locker 			= obj
 			)
 		except Token.DoesNotExist:
@@ -122,11 +121,11 @@ class Token(models.Model):
 
 		token, created = Token.objects.get_or_create(
 			ip_address 		= request.META.get("REMOTE_ADDR"),
-			user_agent 		= request.META.get("HTTP_USER_AGENT"),
-			country 		= country,
-			user 			= obj.user,
 			locker 			= obj,
 			defaults 		= {
+				"user_agent": request.META.get("HTTP_USER_AGENT"),
+				"user": obj.user,
+				"country": country,
 				"unique": strings.random(32),
 				"session": request.session.session_key,
 				"date_time": datetime.now()

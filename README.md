@@ -68,6 +68,6 @@ PRIMARILY for the HTTP notifications/postbacks.
 1. Modify the "viking.service" file in the "project/viking/\_private/extras/" directory.
 2. Copy the file to "/etc/systemd/system/" directory. (Set $USER variable!)
 3. Enable the service ```systemctl enable viking.service```
-4. Do the same for the "nginx.service" file.
+4. Enable NGINX service ```systemctl enable nginx.service```
 5. Enable Redis service ```systemctl enable redis-server.service```
 6. The services will start after you reboot the system.
