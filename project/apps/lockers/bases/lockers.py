@@ -98,7 +98,7 @@ class View_Redirect_Base(View_Locker_Base):
 
 		# Check if there's an Affiliate ID override in settings.py
 		try:
-			user = obj.user
+			user = self._obj.user
 			aff_id = Deposit.get_by_user_id(user.pk).aff_id
 		except:
 			aff_id = Deposit.default_aff_id()
