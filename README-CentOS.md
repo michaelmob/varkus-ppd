@@ -44,7 +44,7 @@ sudo dnf install libmaxminddb-devel
 3. Navigate to "scripts/" directory.
 4. Run "./setup" script.
 5. Run "./manage makemigrations" and "./manage migrate" (Verify that "axes" table was created.)
-6. Modify DEBUG in settings_common.py to set debug.
+6. Modify DEBUG in settings_com.py to set debug.
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".

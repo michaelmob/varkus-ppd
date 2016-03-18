@@ -2,7 +2,7 @@
 Viking 2.0.3
 """
 
-# Overwrite any setting in ./private/settings_prod.py for production servers
+# Overwrite any setting in ./private/settings_pro.py for production servers
 # Overwrite any setting in ./private/settings_dev.py for development servers
 
 import os, socket
@@ -286,9 +286,9 @@ CATEGORY_TYPES_ICONS = {
 }
 
 from .private.keys import *
-from .private.settings_common import *
+from .private.settings_com import *
 
 if DEBUG:
 	from .private.settings_dev import *
 else:
-	from .private.settings_prod import *
+	from .private.settings_pro import *
