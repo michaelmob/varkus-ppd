@@ -7,6 +7,7 @@ from django.db.models import F
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
+from utils.constants import CURRENCY
 import apps.conversions as conversions
 
 getcontext().prec = 2
@@ -19,17 +20,17 @@ class Earnings_Base(models.Model):
 	clicks_today	= models.IntegerField(default=0, verbose_name="Today's Clicks")
 	conversions_today = models.IntegerField(default=0, verbose_name="Today's Conversions")
 
-	today			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Today")
-	yesterday		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Yesterday")
-	week			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Week")
-	month			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Month")
-	yestermonth		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Last Month")
-	year 			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Year")
-	total			= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Total")
+	today			= models.DecimalField(verbose_name="Today", **CURRENCY)
+	yesterday		= models.DecimalField(verbose_name="Yesterday", **CURRENCY)
+	week			= models.DecimalField(verbose_name="Week", **CURRENCY)
+	month			= models.DecimalField(verbose_name="Month", **CURRENCY)
+	yestermonth		= models.DecimalField(verbose_name="Last Month", **CURRENCY)
+	year 			= models.DecimalField(verbose_name="Year", **CURRENCY)
+	total			= models.DecimalField(verbose_name="Total", **CURRENCY)
 
-	real_today 		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Today")
-	real_month		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Month")
-	real_total		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="*Total")
+	real_today 		= models.DecimalField(verbose_name="*Today", **CURRENCY)
+	real_month		= models.DecimalField(verbose_name="*Month", **CURRENCY)
+	real_total		= models.DecimalField(verbose_name="*Total", **CURRENCY)
 
 	def epc(self, today=True):
 		if today:

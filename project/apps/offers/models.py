@@ -14,7 +14,7 @@ from ..conversions.models import Conversion, Token
 
 from django_countries import countries as _countries
 from utils.user_agent import get_ua
-
+from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY
 
 class Offer(models.Model):
 	offer_id	 			= models.IntegerField()
@@ -22,13 +22,13 @@ class Offer(models.Model):
 	name 					= models.CharField(max_length=250, verbose_name="Name")
 	anchor 					= models.CharField(max_length=1000, verbose_name="Anchor")
 	requirements 			= models.CharField(max_length=1000, verbose_name="Requirements")
-	user_agent 				= models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="User Agent")
-	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, blank=True, null=True, verbose_name="Category")
+	user_agent 				= models.CharField(max_length=50, default="", verbose_name="User Agent", **BLANK_NULL)
+	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, verbose_name="Category", **BLANK_NULL)
 	earnings_per_click 		= models.DecimalField(max_digits=15, decimal_places=2, verbose_name="EPC")
 	country 				= models.CharField(max_length=747)
 	flag 					= models.CharField(max_length=5, verbose_name="Country")
 	country_count 			= models.IntegerField()
-	payout 					= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2, verbose_name="Payout")
+	payout 					= models.DecimalField(verbose_name="Payout", **CURRENCY)
 	success_rate			= models.FloatField(verbose_name="Success Rate")
 	tracking_url 			= models.CharField(max_length=1000)
 	date 					= models.DateField(auto_now_add=True)
@@ -146,11 +146,8 @@ class Offer(models.Model):
 		offer_block=[], offer_exclude=[], filters={}
 	):
 		""" Get offers with a bunch of customizable arguments """
-
-		args = (Q(user_agent=None),)
-
-		if user_agent is not None:
-			args = (Q(user_agent__icontains=user_agent) | Q(user_agent=None),)
+		# User Agent Args
+		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | Q(user_agent=None),)
 
 		return Offer.objects\
 			.filter(
@@ -216,9 +213,7 @@ class Offer(models.Model):
 			offer_block.append(conversion.offer.id)
 
 		# User Agent Args
-		args = (Q(user_agent=None),)
-		if user_agent is not None:
-			args = (Q(user_agent__icontains=user_agent) | Q(user_agent=None),)
+		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | Q(user_agent=None),)
 
 		# Staff Priority
 		_offers += Offer.objects\

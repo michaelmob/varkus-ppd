@@ -3,11 +3,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+from utils.constants import DEFAULT_BLANK_NULL
 
 class Contact_Message(models.Model):
 	name = models.CharField(max_length=100)
 	email = models.EmailField()
-	user = models.ForeignKey(User, default=None, blank=True, null=True)
+	user = models.ForeignKey(User, **DEFAULT_BLANK_NULL)
 	ip_address = models.GenericIPAddressField()
 	date_time = models.DateTimeField(auto_now_add=True)
 	subject = models.CharField(max_length=100)
@@ -19,7 +20,6 @@ class Contact_Message(models.Model):
 
 	def __str__(self):
 		return "%s's message" % (self.email)
-
 
 
 class Abuse_Report(models.Model):
@@ -45,9 +45,9 @@ class Abuse_Report(models.Model):
 	date_time = models.DateTimeField(auto_now_add=True)
 	complaint = models.CharField(max_length=100, choices=COMPLAINTS)
 	message = models.TextField(max_length=5000)
-	image1 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], default=None, blank=True, null=True)
-	image2 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], default=None, blank=True, null=True)
-	image3 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], default=None, blank=True, null=True)
+	image1 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
+	image2 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
+	image3 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
 	viewed = models.BooleanField(default=False)
 
 	def delete(self, *args, **kwargs):

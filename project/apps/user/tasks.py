@@ -7,7 +7,7 @@ from django.core.cache import cache
 @shared_task
 def reset_today():
 	cache.clear()
-	Token.clear()
+	#Token.clear()
 
 	return (Earnings().reset_today(), Referral_Earnings().reset_today())
 

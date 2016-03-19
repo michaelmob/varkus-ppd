@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from apps.cp.models import Earnings_Base
 from utils import strings
+from utils.constants import DEFAULT_BLANK_NULL
 
 from .fields import LockerField
 
@@ -15,7 +16,7 @@ class Locker_Base(models.Model):
 	user 			= models.ForeignKey(User)
 	code 			= models.CharField(max_length=10, verbose_name="Code")
 	name 			= models.CharField(max_length=100, verbose_name="Name")
-	description 	= models.TextField(max_length=500, default=None, blank=True, null=True, verbose_name="Description")
+	description 	= models.TextField(max_length=500, verbose_name="Description", **DEFAULT_BLANK_NULL)
 	date_time 		= models.DateTimeField(auto_now_add=True, verbose_name="Date")
 
 	theme			= models.CharField(max_length=64, default="DEFAULT", choices=settings.LOCKER_THEMES)

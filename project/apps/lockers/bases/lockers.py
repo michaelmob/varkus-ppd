@@ -63,7 +63,7 @@ class View_Locker_Base(View):
 				"theme": self._obj.theme or "DEFAULT",
 				"obj": self._obj,
 				"unlocked": unlocked,
-				"offers": Offer.get_cache(request, self._obj)
+				"offers": Offer.get(request, self._obj)
 			}
 		)
 

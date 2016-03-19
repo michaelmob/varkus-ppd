@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib.gis.geoip2 import GeoIP2
 
 from utils import strings
+from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY
 from ..lockers.fields import LockerField
 
 import apps.offers.models
@@ -68,10 +69,10 @@ class Deposit():
 
 class Token(models.Model):
 	unique 		= models.CharField(max_length=64, unique=True)
-	session 	= models.CharField(max_length=64, null=True, blank=True)
-	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
+	session 	= models.CharField(max_length=64, **BLANK_NULL)
+	data 		= models.CharField(max_length=200, **DEFAULT_BLANK_NULL)
 
-	user 		= models.ForeignKey(User, default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	user 		= models.ForeignKey(User, on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
 	offers 		= models.ManyToManyField("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True)
 
 	locker 		= LockerField()
@@ -95,14 +96,11 @@ class Token(models.Model):
 		request -- Get User's IP Address and User Agent
 		obj -- Locker object to create for
 		"""
-		try:
-			return Token.objects.get(
-				ip_address 		= request.META.get("REMOTE_ADDR"),
-				#user_agent 	= request.META.get("HTTP_USER_AGENT"),
-				locker 			= obj
-			)
-		except Token.DoesNotExist:
-			return None
+		return Token.objects.filter(
+			ip_address 		= request.META.get("REMOTE_ADDR"),
+			#user_agent 	= request.META.get("HTTP_USER_AGENT"),
+			locker 			= obj
+		).first()
 
 	def get_or_create(request, obj):
 		"""Get or create token
@@ -111,9 +109,9 @@ class Token(models.Model):
 		obj -- Locker object to create for
 		"""
 		try:
-			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR") if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
+			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
 		except:
-			country = "xx"
+			country = "XX"
 
 		# Create Session
 		if not request.session.exists(request.session.session_key):
@@ -163,34 +161,34 @@ class Token(models.Model):
 		return Token.objects.filter(
 			date_time__gt = datetime.now() - timedelta(days=2),
 			paid = False
-		)
+		).delete()
 
 
 class Conversion(models.Model):
-	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	offer_name			= models.CharField(max_length=150, verbose_name="Offer Name", default=None, blank=True, null=True)
-	country 			= models.CharField(max_length=3, verbose_name="Country", default=None, blank=True, null=True)
+	offer 				= models.ForeignKey("offers.Offer", verbose_name="Offer", on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
+	offer_name			= models.CharField(max_length=150, verbose_name="Offer Name", **DEFAULT_BLANK_NULL)
+	country 			= models.CharField(max_length=3, verbose_name="Country", **DEFAULT_BLANK_NULL)
 
-	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
-	user 				= models.ForeignKey(User, verbose_name="User", related_name="user_id", default=None, blank=True, null=True, on_delete=models.SET_NULL)
+	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
+	user 				= models.ForeignKey(User, verbose_name="User", related_name="user_id", on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
 
 	locker				= LockerField()
 
-	access_url 			= models.CharField(verbose_name="Access URL", max_length=850, default=None, blank=True, null=True)
-	sender_ip_address	= models.GenericIPAddressField(verbose_name="Sender IP Address", blank=True, null=True)
-	user_ip_address		= models.GenericIPAddressField(verbose_name="IP Address", blank=True, null=True)
+	access_url 			= models.CharField(verbose_name="Access URL", max_length=850, **DEFAULT_BLANK_NULL)
+	sender_ip_address	= models.GenericIPAddressField(verbose_name="Sender IP Address", **BLANK_NULL)
+	user_ip_address		= models.GenericIPAddressField(verbose_name="IP Address", **BLANK_NULL)
 
-	user_user_agent		= models.CharField(verbose_name="User-Agent", max_length=300, default=None, blank=True, null=True)
+	user_user_agent		= models.CharField(verbose_name="User-Agent", max_length=300, **DEFAULT_BLANK_NULL)
 
-	payout				= models.DecimalField(verbose_name="Total Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
-	dev_payout			= models.DecimalField(verbose_name="Dev Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
-	user_payout			= models.DecimalField(verbose_name="Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
-	referral_payout		= models.DecimalField(verbose_name="Referral Payout", default=Decimal(0.00), max_digits=10, decimal_places=2)
+	payout				= models.DecimalField(verbose_name="Total Payout", **CURRENCY)
+	dev_payout			= models.DecimalField(verbose_name="Dev Payout", **CURRENCY)
+	user_payout			= models.DecimalField(verbose_name="Payout", **CURRENCY)
+	referral_payout		= models.DecimalField(verbose_name="Referral Payout", **CURRENCY)
 
 	blocked				= models.BooleanField(verbose_name="Blocked", default=False)
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
-	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", blank=True, null=True, choices=Deposit.names())
+	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", choices=Deposit.names(), **BLANK_NULL)
 	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
 
 
