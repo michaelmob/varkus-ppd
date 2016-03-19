@@ -52,14 +52,14 @@ class Form_Sign_Up(UserCreationForm):
 			return None
 
 		# E-mail Exists
-		exists = User.objects.filter(email=self.cleaned_data["email"]).exists()
+		exists = User.objects.filter(email__iexact=self.cleaned_data["email"]).exists()
 
 		if exists:
 			self.add_error("email", "E-mail address is already in use")
 			return None
 
 		# Username Exists
-		exists = User.objects.filter(username=self.cleaned_data["username"]).exists()
+		exists = User.objects.filter(username__iexact=self.cleaned_data["username"]).exists()
 
 		if exists:
 			self.add_error("username", "Username is already in use")

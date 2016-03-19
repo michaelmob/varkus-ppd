@@ -22,7 +22,7 @@ class Offer(models.Model):
 	name 					= models.CharField(max_length=250, verbose_name="Name")
 	anchor 					= models.CharField(max_length=1000, verbose_name="Anchor")
 	requirements 			= models.CharField(max_length=1000, verbose_name="Requirements")
-	user_agent 				= models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="User Agent")
+	user_agent 				= models.CharField(max_length=50, default=None, blank=True, null=True, verbose_name="User Agent")
 	category				= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, blank=True, null=True, verbose_name="Category")
 	earnings_per_click 		= models.DecimalField(max_digits=15, decimal_places=2, verbose_name="EPC")
 	country 				= models.CharField(max_length=747)
@@ -149,7 +149,7 @@ class Offer(models.Model):
 
 		args = (Q(user_agent=None),)
 
-		if user_agent:
+		if user_agent is not None:
 			args = (Q(user_agent__icontains=user_agent) | Q(user_agent=None),)
 
 		return Offer.objects\
@@ -217,11 +217,8 @@ class Offer(models.Model):
 
 		# User Agent Args
 		args = (Q(user_agent=None),)
-		if user_agent:
-			args = (
-				Q(user_agent__icontains=user_agent) |
-				Q(user_agent=None),
-			)
+		if user_agent is not None:
+			args = (Q(user_agent__icontains=user_agent) | Q(user_agent=None),)
 
 		# Staff Priority
 		_offers += Offer.objects\

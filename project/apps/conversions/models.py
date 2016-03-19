@@ -67,7 +67,7 @@ class Deposit():
 
 
 class Token(models.Model):
-	unique 		= models.CharField(max_length=32, unique=True)
+	unique 		= models.CharField(max_length=64, unique=True)
 	session 	= models.CharField(max_length=64, null=True, blank=True)
 	data 		= models.CharField(max_length=200, default=None, blank=True, null=True)
 
@@ -126,7 +126,7 @@ class Token(models.Model):
 				"user_agent": request.META.get("HTTP_USER_AGENT"),
 				"user": obj.user,
 				"country": country,
-				"unique": strings.random(32),
+				"unique": strings.random(64),
 				"session": request.session.session_key,
 				"date_time": datetime.now()
 			}
