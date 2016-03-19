@@ -141,13 +141,12 @@ class Offer(models.Model):
 			request.META.get("REMOTE_ADDR"),
 			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest()))
 
-	def get_basic(
-		count, category, country, user_agent=None, min_payout=0.01,
-		offer_block=[], offer_exclude=[], filters={}
-	):
+	def get_basic(count, category, country, user_agent=None, min_payout=0.01,
+		offer_block=[], offer_exclude=[], filters={}):
 		""" Get offers with a bunch of customizable arguments """
 		# User Agent Args
-		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | Q(user_agent=None),)
+		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | \
+			Q(user_agent=None),)
 
 		return Offer.objects\
 			.filter(
@@ -161,10 +160,8 @@ class Offer(models.Model):
 			.exclude(pk__in=offer_exclude)\
 			.order_by("-earnings_per_click")[:count]
 
-	def random(
-		count, country, user_agent=None, min_payout=0.01,
-		offer_block=None, offer_exclude=[]
-	):
+	def random(count, country, user_agent=None, min_payout=0.01,
+		offer_block=None, offer_exclude=[]):
 		""" Get offers randomly """
 
 		return Offer.objects.all()\
@@ -178,10 +175,8 @@ class Offer(models.Model):
 			.exclude(pk__in=offer_exclude)\
 			.order_by("?")[:count]
 
-	def _get(
-		ip_address, user_agent, count=5, min_payout=0.01,
-		offer_priority=None, offer_block=None
-	):
+	def _get(ip_address, user_agent, count=5, min_payout=0.01,
+		offer_priority=None, offer_block=None):
 		""" Get offers with ip_address and user_agent,
 			geoip tells what country the ip_address is
 			of and selects specific offers with user_agents
@@ -213,7 +208,8 @@ class Offer(models.Model):
 			offer_block.append(conversion.offer.id)
 
 		# User Agent Args
-		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | Q(user_agent=None),)
+		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | \
+			Q(user_agent=None),)
 
 		# Staff Priority
 		_offers += Offer.objects\

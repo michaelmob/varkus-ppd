@@ -117,18 +117,21 @@ class Token(models.Model):
 		if not request.session.exists(request.session.session_key):
 			request.session.create()
 
-		token, created = Token.objects.get_or_create(
-			ip_address 		= request.META.get("REMOTE_ADDR"),
-			locker 			= obj,
-			defaults 		= {
-				"user_agent": request.META.get("HTTP_USER_AGENT"),
-				"user": obj.user,
-				"country": country,
-				"unique": strings.random(64),
-				"session": request.session.session_key,
-				"date_time": datetime.now()
-			}
-		)
+		token = Token.get(request, obj)
+		created = False
+
+		if not token:
+			token = Token.objects.create(
+				ip_address 	= request.META.get("REMOTE_ADDR"),
+				locker 		= obj,
+				user_agent 	= request.META.get("HTTP_USER_AGENT"),
+				user 		= obj.user,
+				country 	= country,
+				unique 		= strings.random(64),
+				session 	= request.session.session_key,
+				date_time 	= datetime.now()
+			)
+			created = True
 
 		if not created:
 			if token.session != request.session.session_key:

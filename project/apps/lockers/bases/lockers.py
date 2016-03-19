@@ -32,10 +32,10 @@ class View_Locker_Base(View):
 		# Deny webcrwalers and people with no user-agent
 		UA = request.META.get("HTTP_USER_AGENT", None)
 		if not UA:
-			return HttpResponseForbidden("Requests without a User-Agent is not allowed.")
+			return HttpResponseForbidden("You must have a user-agent to continue")
 		for c in CRAWLERS:
 			if c in UA.lower():
-				return HttpResponseForbidden("View \"robots.txt\".")
+				return HttpResponseForbidden("View \"robots.txt\"")
 
 		# Set class variables
 		self._request = request
@@ -63,7 +63,7 @@ class View_Locker_Base(View):
 				"theme": self._obj.theme or "DEFAULT",
 				"obj": self._obj,
 				"unlocked": unlocked,
-				"offers": Offer.get(request, self._obj)
+				"offers": Offer.get_cache(request, self._obj)
 			}
 		)
 
