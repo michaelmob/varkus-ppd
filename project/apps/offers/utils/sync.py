@@ -91,6 +91,6 @@ def adgate_sync():
 		"removed": offers_deleted,
 		"updated": offers_updated,
 		"count": Offer.objects.all().count(),
-		"elapsed": (start_datetime - end_datetime).seconds,
+		"elapsed": (end_datetime - start_datetime).seconds,
 		"date_time": str(datetime.now())
 	}

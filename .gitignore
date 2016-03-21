@@ -6,6 +6,7 @@ migrations/*
 **/migrations/*
 !**/migrations/__init__.py
 error.txt
+.fuse*
 *.pyc
 *.pyo
 *.sqlite3

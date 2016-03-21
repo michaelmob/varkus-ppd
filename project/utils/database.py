@@ -3,6 +3,9 @@ from django.conf import settings
 def is_postgres():
 	return settings.DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql_psycopg2"
 
+def is_sqlite():
+	return settings.DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3"
+
 # Does the same thing as distinct does
 def distinct_column(queryset, column):
 	pks = queryset.values_list("pk", column).distinct()

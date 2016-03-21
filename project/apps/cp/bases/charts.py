@@ -1,39 +1,32 @@
 from collections import Counter
 from django.core.cache import cache
 
-class Charts():
-	def line_data(obj, default=lambda: [{x: 0} for x in range(24)]):
-		# Create chart template
-		data1 = default()
-		data2 = default()
-		data3 = default()
+from django.db.models import Count, Sum
+from utils.database import is_sqlite
 
-		# Append small dictionary to chart list -- for clicks
-		for token in obj.earnings.get_tokens_today():
-			data1.append({token.date_time.hour: 1})
+class Activity():
+	def data(objs, fx=Count, field="id"):
+		result = {x: 0 for x in range(24)}
 
-		# Append small dictionary to chart list -- for conversion count & earnings
-		for conversion in obj.earnings.get_conversions_today():
-			data2.append({conversion.date_time.hour: 1})
-			data3.append({conversion.date_time.hour: float(conversion.user_payout)})
+		if is_sqlite():
+			select = "strftime('%%H', date_time)"
+		else:
+			select = "extract(hour from date_time)"
 
-		# Merge duplicate keyed arrays -- for clicks
-		counter1 = Counter()
-		for hour in data1: counter1.update(hour)
+		objs = objs \
+			.extra(select={"hour": select}) \
+			.values("hour").annotate(num=fx(field)) \
+			.values_list("hour", "num")
 
-		# Merge duplicate keyed arrays -- for conversion count
-		counter2 = Counter()
-		for hour in data2: counter2.update(hour)
+		result.update({int(x): float(y) for x, y in objs})
+		return list(result.items())
 
-		# Merge duplicate keyed arrays -- for earnings
-		counter3 = Counter()
-		for hour in data3: counter3.update(hour)
+	def output(obj):
+		queryset = obj.earnings.get_conversions_today()
 
-		# Result (clicks, conversions, earnings)
-		return (list(counter1.items()), list(counter2.items()), list(counter3.items()))
-
-	def line_output(obj):
-		clicks, conversions, earnings = Charts.line_data(obj)
+		clicks = Activity.data(obj.earnings.get_tokens_today())
+		conversions = Activity.data(queryset)
+		earnings = Activity.data(queryset, Sum, "user_payout")
 
 		return {
 			"success": True,
@@ -45,56 +38,42 @@ class Charts():
 			]
 		}
 
-	def line_cache(obj):
+	def output_cache(obj):
 		# Create key (lc_file_4)
 		key = "lc_" + obj.__class__.__name__.lower() + str(obj.id)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set
 		if not data:
-			data = Charts.line_output(obj)
+			data = Activity.output(obj)
 			cache.set(key, data, 60)
 
 		return data
 
-	def map_data(obj):
-		result = []
-		data = {}
+class Map():
+	def data(objs):
+		results = objs.exclude(country=None).values("country") \
+			.annotate(conversions=Count("id"), earnings=Sum("user_payout")) \
+			.values_list("country", "conversions", "earnings")
 
-		# Loop through conversions
-		for obj in obj.earnings.get_conversions_today():
-			obj.country = obj.country.upper()
+		return [(result[0].upper(), int(result[1]), float(result[2])) \
+			for result in results]
 
-			# If already exists just add onto the payment
-			if obj.country in data:
-				data[obj.country][0] += float(obj.user_payout)
-				data[obj.country][1] += 1
-
-			# Otherwise add the payment to the dict
-			else:
-				data[obj.country] = [float(obj.user_payout), 1]
-
-		# Format to Google chart reqs
-		for key, value in data.items():
-			result.append((key, value[0], value[1]))
-
-		return result
-
-	def map_output(obj):
+	def output(obj):
 		return {
 			"success": True,
 			"message": "",
-			"data": Charts.map_data(obj)
+			"data": Map.data(obj.earnings.get_conversions_today())
 		}
 
-	def map_cache(obj):
+	def output_cache(obj):
 		# Create key (mc_file_4)
 		key = "mc_" + obj.__class__.__name__.lower() + str(obj.id)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set
 		if not data:
-			data = Charts.map_output(obj)
+			data = Map.output(obj)
 			cache.set(key, data, 60)
 
 		return data

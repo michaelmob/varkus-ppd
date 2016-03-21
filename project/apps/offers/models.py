@@ -7,13 +7,13 @@ from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
-from django.contrib.gis.geoip2 import GeoIP2
 
 from ..cp.models import Earnings_Base
 from ..conversions.models import Conversion, Token
 
 from django_countries import countries as _countries
 from utils.user_agent import get_ua
+from utils.geoip import retrieve
 from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY
 
 class Offer(models.Model):
@@ -80,10 +80,8 @@ class Offer(models.Model):
 
 		return dirty
 
-	def create(
-		id, name, anchor, requirements, user_agent, category,
-		earnings_per_click, country, payout, tracking_url
-	):
+	def create(id, name, anchor, requirements, user_agent, category,
+		earnings_per_click, country, payout, tracking_url):
 		""" Create offer with arguments """
 		obj = Offer.objects.create(
 			offer_id				= id,
@@ -105,12 +103,21 @@ class Offer(models.Model):
 
 		return obj
 
+	def get_legacy(ip_address, user_agent, obj):
+		""" Get offers by locker object """
+		profile = obj.user.profile
+
+		return Offer._get(
+			ip_address, user_agent,
+			obj.offers_count if 0 < obj.offers_count < 51 else settings.OFFERS_COUNT,
+			0.01, profile.offer_priority, profile.offer_block)
+
 	def get(request, obj):
 		""" Get offers by locker object """
 		profile = obj.user.profile
 
 		return Offer._get(
-			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
+			"64.233.173.230", request.META.get("HTTP_USER_AGENT"),
 			obj.offers_count if 0 < obj.offers_count < 51 else settings.OFFERS_COUNT,
 			0.01, profile.offer_priority, profile.offer_block)
 
@@ -181,19 +188,17 @@ class Offer(models.Model):
 			geoip tells what country the ip_address is
 			of and selects specific offers with user_agents
 			that correspond to given user_agent """
-
 		user_agent = get_ua(user_agent)
 
 		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
 
 		# GeoIP
-		try:
-			data = GeoIP2().city(ip_address if ip_address != "127.0.0.1" else "173.63.97.160")
-		except:
-			data = {"country_code": "xx", "city": "Unknown"}
+		country, region = retrieve(ip_address if ip_address != "127.0.0.1" else "173.63.97.160")
 
-		country, region = (data["country_code"], data["city"])
+		if not country:
+			country = "US"
+			region = "your area"
 
 		_offers = []
 
@@ -275,6 +280,9 @@ class Offer(models.Model):
 		for offer in _offers:
 			if "{region}" in offer.anchor:
 				offer.anchor = offer.anchor.replace("{region}", region)
+
+			if "{city}" in offer.anchor:
+				offer.anchor = offer.anchor.replace("{city}", region)
 
 		return _offers[:count]
 

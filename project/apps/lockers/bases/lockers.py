@@ -8,7 +8,7 @@ from apps.offers.models import Offer
 from apps.conversions.models import Token, Deposit
 
 CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
-	"baiduspider", "speedy spider", "dotbot")
+	"baiduspider", "speedy spider", "dotbot", "google favicon")
 
 class View_Locker_Base(View):
 	template = None
@@ -33,6 +33,7 @@ class View_Locker_Base(View):
 		UA = request.META.get("HTTP_USER_AGENT", None)
 		if not UA:
 			return HttpResponseForbidden("You must have a user-agent to continue")
+			
 		for c in CRAWLERS:
 			if c in UA.lower():
 				return HttpResponseForbidden("View \"robots.txt\"")

@@ -11,7 +11,7 @@ from ..models import Offer
 from ..forms import Form_Offer
 from ..tables import Table_Offer_All, Table_Offer_Conversions, Table_Offer_Options
 
-from apps.cp.bases.charts import Charts
+from apps.cp.bases.charts import Activity
 
 
 class View_Overview(View):
@@ -112,4 +112,4 @@ class View_Line_Chart(View):
 		except (ValueError, Offer.DoesNotExist):
 			return JsonResponse({"data": None})
 
-		return JsonResponse(Charts.line_cache(obj))
+		return JsonResponse(Activity.output_cache(obj))

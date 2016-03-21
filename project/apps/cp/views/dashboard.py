@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 from ...offers.models import Offer
 from ..tables import Table_Offer
-from ..bases.charts import Charts
+from ..bases.charts import Activity, Map
 
 
 def index(request):
@@ -17,8 +17,8 @@ def index(request):
 
 
 def line_chart(request):
-	return JsonResponse(Charts.line_cache(request.user))
+	return JsonResponse(Activity.output_cache(request.user))
 
 
 def map_chart(request):
-	return JsonResponse(Charts.map_cache(request.user))
+	return JsonResponse(Map.output_cache(request.user))

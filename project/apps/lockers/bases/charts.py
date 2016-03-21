@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.shortcuts import render, redirect
 
-from apps.cp.bases.charts import Charts
+from apps.cp.bases.charts import Activity, Map
 
 
 class View_Line_Chart_Base(View):
@@ -27,7 +27,7 @@ class View_Line_Chart_Base(View):
 			return JsonResponse({})
 
 		# Get line data from cache, if exists
-		data = Charts.line_cache(obj)
+		data = Activity.output_cache(obj)
 		return JsonResponse(data)
 
 
@@ -53,5 +53,5 @@ class View_Map_Chart_Base(View):
 			return JsonResponse({})
 
 		# Get line data from cache, if exists
-		data = Charts.map_cache(obj)
+		data = Map.output_cache(obj)
 		return JsonResponse(data)

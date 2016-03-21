@@ -5,13 +5,13 @@ var colors = ["#FFCDD2", "#EF9A9A", "#E57373", "#EF5350", "F44336"];
 var drawMapChart = function(data) {
 	var table = new google.visualization.DataTable();
 	table.addColumn("string", "Country");
-	table.addColumn("number", "Earnings");
 	table.addColumn("number", "Conversions");
+	table.addColumn("number", "Earnings");
 	table.addRows(data);
 
 	// Format second column
 	var formatter = new google.visualization.NumberFormat({prefix: "$"});
-	formatter.format(table, 1);
+	formatter.format(table, 2);
 
 	var doDrawing = function() {
 		var geoChart = new google.visualization.GeoChart($(".map.chart.container")[0]);
