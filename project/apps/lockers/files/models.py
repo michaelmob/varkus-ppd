@@ -19,7 +19,7 @@ class File(Locker_Base):
 			file 		= file.file,
 			file_name	= file.name,
 			file_size	= file.size,
-			date_time	= datetime.now()
+			datetime	= datetime.now()
 		)
 
 		Earnings.objects.get_or_create(obj=obj)

@@ -1,0 +1,103 @@
+{% load notifications %}
+
+{% notifications as notifications %}
+
+<a class="ui notifications icon item">
+	<i class="bell icon"></i>
+	<div class="ui yellow empty circular notification label{% if not notifications|has_unread %} hidden{% endif %}"></div>
+	{% if user.is_staff %}
+		<div class="ui blue empty circular special-notification label hidden"></div>
+	{% endif %}
+</a>
+
+<div class="ui fluid notifications popup">
+	<div class="ui feed">
+		{% for notification in notifications %}
+			<div class="{% if notification.unread %}unread {% endif %}event">
+				<div class="label"><i class="{{ notification.icon }} icon"></i></div>
+				<div class="content">
+					{{ notification.message }}
+
+					<div class="meta">
+						{% if notification.url %}
+						<a class="view" href="{{ notification.url }}">
+							<i class="icon linkify"></i> View
+						</a>
+						{% endif %}
+						<span class="date">{{ notification.datetime|timesince }} ago</span>
+					</div>
+				</div>
+			</div>
+		{% empty %}
+			<div class="event">
+				<div class="content">
+					You have no new notifications.
+				</div>
+			</div>
+		{% endfor %}
+
+		{% if user.is_staff %}
+			{% staff_notifications as staff_notifications %}
+
+			{% if staff_notifications.tickets > 0 %}
+				<div class="special event">
+					<div class="label"><i class="ticket icon"></i></div>
+					<div class="content">
+						<div>Unread Tickets: <strong>{{ staff_notifications.tickets }}</strong></div>
+
+						<div class="meta">
+							<a class="view" href="{% url 'admin:tickets_thread_changelist' %}">
+								<i class="icon linkify"></i> View
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+			
+			{% if staff_notifications.messages > 0 %}
+				<div class="special event">
+					<div class="label"><i class="chat icon"></i></div>
+					<div class="content">
+						<div>Unread Contact Messages: <strong>{{ staff_notifications.messages }}</strong></div>
+
+						<div class="meta">
+							<a class="view" href="{% url 'admin:support_contact_message_changelist' %}">
+								<i class="icon linkify"></i> View
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% if staff_notifications.reports > 0 %}
+				<div class="special event">
+					<div class="label"><i class="legal icon"></i></div>
+					<div class="content">
+						<div>Unread Abuse Reports: <strong>{{ staff_notifications.reports }}</strong></div>
+
+						<div class="meta">
+							<a class="view" href="{% url 'admin:support_abuse_report_changelist' %}">
+								<i class="icon linkify"></i> View
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% if staff_notifications.invoices > 0 %}
+				<div class="special event">
+					<div class="label"><i class="list layout icon"></i></div>
+					<div class="content">
+						<div>Unpaid Invoices: <strong>{{ staff_notifications.invoices }}</strong></div>
+
+						<div class="meta">
+							<a class="view" href="{% url 'admin:billing_invoice_changelist' %}">
+								<i class="icon linkify"></i> View
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
+	</div>
+</div>

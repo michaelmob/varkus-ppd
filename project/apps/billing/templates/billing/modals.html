@@ -1,43 +1,50 @@
-{% load billing %}
 {% load semanticui %}
 
-<div class="ui modal edit">
+<div class="ui form modal edit">
 	<i class="close icon"></i>
+
 	<div class="header">
-		Modify Billing Information
+		Edit Billing Information
 	</div>
+
 	<div class="content">
-		<div class="ui tabular large menu">
+		<script>var active_tab = "{{ choice|lower }}";</script>
+		<div class="ui top attached tabular menu">
 			<a class="active item" data-tab="paypal"><i class="paypal icon"></i> Paypal</a>
 			<a class="item" data-tab="check"><i class="pencil icon"></i> Check</a>
 			<a class="item" data-tab="wire"><i class="credit card icon"></i> Wire</a>
 			<a class="item" data-tab="direct"><i class="fast forward icon"></i> Direct Deposit/ACH</a>
 		</div>
 
-		{% for choice in payment_choices %}
-		<div class="ui {% if choice == 'paypal' %}active {% endif %}tab" data-tab="{{ choice }}">
-			<form name="{{ choice }}" action="{% url 'billing' %}" method="POST" class="ui {{ choice }} form">
+		<div class="ui bottom attached segment">
+			<form class="ui active tab" data-tab="paypal" action="{% url 'billing' %}" method="POST">
 				{% csrf_token %}
-				<input type="hidden" style="display:none" name="payment_method" value="{{ choice }}" />
+				<input type="hidden" name="form" value="PAYPAL" />
+				{% render_form form_paypal %}
+			</form>
 
-				{% if choice == "paypal" %}
-					{% render_form form_paypal %}
+			<form class="ui tab" data-tab="check" action="{% url 'billing' %}" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="CHECK" />
+				{% render_form form_check %}
+			</form>
 
-				{% elif choice == "check" %}
-					{% render_form form_check %}
+			<form class="ui tab" data-tab="wire" action="{% url 'billing' %}" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="WIRE" />
+				{% render_form form_wire %}
+			</form>
 
-				{% elif choice == "wire" %}
-					{% render_form form_wire %}
-
-				{% elif choice == "direct" %}
-					{% render_form form_direct %}
-				{% endif %}
-
-				<div class="field">
-					<button class="ui positive submit button fluid">Save Billing Information</button>
-				</div>
+			<form class="ui tab" data-tab="direct" action="{% url 'billing' %}" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="DIRECT" />
+				{% render_form form_direct %}
 			</form>
 		</div>
-		{% endfor %}
+	</div>
+
+	<div class="actions">
+		<div class="ui black cancel button">Cancel</div>
+		<div class="ui submit positive button">Save</div>
 	</div>
 </div>

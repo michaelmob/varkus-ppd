@@ -84,7 +84,7 @@ def render_field_dropdown(field, initial=None, **kwargs):
 	if not initial:
 		field.initial = initial
 
-	kwargs["class"] = "ui dropdown"
+	kwargs["class"] = "ui fluid dropdown" 
 
 	return mark_safe(generic_field(field, None, **kwargs))
 

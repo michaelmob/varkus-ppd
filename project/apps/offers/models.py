@@ -42,6 +42,9 @@ class Offer(models.Model):
 		except:
 			return "#"
 
+	def get_absolute_url(self, obj):
+		return self.get_manage_url()
+
 	def get_by_offer_id(offer_id):
 		""" Get offer by its id from the ad company """
 		try:
@@ -117,7 +120,7 @@ class Offer(models.Model):
 		profile = obj.user.profile
 
 		return Offer._get(
-			"64.233.173.230", request.META.get("HTTP_USER_AGENT"),
+			request.META.get("REMOTE_ADDR"), request.META.get("HTTP_USER_AGENT"),
 			obj.offers_count if 0 < obj.offers_count < 51 else settings.OFFERS_COUNT,
 			0.01, profile.offer_priority, profile.offer_block)
 
@@ -128,7 +131,7 @@ class Offer(models.Model):
 			[call offer item .renew() to renew cached offers] """
 
 		# Make key for cache
-		key = "o_%s_%s_%s" % (
+		key = "offers.%s_%s_%s" % (
 			request.META.get("REMOTE_ADDR"),
 			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest(),
 			obj.code)
@@ -144,7 +147,7 @@ class Offer(models.Model):
 		return offers
 
 	def renew(request):
-		return cache.delete("o_%s_%s" % (
+		return cache.delete("offers.%s_%s" % (
 			request.META.get("REMOTE_ADDR"),
 			hashlib.sha256(request.META.get("HTTP_USER_AGENT").encode("utf-8")).hexdigest()))
 
@@ -190,11 +193,15 @@ class Offer(models.Model):
 			that correspond to given user_agent """
 		user_agent = get_ua(user_agent)
 
-		offer_block = [o.id for o in offer_block.all()] if offer_block else []
 		offer_priority = [o.id for o in offer_priority.all()] if offer_priority else []
+		offer_block = [o.id for o in offer_block.all()] if offer_block else []
+
+		# Debugging
+		if settings.DEBUG and ip_address == "127.0.0.1":
+			ip_address = "8.8.8.8"
 
 		# GeoIP
-		country, region = retrieve(ip_address if ip_address != "127.0.0.1" else "173.63.97.160")
+		country, region = retrieve(ip_address)
 
 		if not country:
 			country = "US"
@@ -203,37 +210,30 @@ class Offer(models.Model):
 		_offers = []
 
 		# Block Completed Offers
-		conversions = Conversion.objects\
-			.filter(
-				user_ip_address = ip_address,
-				date_time__gt 	= datetime.now() - timedelta(hours=6)
-			)
+		conversions = Conversion.objects.filter(
+			user_ip_address = ip_address,
+			datetime__gt 	= datetime.now() - timedelta(hours=6))
 
 		for conversion in conversions:
-			offer_block.append(conversion.offer.id)
+			offer_block.append(conversion.offer_id)
 
 		# User Agent Args
 		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | \
 			Q(user_agent=None),)
 
 		# Staff Priority
-		_offers += Offer.objects\
-			.filter(
-				priority 			= True,
-				payout__gte 		= min_payout,
-				country__icontains 	= country,
-				*args
-			)\
-			.exclude(pk__in=offer_block)
+		_offers += Offer.objects.filter(
+			priority 			= True,
+			payout__gte 		= min_payout,
+			country__icontains 	= country,
+			*args).exclude(pk__in=offer_block)
 
 		# User Priority
-		_offers += Offer.objects\
-			.filter(
-				pk__in 				= offer_priority,
-				payout__gte 		= min_payout,
-				country__icontains 	= country,
-				*args
-			)
+		_offers += Offer.objects.filter(
+			pk__in 				= offer_priority,
+			payout__gte 		= min_payout,
+			country__icontains 	= country,
+			*args)
 
 		# Common arguments
 		kwargs = {

@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.contrib.auth.decorators import login_required
 
 from .views.contact import View_Contact
 from .views.report import View_Report

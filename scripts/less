@@ -3,6 +3,5 @@
 # apt-get install npm
 # npm install -g less less-plugin-clean-css
 
-cd $(dirname $0)/../
-cd static/css/_less/
-lessc semantic.less --clean-css="--s1 --advanced --compatibility=ie8" > ../semantic.min.css
+cd $(dirname $0)/../static/css/_less/
+lessc semantic.less --clean-css="--s1 --advanced --compatibility=ie8" > ../base.css

@@ -1,11 +1,9 @@
 import json
+from channels import Group
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-
-from ws4redis.publisher import RedisPublisher
-from ws4redis.redis_store import RedisMessage
 
 from .models import Conversion, Token
 from utils.dicts import keep_wanted
@@ -39,8 +37,9 @@ def unlock_signal(sender, instance, created, **kwargs):
 		}
 	}
 
-	locker = RedisPublisher(facility="locker", sessions=[instance.session])
-	locker.publish_message(RedisMessage(json.dumps(response)))
+	Group("session:" + instance.session).send({
+		"text": json.dumps(response)
+	})
 
 
 @receiver(post_save, sender=Token)
@@ -51,22 +50,14 @@ def notify_click_signal(sender, instance, created, **kwargs):
 	if not (created and instance.user):
 		return
 
-	earnings = instance.user.earnings
-
 	response = {
 		"success": True,
-		"message": "Click",
-		"type": "TOKEN",
-		"data": {
-			"user": {
-				"clicks": earnings.clicks + 1,
-				"clicks_today": earnings.clicks_today + 1
-			}
-		}
+		"type": "TOKEN"
 	}
 
-	redis_publisher = RedisPublisher(facility="cp", users=[instance.user.username])
-	redis_publisher.publish_message(RedisMessage(json.dumps(response)), expire=0)
+	Group("user:" + str(instance.user.pk)).send({
+		"text": json.dumps(response)
+	})
 
 
 @receiver(post_save, sender=Conversion)
@@ -77,25 +68,20 @@ def notify_conversion_signal(sender, instance, created, **kwargs):
 	if not (created and instance.user and not instance.blocked):
 		return
 
-	# Add wanted data to conversion_data
-	conversion_data = keep_wanted(instance, (
-		"user_payout", "referral_payout", "approved"))
-
 	# Keep wanted user data
-	user_data = keep_wanted(User.objects.get(id=instance.user.id).earnings, (
-		"clicks", "conversions", "clicks_today", "conversions_today", "today",
-		"week", "month", "year", "total"))
+	earnings = User.objects.get(id=instance.user.id).earnings
 
 	# Send response to Control Panel
 	response = {
 		"success": True,
-		"message": "Conversion",
 		"type": "CONVERSION",
 		"data": {
-			"conversion": conversion_data,
-			"user": user_data
+			"approved": True,
+			"payout": float(instance.user_payout),
+			"user": earnings.output_dict()
 		}
 	}
 
-	cp = RedisPublisher(facility="cp", users=[instance.user.username])
-	cp.publish_message(RedisMessage(json.dumps(response)), expire=0)
+	Group("user:" + str(instance.user.pk)).send({
+		"text": json.dumps(response)
+	})

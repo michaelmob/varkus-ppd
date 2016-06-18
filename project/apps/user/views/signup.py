@@ -30,20 +30,19 @@ class View_Sign_Up(View):
 		form = Form_Sign_Up(request.POST)
 		user = form.create()
 
-		if user:
-			if user.is_active:
-				# Authenticate user, set to "user"
-				user = authenticate(username=form.cleaned_data["username"],
-					password=form.cleaned_data["password1"])
+		if user and user.is_active:
+			# Authenticate user, set to "user"
+			user = authenticate(username=form.cleaned_data["username"],
+				password=form.cleaned_data["password1"])
 
-				# Log that user in
-				login(request, user)
+			# Log that user in
+			login(request, user)
 
-				messages.success(request, "Welcome to %s!" % settings.SITE_NAME)
-				return redirect("dashboard")
-			else:
-				messages.success(request, "Welcome to %s! We'll notify you when your account is activated." % settings.SITE_NAME)
-				return redirect("login")
+			messages.success(request, "Welcome to %s!" % settings.SITE_NAME)
+			return redirect("dashboard")
+		else:
+			messages.success(request, "Welcome to %s! We'll notify you when your account is activated." % settings.SITE_NAME)
+			return redirect("login")
 
 		return render(
 			request, "user/signup.html",

@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load currency %}
+{% load announcements %}
 
 {% block headstylebase %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/page/panel.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/base-panel.css' %}" />
 {% endblock %}
 
 {% block headjsbase %}
-<script type="text/javascript">var uri="{% websocket_uri %}";var hour={% now "H" %};</script>
-<script type="text/javascript" src="{% static 'js/ws4redis.js' %}"></script>
-{# <script type="text/javascript" src="{% static 'js/page/cp/options.js' %}"></script> #}
-<script type="text/javascript" src="{% static 'js/page/cp/updater.js' %}"></script>
+<script>var wsUrl="{% websocket_url %}/cp/";var hour={% now "H" %};</script>
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/socket.js' %}"></script>
+<script src="{% static 'js/options.js' %}"></script>
+<script src="{% static 'js/apps/cp/app.js' %}"></script>
 {% endblock %}
+
+{% block aside %}{% endblock %}
 
 {% block nav %}
 <nav class="ui sticky main menu">
@@ -51,22 +55,22 @@
 				<i class="dashboard icon link"></i>
 			</a>
 
+			{% include 'cp/dashboard/notifications.html' %}
+
 			<div class="ui dropdown wide icon item hover" data-content="Settings" data-variation="inverted">
 				<i class="setting icon link"></i>
 				<div class="menu">
 					<div class="item disabled">
 						{{ user.username|title }}'s Account
 					</div>
-					{% comment %}
-					<div class="ui options item">
-						<i class="options icon"></i>
-						Options
-					</div>
-					{% endcomment %}
 					<a class="item" href="{% url 'logout' %}">
 						<i class="sign out icon"></i>
 						Logout
 					</a>
+					<div class="ui options item">
+						<i class="options icon"></i>
+						Options
+					</div>
 				</div>
 			</div>
 
@@ -92,50 +96,23 @@
 
 {% block wrapper %}
 	{% block options-modal %}
-		{% comment %}
-		<div class="ui options modal small">
-			<i class="close icon"></i>
-			<div class="header">
-				Options
-			</div>
-			<div class="content">
-				<div class="ui options form">
-					{# Accept Messages #}
-					<div class="field">
-						<div class="ui toggle checkbox">
-							<input id="accept-messages" type="checkbox" checked />
-							<label>Accept Messages</label>
-						</div>
-					</div>
+		{% include 'cp/dashboard/options.html' %}
+	{% endblock %}
 
-					{# Notification Sound #}
-					<div class="field">
-						<label>Notification Sound</label>
-						<div class="ui action input">
-							<select id="notification-sound" class="ui fluid dropdown">
-								<option value="">Choose Notification Sound</option>
-								<option value="none">None</option>
-								<option value="bell">Bell (Default)</option>
-								<option value="beep">Beep</option>
-							</select>
-							<button class="right attached ui icon button">
-								<i class="play icon"></i>
-							</button>
-						</div>
+	{% block broadcasts %}
+		{% broadcasts as broadcasts %}
+		<div class="message wrapper">
+			{% for broadcast in broadcasts %}
+				<div class="ui icon broadcast message" data-id="{{ broadcast.pk }}">
+					{# <i class="close icon"></i> #}
+					<i class="{{ broadcast.icon }} icon"></i>
+					<div class="content">
+						<div class="header">{{ broadcast.subject }}</div>
+						<p>{{ broadcast.message }}</p>
 					</div>
 				</div>
-			</div>
-			<div class="actions">
-				<div class="ui black deny button">
-					Cancel
-				</div>
-				<div class="ui left labeled icon positive submit button">
-					<i class="checkmark icon"></i>
-					Save
-				</div>
-			</div>
+			{% endfor %}
 		</div>
-		{% endcomment %}
 	{% endblock %}
 
 	{% block messages %}

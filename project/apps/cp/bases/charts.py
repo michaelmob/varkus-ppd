@@ -10,12 +10,12 @@ class Activity():
 
 		# Append small dictionary to chart list -- for clicks
 		for token in obj.earnings.get_tokens_today():
-			data1.append({token.date_time.hour: 1})
+			data1.append({token.datetime.hour: 1})
 
 		# Append small dictionary to chart list -- for conversion count & earnings
 		for conversion in obj.earnings.get_conversions_today():
-			data2.append({conversion.date_time.hour: 1})
-			data3.append({conversion.date_time.hour: float(conversion.user_payout)})
+			data2.append({conversion.datetime.hour: 1})
+			data3.append({conversion.datetime.hour: float(conversion.user_payout)})
 
 		# Merge duplicate keyed arrays -- for clicks
 		counter1 = Counter()
@@ -46,8 +46,8 @@ class Activity():
 		}
 
 	def output_cache(obj):
-		# Create key (lc_file_4)
-		key = "lc_" + obj.__class__.__name__.lower() + str(obj.id)
+		# CCreate key (line-chart:file.4)
+		key = "line-chart:" + obj.__class__.__name__.lower() + "." + str(obj.pk)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set
@@ -69,12 +69,12 @@ class Map():
 
 			# If already exists just add onto the payment
 			if obj.country in data:
-				data[obj.country][0] += float(obj.user_payout)
-				data[obj.country][1] += 1
+				data[obj.country][0] += 1
+				data[obj.country][1] += float(obj.user_payout)
 
 			# Otherwise add the payment to the dict
 			else:
-				data[obj.country] = [float(obj.user_payout), 1]
+				data[obj.country] = [1, float(obj.user_payout)]
 
 		# Format to Google chart reqs
 		for key, value in data.items():
@@ -90,8 +90,8 @@ class Map():
 		}
 
 	def output_cache(obj):
-		# Create key (mc_file_4)
-		key = "mc_" + obj.__class__.__name__.lower() + str(obj.id)
+		# Create key (map-chart:file.4)
+		key = "map-chart:" + obj.__class__.__name__.lower() + "." + str(obj.pk)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set

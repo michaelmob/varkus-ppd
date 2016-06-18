@@ -3,5 +3,5 @@ from celery import shared_task
 from .models import Invoice
 
 @shared_task
-def generate():
-	return Invoice.generate()
+def create_all():
+	return Invoice.create_all()

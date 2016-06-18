@@ -1,5 +1,5 @@
 """
-Viking 2.0.3
+Viking 0.2.1
 """
 
 # Overwrite any setting in ./private/settings_pro.py for production servers
@@ -7,6 +7,10 @@ Viking 2.0.3
 
 import os, socket
 from datetime import timedelta
+
+# Debug
+# https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-DEBUG
+DEBUG = os.environ.get("DEBUG", False)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -19,23 +23,25 @@ INSTALLED_APPS = (
 	"django.contrib.sessions",
 	"django.contrib.messages",
 	"django.contrib.staticfiles",
+	"django.contrib.postgres",
 
-	"debug_toolbar", 		# django-debug-toolbar
-	"captcha", 				# django-recaptcha
-	"storages", 			# django-storages
-	"axes", 				# django-axes
-	"djcelery", 			# django-celery
-	"anora", 				# anora
-	"django_countries", 	# django-countries
-	"django_gravatar",		# django-gravatar2
-	"django_tables2", 		# django-tables2
-	"ws4redis",				# django-websocket-redis
+	"debug_toolbar",        # django-debug-toolbar
+	"captcha",              # django-recaptcha
+	"storages",             # django-storages
+	"axes",                 # django-axes
+	"djcelery",             # django-celery
+	"anora",                # anora
+	"django_countries",     # django-countries
+	"django_gravatar",      # django-gravatar2
+	"django_tables2",       # django-tables2
+	"channels",             # channels
 
 	"apps.user",
 	"apps.offers",
 	"apps.cp",
 	"apps.site",
 	"apps.support",
+	"apps.tickets",
 	"apps.conversions",
 	"apps.billing",
 	"apps.api",
@@ -68,8 +74,6 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = "viking.urls"
 
-WSGI_APPLICATION = "ws4redis.django_runserver.application"
-
 # Login
 INVITE_ONLY = False
 LOGIN_URL = "/login/"
@@ -99,7 +103,6 @@ TEMPLATES = [
 				"django.contrib.auth.context_processors.auth",
 				"django.contrib.messages.context_processors.messages",
 				"django.template.context_processors.request",
-				"ws4redis.context_processors.default"
 			],
 			"loaders": [
 				"django.template.loaders.filesystem.Loader",
@@ -119,24 +122,45 @@ ALLOWED_HOSTS = []
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_SCHEME", "https")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "1pocfkh#z)llgp&h_t@svn^o3r^x6^g)s#qqx(udo0i7j3hj*e"
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
 	"default": {
-		"ENGINE": "django.db.backends.sqlite3",
-		"NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+		"ENGINE": "django.db.backends.postgresql_psycopg2",
+		"HOST": os.environ["DB_HOST"],
+		"PORT": os.environ["DB_PORT"],
+		"NAME": os.environ["DB_NAME"],
+		"USER": os.environ["DB_USER"],
+		"PASSWORD": os.environ["DB_PASS"],
+	}
+}
+
+# Cache
+# https://docs.djangoproject.com/en/dev/ref/settings/#cache
+CACHES = {
+	"default": {
+		"BACKEND": "django_redis.cache.RedisCache",
+		"LOCATION": "redis://%s:%s/1" % (
+			os.environ.get("REDISHOST", "127.0.0.1"),
+			os.environ.get("REDISPORT", "6379")),
+		"OPTIONS": {
+			"CLIENT_CLASS": "django_redis.client.DefaultClient",
+		}
 	}
 }
 
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
-# Websockets
-WEBSOCKET_HOST = None
-WEBSOCKET_URL = "/ws/"
-WS4REDIS_HEARTBEAT = "PING"
+# Channels
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "asgi_redis.RedisChannelLayer",
+		"ROUTING": "viking.routing.channel_routing",
+	},
+}
 
 # Media files (User Content)
 MEDIA_URL = "/media/"
@@ -152,24 +176,22 @@ STATICFILES_DIRS = (
 )
 
 # Site Settings
-SITE_NAME = "Development"
-SITE_DOMAIN = "test.com"
+SITE_NAME = os.environ.get("SITE_NAME", "Viking")
+SITE_DOMAIN = os.environ.get("DOMAIN", "viking.com")
 SITE_URL = "https://" + SITE_DOMAIN
 
 MESSAGE_TAGS = {
-    10: "orange",
-    20: "blue",
-    25: "green",
-    30: "warning",
-    40: "red",
-    50: "red"
+	10: "orange", 20: "blue", 25: "green", 30: "warning", 40: "red", 50: "red"
 }
 
 # Gravatar
 GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 # GeoIP
-GEOIP_PATH = os.path.join(BASE_DIR, "viking")
+GEOIP_PATH = BASE_DIR
+if os.environ.get("DJANGO_SETTINGS_MODULE"):
+	from django.contrib.gis.geoip2 import GeoIP2
+	GEOIP = GeoIP2()
 
 # HTTP Notification Proxy
 HTTP_NOTIFICATION_USE_PROXY = False
@@ -206,7 +228,9 @@ LOCKER_THEMES = (
 )
 
 # Tables
-ITEMS_PER_PAGE = 20
+ITEMS_PER_PAGE_LARGE = 20
+ITEMS_PER_PAGE_MEDIUM = 10
+ITEMS_PER_PAGE_SMALL = 5
 
 # Offers
 OFFERS_COUNT = 10
@@ -233,10 +257,10 @@ DEFAULT_PARTY_NAME = "User"
 DEFAULT_CUT_AMOUNT = 0.40  # Developers Cut
 DEFAULT_REFERRAL_CUT_AMOUNT = 0.10
 
-# Deposits # Default must exist // Always make "-1" default
+# Deposits // Default must exist // Always make "-1" default
 DEPOSITS = (
-	# User ID   Company     	Aff ID	Deposit Code        Deposit Name        Password
-	(-1,		"ADGATEMEDIA",	1,		"DEFAULT_DEPOSIT",	"Default Deposit",	"PASSWORD"),
+	# User ID   Company         Aff ID  Deposit Code        Deposit Name        Password
+	(-1,        "ADGATEMEDIA",  1,      "DEFAULT_DEPOSIT",  "Default Deposit",  "PASSWORD"),
 )
 
 CATEGORY_TYPES = (

@@ -1,6 +1,7 @@
 {% extends 'lockers/bases/manage/overview.html' %}
 {% load static %}
 {% load blueprints %}
+{% load semanticui %}
 
 
 {% block modals %}
@@ -13,42 +14,13 @@
 		<div class="ui form">
 			{% csrf_token %}
 
-			<div class="field">
-				<label>List Name</label>
-				{{ form.name }}
-			</div>
-
-			<div class="field">
-				<label>Description <small><i>Optional</i></small></label>
-				{{ form.description }}
-			</div>
-
-			<div class="field">
-				<label>Individual Item Name</label>
-				{{ form.item_name }}
-			</div>
-
-			<div class="field">
-				<label>Items</label>
-				{{ form.items }}
-			</div>
-
-			<div class="field">
-				<label>Delimeter</label>
-				{{ form.delimeter }}
-			</div>
-
-			<div class="field">
-				<label>Distribution Order</label>
-				{{ form.order }}
-			</div>
-
-			<div class="field">
-				<div class="ui checkbox">
-					{{ form.reuse }}
-					<label>Allow re-use of items</label>
-				</div>
-			</div>
+			{% render_field form.name placeholder="My List" %}
+			{% render_field form.description placeholder="See the things in my list!" %}
+			{% render_field form.item_name placeholder="Item" %}
+			{% render_field form.items %}
+			{% render_field_dropdown form.delimeter %}
+			{% render_field_dropdown form.order %}
+			{% render_field_checkbox form.reuse "toggle" %}
 		</div>
 
 	</div>
@@ -107,5 +79,5 @@
 	</div>
 </div>
 
-<script src="{% static 'js/page/lockers/lists/lists.js' %}"></script>
+<script src="{% static 'js/apps/lockers/lists/lists.js' %}"></script>
 {% endblock %}

@@ -3,16 +3,13 @@
 
 {% block object-tools-items %}
 
-{% with obj_name=opts.object_name|upper %}
-	{% with args='q='|add:obj_name %}
-		<li><a href="{% url 'admin:conversions_conversion_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Conversions" %}</a></li>
-		<li><a href="{% url 'admin:conversions_token_changelist' %}?{{ args }},{{ original.id }},{{ original.code }}">{% trans "Tokens" %}</a></li>
-	{% endwith %}
-{% endwith %}
+<li><a href="{% url 'admin:conversions_conversion_changelist' %}?{{ original.admin_lookup_args }}">{% trans "Conversions" %}</a></li>
+<li><a href="{% url 'admin:conversions_token_changelist' %}?{{ original.admin_lookup_args }}">{% trans "Tokens" %}</a></li>
 
 <li>
 	{% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}
 	<a href="{% add_preserved_filters history_url %}" class="historylink">{% trans "History" %}</a>
 </li>
-{% if has_absolute_url %}<li><a href="{{ absolute_url }}" class="viewsitelink">{% trans "View on site" %}</a></li>{% endif %}
+{% if has_absolute_url %}<li><a href="{{ original.get_manage_url }}" class="viewsitelink">{% trans "Manage" %}</a></li>{% endif %}
+{% if has_absolute_url %}<li><a href="{{ original.get_locker_url }}" class="viewsitelink">{% trans "Locker" %}</a></li>{% endif %}
 {% endblock %}

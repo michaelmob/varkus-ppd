@@ -1,53 +1,158 @@
 #!/bin/bash
+cd $(dirname $0)
 
-cd $(dirname $0)/../
-source env/bin/activate
-cd project/
+# Verify exports script exists
+if [ ! -f "exports" ]; then
+	echo "exports script does not exist"
+fi
+
+source exports
+
+# Run as desired user
+if [ $USER != "$RUN_AS" ]; then
+	sudo -u $RUN_AS ./viking $@
+	exit 0
+fi
+
+# Verify virtualenv exists
+if [ ! -d "../.env" ]; then
+	echo "virtualenv does not exist"
+	exit 1
+fi
+
+# Activate virtualenv
+cd ../project/
+source ../.env/bin/activate
+
+DEBUG_RUN_CELERY=false
+
+function manage() {
+	python manage.py $@
+}
+
+function start() {
+	echo "Start Viking from Supervisor"
+}
+
+function stop() {
+	echo "Stopping Viking"
+
+	files=( "celeryev.pid" "celeryw.pid" )
+
+	for i in "${files[@]}"; do
+		if [ -a $i ]; then
+			kill $(cat $i)
+			rm $i
+		fi
+	done
+}
 
 case "$1" in
-
 	start)
-		echo "Starting Viking"
-		# Run Celery Cam
-		../scripts/manage celerycam --frequency=30.0 &
-
-		# Run Celery Worker
-		celery worker --app=viking --beat --events --pidfile=celeryw.pid &
-
-		# Run uWSGI
-		uwsgi --ini viking/uwsgi/django.ini &
-		uwsgi --ini viking/uwsgi/websocket.ini &
-		;;
+		start ;;
 
 	stop)
-		echo "Stopping Viking"
-
-		# Kill Celerycam
-		kill $(cat celeryev.pid)
-
-		# Kill Celery worker
-		kill $(cat celeryw.pid)
-
-		# Kill uWSGI
-		kill -9 $(cat uwsgi.pid)
-		kill -9 $(cat uwsgi_ws.pid)
-
-		# Cleanup
-		rm celeryev.pid
-		rm celeryw.pid
-		rm uwsgi.pid
-		rm uwsgi_ws.pid
-		;;
+		stop ;;
 
 	restart)
-		../scripts/viking stop
-		../scripts/viking start
-		;;
-	*)
-		echo "Usage: viking {start|stop|restart}"
-		exit 1
+		stop && start ;;
+
+	manage)
+		manage ${@:2} ;;
+
+	migrate)
+		manage makemigrations && manage migrate ;;
+
+	daphne)
+		daphne viking.asgi:channel_layer ;;
+
+	runworker)
+		manage runworker ;;
+
+	celerycam)
+		manage celerycam --frequency=30.0 ;;
+
+	celeryworker)
+		celery worker --app=viking --beat --events --pidfile=celeryw.pid ;;
+
+	debug)
+		export DEBUG=true
+
+		if [ $DEBUG_CELERY == true ]; then
+			manage celerycam --frequency=30.0 &
+
+			manage celery worker --app=viking --beat --events \
+				--pidfile=celeryw.pid --loglevel=INFO &
+		fi
+
+		manage runserver
+		stop ;;
+
+	pip)
+		pip ${@:2} ;;
+
+	geoip)
+		echo "Updating GeoLite2 City Database"
+		rm GeoLite2-City.mmdb
+		wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
+		gunzip -f GeoLite2-City.mmdb.gz
 		;;
 
+	less)
+		echo "Compiling less stylesheet"
+		lessc ../static/css/_less/semantic.less \
+			--clean-css="--s1 --advanced --compatibility=ie8" > ../static/css/base.css
+		;;
+
+	clean)
+		find ../ -name "*.pyc" -type f -delete
+
+		echo "Cleaned python files"
+
+		if [ "$2" = "migrations" ]; then
+			cd ../project/
+			find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+			echo "Cleaned migration files"
+		fi
+		;;
+
+	backup)
+		export PGPASSWORD=$DB_PASS
+		mkdir -p ../backups
+		pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME > \
+			../backups/BACKUP_$(date +"%Y-%m-%d_%H-%M-%S")
+		;;
+
+	restore)
+		psql $PGDATABASE < $2
+		;;
+
+	edit)
+		case "$2" in
+			com) sensible-editor viking/private/settings_com.py ;;
+			pro) sensible-editor viking/private/settings_pro.py ;;
+			dev) sensible-editor viking/private/settings_dev.py ;;
+			key) sensible-editor viking/private/keys.py ;;
+			*) exit 1 ;;
+		esac
+		;;
+
+	*)
+		echo -e "Usage: viking arg\nList of args:"
+		echo -e "\t start: Start uWSGI and celery worker/monitor"
+		echo -e "\t stop: Stop uWSGI and celery worker/monitor, delete PID files"
+		echo -e "\t restart: Stop and start"
+		echo -e "\t manage {args}: Run manage.py"
+		echo -e "\t migrate: Run django migrations"
+		echo -e "\t debug: Run manage.py runserver"
+		echo -e "\t pip {args}: Run virtualenv pip"
+		echo -e "\t geoip: Update GeoIP database"
+		echo -e "\t clean [migration]: Clean pycache [and migration files]"
+		echo -e "\t backup {file}: Backup database using PostgreSQL"
+		echo -e "\t restore {file}: Restore database using PostgreSQL"
+		echo -e "\t edit {com/pro/dev/key}: Edit settings"
+		exit 1
+		;;
 esac
 
 exit 0

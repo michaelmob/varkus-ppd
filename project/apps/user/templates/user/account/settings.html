@@ -148,7 +148,7 @@
 									<i class="linkify icon"></i>
 									<div class="content">
 										<div class="header">Website</div>
-										{% if website %}
+										{% if user.profile.website %}
 											<a href="{{ user.profile.website }}">{{ user.profile.website }}</a>
 										{% else %}
 											{{ DEFAULT_TEXT }}
@@ -168,7 +168,7 @@
 									<i class="credit card icon"></i>
 									<div class="content">
 										<div class="header">Billing Details</div>
-										<a href="{% url 'billing' %}">Modify Billing Information</a>
+										<a href="{% url 'billing' %}">Edit Billing Information</a>
 									</div>
 								</div>
 
@@ -251,6 +251,6 @@
 	</div>
 </div>
 
-<script src="{% static 'js/page/user/settings.js' %}"></script>
+<script src="{% static 'js/apps/user/settings.js' %}"></script>
 {% endwith %}
 {% endblock %}

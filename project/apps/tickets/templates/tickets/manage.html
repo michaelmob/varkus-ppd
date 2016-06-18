@@ -1,0 +1,175 @@
+{% extends 'base-panel.html' %}
+{% load static %}
+{% load semanticui %}
+{% load gravatar %}
+
+{% block title %}Tickets{% endblock %}
+
+{% block tab %}tickets{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Support</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'tickets' %}" class="section">Tickets</a>
+	<i class="right chevron icon divider"></i>
+	<strong>Ticket: </strong><a href="{% url 'tickets-manage' obj.pk %}" class="active section">{{ obj.subject }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+	<div class="ui grid stackable">
+		<div class="eight wide column">
+			<div class="ui one column grid">
+
+				{# Thread Details #}
+				<div class="column">
+					<div class="box">
+						<div class="ui top attached inverted red menu">
+							<div class="icon header item"><i class="ticket icon"></i></div>
+							<div class="header item">Ticket Information</div>
+
+							<div class="right menu">
+								{% if user.is_staff %}
+								<a href="{% url 'admin:tickets_thread_change' obj.id %}" class="ui inverted icon item">
+									<i class="shield icon"></i>
+								</a>
+								{% endif %}
+
+								<div class="ui inverted item dropdown">
+									<i class="heartbeat icon"></i> Set Status
+									<div class="menu">
+										<div class="header">Status</div>
+										<div data-id="{{ obj.pk }}" data-status="open" class="ui status item radio checkbox">
+											<input class="hidden" tabindex="0" name="status" type="radio" {% if obj.closed == False %}checked {% endif %}/>
+											<label>Open</label>
+										</div>
+										<div data-id="{{ obj.pk }}" data-status="close" class="ui status item radio checkbox">
+											<input class="hidden" tabindex="0" name="status" type="radio" {% if obj.closed == True %}checked {% endif %}/>
+											<label>Closed</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="ui bottom attached segment">
+							<div class="ui divided relaxed list">
+								<div class="item">
+									<i class="quote left icon"></i>
+									<div class="content">
+										<div class="header">Subject</div>
+										{{ obj.subject }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="sitemap icon"></i>
+									<div class="content">
+										<div class="header">Category</div>
+										{{ obj.get_category_display }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="signal icon"></i>
+									<div class="content">
+										<div class="header">Priority</div>
+										{{ obj.get_priority_display }}
+									</div>
+								</div>
+								<div class="item">
+									<i class="heartbeat icon"></i>
+									<div class="content">
+										<div class="header">Status</div>
+										{% if obj.closed %}
+											<span class="ui red status label">Closed</span>
+										{% else %}
+											<span class="ui green status label">Open</span>
+										{% endif %}
+									</div>
+								</div>
+								<div class="item">
+									<i class="calendar icon"></i>
+									<div class="content">
+										<div class="header">Created On</div>
+										{{ obj.datetime }}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{# Create Post #}
+				<div class="column">
+					<form class="box" action="{% url 'tickets-manage' obj.pk %}" enctype="multipart/form-data" method="POST">
+						<div class="ui top attached inverted red menu">
+							<div class="icon header item"><i class="write icon"></i></div>
+							<div class="header item">Create Post</div>
+						</div>
+						<div class="ui form bottom attached segment">
+							{% csrf_token %}
+							{% render_field form.message placeholder='Type your message here.' %}
+							<div class="field">
+								{{ form.file }}
+							</div>
+						</div>
+						<div class="ui labeled icon bottom attached basic submit button">
+							<i class="plus icon"></i>
+							Submit Post
+						</div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="eight wide column">
+			<div class="box">
+				<div class="ui top attached inverted red menu">
+					<div class="icon header item"><i class="comments icon"></i></div>
+					<div class="header item">Posts</div>
+				</div>
+				<div class="ui bottom attached segment">
+
+					<div class="ui comments">
+					{% for post in obj.posts %}
+						<div class="comment">
+							<a class="avatar">
+								{% gravatar post.user.email 32 %}
+							</a>
+							<div class="content">
+								<a class="author">
+									{% if post.user.is_staff == True %}
+										{{ post.user.first_name }}
+									{% else %}
+										{{ post.user.username }}
+									{% endif %}
+								</a>
+								<div class="metadata">
+									<span class="date">{{ post.datetime }}</span>
+									{% if post.user.is_staff == True %}
+										<span class="ui orange horizontal label">Staff</span>
+									{% endif %}
+								</div>
+								<div class="text">
+									{{ post.message|linebreaksbr }}
+								</div>
+								{% if post.file %}
+								<div class="actions">
+									<a target="_blank" href="{{ post.file.url }}">View Attachment</a>
+								</div>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/apps/tickets/manage.js' %}"></script>
+{% endblock %}

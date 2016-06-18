@@ -29,9 +29,9 @@ var drawMapChart = function(data) {
 				width: "100%",
 				height: "100%",
 				dataMode: "regions",
-				legend: {position: "none"},
+				legend: { position: "none" },
 				backgroundColor: "#FFF",
-				colorAxis: {colors: colors},
+				colorAxis: { colors: colors },
 				datalessRegionColor: "#EEE"
 			}
 		);

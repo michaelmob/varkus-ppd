@@ -1,0 +1,13 @@
+#!/bin/bash
+export RUN_AS="michael"
+export DEBUG=false
+export DEBUG_CELERY=true
+
+export ADVANCED_PASSWORD="Freaknik"
+export SECRET_KEY="_development_development_development_development_"
+
+export DB_HOST="127.0.0.1"
+export DB_PORT=5432
+export DB_NAME="v_db"
+export DB_USER="v_user"
+export DB_PASS="v_pass"

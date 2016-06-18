@@ -19,7 +19,13 @@ class View_Unlock(View_Unlock_Base):
 
 	def get_return(self):
 		if not self.token.data:
-			self.token.data = self._obj.get()
+			# Get list item and set it as used
+			obj = self._obj.get()
+			obj.used = True
+			obj.save()
+
+			# Set token data to list item value
+			self.token.data = obj.value
 			self.token.save()
 
 		return super(View_Unlock, self).get_return()

@@ -1,15 +1,14 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.urlresolvers import reverse
 
 from apps.cp.models import Earnings_Base
 from utils import strings
 from utils.constants import DEFAULT_BLANK_NULL
-
-from .fields import LockerField
-
+	
 
 ''' Base for Lockers '''
 class Locker_Base(models.Model):
@@ -17,12 +16,12 @@ class Locker_Base(models.Model):
 	code 			= models.CharField(max_length=10, verbose_name="Code")
 	name 			= models.CharField(max_length=100, verbose_name="Name")
 	description 	= models.TextField(max_length=500, verbose_name="Description", **DEFAULT_BLANK_NULL)
-	date_time 		= models.DateTimeField(auto_now_add=True, verbose_name="Date")
+	datetime 		= models.DateTimeField(auto_now_add=True, verbose_name="Date")
 
 	theme			= models.CharField(max_length=64, default="DEFAULT", choices=settings.LOCKER_THEMES)
 	offers_count	= models.IntegerField(default=8)
 
-	conversion_block		= models.DecimalField(
+	conversion_block = models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],
 		max_digits 		= 5,
 		decimal_places 	= 2,
@@ -30,14 +29,28 @@ class Locker_Base(models.Model):
 		help_text 		= """Chance of a conversion block happening.<br/>
 			Divide by 100 (example: 0.30 == 30%)<br/>
 			1 for guaranteed conversion block.<br/>
-			0 for no conversion block.""")
+			0 for no conversion block."""
+	)
 
 	country_block	= models.CharField(
 		max_length 		= 100,
 		default 		= "",
 		blank 			= True,
 		null 			= True,
-		help_text 		= "ISO 3166-1 alpha-2 (example: \"US,FR,\")")
+		help_text 		= "ISO 3166-1 alpha-2 (example: \"US,FR,\")"
+	)
+
+	def lookup_args(self):
+		"""Filter arguments"""
+		return {
+			"locker_type__pk": ContentType.objects.get_for_model(self.__class__).pk,
+			"locker_id": self.id
+		}
+
+	def admin_lookup_args(self):
+		return "locker_type=%s&locker_id=%s" % (
+			ContentType.objects.get_for_model(self.__class__).pk, self.id
+		)
 
 	def get_type(self):
 		"""Get class name (Ex: widget, file, list, link)"""
@@ -49,6 +62,9 @@ class Locker_Base(models.Model):
 
 	def get_manage_url(self):
 		"""Get manage (control panel) url (Ex: file-manage -> /files/manage/code/)"""
+		return self.get_link("manage")
+
+	def get_absolute_url(self):
 		return self.get_link("manage")
 
 	def get_locker_url(self):

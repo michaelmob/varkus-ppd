@@ -1,30 +1,28 @@
 {% load django_tables2 %}
-{% load pagination %}
 
-{% with num=table.paginator.page_range %}
-	{% if num|length > 1 %}
-		<div class="ui {% if class %}{{ class }} {% endif %}pagination fluid {% if inverted %}inverted {% endif %}menu">
+{% if table.paginator.page_range|length > 1 %}
+	<div class="ui {% if class %}{{ class }} {% endif %}pagination fluid {% if inverted %}inverted {% endif %}menu">
 
-			{% if table.page.number > 4 %}
-				<a href="{% querystring table.prefixed_page_field=1 %}" class="item">1</a>
-				<a class="disabled item">...</a>
-			{% endif %}
+		<a href="{% querystring table.prefixed_page_field=1 %}" class="item{% if not table.page.has_previous %} disabled{% endif %}">
+			<i class="step backward icon"></i>
+		</a>
 
-			{% for page in num|paginate:table.page.number %}
-				<a href="{% querystring table.prefixed_page_field=page %}" class="{% if page == table.page.number %}active {% endif %}item">
-					{{ page }}
-				</a>
-			{% endfor %}
+		<a href="{% if table.page.has_previous %}{% querystring table.prefixed_page_field=table.page.previous_page_number %}{% endif %}" class="item{% if not table.page.has_previous %} disabled{% endif %}">
+			<i class="backward icon"></i>
+		</a>
 
-			{% if table.page.number < num|length|add:"-3" %}
-				<a class="disabled item">...</a>
-				<a href="{% querystring table.prefixed_page_field=num|length %}" class="item">{{ num|length }}</a>
-			{% endif %}
+		{% for page in pages %}
+			<a href="{% querystring table.prefixed_page_field=page %}" class="{% if page == table.page.number %}active {% endif %}item">
+				{{ page }}
+			</a>
+		{% endfor %}
 
-			<div class="item float right">
-				Page {{ table.page.number }} / {{ num|length }}
-			</div>
+		<a href="{% if table.page.has_next %}{% querystring table.prefixed_page_field=table.page.next_page_number %}{% endif %}" class="item{% if table.page.number == table.paginator.num_pages %} disabled{% endif %}">
+			<i class="forward icon"></i>
+		</a>
 
-		</div>
-	{% endif %}
-{% endwith %}
+		<a href="{% querystring table.prefixed_page_field=table.paginator.num_pages %}" class="item{% if not table.page.has_next %} disabled{% endif %}">
+			<i class="step forward icon"></i>
+		</a>
+	</div>
+{% endif %}

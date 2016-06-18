@@ -1,6 +1,0 @@
-#!/bin/bash
-cd ../project/viking/
-echo "Updating GeoLite2 City Database"
-wget -q http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
-gunzip -f GeoLite2-City.mmdb.gz
-rm GeoLite2-City.mmdb.gz

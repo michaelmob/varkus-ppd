@@ -7,21 +7,15 @@ class Form_Create(ModelForm):
 		model = Link
 		fields = ["name", "url", "description"]
 
-	def create(self, user):
-		obj = super(Form_Create, self).save(commit=False)
-		
-		# Set Fields
-		obj.user = user
-		obj.code = Link().generate_code()
-		obj.name = self.cleaned_data["name"]
-		obj.description = self.cleaned_data["description"]
-		obj.url = self.cleaned_data["url"]
-		obj.save()
+	def save(self, user):
+		if not self.is_valid():
+			return None
 
-		# Create Earnings
-		Earnings.objects.get_or_create(obj=obj)
-
-		return obj
+		return Link.create(
+			user 		= user,
+			name 		= self.cleaned_data["name"],
+			description = self.cleaned_data["description"],
+			url 		= self.cleaned_data["url"])
 
 
 class Form_Edit(ModelForm):

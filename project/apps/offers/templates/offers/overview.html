@@ -29,17 +29,17 @@
 					<div class="header item">Offers{% if query|length > 0 %}&nbsp;<small>[Filter: "{{ query }}"]{% endif %}</small></div>
 
 					<div class="right menu">
-						<form class="inverted item">
+						<form class="inverted item" method="GET">
 							<div class="ui inverted transparent icon input">
 								<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
-								<i class="search link icon"></i>
+								<i class="search icon"></i>
 							</div>
 						</form>
 						<a class="inverted item" href="{% url 'offers-options' %}">
 							<i class="options icon"></i> Options
 						</a>
 						{% if user.is_superuser %}
-						<a class="inverted item" href="{% url 'offers-sync' %}">
+						<a class="ui inverted sync item">
 							<i class="refresh icon"></i> Sync
 						</a>
 						{% endif %}
@@ -52,5 +52,17 @@
 		</div>
 	</div>
 </div>
-<script>$(".search").click(function() { $("form").submit(); });</script>
+
+{% if user.is_superuser %}
+<script>
+	$(".sync.item").api({
+		url: "{% url 'offers-sync' %}",
+		stateContext: ".sync.item .icon",
+		onSuccess: function(response) {
+			console.log(response.data);
+			$(".sync.item").state("flash text", response.message);
+		},
+	});
+</script>
+{% endif %}
 {% endblock %}

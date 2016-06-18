@@ -1,16 +1,15 @@
-import hashlib
 from datetime import datetime, timedelta
-from decimal import Decimal
+from random import randint
+from utils import strings
+from utils.constants import (DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY,
+	USER_AGENTS)
 
 from django.conf import settings
 from django.db import models
 from django.core.cache import cache
 from django.contrib.auth.models import User
-from django.contrib.gis.geoip2 import GeoIP2
-
-from utils import strings
-from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY
-from ..lockers.fields import LockerField
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 import apps.offers.models
 
@@ -75,20 +74,64 @@ class Token(models.Model):
 	user 		= models.ForeignKey(User, on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
 	offers 		= models.ManyToManyField("offers.Offer", related_name="token_offer_id", verbose_name="Offer", default=None, blank=True)
 
-	locker 		= LockerField()
+	locker_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, limit_choices_to={"app_label__in": ("lockers",)}, **BLANK_NULL)
+	locker_id 	= models.PositiveIntegerField(**BLANK_NULL)
+	locker 		= GenericForeignKey("locker_type", "locker_id")
 
 	user_agent 	= models.CharField(max_length=300)
 	ip_address 	= models.GenericIPAddressField(verbose_name="IP Address")
 	country 	= models.CharField(max_length=5)
-	date_time	= models.DateTimeField()
+	datetime	= models.DateTimeField()
 	last_access	= models.DateTimeField(auto_now=True, verbose_name="Last Access")
 
 	conversion 	= models.BooleanField(default=False, verbose_name="Conversion")
-	paid 		= models.BooleanField(default=False)
-	staff 		= models.BooleanField(default=False)
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.unique)
+
+	def random(obj, offer=None):
+		""" Generate random Token (for debugging purposes) """
+		country = "XX"
+
+		# Random, but valid, IP Address and country
+		while country == "XX":
+			ip_address = ".".join(str(randint(0, 255)) for n in range(4))
+			try:
+				country = settings.GEOIP.country_code(ip_address)
+			except:
+				country = "XX"
+
+		# Random Date
+		date = datetime.now().replace(hour=randint(0, 23), minute=randint(0, 59))
+
+		# Create the actual token
+		token = Token.objects.create(
+			ip_address 	= ip_address,
+			locker 		= obj,
+			user_agent 	= USER_AGENTS[randint(0, len(USER_AGENTS) - 1)],
+			user 		= obj.user,
+			country 	= country,
+			unique 		= strings.random(64),
+			session 	= None,
+			datetime 	= date)
+
+		# Add offer
+		if not offer:
+			offer = apps.offers.models.Offer.objects.filter(
+				earnings_per_click__gt=0.01).order_by("?").first()
+
+		token.offers.add(offer)
+
+		# Increment clicks
+		try:
+			offer.earnings.increment_clicks()
+			obj.user.earnings.increment_clicks()
+			obj.earnings.increment_clicks()
+		except:
+			pass
+
+		return token
+
 
 	def get(request, obj):
 		"""Get token by identifiers
@@ -97,9 +140,8 @@ class Token(models.Model):
 		obj -- Locker object to create for
 		"""
 		return Token.objects.filter(
-			ip_address 		= request.META.get("REMOTE_ADDR"),
-			#user_agent 	= request.META.get("HTTP_USER_AGENT"),
-			locker 			= obj
+			ip_address = request.META.get("REMOTE_ADDR"),
+			**obj.lookup_args()
 		).first()
 
 	def get_or_create(request, obj):
@@ -129,8 +171,7 @@ class Token(models.Model):
 				country 	= country,
 				unique 		= strings.random(64),
 				session 	= request.session.session_key,
-				date_time 	= datetime.now()
-			)
+				datetime 	= datetime.now())
 			created = True
 
 		if not created:
@@ -142,15 +183,7 @@ class Token(models.Model):
 
 	def access(self):
 		"""Check if token has access to continue"""
-		return (self.conversion or self.paid or self.staff)
-
-	def renew(request):
-		return cache.delete("o_%s_%s" % \
-			(
-				self.ip_address,
-				hashlib.sha256(self.user_agent.encode("utf-8")).hexdigest()
-			)
-		)
+		return self.conversion
 
 	def get_verify(unique, ip_address):
 		"""Verify token for unique and ip_address exists by returning the object"""
@@ -162,8 +195,7 @@ class Token(models.Model):
 	def clear():
 		"""Clear/delete all tokens"""
 		return Token.objects.filter(
-			date_time__gt = datetime.now() - timedelta(days=2),
-			paid = False
+			datetime__gt=datetime.now() - timedelta(days=2)
 		).delete()
 
 
@@ -175,7 +207,9 @@ class Conversion(models.Model):
 	token 				= models.ForeignKey(Token, verbose_name="Token", related_name="token_id", on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
 	user 				= models.ForeignKey(User, verbose_name="User", related_name="user_id", on_delete=models.SET_NULL, **DEFAULT_BLANK_NULL)
 
-	locker				= LockerField()
+	locker_type 		= models.ForeignKey(ContentType, on_delete=models.SET_NULL, limit_choices_to={"app_label__in": ("lockers",)}, **BLANK_NULL)
+	locker_id 			= models.PositiveIntegerField(**BLANK_NULL)
+	locker 				= GenericForeignKey("locker_type", "locker_id")
 
 	access_url 			= models.CharField(verbose_name="Access URL", max_length=850, **DEFAULT_BLANK_NULL)
 	sender_ip_address	= models.GenericIPAddressField(verbose_name="Sender IP Address", **BLANK_NULL)
@@ -192,44 +226,70 @@ class Conversion(models.Model):
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", choices=Deposit.names(), **BLANK_NULL)
-	date_time			= models.DateTimeField(verbose_name="Date", auto_now_add=True)
+	datetime			= models.DateTimeField(verbose_name="Date")
 
 
-	def get_or_create(offer, token, payout, sender_ip_address, user_ip_address,
-		deposit="DEFAULT_DEPOSIT", blocked=False, approved=True):
-		""" Create Conversion Row """
+	def get_or_create(token, offer=None, sender=None, payout=None,
+		deposit="DEFAULT_DEPOSIT", blocked=False, approved=True, **kwargs):
+		""" Create Conversion """
+		# Last offer from token
+		if token and not offer:
+			offer = token.offers.last()
+
+		# Still no offer? Just make one for the sake of it
 		if not offer:
 			offer = apps.offers.models.Offer()
 
+		# Create blank token if no token
 		if not token:
 			token = Token()
 
-		args = {
-			"offer" 			: offer if offer.pk else None,
-			"token" 			: token if token.pk else None,
-			"user"				: token.user,
-			"locker"			: token.locker,
+		# Values to search for existing Conversion
+		search = {
+			"offer" 	: offer if offer.pk else None,
+			"token"		: token if token.pk else None,
+			"user"		: token.user,
 		}
 
-		defaults = {
+		# Attempt to find an existing conversion
+		obj = Conversion.objects.filter(**search).first()
+
+		if obj:
+			return (obj, False)
+
+		# Conversion does not exist
+		# Creation values for conversion
+		values = {
+			"locker"			: token.locker,
 			"offer_name"		: offer.name,
-			"sender_ip_address"	: sender_ip_address,
-			"user_ip_address"	: user_ip_address,
+			"sender_ip_address"	: sender,
+			"user_ip_address"	: token.ip_address,
 			"user_user_agent" 	: token.user_agent,
-			"payout"			: payout,
+			"payout"			: payout or offer.payout, 
 			"blocked"			: blocked,
 			"approved"			: approved,
 			"deposit"			: deposit,
-			"date_time"			: datetime.now(),
+			"datetime" 			: datetime.now()
 		}
+
+		# Datetime optional
+		if "datetime" in kwargs:
+			if kwargs["datetime"] == "TOKEN":
+				values["datetime"] = token.datetime
+			else:
+				values["datetime"] = kwargs["datetime"]
 
 		# Find IP address country, use Offer's country if not found
 		try:
-			defaults["country"] = GeoIP2().country_code(user_ip_address)
+			values["country"] = settings.GEOIP.country_code(token.ip_address)
 		except:
-			defaults["country"] = offer.flag
+			values["country"] = offer.flag
 
-		return Conversion.objects.get_or_create(defaults=defaults, **args)
+		# Add the original `search` values to `values`
+		values.update(search)
+		
+		# Create the conversion
+		return (Conversion.objects.create(**values), True)
 
 
 # Signals

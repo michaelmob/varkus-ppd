@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import View
@@ -5,12 +6,11 @@ from django.http import HttpResponse, JsonResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 
-from apps.conversions.models import Conversion
-
 from ..models import Offer
 from ..forms import Form_Offer
 from ..tables import Table_Offer_All, Table_Offer_Conversions, Table_Offer_Options
 
+from apps.conversions.models import Conversion
 from apps.cp.bases.charts import Activity
 
 
@@ -26,7 +26,7 @@ class View_Overview(View):
 
 		return render(request, "offers/overview.html", {
 			"query": query,
-			"offers": Table_Offer_All.create(request, offers)
+			"offers": Table_Offer_All(request, offers, settings.ITEMS_PER_PAGE_LARGE)
 		})
 
 
@@ -39,7 +39,8 @@ class View_Manage(View):
 		except (ValueError, Offer.DoesNotExist):
 			return redirect("offers")
 
-		conversions = Conversion.objects.filter(offer=obj, user=request.user, blocked=False).order_by("-date_time")
+		conversions = Conversion.objects.filter(offer=obj, user=request.user,
+			blocked=False).order_by("-datetime")
 
 		# Set offer importance
 		importance = "neutral"
@@ -51,7 +52,7 @@ class View_Manage(View):
 
 		return render(request, "offers/manage.html", {
 			"obj": obj,
-			"conversions": Table_Offer_Conversions.create(request, conversions),
+			"conversions": Table_Offer_Conversions(request, conversions),
 			"importance": importance
 		})
 
@@ -59,10 +60,10 @@ class View_Manage(View):
 class View_Options(View):
 	def get(self, request):
 		return render(request, "offers/options.html", {
-			"prioritized": Table_Offer_Options.create(
+			"prioritized": Table_Offer_Options(
 				request, request.user.profile.offer_priority.all()),
 
-			"blocked": Table_Offer_Options.create(
+			"blocked": Table_Offer_Options(
 				request, request.user.profile.offer_block.all())
 		})
 

@@ -3,25 +3,23 @@ import random
 from datetime import datetime
 from ..models import models, Locker_Base, Earnings_Base
 
+ORDERS = (
+	("DESCENDING", "Descending"),
+	("ASCENDING", "Ascending"),
+	("RANDOM", "Random"),
+)
+
+DELIMETERS = (
+	("\\n", "New Line (\\n)"),
+	(",", "Comma (,)"),
+	(";", "Semi-colon (;)"),
+	("|", "Vertical bar (|)"),
+	("-", "Dash (-)"),
+	("space", "Space ( )"),
+)
 
 class List(Locker_Base):
-	ORDERS = (
-		("descending", "Descending"),
-		("ascending", "Ascending"),
-		("random", "Random"),
-	)
-
-	DELIMETERS = (
-		("\\n", "New Line (\\n)"),
-		(",", "Comma (,)"),
-		(";", "Semi-colon (;)"),
-		("|", "Vertical bar (|)"),
-		("-", "Dash (-)"),
-		("space", "Space ( )"),
-	)
-
-	item_name		= models.CharField(max_length=100)
-	items 			= models.TextField(max_length=6000)
+	item_name		= models.CharField(max_length=100, verbose_name="Individual Item Name")
 	item_count 		= models.IntegerField(default=0, verbose_name="Item Count")
 	unlock_count	= models.IntegerField(default=0)
 	order 			= models.CharField(max_length=20, default="descending", choices=ORDERS)
@@ -35,8 +33,7 @@ class List(Locker_Base):
 		elif delimeter == "space":
 			delimeter = " "
 
-		items = [[item, 0] for item in items.replace("\r", "").split(delimeter)]
-		items_json = json.dumps(items, separators=(",", ":"))
+		items = items.replace("\r", "").split(delimeter)
 
 		obj = List.objects.create(
 			user 		= user,
@@ -44,104 +41,34 @@ class List(Locker_Base):
 			name 		= name,
 			item_name 	= item_name,
 			description = description,
-			items 		= items_json,
 			item_count	= len(items),
 			order 		= order,
 			delimeter 	= delimeter,
 			reuse 		= True,
-			date_time	= datetime.now()
+			datetime	= datetime.now()
 		)
 
 		Earnings.objects.get_or_create(obj=obj)
+		List_Item.objects.bulk_create([List_Item(parent=obj, value=value) \
+			for value in items])
 
 		return obj
 
 	def remaining(self):
 		return self.item_count - self.unlock_count
 
-	def items_list(self):
-		return json.loads(self.items)
-
-	def reset(self, descending=True):
-		items = [[item[0], 0] for item in json.loads(self.items)]
-
-		if not descending:
-			items = items[::-1]
-
-		self.items = json.dumps(items, separators=(",", ":"))
-		self.unlock_count = 0
-		self.save()
-		return items
+	def reset(self):
+		return List_Item.objects.filter(parent=self).update(used=False)
 
 	def get(self):
-		if self.order == "descending":
-			return self.get_order(True)
-		elif self.order == "ascending":
-			return self.get_order(False)
-		elif self.order == "random":
-			return self.random()
+		if self.order == "ASCENDING":
+			return List_Item.objects.filter(parent=self, used=False).first()
 
-	def get_order(self, descending=True):
-		# Grab our items list, list of lists
-		# first [0] is the content, second [1] is use
-		# ([1] == 0) == Not used
-		# ([1] == 1) == Already used
-		items = self.items_list()
+		if self.order == "DESCENDING":
+			return List_Item.objects.filter(parent=self, used=False).last()
 
-		# Reverse array if not descending
-		if not descending:
-			items = items[::-1]
-
-		# Check last item, to see if list is finished
-		if items[-1][1] == 1:
-			if self.reuse:
-				# List can be re-used so reset items
-				items = self.reset(descending)
-			else:
-				# Return none since we aren't re-using the list
-				return None
-
-		# Loop through items to see if they have been given out
-		for i, item in enumerate(items):
-			if item[1] == 0:
-				# Set use to 1 to signify it's been used, and then encode
-				# to json and save the object
-				items[i][1] = 1
-				
-				if not descending:
-					items = items[::-1]
-				
-				self.items = json.dumps(items, separators=(",", ":"))
-				self.unlock_count += 1
-				self.save()
-
-				# Return the content
-				return item[0]
-
-	def random(self):
-		items = self.items_list()
-		unused = []
-
-		for item in items:
-			if item[1] == 0:
-				unused.append(item)
-
-		if len(unused) < 1:
-			if self.reuse:
-				self.reset()
-				return self.random()
-			else:
-				return None
-
-		random_item = random.choice(unused)
-
-		items[items.index(random_item)][1] = 1
-		
-		self.items = json.dumps(items, separators=(",", ":"))
-		self.unlock_count += 1
-		self.save()
-
-		return random_item[0]
+		if self.order == "RANDOM":
+			return List_Item.objects.filter(parent=self, used=False).order_by("?").first()
 
 
 class Earnings(Earnings_Base):
@@ -149,3 +76,15 @@ class Earnings(Earnings_Base):
 	
 	class Meta:
 		db_table = "lists_earnings"
+
+
+class List_Item(models.Model):
+	parent = models.ForeignKey(List, on_delete=models.CASCADE)
+	value = models.CharField(max_length=1000)
+	used = models.BooleanField(default=False)
+
+	class Meta:
+		verbose_name = "List Item"
+
+	def __str__(self):
+		return "[%s] %s" % (self.parent.name, self.value)

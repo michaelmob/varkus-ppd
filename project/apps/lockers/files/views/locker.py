@@ -24,19 +24,13 @@ class View_Download(View_Unlock_Base):
 	model = File
 
 	def access(self):
-		# Test if internal is set to True, if it's True then return as true,
-		# otherwise we want it to keep moving down the line
 		try:
 			if self.internal:
 				return True
 		except:
 			pass
 
-		# Get token using request and the locker object
-		self.token = Token.get(self._request, self._obj)
-
-		# Return access
-		return self.token.access()
+		return super(__class__, self).access()
 
 	def get_return(self):
 		response = HttpResponse(self._obj.file, content_type="application/octet-stream")

@@ -1,9 +1,43 @@
 #!/bin/bash
+if [ "$(whoami)" != "root" ]; then
+	echo "Run this script as root"
+	exit 1
+fi
+
 cd $(dirname $0)
 
-./pip install -r "$(pwd)/requirements.txt" $@
+# User
+USER=${SUDO_USER:-$(whoami)}
 
-./geoip
+# Paths
+SCRIPTS_DIR=$(pwd)
+PROJECT_DIR=$(pwd)/../project/
+SETTINGS_DIR=$PROJECT_DIR/viking/
 
-./manage makemigrations
-./manage migrate
+# Random Generator
+function rand() {
+	cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1
+}
+
+case "$1" in
+	1) # Create Exports
+		echo -e "Fill out following questions\n"
+
+		echo -n "Database: "
+		read PGDATABASE
+
+		echo -n "Database User: "
+		read PGUSER
+
+		echo -n "Database Pass: [Random] "
+		read PGPASSWORD
+
+		if [ -z $PGPASSWORD ]; then
+			PGPASSWORD=$(rand)
+		fi
+
+		if [ ! [ -z PGDATABSE && -z PGUSER && -z PGPASSWORD ] ];
+			echo "aaa"
+		fi
+		;;
+esac

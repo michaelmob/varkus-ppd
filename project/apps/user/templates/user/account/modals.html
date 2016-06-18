@@ -8,7 +8,7 @@
 	<div class="content">
 		<div class="ui form">
 			{% csrf_token %}
-			<input type="hidden" style="display:none" name="section" value="personal" />
+			<input type="hidden" style="display:none" name="form" value="PERSONAL" />
 
 			<div class="two fields">
 				{% render_field form_personal.first_name %}
@@ -43,7 +43,7 @@
 	<div class="content">
 		<div class="ui form">
 			{% csrf_token %}
-			<input type="hidden" style="display:none" name="section" value="account" />
+			<input type="hidden" style="display:none" name="form" value="ACCOUNT" />
 
 			{% render_field form_account.company %}
 			{% render_field form_account.website %}

@@ -1,9 +1,7 @@
-import os, json
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.conf import settings
-from django.conf.urls import patterns, include, url, static
-from django.contrib.auth.decorators import login_required
+from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 
 admin.site.login = login_required(admin.site.login)
 
@@ -34,6 +32,9 @@ urlpatterns = [
 	# Support
 	url(r"^support/", include("apps.support.urls")),
 
+	# Support
+	url(r"^tickets/", include("apps.tickets.urls")),
+
 	# Billing
 	url(r"^billing/", include("apps.billing.urls")),
 
@@ -43,3 +44,11 @@ urlpatterns = [
 	# Admin
 	url(r"^admin/", include(admin.site.urls)),
 ]
+
+if settings.DEBUG:
+	from django.views.static import serve
+	
+	urlpatterns += [
+		url(r"^media/(?P<path>.*)$", serve, {
+			"document_root": settings.MEDIA_ROOT })
+	]

@@ -143,3 +143,39 @@ html, body, body > .pusher {
 .chart.container {
 	min-height: 12.5rem;
 }
+
+// Base
+.pusher {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+.pusher > .footer {
+	flex: 1;
+}
+
+// Visiblity
+/* Mobile Only Hide */
+@media only screen and (max-width: 767px) {
+	[class*="tablet only"]:not(.mobile):not(.grid):not(.row):not(.column),
+	[class*="computer only"]:not(.mobile):not(.grid):not(.row):not(.column) {
+		display: none !important;
+	}
+}
+
+/* Tablet Only Hide */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	[class*="mobile only"]:not(.tablet):not(.grid):not(.row):not(.column),
+	[class*="computer only"]:not(.tablet):not(.grid):not(.row):not(.column) {
+		display: none !important;
+	}
+}
+
+/* Computer Only Hide */
+@media only screen and (min-width: 992px) {
+	[class*="mobile only"]:not(.computer):not(.grid):not(.row):not(.column),
+	[class*="tablet only"]:not(.computer):not(.grid):not(.row):not(.column) {
+		display: none !important;
+	}
+}

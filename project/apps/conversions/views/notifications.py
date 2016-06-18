@@ -76,14 +76,13 @@ def receive(request, password):
 
 	# Create conversion object
 	conversion, created = Conversion.get_or_create(
-		offer 				= offer,
-		token 				= token,
-		payout  			= payout,
-		sender_ip_address 	= request.META.get("REMOTE_ADDR"),
-		user_ip_address 	= ip_address,
-		deposit				= deposit.code,
-		approved			= approved,
-		blocked				= blocked
+		token 		= token,
+		offer 		= offer,
+		payout  	= payout,
+		sender 		= request.META.get("REMOTE_ADDR"),
+		deposit		= deposit.code,
+		approved	= approved,
+		blocked		= blocked
 	)
 
 	# Update response

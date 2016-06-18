@@ -9,12 +9,12 @@
 	<div class="column" style="max-width:450px">
 		<h2 class="ui image header">
 			<div class="content">
-				Log-in to your account
+				Varkus
 			</div>
 		</h2>
 
 		{% if form.errors %}
-			<div class="ui floating message red">
+			<div class="ui message red">
 				<i class="close icon"></i>
 				Invalid username or password.
 				{# <br/> #}
@@ -38,5 +38,5 @@
 </div>
 
 <script src="{% static 'js/api.js' %}"></script>
-<script src="{% static 'js/page/user/log-in.js' %}"></script>
+<script src="{% static 'js/apps/user/log-in.js' %}"></script>
 {% endblock %}

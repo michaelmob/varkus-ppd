@@ -1,10 +1,9 @@
-import django_tables2 as tables
-
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.formats import date_format
 from django.utils.safestring import mark_safe
 
+from apps.site.tables import tables, Table_Base
 from apps.cp.templatetags.currency import currency
 
 from .models import Invoice
@@ -16,16 +15,20 @@ class Table_Invoice(tables.Table):
 	paid = tables.Column(accessor="paid", verbose_name="Status")
 	details = tables.Column(accessor="details", verbose_name="Notes")
 
-	class Meta:
+	class Meta(Table_Base.Meta):
 		model = Invoice
 		empty_text = "There are no invoices associated with your account."
 		attrs = {"class": "ui sortable table"}
 		fields = ("creation_date", "billing_period", "total_amount", "referral_amount", "paid", "due_date", "details")
 
-	def create(request):
-		table = __class__(Invoice.objects.filter(user=request.user).order_by("-creation_date"))
-		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
-		return table
+	def __init__(self, request, data=None, **kwargs):
+		if not data:
+			data = Invoice.objects.filter(user=request.user).order_by("-creation_date")
+
+		super(__class__, self).__init__(data, **kwargs)
+
+		tables.RequestConfig(request,
+			paginate={ "per_page": settings.ITEMS_PER_PAGE_LARGE }).configure(self)
 
 	def render_total_amount(self, value):
 		return "$%s" % currency(value)

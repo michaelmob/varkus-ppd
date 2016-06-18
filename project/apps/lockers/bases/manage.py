@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.views.generic import View
 from django.shortcuts import render, redirect
 
-from ..tables import Table_Locker_Conversion, Table_Locker_Click
+from ..tables import Table_Locker_Conversions, Table_Locker_Clicks
 
 
 class View_Overview_Base(View):
@@ -22,7 +22,7 @@ class View_Overview_Base(View):
 			self.template,
 			{
 				"locker": self.table.Meta.model.__name__.lower(),
-				"table": self.table.create(request),
+				"table": self.table(request),
 				"MAX": self.maximum,
 				"form": self.form
 			}
@@ -32,7 +32,7 @@ class View_Overview_Base(View):
 	def post(self, request):
 		# Verify we haven't went over the maximum object count
 		if(self.model.objects.filter(user=request.user).count() >= self.maximum):
-			messages.error(request, "You have reached the " + self.model.__name__.lower() + " limit. Delete some to create a new one.")
+			messages.error(request, "You have reached the %s limit. Delete some to create a new one." % self.model.__name__.lower())
 			#request.POST = None
 			return self.get(request)
 
@@ -42,9 +42,11 @@ class View_Overview_Base(View):
 		# Set form with post data and our newly created object
 		self.form = self.form(request.POST, instance=obj)
 
-		try:
-			self.form.create(request.user)
-		except ValueError:
+		# Attempt creation of object
+		obj = self.form.save(request.user)
+		
+		# Show errors if failed
+		if not obj:
 			for error in self.form.errors:
 				messages.error(request, "%s field: %s" % \
 					(
@@ -55,7 +57,7 @@ class View_Overview_Base(View):
 
 			return self.get(request)
 
-		return redirect(obj.get_type() + "s-manage", obj.code)
+		return redirect(obj.get_manage_url())
 
 
 class View_Manage_Base(View):
@@ -91,11 +93,11 @@ class View_Manage_Base(View):
 			{
 				"locker": self.model.__name__.lower(),
 				"form": self.form(instance=obj),
-				"obj": obj,
-				"conversions": Table_Locker_Conversion.create(request, obj.earnings.get_conversions()),
+				"obj": obj,				
 				"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
-				"clicks": Table_Locker_Click.create(request, obj.earnings.get_tokens()),
-				"url": request.build_absolute_uri(reverse(self.model.__name__.lower() + "s-locker", args=(obj.code,))),
+				"clicks": Table_Locker_Clicks(request, obj.earnings.get_tokens()),
+				"conversions": Table_Locker_Conversions(request,
+					obj.earnings.get_conversions().prefetch_related("offer")),
 			}
 		)
 

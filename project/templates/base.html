@@ -13,25 +13,23 @@
 
 	<title>{% block titlefull %}{% block title %}{% endblock %} | {% site_name %}{% endblock %}</title>
 
-	<link rel="icon" type="image/png" href="/static/img/logo/32.png">
+	<link rel="icon" type="image/png" href="/static/img/logo/48.png">
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,700">
-	<link rel="stylesheet" type="text/css" href="{% static 'css/semantic.min.css' %}" />
-	<link rel="stylesheet" type="text/css" href="{% static 'css/visibility.min.css' %}" />
+	<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}" />
 
-	{% block headstylebase %}<link rel="stylesheet" type="text/css" href="{% static 'css/page/base.css' %}" />{% endblock %}
+	{% block headstylebase %}{% endblock %}
 	{% block headstyle %}{% endblock headstyle %}
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 	<script src="{% static 'js/semantic.min.js' %}"></script>
-	<script src="{% static 'js/page/global.js' %}"></script>
+	<script src="{% static 'js/apps/global.js' %}"></script>
 
 	{% block headjsbase %}{% endblock %}
 	{% block headjs %}{% endblock %}
-	{% block headextra %}{% endblock %}
 </head>
 
 <body>
-	{% block aside %}
+	{% block asidebase %}
 	<aside class="ui left fixed inverted vertical sidebar menu{% block sidemenu %}{% endblock %}">
 
 		<a href="{% url 'home' %}" class="logo header item">
@@ -63,6 +61,10 @@
 
 		<a class="item offers" href="{% url 'offers' %}">
 			<i class="tags icon"></i> Offers
+		</a>
+
+		<a class="item conversions" href="{% url 'conversions' %}">
+			<i class="lightning icon"></i> Conversions
 		</a>
 
 		<a class="item statistics" href="{% url 'statistics' %}">
@@ -101,6 +103,11 @@
 			Account
 		</a>
 
+		<a class="item tickets" href="{% url 'tickets' %}">
+			<i class="ticket icon"></i>
+			Tickets
+		</a>
+
 		{% if user.is_staff %}
 		<div class="header item">Staff</div>
 
@@ -130,6 +137,8 @@
 	</aside>
 	<script>$(".item.{% block tab %}dashboard{% endblock %}").addClass("active");</script>
 	{% endblock %}
+
+	{% block aside %}{% endblock %}
 
 	<section class="pusher" style="overflow-y:auto">
 		{% block nav %}

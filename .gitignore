@@ -1,19 +1,21 @@
-__pycache__/
-env/
-media/
-private/
-migrations/*
-**/migrations/*
-!**/migrations/__init__.py
-error.txt
-.fuse*
+# File types
+*.log
+*.pot
 *.pyc
-*.pyo
-*.sqlite3
-*.db
-*.mmdb
 *.pid
-*.sublime*
-nohup.out
-nohup.log
-tags
+*.mmdb
+.fuse*
+
+# Binary
+__pycache__/
+.env/
+
+# Project Directories
+private/
+media/**
+
+# Migrations
+migrations/
+
+# LetsEncrypt Directories
+.well-known/

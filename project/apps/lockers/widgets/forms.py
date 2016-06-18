@@ -7,20 +7,14 @@ class Form_Create(ModelForm):
 		model = Widget
 		fields = ["name", "description"]
 
-	def create(self, user):
-		obj = super(Form_Create, self).save(commit=False)
+	def save(self, user):
+		if not self.is_valid():
+			return None
 		
-		# Set Fields
-		obj.user = user
-		obj.code = Widget().generate_code()
-		obj.name = self.cleaned_data["name"]
-		obj.description = self.cleaned_data["description"]
-		obj.save()
-
-		# Create Earnings
-		Earnings.objects.get_or_create(obj=obj)
-
-		return obj
+		return Widget.create(
+			user 		= user,
+			name 		= self.cleaned_data["name"],
+			description = self.cleaned_data["description"])
 
 
 class Form_Edit(ModelForm):

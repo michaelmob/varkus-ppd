@@ -6,22 +6,43 @@ from django.utils.safestring import mark_safe
 
 from apps.conversions.models import Conversion
 from .models import Offer
+from apps.site.tables import Table_Base, tables
 from apps.cp.templatetags.currency import currency, cut_percent
 
 
 class Table_Offer_Base(tables.Table):
+	class Meta(Table_Base.Meta):
+		pass
+
+	def __init__(self, request, data, per_page=5, **kwargs):
+		self.cut_amount = request.user.profile.party.cut_amount
+		super(__class__, self).__init__(data)
+		tables.RequestConfig(request,
+			paginate={"per_page": per_page}).configure(self)
+
 	def render_name(self, value, record):
 		return mark_safe("<a href='%s'>%s</a>" % (reverse("offers-manage", args=(record.id,)), value))
 
 	def render_offer(self, value, record):
 		offer = record.offer
-		return mark_safe("<a href='%s'>%s</a>" % (reverse("offers-manage", args=(offer.id,)), offer.name))
+		return mark_safe("<a href='%s'>%s</a>" % (
+			reverse("offers-manage", args=(offer.id,)), offer.name))
+
+	def render_locker(self, value, record):
+		locker = record.locker
+		return mark_safe("<a href='%s'>%s</a>" % (locker.get_manage_url(),
+			locker.get_type().title() + ": " + locker.name))
+
+	def render_approved(self, record):
+		return mark_safe("<span class=\"ui %s horizontal label\">%s</span>" % \
+			("green" if record.approved else "red",
+				"Approved" if record.approved else "Chargeback"))
 
 	def render_earnings_per_click(self, value):
-		return "$%s" % (currency(cut_percent(value, self.cut_amount)))
+		return "$%s" % currency(cut_percent(value, self.cut_amount))
 
 	def render_payout(self, value):
-		return "$%s" % (currency(cut_percent(value, self.cut_amount)))
+		return "$%s" % currency(cut_percent(value, self.cut_amount))
 
 	def render_user_payout(self, value):
 		return "$" + str(value)
@@ -53,51 +74,33 @@ class Table_Offer_Base(tables.Table):
 
 
 class Table_Offer_All(Table_Offer_Base):
-	name = tables.Column(accessor="name")
 	cut_amount = 1
 
-	class Meta:
+	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
-		attrs = {"class": "ui sortable table"}
 		empty_text = "No offers matching your search exist."
 		fields = ("name", "category", "flag",
 			"user_agent", "earnings_per_click", "payout")
 
-	def create(request, objects):
-		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
-		table.cut_amount = request.user.profile.party.cut_amount or settings.DEFAULT_CUT_AMOUNT
-		return table
-
 
 class Table_Offer_Conversions(Table_Offer_Base):
-	class Meta:
-		model = Conversion
-		attrs = {"class": "ui sortable table"}
-		empty_text = "You haven't received any conversions with this offer."
-		fields = ("user_ip_address", "user_payout", "date_time", "approved")
+	approved = tables.Column(accessor="approved", verbose_name="")
 
-	def create(request, objects):
-		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": 5}).configure(table)
-		return table
+	class Meta(Table_Offer_Base.Meta):
+		model = Conversion
+		empty_text = "You haven't received any conversions with this offer."
+		fields = ("user_ip_address", "user_payout", "datetime", "approved")
 
 
 class Table_Offer_Options(Table_Offer_Base):
 	remove = tables.Column(empty_values=(), orderable=False)
 
-	class Meta:
+	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
-		attrs = {"class": "ui sortable table"}
 		empty_text = "There are no offers in this list."
 		fields = ("name", "category", "flag")
 
-	def create(request, objects):
-		table = __class__(objects)
-		tables.RequestConfig(request, paginate={"per_page": settings.ITEMS_PER_PAGE}).configure(table)
-		return table
-
 	def render_remove(self, record):
 		return mark_safe(
-			"<button data-id='%s' class='ui fluid left labeled icon remove button mini'><i class='remove icon'></i>Remove</button>" %\
+			"<a data-id='%s' class='ui fluid left labeled icon remove button mini'><i class='remove icon'></i>Remove</a>" %\
 				(record.pk,))

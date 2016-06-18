@@ -1,6 +1,7 @@
 {% extends 'lockers/bases/manage/overview.html' %}
 {% load static %}
 {% load blueprints %}
+{% load semanticui %}
 
 
 {% block modals %}
@@ -13,20 +14,9 @@
 		<div class="ui form">
 			{% csrf_token %}
 
-			<div class="field">
-				<label>Name</label>
-				{{ form.name }}
-			</div>
-
-			<div class="field">
-				<label>Description <small><i>Optional</i></small></label>
-				{{ form.description }}
-			</div>
-
-			<div class="field">
-				<label>URL</label>
-				{{ form.url }}
-			</div>
+			{% render_field form.name placeholder="My Website" %}
+			{% render_field form.description placeholder="This will send you to my website!" %}
+			{% render_field form.url placeholder="https://www.my-website.com/" %}
 		</div>
 
 	</div>
@@ -76,5 +66,5 @@
 	</div>
 </div>
 
-<script src="{% static 'js/page/lockers/links/links.js' %}"></script>
+<script src="{% static 'js/apps/lockers/links/links.js' %}"></script>
 {% endblock %}

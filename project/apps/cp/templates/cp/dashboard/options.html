@@ -1,0 +1,81 @@
+<div class="ui options modal small">
+	<i class="close icon"></i>
+	<div class="header">
+		Options
+	</div>
+	<div class="content">
+		<div class="ui options form">
+
+			{# Click Sound #}
+			<div class="field">
+				<label>Click Sound</label>
+				<div class="ui action input">
+					<div id="click-sound" class="ui fluid selection dropdown option" data-default="disabled">
+						<input name="click-sound" type="hidden">
+						<i class="dropdown icon"></i>
+						<div class="default text">Choose</div>
+						<div class="menu">
+							<div class="item" data-value="disabled">Disabled (Default)</div>
+							<div class="item" data-value="click">Click</div>
+							<div class="item" data-value="tap">Tap</div>
+						</div>
+					</div>
+					<button class="ui right attached play icon button">
+						<i class="play icon"></i>
+					</button>
+				</div>
+			</div>
+
+			{# Conversion Sound #}
+			<div class="field">
+				<label>Conversion Sound</label>
+				<div class="ui action input">
+					<div id="conversion-sound" class="ui fluid selection dropdown option" data-default="bell">
+						<input name="conversion-sound" type="hidden">
+						<i class="dropdown icon"></i>
+						<div class="default text">Choose</div>
+						<div class="menu">
+							<div class="item" data-value="disabled">Disabled</div>
+							<div class="item" data-value="bell">Bell (Default)</div>
+							<div class="item" data-value="coin">Coin</div>
+							<div class="item" data-value="beep">Beep</div>
+						</div>
+					</div>
+					<button class="ui right attached play icon button">
+						<i class="play icon"></i>
+					</button>
+				</div>
+			</div>
+
+			{# Big Conversion Sound #}
+			<div class="field">
+				<label>Big Conversion Sound</label>
+				<div class="ui action input">
+					<div id="big-conversion-sound" class="ui fluid selection dropdown option" data-default="applaud">
+						<input name="big-conversion-sound" type="hidden">
+						<i class="dropdown icon"></i>
+						<div class="default text">Choose</div>
+						<div class="menu">
+							<div class="item" data-value="disabled">Disabled</div>
+							<div class="item" data-value="applaud">Applaud (Default)</div>
+							<div class="item" data-value="cheering">Cheering</div>
+						</div>
+					</div>
+					<button class="ui right attached play icon button">
+						<i class="play icon"></i>
+					</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui black deny button">
+			Cancel
+		</div>
+		<div class="ui left labeled icon positive submit button">
+			<i class="checkmark icon"></i>
+			Save
+		</div>
+	</div>
+</div>

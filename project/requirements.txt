@@ -1,0 +1,23 @@
+# Python Plugins
+setuptools
+cython
+django
+psycopg2
+pillow
+pysocks
+geoip2
+psutil
+
+# Django Plugins
+django-recaptcha
+django-storages
+django-axes
+django-celery
+django-countries
+django-gravatar2
+django-debug-toolbar
+django-channels
+
+# Git Repositories
+git+https://github.com/thetarkus/anora
+git+https://github.com/bradleyayers/django-tables2

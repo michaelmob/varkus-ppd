@@ -2,15 +2,94 @@ import json
 from decimal import Decimal, getcontext
 from datetime import datetime, date, timedelta
 
-from django.db import models, connection
-from django.db.models import F
-from django.core.urlresolvers import reverse
-from django.core.cache import cache
+from django.db import models
+from django.db.models import F, Q
+from django.contrib.auth.models import User
 
-from utils.constants import CURRENCY
+from utils.constants import CURRENCY, BLANK_NULL
 import apps.conversions as conversions
 
 getcontext().prec = 2
+NOTIFICATION_ICONS = (
+	("announcement", "Announcement"),
+	("warning", "Warning"),
+	("help", "Help"),
+	("info", "Info"),
+	("money", "Money"),
+	("lightning", "Conversion"),
+	("users", "Users"),
+	("ticket", "Ticket"),
+	("birthday", "Birthday"),
+	("alarm", "Alarm"))
+
+NOTIFICATION_COLORS = (
+	("blue", "Blue"),
+	("red", "Red"),
+	("yellow", "Yellow"),
+	("orange", "Orange"),
+	("green", "Green"))
+
+class Notification(models.Model):
+	user		= models.ForeignKey(User, blank=True, null=True)
+	icon 		= models.CharField(max_length=15, choices=NOTIFICATION_ICONS)
+	color 		= models.CharField(max_length=15, choices=NOTIFICATION_COLORS)
+	message 	= models.TextField(max_length=300)
+	url 		= models.URLField(max_length=300, **BLANK_NULL)
+	unread 		= models.BooleanField(default=True)
+	staff 		= models.BooleanField(default=False)
+	datetime	= models.DateTimeField(verbose_name="Date")
+
+	def get(user):
+		""" Filter notifications from user that are less than 3 days old """
+		return __class__.objects.filter(
+			Q(user=user, datetime__gt=datetime.now() - timedelta(days=3)) | \
+			Q(staff=user.is_staff))
+
+	def create(user, icon, message, url=None, staff=False):
+		# Check for older notification and overwrite it
+		obj = __class__.objects.filter(user=user, message=message).first()
+
+		# Notification does not exist, so create a new one
+		if not obj:
+			obj = Notification()
+			obj.user = user
+			obj.icon = icon
+			obj.message = message
+			obj.staff = staff
+
+		# Set URL
+		if url:
+			obj.url = url
+
+		obj.unread = True
+		obj.save()
+
+	def mark_read(user):
+		return __class__.objects.filter(Q(user=user, unread=True) | \
+			Q(staff=user.is_staff)).update(unread=False)
+
+	def clear():
+		"""Clear/delete expired notifications"""
+		return __class__.objects.filter(
+			datetime__lt=datetime.now() - timedelta(days=3), read=True).delete()
+
+
+class Announcement(models.Model):
+	user		= models.ForeignKey(User, blank=True, null=True)
+	icon 		= models.CharField(max_length=15, choices=NOTIFICATION_ICONS)
+	color 		= models.CharField(max_length=15, choices=NOTIFICATION_COLORS)
+	subject 	= models.TextField(max_length=300)
+	message 	= models.TextField(max_length=1000)
+	broadcast 	= models.BooleanField(default=False)
+	datetime	= models.DateTimeField(auto_now_add=True, verbose_name="Date")
+
+	def broadcasts():
+		""" Return broadcasts """
+		return __class__.objects.filter(broadcast=True)
+
+	def recent():
+		return __class__.objects.filter(
+			datetime__gt=datetime.now() - timedelta(days=3), read=True).delete()
 
 
 class Earnings_Base(models.Model):
@@ -28,37 +107,51 @@ class Earnings_Base(models.Model):
 	year 			= models.DecimalField(verbose_name="Year", **CURRENCY)
 	total			= models.DecimalField(verbose_name="Total", **CURRENCY)
 
-	real_today 		= models.DecimalField(verbose_name="*Today", **CURRENCY)
-	real_month		= models.DecimalField(verbose_name="*Month", **CURRENCY)
-	real_total		= models.DecimalField(verbose_name="*Total", **CURRENCY)
-
 	def epc(self, today=True):
 		if today:
-			return (Decimal(self.today) / self.clicks_today) if self.clicks_today > 0 else 0
+			x = (Decimal(self.today) / self.clicks_today) if self.clicks_today > 0 else 0
 		else:
-			return (Decimal(self.total) / self.clicks) if self.clicks > 0 else 0
+			x = (Decimal(self.total) / self.clicks) if self.clicks > 0 else 0
+
+		return format(float(x), ".2f").rstrip('0').rstrip('.')
+
+	def output_dict(self):
+		return {
+			"clicks": {
+				"today": float(self.clicks),
+				"total": float(self.clicks_today)
+			},
+			"conversions": {
+				"today": float(self.conversions_today),
+				"total": float(self.conversions)
+			},
+			"earnings": {
+				"today": float(self.today),
+				"week": float(self.week),
+				"month": float(self.month),
+				"year": float(self.year),
+				"total": float(self.total)
+			},
+			"epc": {
+				"today": self.epc()
+			}
+		}
 
 	def reset_today(self):
-		print("Reset Today's Earnings")
-		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET yesterday=today, today=0, real_today=0, clicks_today=0, conversions_today=0 WHERE clicks_today>0 OR today>0 OR yesterday>0" % (self._meta.db_table))
+		self.__class__.objects.filter(Q(clicks_today__gt=0) | Q(today__gt=0) | Q(yesterday__gt=0)) \
+			.update(yesterday=F("today"), today=0, clicks_today=0, conversions_today=0)
 
 	def reset_week(self):
-		print("Reset Week's Earnings")
-		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET week=0 WHERE week>0" % (self._meta.db_table))
+		self.__class__.objects.filter(week__gt=0).update(week=0)
 
 	def reset_month(self):
-		print("Reset Month's Earnings")
-		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET yestermonth=month, month=0, real_month=0 WHERE month>0 OR yestermonth>0" % (self._meta.db_table))
+		self.__class__.objects.filter(Q(month__gt=0) | Q(yestermonth__gt=0)) \
+			.update(yestermonth=F("month"), month=0)
 
 	def reset_year(self):
-		print("Reset Year's Earnings")
-		cursor = connection.cursor()
-		cursor.execute("UPDATE %s SET year=0 WHERE year>0" % (self._meta.db_table))
+		self.__class__.objects.filter(year__gt=0).update(year=0)
 
-	def add(self, amount, cut=0, add_to_real=True):
+	def add(self, amount, cut=0):
 		amount = Decimal(amount)
 		amount_cut = Decimal(amount - (amount * Decimal(cut)))
 
@@ -70,11 +163,6 @@ class Earnings_Base(models.Model):
 		self.month 	= F("month")	+ amount_cut
 		self.year 	= F("year") 	+ amount_cut
 		self.total 	= F("total") 	+ amount_cut
-
-		if add_to_real:
-			self.real_today = F("real_today") + amount
-			self.real_month = F("real_month") + amount
-			self.real_total = F("real_total") + amount
 
 		self.save()
 		return amount_cut
@@ -91,8 +179,8 @@ class Earnings_Base(models.Model):
 		self.save()
 		return amount
 
-	def difference(self, amount, cut=0, add_to_real=False):
-		return self.add(amount, 1 - cut, add_to_real)
+	def difference(self, amount, cut=0):
+		return self.add(amount, 1 - cut)
 
 	def __get_base_u(self, search_model, date_range, show_all=False):
 		args = {}
@@ -110,11 +198,11 @@ class Earnings_Base(models.Model):
 
 		# otherwise we know it's a Locker
 		else:
-			args["locker"] = self.obj
+			args.update(self.obj.lookup_args())
 
 		# Include date_range to queryset
 		if date_range:
-			args["date_time__range"] = date_range
+			args["datetime__range"] = date_range
 
 		# Show every conversion, including conversion blocked ones
 		if not show_all:
@@ -123,7 +211,7 @@ class Earnings_Base(models.Model):
 		return search_model.objects.filter(**args)
 
 	def __get_base(self, search_model, date_range, show_all=False):
-		return self.__get_base_u(search_model, date_range, show_all).order_by("-date_time")
+		return self.__get_base_u(search_model, date_range, show_all).order_by("-datetime")
 
 	def get_conversions_u(self, date_range=None, show_all=False):
 		# Unordered

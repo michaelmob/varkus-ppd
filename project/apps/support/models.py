@@ -5,15 +5,16 @@ from django.core.exceptions import ValidationError
 
 from utils.constants import DEFAULT_BLANK_NULL
 
+
 class Contact_Message(models.Model):
 	name = models.CharField(max_length=100)
 	email = models.EmailField()
 	user = models.ForeignKey(User, **DEFAULT_BLANK_NULL)
 	ip_address = models.GenericIPAddressField()
-	date_time = models.DateTimeField(auto_now_add=True)
+	datetime = models.DateTimeField(auto_now_add=True)
 	subject = models.CharField(max_length=100)
 	message = models.TextField(max_length=1000)
-	viewed = models.BooleanField(default=False)
+	unread = models.BooleanField(default=True)
 
 	class Meta:
 		verbose_name = "Contact message"
@@ -34,7 +35,7 @@ class Abuse_Report(models.Model):
 	class Meta:
 		verbose_name = "Abuse report"
 
-	def validate_image(field):
+	def validate_file(field):
 		if field.file.size > settings.REPORT_MAX_FILE_SIZE:
 			raise ValidationError("File size must be less than 4mb!")
 
@@ -42,19 +43,19 @@ class Abuse_Report(models.Model):
 	email = models.EmailField()
 	user = models.ForeignKey(User, default=None, blank=True, null=True)
 	ip_address = models.GenericIPAddressField()
-	date_time = models.DateTimeField(auto_now_add=True)
+	datetime = models.DateTimeField(auto_now_add=True)
 	complaint = models.CharField(max_length=100, choices=COMPLAINTS)
 	message = models.TextField(max_length=5000)
-	image1 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
-	image2 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
-	image3 = models.ImageField(upload_to="reports/%b-%Y/", validators=[validate_image], **DEFAULT_BLANK_NULL)
-	viewed = models.BooleanField(default=False)
+	file1 = models.FileField(upload_to="reports/%Y/%m/%d/", validators=[validate_file], **DEFAULT_BLANK_NULL)
+	file2 = models.FileField(upload_to="reports/%Y/%m/%d/", validators=[validate_file], **DEFAULT_BLANK_NULL)
+	file3 = models.FileField(upload_to="reports/%Y/%m/%d/", validators=[validate_file], **DEFAULT_BLANK_NULL)
+	unread = models.BooleanField(default=True)
 
 	def delete(self, *args, **kwargs):
-		self.image1.delete()
-		self.image2.delete()
-		self.image3.delete()
-		super(Abuse_Report, self).delete(*args, **kwargs)
+		self.file1.delete()
+		self.file2.delete()
+		self.file3.delete()
+		super(__class__, self).delete(*args, **kwargs)
 
 	def __str__(self):
 		return "%s's complaint" % (self.email)

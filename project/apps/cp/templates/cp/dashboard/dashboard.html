@@ -28,29 +28,49 @@
 
 	<div class="ui stackable grid">
 	
-		{# Charts #}
+		{# Left Column #}
 		<div class="seven wide column">
 			<div class="ui one column stackable grid">
+				{# Line #}
 				<div class="column">
 					{% line_chart '/dashboard/chart/line.json' %}
 				</div>
 
+				{# Map #}
 				<div class="column">
 					{% map_chart '/dashboard/chart/map.json' %}
+				</div>
+
+				{# Twitter #}
+				<div class="column">
+					<div class="ui segment">
+						<a class="twitter-timeline" data-dnt="true" data-theme="light" data-link-color="#F44336" href="https://twitter.com/varkuscom">Tweets by varkuscom</a>
+						<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		{# Tables #}
+		{# Right Column #}
 		<div class="nine wide column">
 			<div class="ui one column stackable grid">
+				{# Conversions #}
+				{% if conversions.data.data|length > 0 %}
+					<div class="column">
+						{% table conversions 'Recent Conversions' 'lightning' %}
+					</div>
+				{% endif %}
+
+				{# Newest Offers #}
 				<div class="column">
 					{% table offers 'Newest Offers' 'tags' %}
 				</div>
 
+				{# Top Performing Offers #}
 				<div class="column">
-					{% table top_offers 'Top Performing Offers' 'thumbs up' %}
+					{% table top_offers 'Top Performing Offers' 'pie chart' %}
 				</div>
+
 			</div>
 		</div>
 

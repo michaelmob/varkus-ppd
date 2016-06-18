@@ -3,7 +3,7 @@ from calendar import monthrange
 
 from django import template
 from django.conf import settings
-from ..models import PAYMENT_CHOICES_DICT, PAYMENT_ICONS
+from ..models import PAYMENT_ICONS
 
 register = template.Library()
 
@@ -17,17 +17,8 @@ def payment_icon(method):
 
 
 @register.filter
-def payment_method(method):
-	try:
-		return PAYMENT_CHOICES_DICT[method]
-	except:
-		return "None"
-
-
-@register.filter
 def payment_next_date(freq):
 	today = date.today()
 	
-	return date(
-		today.year, today.month, monthrange(today.year, today.month)[1]
-	) + timedelta(days=int(freq))
+	return date(today.year, today.month,
+		monthrange(today.year, today.month)[1]) + timedelta(days=int(freq))

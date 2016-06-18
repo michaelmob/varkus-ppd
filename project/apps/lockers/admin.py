@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .lists.models import 	List, Earnings as List_Earnings
 from .files.models import 	File, Earnings as File_Earnings
-from .links.models import 	Link, Earnings as Link_Earnings
+from .links.models 	import 	Link, Earnings as Link_Earnings
 from .widgets.models import Widget, Earnings as Widget_Earnings
 
 from apps.cp.templatetags.currency import currency
@@ -19,7 +19,7 @@ class ModelAdminBase(admin.ModelAdmin):
 
 	list_display = (
 		"name", "user", "conversions", "earnings_today",
-		"earnings_month", "earnings_total", "date_time")
+		"earnings_month", "earnings_total", "datetime")
 
 	# Allow ordering
 	conversions.admin_order_field = "earnings__conversions"
@@ -40,7 +40,7 @@ class Admin_File(ModelAdminBase):
 
 	list_display = (
 		"name", "file_size", "user", "conversions", "earnings_today",
-		"earnings_month", "earnings_total", "date_time")
+		"earnings_month", "earnings_total", "datetime")
 
 
 

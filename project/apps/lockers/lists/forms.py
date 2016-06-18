@@ -1,47 +1,29 @@
-import json
-
+from django import forms
 from django.forms import ModelForm
 from .models import List, Earnings
 
 
 class Form_Create(ModelForm):
+	items = forms.CharField(widget=forms.Textarea)
+
 	class Meta:
 		model = List
-		fields = ["name", "description", "item_name", "items", "order", "delimeter", "reuse"]
+		fields = ["name", "description", "item_name", "items", "order",
+			"delimeter", "reuse"]
 
-	def create(self, user):
-		obj = super(Form_Create, self).save(commit=False)
+	def save(self, user):
+		if not self.is_valid():
+			return None
 
-		# Set Delimeter to correct symbol
-		delimeter = self.cleaned_data["delimeter"]
-		if delimeter == "\\n":
-			delimeter = "\n"
-
-		elif delimeter == "space":
-			delimeter = " "
-
-		# Turn array into json string for database storage
-		items = self.cleaned_data["items"]
-		items = [[item, 0] for item in items.replace("\r", "").split(delimeter)]
-		items_json = json.dumps(items, separators=(",", ":"))
-
-		# Set Fields
-		obj.user 		= user
-		obj.code 		= List().generate_code()
-		obj.description = self.cleaned_data["description"]
-		obj.name 		= self.cleaned_data["name"]
-		obj.item_name	= self.cleaned_data["item_name"]
-		obj.items 		= items_json
-		obj.item_count	= len(items)
-		obj.order 		= self.cleaned_data["order"]
-		obj.delimeter 	= self.cleaned_data["delimeter"]
-		obj.reuse 		= self.cleaned_data["reuse"]
-		obj.save()
-
-		# Create Earnings
-		Earnings.objects.get_or_create(obj=obj)
-
-		return obj
+		return List.create(
+			user 		= user,
+			name 		= self.cleaned_data["name"],
+			item_name	= self.cleaned_data["item_name"],
+			description	= self.cleaned_data["description"],
+			items 		= self.cleaned_data["items"],
+			delimeter 	= self.cleaned_data["delimeter"],
+			order 		= self.cleaned_data["order"],
+			reuse 		= self.cleaned_data["reuse"])
 
 
 class Form_Edit(ModelForm):

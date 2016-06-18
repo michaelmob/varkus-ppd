@@ -105,6 +105,7 @@
 								<div class="ui inverted black segment">
 									<div class="ui stackable middle aligned two column grid">
 
+										{% with url=obj.get_locker_url %}
 										<div class="column">
 											<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
 										</div>
@@ -132,6 +133,7 @@
 												</a>
 											</div>
 										</div>
+										{% endwith %}
 
 									</div>
 								</div>
@@ -151,6 +153,12 @@
 							</div>
 
 							<div class="right menu">
+								{% if user.is_staff %}
+								<a href="{% url 'admin:lockers_'|add:locker|add:'_change' obj.id %}" class="ui inverted icon item">
+									<i class="shield icon"></i>
+								</a>
+								{% endif %}
+
 								<a class="inverted item edit button">
 									<i class="edit icon"></i>
 									Edit
@@ -211,5 +219,5 @@
 	</div>
 </div>
 
-<script src="{% static 'js/page/lockers/'|add:locker|add:'s/manage.js' %}"></script>
+<script src="{% static 'js/apps/lockers/'|add:locker|add:'s/manage.js' %}"></script>
 {% endblock %}

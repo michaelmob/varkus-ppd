@@ -7,7 +7,7 @@ from apps.conversions.models import Conversion
 
 
 @receiver(post_save, sender=User)
-def user_created_signal(sender, instance, created, **kwargs):
+def user_saved_signal(sender, instance, created, **kwargs):
 	if created:
 		Profile.objects.get_or_create(user=instance)
 		Billing.objects.get_or_create(user=instance)

@@ -91,11 +91,12 @@ class View_Redirect_Base(View_Locker_Base):
 
 		except (KeyError, Offer.DoesNotExist):
 			# Offer doesn't exist, or they were directly linked the offer
-			return redirect(request.META.get("HTTP_REFERER", "home"))
+			return redirect(
+				request.META.get("HTTP_REFERER", self._obj.get_locker_url()))
 
 		except Token.DoesNotExist:
 			# Offer doesn't exist
-			return redirect("home")
+			return redirect(self._obj.get_locker_url())
 
 		# Check if there's an Affiliate ID override in settings.py
 		try:
@@ -130,11 +131,9 @@ class View_Unlock_Base(View_Locker_Base):
 		# Get token using request and the locker object
 		try:
 			self.token = Token.get(self._request, self._obj)
+			return self.token.access()
 		except:
 			return False
-
-		# Return access
-		return self.token.access()
 
 	def get(self, request, code=None):
 		# Set class variables
@@ -147,7 +146,7 @@ class View_Unlock_Base(View_Locker_Base):
 
 		# Check access
 		if not self.access():
-			return redirect("home")
+			return redirect(self._obj.get_locker_url())
 
 		return self.get_return()
 

@@ -9,9 +9,6 @@ class Inline_Earnings(admin.StackedInline):
 
 @admin.register(Offer)
 class Admin_Offer(admin.ModelAdmin):
-	def view_on_site(self, obj):
-		return reverse("offers-manage", args=(obj.id,))
-
 	inlines = [Inline_Earnings]
 	list_display = (
 		"name", "anchor", "category", "user_agent",

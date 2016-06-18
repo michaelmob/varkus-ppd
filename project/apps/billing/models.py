@@ -1,34 +1,34 @@
 from datetime import date, timedelta
 from calendar import monthrange
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q, Sum
-
 from django.contrib.auth.models import User
 
 from apps.conversions.models import Conversion
+from utils.constants import CURRENCY, DEFAULT_BLANK_NULL, BLANK_NULL
 
 
 PAYMENT_CHOICES = (
-	("none", "None"),
-	("paypal", "Paypal"),
-	("check", "Check"),
-	("wire", "Wire"),
-	("direct", "Direct Deposit/ACH"),
+	("NONE", "None"),
+	("PAYPAL", "Paypal"),
+	("CHECK", "Check"),
+	("WIRE", "Wire"),
+	("DIRECT", "Direct Deposit/ACH"),
 )
 
 PAYMENT_ICONS = {
-	"none": "payment",
-	"paypal": "paypal",
-	"check": "write",
-	"wire": "payment",
-	"direct": "forward"
+	"NONE": "payment",
+	"PAYPAL": "paypal",
+	"CHECK": "write",
+	"WIRE": "payment",
+	"DIRECT": "forward"
 }
 
 PAYMENT_CHOICES_DICT = dict(PAYMENT_CHOICES)
-PAYMENT_CHOICES_USER_DICT = PAYMENT_CHOICES_DICT
-del PAYMENT_CHOICES_USER_DICT["none"]
-PAYMENT_CHOICE_LIST = PAYMENT_CHOICES_USER_DICT.keys()
+PAYMENT_CHOICE_LIST = list(PAYMENT_CHOICES_DICT.keys())
+PAYMENT_CHOICE_LIST.remove("NONE")
 
 
 # Null, Blank, and Empty Default preset
@@ -36,38 +36,11 @@ DEFAULTS = { "null": True, "blank": True, "default": "" }
 
 class Billing(models.Model):
 	user = models.OneToOneField(User, primary_key=True)
-	method = models.CharField(max_length=15, default="none", choices=PAYMENT_CHOICES)
-
-	pending_earnings = models.DecimalField(
-		max_digits=50, decimal_places=2, default=0.00)
-
-	paid_earnings = models.DecimalField(
-		max_digits=50, decimal_places=2, default=0.00)
-
-	# Paypal
-	paypal_email = models.EmailField(max_length=100, **DEFAULTS)
-
-	# Check
-	check_pay_to 	= models.CharField(max_length=100, **DEFAULTS)
-	check_address 	= models.TextField(max_length=300, **DEFAULTS)
-
-	# Wire
-	wire_beneficiary_name	= models.CharField(max_length=100, **DEFAULTS)
-	wire_account_number 	= models.CharField(max_length=100, **DEFAULTS)
-	wire_bank_name			= models.CharField(max_length=100, **DEFAULTS)
-	wire_routing_aba_swift 	= models.CharField(max_length=100, **DEFAULTS)
-	wire_bank_address		= models.TextField(max_length=300, **DEFAULTS)
-	wire_additional 		= models.TextField(max_length=300, **DEFAULTS)
-
-	# Direct Deposit / ACH
-	direct_account_holder 	= models.CharField(max_length=100, **DEFAULTS)
-	direct_account_number 	= models.CharField(max_length=100, **DEFAULTS)
-	direct_routing_number 	= models.CharField(max_length=100, **DEFAULTS)
-	direct_bank_name 		= models.CharField(max_length=100, **DEFAULTS)
-	direct_additional 		= models.TextField(max_length=300, **DEFAULTS)
-
-	additional 				= models.TextField(max_length=300, **DEFAULTS)
-
+	choice = models.CharField(max_length=15, default="NONE",
+		choices=PAYMENT_CHOICES)
+	pending_earnings = models.DecimalField(**CURRENCY)
+	paid_earnings = models.DecimalField(**CURRENCY)
+	data = JSONField(default=dict)
 
 
 class Invoice(models.Model):
@@ -79,32 +52,20 @@ class Invoice(models.Model):
 	billing_start_date 	= models.DateField()
 	billing_end_date 	= models.DateField()
 
-	total_amount 		= models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Total Amount")
-	referral_amount		= models.DecimalField(max_digits=10, decimal_places=2)
+	total_amount 		= models.DecimalField(verbose_name="Total Amount", **CURRENCY)
+	referral_amount		= models.DecimalField(**CURRENCY)
 
 	paid 				= models.BooleanField(default=False)
 	error 				= models.BooleanField(default=False)
 
-	details 			= models.TextField(max_length=1000, default="", blank=True, null=True)
-	file 				= models.FileField(upload_to="billing/%b-%Y/", default=None, blank=True, null=True)
+	details 			= models.TextField(max_length=1000, default="", **BLANK_NULL)
+	file 				= models.FileField(upload_to="billing/%b-%Y/", **DEFAULT_BLANK_NULL)
 
 
-	def create(user, due_date, billing_start, billing_end, total_amount, referral_amount):
+	def create(user):
+		# I made $20 in January, so I make an invoice on February 1st to payout
+		# the $20 on February 15th
 
-		return Invoice.objects.create(
-			user 				= user,
-			creation_date 		= date.today(),
-			due_date			= due_date,
-
-			billing_start_date 	= billing_start,
-			billing_end_date 	= billing_end,
-
-			total_amount		= total_amount,
-			referral_amount		= referral_amount)
-
-
-	#I made $20 in January, so I make an invoice on February 1st to payout the $20 on February 15th
-	def create_auto(user):
 		# Dates
 		due_date 	= date.today().replace(day=15)
 		start 		= (due_date.replace(day=1) - timedelta(days=1)).replace(day=1)
@@ -135,16 +96,19 @@ class Invoice(models.Model):
 		if total_earnings + user.billing.pending_earnings < user.profile.party.minimum_payout:
 			return
 
-		return Invoice.create(
+		return Invoice.objects.create(
 			user 			= user,
+			creation_date 	= date.today(),
 			due_date 		= due_date,
+
 			billing_start 	= start,
 			billing_end 	= end,
+
 			total_amount	= total_earnings,
 			referral_amount	= referral_earnings)
 
 
-	def generate():
+	def create_all():
 		users = User.objects.filter(
 			Q(earnings__month__gt=0) | Q(referral_earnings__month__gt=0) |
 			Q(billing__pending_earnings__gte=5))
@@ -152,7 +116,7 @@ class Invoice(models.Model):
 		count = 0
 
 		for user in users:
-			Invoice.create_auto(user)
+			Invoice.create(user)
 			count += 1
 
 		return count

@@ -50,7 +50,7 @@
 
 							<div class="right menu">
 								<a class="inverted item edit button">
-									<i class="edit icon"></i> Modify Billing Information
+									<i class="edit icon"></i> Edit
 								</a>
 							</div>
 						</div>
@@ -76,6 +76,5 @@
 
 {% include 'billing/modals.html' %}
 <script src="{% static 'js/api.js' %}"></script>
-<script src="{% static 'js/page/billing/billing.js' %}"></script>
-{% if user.billing.method %}<script>$(".ui.tabular.menu .item").tab("change tab ", "{{ user.billing.method }}");</script>{% endif %}
+<script src="{% static 'js/apps/billing/billing.js' %}"></script>
 {% endblock %}

@@ -5,7 +5,7 @@ from json import loads
 from urllib.request import urlopen
 
 from django.conf import settings
-from django.shortcuts import HttpResponse
+from django.http import JsonResponse
 from django.core.exceptions import MultipleObjectsReturned
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -14,10 +14,7 @@ from utils.user_agent import format_ua
 
 @staff_member_required
 def sync(request):
-	out = adgate_sync()
-	return HttpResponse(
-		"Added: %s | Removed: %s | Updated: %s | Count: %s | Elapsed: %s | OKAY @ %s" % (
-			out["added"], out["removed"], out["updated"], out["count"], out["elapsed"], out["date_time"]))
+	return JsonResponse(adgate_sync())
 
 
 def adgate_sync():
@@ -87,10 +84,14 @@ def adgate_sync():
 
 	# Return with data
 	return {
-		"added": offers_added,
-		"removed": offers_deleted,
-		"updated": offers_updated,
-		"count": Offer.objects.all().count(),
-		"elapsed": (end_datetime - start_datetime).seconds,
-		"date_time": str(datetime.now())
+		"success": True,
+		"message": "Synced",
+		"data": {
+			"added": offers_added,
+			"removed": offers_deleted,
+			"updated": offers_updated,
+			"count": Offer.objects.all().count(),
+			"elapsed": (end_datetime - start_datetime).seconds,
+			"datetime": str(datetime.now())
+		}
 	}

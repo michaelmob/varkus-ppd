@@ -1,4 +1,5 @@
 from decimal import Decimal
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.db import models
@@ -67,7 +68,7 @@ class Profile(models.Model):
 	address			= models.TextField(max_length=200, blank=True, null=True)
 	city			= models.CharField(max_length=100, blank=True, null=True)
 	state			= models.CharField(max_length=100, blank=True, null=True)
-	country			= CountryField()
+	country			= CountryField(blank=True, null=True)
 	postal_code		= models.CharField(max_length=20, blank=True, null=True)
 
 	company 		= models.CharField(max_length=100, blank=True, null=True)
@@ -85,22 +86,20 @@ class Profile(models.Model):
 			self.party = self.party.default()
 			self.save()
 
-		a = Decimal(self.party.cut_amount)
-		b = Decimal(self.party.referral_cut_amount)
-
-		return (a, b)
+		return (Decimal(self.party.cut_amount),
+			Decimal(self.party.referral_cut_amount))
 
 
 class Earnings(Earnings_Base):
-	obj 		= models.OneToOneField(User, primary_key=True)
-	wallet		= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
+	obj 	= models.OneToOneField(User, primary_key=True)
+	wallet	= models.DecimalField(default=Decimal(0.00), max_digits=10, decimal_places=2)
 
 	class Meta:
 		verbose_name_plural = "Earnings"
 
 
 class Referral_Earnings(Earnings_Base):
-	obj 		= models.OneToOneField(User, primary_key=True)
+	obj = models.OneToOneField(User, primary_key=True)
 
 	def referrals(self):
 		return User.objects.filter(profile__referrer=self.obj)
@@ -108,6 +107,7 @@ class Referral_Earnings(Earnings_Base):
 	class Meta:
 		verbose_name = "Referral Earnings"
 		verbose_name_plural = "Referral Earnings"
+
 
 # Signals
 from . import signals

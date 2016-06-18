@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib import messages
 from ..forms import Form_Contact
@@ -9,21 +9,14 @@ class View_Contact(View):
 	def get(self, request):
 		return render(
 			request, "support/contact.html", {
-				"form": Form_Contact
+				"form": Form_Contact(request)
 			}
 		)
 
 	def post(self, request):
-		form = Form_Contact(request.POST)
-		obj = form.create(request)
+		obj = Form_Contact(request).save()
 
-		# Object was created, so reset form and send message
 		if obj:
-			form = Form_Contact
 			messages.success(request, "Your message has been received. Thanks for your feedback!")
 
-		return render(
-			request, "support/contact.html", {
-				"form": form
-			}
-		)
+		return redirect("contact")

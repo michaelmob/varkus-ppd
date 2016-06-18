@@ -4,7 +4,7 @@ from ..models import Locker_Base, Earnings_Base
 
 
 class Link(Locker_Base):
-	url		= models.URLField(max_length=1000)
+	url = models.URLField(max_length=1000, verbose_name="URL")
 
 	def create(user, name, description, url):
 		obj = Link.objects.create(
@@ -13,8 +13,7 @@ class Link(Locker_Base):
 			name 		= name,
 			description	= description,
 			url 		= url,
-			date_time	= datetime.now()
-		)
+			datetime	= datetime.now())
 
 		Earnings.objects.get_or_create(obj=obj)
 
