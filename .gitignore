@@ -17,7 +17,7 @@ backups/
 media/**
 
 # Static Files
-static/admin/
+static/admin
 
 # Migrations
 migrations/
