@@ -33,7 +33,7 @@ class Table_Conversions_Base(Table_Offer_Base):
 
 class Table_Conversions(Table_Conversions_Base):
 	locker = tables.Column(verbose_name="Locker")
-	
+
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
 		empty_text = "There doesn't seem to be any conversions here for this category or date range."

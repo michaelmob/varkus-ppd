@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 from utils.constants import CURRENCY, BLANK_NULL
 import apps.conversions as conversions
+from apps.cp.templatetags.currency import currency
 
 getcontext().prec = 2
 NOTIFICATION_ICONS = (
@@ -118,19 +119,19 @@ class Earnings_Base(models.Model):
 	def output_dict(self):
 		return {
 			"clicks": {
-				"today": float(self.clicks),
-				"total": float(self.clicks_today)
+				"today": self.clicks_today,
+				"total": self.clicks
 			},
 			"conversions": {
-				"today": float(self.conversions_today),
-				"total": float(self.conversions)
+				"today": self.conversions_today,
+				"total": self.conversions
 			},
 			"earnings": {
-				"today": float(self.today),
-				"week": float(self.week),
-				"month": float(self.month),
-				"year": float(self.year),
-				"total": float(self.total)
+				"today": currency(self.today),
+				"week": currency(self.week),
+				"month": currency(self.month),
+				"year": currency(self.year),
+				"total": currency(self.total)
 			},
 			"epc": {
 				"today": self.epc()
