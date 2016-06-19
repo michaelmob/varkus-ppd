@@ -1,0 +1,13 @@
+#!/bin/bash
+export RUN_AS=""
+export DEBUG=false
+export DEBUG_CELERY=true
+
+export ADVANCED_PASSWORD=""
+export SECRET_KEY=""
+
+export DB_HOST="127.0.0.1"
+export DB_PORT=5432
+export DB_NAME=""
+export DB_USER=""
+export DB_PASS=""

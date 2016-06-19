@@ -47,7 +47,7 @@ class Activity():
 
 	def output_cache(obj):
 		# CCreate key (line-chart:file.4)
-		key = "line-chart:" + obj.__class__.__name__.lower() + "." + str(obj.pk)
+		key = "line-chart-" + obj.__class__.__name__.lower() + "." + str(obj.pk)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set
@@ -91,7 +91,7 @@ class Map():
 
 	def output_cache(obj):
 		# Create key (map-chart:file.4)
-		key = "map-chart:" + obj.__class__.__name__.lower() + "." + str(obj.pk)
+		key = "map-chart-" + obj.__class__.__name__.lower() + "." + str(obj.pk)
 		data = cache.get(key)
 
 		# Cached does not exist, process and set

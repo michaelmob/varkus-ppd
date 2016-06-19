@@ -12,7 +12,11 @@ __pycache__/
 
 # Project Directories
 private/
+backups/
 media/**
+
+# Static Files
+static/admin/
 
 # Migrations
 migrations/

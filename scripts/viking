@@ -24,41 +24,19 @@ fi
 cd ../project/
 source ../.env/bin/activate
 
-DEBUG_RUN_CELERY=false
-
 function manage() {
 	python manage.py $@
 }
 
-function start() {
-	echo "Start Viking from Supervisor"
-}
-
-function stop() {
-	echo "Stopping Viking"
-
-	files=( "celeryev.pid" "celeryw.pid" )
-
-	for i in "${files[@]}"; do
-		if [ -a $i ]; then
-			kill $(cat $i)
-			rm $i
-		fi
-	done
-}
-
 case "$1" in
-	start)
-		start ;;
-
-	stop)
-		stop ;;
-
-	restart)
-		stop && start ;;
+	bash)
+		bash ;;
 
 	manage)
 		manage ${@:2} ;;
+
+	createmigrationdirectories)
+		find apps/ -name "models.py" | xargs -L1 dirname | xargs -I % mkdir %/migrations/\;touch %/migrations/__init__.py ;;
 
 	migrate)
 		manage makemigrations && manage migrate ;;
@@ -129,21 +107,23 @@ case "$1" in
 
 	edit)
 		case "$2" in
-			com) sensible-editor viking/private/settings_com.py ;;
-			pro) sensible-editor viking/private/settings_pro.py ;;
-			dev) sensible-editor viking/private/settings_dev.py ;;
-			key) sensible-editor viking/private/keys.py ;;
+			common) sensible-editor viking/private/settings_common.py ;;
+			production) sensible-editor viking/private/settings_production.py ;;
+			development) sensible-editor viking/private/settings_development.py ;;
+			keys) sensible-editor viking/private/keys.py ;;
 			*) exit 1 ;;
 		esac
 		;;
 
 	*)
 		echo -e "Usage: viking arg\nList of args:"
-		echo -e "\t start: Start uWSGI and celery worker/monitor"
-		echo -e "\t stop: Stop uWSGI and celery worker/monitor, delete PID files"
-		echo -e "\t restart: Stop and start"
 		echo -e "\t manage {args}: Run manage.py"
+		echo -e "\t createmigrationdirectories: Create migration directories in each app folder"
 		echo -e "\t migrate: Run django migrations"
+		echo -e "\t daphne: Run daphne"
+		echo -e "\t runworker: Run workers for daphne"
+		echo -e "\t celerycam: Run celery camera"
+		echo -e "\t celeryworker: Run workers for celery"
 		echo -e "\t debug: Run manage.py runserver"
 		echo -e "\t pip {args}: Run virtualenv pip"
 		echo -e "\t geoip: Update GeoIP database"

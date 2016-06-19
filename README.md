@@ -14,28 +14,10 @@ for the database, and NGINX will be used as a reverse-proxy server for Daphne.**
 2. Install required packages.
 ```
 # Install Maxmind GeoIP Database
-sudo add-apt-repository ppa:maxmind/ppa
-sudo apt update
+sudo add-apt-repository -y ppa:maxmind/ppa && sudo apt update
 
 # Install required packages 
-sudo apt install -y \
-	sudo \
-	git \
-	build-essential \
-	python3-dev \
-	python3-setuptools \
-	python-virtualenv \
-	postgresql \
-	postgresql-contrib \
-	libpq-dev \
-	redis-server \
-	rabbitmq-server \
-	postfix \
-	nginx \
-	software-properties-common \
-	libmaxminddb0 \
-	libmaxminddb-dev \
-	mmdb-bin
+sudo apt install -y software-properties-common sudo git build-essential python3-dev python3-setuptools python-virtualenv postgresql postgresql-contrib libpq-dev redis-server rabbitmq-server postfix nginx libmaxminddb0 libmaxminddb-dev mmdb-bin
 ```
 2. Git clone this repository on the server into "/var/www/".
 
@@ -44,15 +26,16 @@ sudo apt install -y \
 2. Create a database for Viking and give user full access. ```sudo -u postgres createdb -O $USER $DATABASE```
 
 #### Step 3: Setup Environment
-1. Create a virtual environment in the Viking directory. ```virtualenv -p $(which python3) env```
+1. Create a virtual environment in the Viking directory. ```virtualenv -p $(which python3) .env```
 
 #### Step 4: Django Setup
-1. Remove underscore from "project/viking/\_private" directory.
-2. Make all required changes in renamed "private" directory. (PostgreSQL details)
-3. Navigate to "scripts/" directory.
-4. Run "./viking geoip".
-5. Run "./manage makemigrations" and "./manage migrate" (Verify that "axes" table was created.)
-6. Modify DEBUG in settings_com.py to set debug.
+1. Copy `exports` file from `project/viking/\_private/` directory to `scripts/` directory.
+2. Remove underscore from `project/viking/\_private/` directory.
+3. Make all required changes in renamed `private` directory.
+4. Navigate to `scripts/` directory.
+5. Install Python packages `/viking pip install -r $(pwd)/../project/requirements.txt`
+6. Run "./viking geoip".
+7. Run "./viking migrate" (Verify that "axes" table was created.)
 
 #### Step 5: Setup Nginx
 1. Navigate to "/etc/nginx/sites-available".
@@ -67,10 +50,11 @@ sudo apt install -y \
 1. Clone LetsEncrypt repo ```git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt```
 2. Create a ".well-known" directory. `mkdir /var/www/viking/.well-known`
 3. Uncomment LetsEncrypt section from Viking's NGiNX config.
-4. Navigate to `/opt/letsencrypt/`
-5. Run LetsEncrypt **(Replace viking.com with your domain)** ```./letsencrypt-auto certonly -a webroot --webroot-path=/var/www/viking -d viking.com -d www.viking.com```
-6. Generate dh group ```openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048```
-7. Modify Viking's NGiNX config to point to these certs and uncomment all SSL options.
+4. Comment out the Non-SSL server from the NGiNX config and restart it.
+5. Navigate to `/opt/letsencrypt/`
+6. Run LetsEncrypt **(Replace viking.com with your domain)** ```./letsencrypt-auto certonly -a webroot --webroot-path=/var/www/viking -d viking.com -d www.viking.com```
+7. Modify Viking's NGiNX config to point to these certs.
+8. Uncomment out the Non-SSL server from the NGiNX config and restart it.
 
 You cannot connect to an insecure websocket from a secure protocol (HTTP !-> HTTPS).
 Some provider's (namely AdgateMedia) HTTP notifications/postbacks do not work over HTTPS.

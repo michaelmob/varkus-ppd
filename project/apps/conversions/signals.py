@@ -37,7 +37,7 @@ def unlock_signal(sender, instance, created, **kwargs):
 		}
 	}
 
-	Group("session:" + instance.session).send({
+	Group("session-" + instance.session).send({
 		"text": json.dumps(response)
 	})
 
@@ -55,7 +55,7 @@ def notify_click_signal(sender, instance, created, **kwargs):
 		"type": "TOKEN"
 	}
 
-	Group("user:" + str(instance.user.pk)).send({
+	Group("user-" + str(instance.user.pk)).send({
 		"text": json.dumps(response)
 	})
 
@@ -82,6 +82,6 @@ def notify_conversion_signal(sender, instance, created, **kwargs):
 		}
 	}
 
-	Group("user:" + str(instance.user.pk)).send({
+	Group("user-" + str(instance.user.pk)).send({
 		"text": json.dumps(response)
 	})

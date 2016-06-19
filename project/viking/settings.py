@@ -1,16 +1,16 @@
 """
-Viking 0.2.1
+Viking 0.5.0
 """
 
-# Overwrite any setting in ./private/settings_pro.py for production servers
-# Overwrite any setting in ./private/settings_dev.py for development servers
+# Overwrite any setting in ./private/settings_production.py for production servers
+# Overwrite any setting in ./private/settings_development.py for development servers
 
 import os, socket
 from datetime import timedelta
 
 # Debug
 # https://docs.djangoproject.com/en/1.9/ref/settings/#std:setting-DEBUG
-DEBUG = os.environ.get("DEBUG", False)
+DEBUG = os.environ.get("DEBUG", "").lower() == "true"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -287,32 +287,32 @@ CATEGORY_TYPES = (
 )
 
 CATEGORY_TYPES_ICONS = {
-	"Android": "android",
-	"Downloads": "download",
-	"Email Submits": "mail outline",
-	"Free": "certificate",
-	"Gifts": "gift",
-	"Hard Incentives": "bomb",
-	"Health & Beauty": "female",
-	"Home & Garden": "home",
-	"iOS Devices": "apple",
-	"iPad": "tablet",
-	"iPhone": "mobile",
-	"Conversion Gen": "lightning",
-	"Mobile Subscription": "mobile",
-	"Mobile WAP": "mobile",
-	"Mobile Content": "mobile",
-	"Online Services": "desktop",
-	"PIN Submit": "mobile",
-	"Samsung devices": "mobile",
-	"Special Requests": "checkered flag",
-	"Surveys": "checkmark",
+	"Android" 				: "android",
+	"Downloads"				: "download",
+	"Email Submits"			: "mail outline",
+	"Free"					: "certificate",
+	"Gifts"					: "gift",
+	"Hard Incentives"		: "bomb",
+	"Health & Beauty"		: "female",
+	"Home & Garden"			: "home",
+	"iOS Devices"			: "apple",
+	"iPad"					: "tablet",
+	"iPhone"				: "mobile",
+	"Conversion Gen"		: "lightning",
+	"Mobile Subscription"	: "mobile",
+	"Mobile WAP"			: "mobile",
+	"Mobile Content"		: "mobile",
+	"Online Services"		: "desktop",
+	"PIN Submit"			: "mobile",
+	"Samsung devices"		: "mobile",
+	"Special Requests"		: "checkered flag",
+	"Surveys"				: "checkmark",
 }
 
 from .private.keys import *
-from .private.settings_com import *
+from .private.settings_common import *
 
 if DEBUG:
-	from .private.settings_dev import *
+	from .private.settings_development import *
 else:
-	from .private.settings_pro import *
+	from .private.settings_production import *

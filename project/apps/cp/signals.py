@@ -29,11 +29,11 @@ def charts_conversion_signal(sender, instance, created, **kwargs):
 	# cache.delete_many with memcached doesn't work
 	cache_keys = (
 		# User's Charts
-		"line-chart:" + user_ref,
-		"map-chart:" + user_ref,
+		"line-chart-" + user_ref,
+		"map-chart-" + user_ref,
 
 		# User's Locker Charts
-		"line-chart:" + locker_ref,
+		"line-chart-" + locker_ref,
 		"map-chart:." + locker_ref
 	)
 
@@ -55,6 +55,6 @@ def notification_signal(sender, instance, created, **kwargs):
 		"data": { }
 	}
 
-	Group("user:" + str(instance.user.pk)).send({
+	Group("user-" + str(instance.user.pk)).send({
 		"text": json.dumps(response)
 	})

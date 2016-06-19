@@ -59,7 +59,7 @@ class Table_Statistics_Base(Table_Conversions_Base):
 		offer_ids = list(set([ n[0] for n in data.values_list("offer_id") ]))
 
 		# All related tokens
-		tokens = Token.objects.filter(**self.args, offers__in=offer_ids) \
+		tokens = Token.objects.filter(offers__in=offer_ids, **self.args) \
 			.prefetch_related("offers")
 
 		# For each offer of token, add 1 on every occurence

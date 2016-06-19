@@ -18,5 +18,4 @@ ADMINS = (
 SERVER_EMAIL = "error@viking.com"
 DEFAULT_FROM_EMAIL = "noreply@viking.com"
 
-# SECURITY WARNING: do not run with debug turned on in production!
 ALLOWED_HOSTS = [".viking.com", SITE_DOMAIN]
