@@ -153,7 +153,7 @@ class Token(models.Model):
 		request -- http request
 		obj -- Locker object to create for
 		"""
-		country = GeoIP2().country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
+		country = country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
 		
 		if not country:
 			country = "XX"
