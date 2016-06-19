@@ -1,5 +1,3 @@
-import os
-
 # Use below commands to create database
 """
 DATABASE_NAME=viking_dev

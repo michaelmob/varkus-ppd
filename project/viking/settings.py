@@ -189,9 +189,6 @@ GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 # GeoIP
 GEOIP_PATH = BASE_DIR
-if os.environ.get("DJANGO_SETTINGS_MODULE"):
-	from django.contrib.gis.geoip2 import GeoIP2
-	GEOIP = GeoIP2()
 
 # HTTP Notification Proxy
 HTTP_NOTIFICATION_USE_PROXY = False

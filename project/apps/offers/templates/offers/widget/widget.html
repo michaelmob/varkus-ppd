@@ -28,7 +28,7 @@
 	{% if unlocked %}
 		<a href="{{ obj.get_unlock_url }}" class="centered continue">Click to Continue</a>
 	{% else %}
-		<!-- {{ ip_address }} -->
+		<!-- {{ ip_address }},{{ country_code }} -->
 		<div class="items">
 			{% with redirect_url=obj.get_type|add:'s-redirect' %}
 				{% for offer in offers %}

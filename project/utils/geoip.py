@@ -8,3 +8,9 @@ def retrieve(ip_address):
 		return (x["country_code"], x["city"])
 	except:
 		return (None, None)
+
+def country_code(ip_address):
+	try:
+		return geoip.country_code(ip_address)
+	except:
+		return None

@@ -3,6 +3,7 @@ from random import randint
 from utils import strings
 from utils.constants import (DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY,
 	USER_AGENTS)
+from utils.geoip import country_code
 
 from django.conf import settings
 from django.db import models
@@ -97,7 +98,7 @@ class Token(models.Model):
 		while country == "XX":
 			ip_address = ".".join(str(randint(0, 255)) for n in range(4))
 			try:
-				country = settings.GEOIP.country_code(ip_address)
+				country = country_code(ip_address)
 			except:
 				country = "XX"
 
@@ -113,12 +114,14 @@ class Token(models.Model):
 			country 	= country,
 			unique 		= strings.random(64),
 			session 	= None,
-			datetime 	= date)
+			datetime 	= date
+		)
 
 		# Add offer
 		if not offer:
 			offer = apps.offers.models.Offer.objects.filter(
-				earnings_per_click__gt=0.01).order_by("?").first()
+				earnings_per_click__gt=0.01
+			).order_by("?").first()
 
 		token.offers.add(offer)
 
@@ -150,9 +153,9 @@ class Token(models.Model):
 		request -- http request
 		obj -- Locker object to create for
 		"""
-		try:
-			country = GeoIP2().country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
-		except:
+		country = GeoIP2().country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
+		
+		if not country:
 			country = "XX"
 
 		# Create Session
@@ -280,9 +283,9 @@ class Conversion(models.Model):
 				values["datetime"] = kwargs["datetime"]
 
 		# Find IP address country, use Offer's country if not found
-		try:
-			values["country"] = settings.GEOIP.country_code(token.ip_address)
-		except:
+		values["country"] = country_code(token.ip_address)
+
+		if not values["country"]:
 			values["country"] = offer.flag
 
 		# Add the original `search` values to `values`

@@ -55,6 +55,9 @@ sudo apt install -y software-properties-common sudo git build-essential python3-
 6. Run LetsEncrypt **(Replace viking.com with your domain)** ```./letsencrypt-auto certonly -a webroot --webroot-path=/var/www/viking -d viking.com -d www.viking.com```
 7. Modify Viking's NGiNX config to point to these certs.
 8. Uncomment out the Non-SSL server from the NGiNX config and restart it.
+9. Edit crontab. `crontab -e`
+10. Add the follow lines for auto-renewal. ```30 2 * * 1 /opt/letsencrypt/letsencrypt-auto renew >> /var/log/le-renew.log
+35 2 * * 1 /bin/systemctl reload nginx```
 
 You cannot connect to an insecure websocket from a secure protocol (HTTP !-> HTTPS).
 Some provider's (namely AdgateMedia) HTTP notifications/postbacks do not work over HTTPS.

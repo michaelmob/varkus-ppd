@@ -2,12 +2,15 @@ import django_tables2 as tables
 
 from django.conf import settings
 from django.db.models import Count
+from django.utils.safestring import mark_safe
 
+from utils.country import COUNTRIES
 from apps.offers.tables import Table_Offer_Base
-from .models import Conversion, Token
 from apps.offers.models import Offer
+from .models import Conversion, Token
 
 class Table_Conversions_Base(Table_Offer_Base):
+
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
 		fields = ()
@@ -29,14 +32,16 @@ class Table_Conversions_Base(Table_Offer_Base):
 
 
 class Table_Conversions(Table_Conversions_Base):
+	locker = tables.Column(verbose_name="Locker")
+	
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
-		empty_text = "You haven't received any conversions, yet."
+		empty_text = "There doesn't seem to be any conversions here for this category or date range."
 		fields = ("locker", "offer", "user_ip_address", "user_payout", "datetime", "approved")
 
 
 class Table_Statistics_Base(Table_Conversions_Base):
-	distinct_field = None
+	distinct_field = "offer_id"
 
 	class Meta(Table_Conversions_Base.Meta):
 		model = Conversion
@@ -49,7 +54,7 @@ class Table_Statistics_Base(Table_Conversions_Base):
 
 	def data(self, **kwargs):
 		data = Conversion.objects.filter(**self.args).defer("locker") \
-			.prefetch_related("offer").distinct("offer")
+			.prefetch_related("offer").distinct(self.distinct_field)
 
 		# Create class variable
 		self.offers = { "clicks": { }, "conversions": { }, "chargebacks": { } }
@@ -113,8 +118,6 @@ class Table_Statistics_Offers(Table_Statistics_Base):
 	conversions = tables.Column(empty_values=())
 	user_payout = tables.Column()
 	chargebacks = tables.Column(empty_values=())
-
-	distinct_field = "offer"
 
 	class Meta(Table_Statistics_Base.Meta):
 		fields = ("offer", "clicks", "conversions", "user_payout", "chargebacks")

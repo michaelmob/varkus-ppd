@@ -7,6 +7,8 @@ from django.http import HttpResponse, HttpResponseForbidden
 from apps.offers.models import Offer
 from apps.conversions.models import Token, Deposit
 
+from utils.geoip import country_code
+
 CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
 	"baiduspider", "speedy spider", "dotbot", "google favicon")
 
@@ -61,6 +63,7 @@ class View_Locker_Base(View):
 			self.template,
 			{
 				"ip_address": request.META.get("REMOTE_ADDR"),
+				"country_code": country_code(request.META.get("REMOTE_ADDR")),
 				"theme": self._obj.theme or "DEFAULT",
 				"obj": self._obj,
 				"unlocked": unlocked,
