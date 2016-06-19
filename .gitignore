@@ -5,6 +5,7 @@
 *.pid
 *.mmdb
 .fuse*
+exports
 
 # Binary
 __pycache__/
