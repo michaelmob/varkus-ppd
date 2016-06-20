@@ -42,6 +42,8 @@ class Table_Conversions(Table_Conversions_Base):
 
 class Table_Statistics_Base(Table_Conversions_Base):
 	distinct_field = "offer_id"
+	clicks_key = "offer.id"
+	conversions_key = "conversion.offer_id"
 
 	class Meta(Table_Conversions_Base.Meta):
 		model = Conversion
@@ -51,6 +53,12 @@ class Table_Statistics_Base(Table_Conversions_Base):
 
 	def __init__(self, request, date_range=None, per_page=2147483647, **kwargs):
 		super(__class__, self).__init__(request, date_range, per_page, **kwargs)
+
+	def add_or_one(self, dict_, key):
+		try:
+			dict_[key] += 1
+		except:
+			dict_[key] = 1
 
 	def data(self, **kwargs):
 		data = Conversion.objects.filter(**self.args).defer("locker") \
@@ -70,47 +78,29 @@ class Table_Statistics_Base(Table_Conversions_Base):
 		# For each offer of token, add 1 on every occurence
 		for token in tokens:
 			for offer in token.offers.all():
-				try:
-					self.offers["clicks"][offer.id] += 1
-				except:
-					self.offers["clicks"][offer.id] = 1
+				self.add_or_one(self.offers["clicks"], eval(self.clicks_key))
 
 		### CONVERSIONS and CHARGEBACKS ###
 		conversions = Conversion.objects.filter(**self.args)
 
 		for conversion in conversions:
 			# Conversions
-			try:
-				self.offers["conversions"][conversion.offer_id] += 1
-			except:
-				self.offers["conversions"][conversion.offer_id] = 1
+			self.add_or_one(self.offers["conversions"], eval(self.conversions_key))
 
 			# Chargebacks
 			if conversion.approved == False:
-				try:
-					self.offers["chargebacks"][conversion.offer_id] += 1
-				except:
-					self.offers["chargebacks"][conversion.offer_id] = 1
+				self.add_or_one(self.offers["chargebacks"], eval(self.conversions_key))
 
 		return data
 
 	def render_clicks(self, record):
-		try:
-			return self.offers["clicks"][record.offer_id]
-		except:
-			return 0
+		return self.offers["clicks"].get(eval("record." + self.distinct_field), 0)
 
 	def render_conversions(self, record):
-		try:
-			return self.offers["conversions"][record.offer_id]
-		except:
-			return 0
+		return self.offers["conversions"].get(eval("record." + self.distinct_field), 0)
 
 	def render_chargebacks(self, record):
-		try:
-			return self.offers["chargebacks"][record.offer_id]
-		except:
-			return 0
+		return self.offers["chargebacks"].get(eval("record." + self.distinct_field), 0)
 
 
 class Table_Statistics_Offers(Table_Statistics_Base):
@@ -129,9 +119,11 @@ class Table_Statistics_Countries(Table_Statistics_Base):
 	chargebacks = tables.Column(empty_values=())
 
 	distinct_field = "country"
+	clicks_key = "offer.country"
+	conversions_key = "conversion.country"
 
 	class Meta(Table_Statistics_Base.Meta):
-		fields = ("country", "clicks", "conversions")
+		fields = ("country", "clicks", "conversions", "offer")
 
 	def render_country(self, value):
 		return mark_safe("<i class='%s flag'></i>%s" % (

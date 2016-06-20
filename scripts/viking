@@ -29,6 +29,15 @@ function manage() {
 }
 
 case "$1" in
+	start)
+		sudo supervisorctl start viking: ;;
+	
+	stop)
+		sudo supervisorctl stop viking: ;;
+	
+	restart)
+		sudo supervisorctl restart viking: ;;
+
 	bash)
 		bash ;;
 
@@ -117,20 +126,24 @@ case "$1" in
 
 	*)
 		echo -e "Usage: viking arg\nList of args:"
-		echo -e "\t manage {args}: Run manage.py"
-		echo -e "\t createmigrationdirectories: Create migration directories in each app folder"
-		echo -e "\t migrate: Run django migrations"
-		echo -e "\t daphne: Run daphne"
-		echo -e "\t runworker: Run workers for daphne"
-		echo -e "\t celerycam: Run celery camera"
-		echo -e "\t celeryworker: Run workers for celery"
-		echo -e "\t debug: Run manage.py runserver"
-		echo -e "\t pip {args}: Run virtualenv pip"
-		echo -e "\t geoip: Update GeoIP database"
-		echo -e "\t clean [migration]: Clean pycache [and migration files]"
-		echo -e "\t backup {file}: Backup database using PostgreSQL"
-		echo -e "\t restore {file}: Restore database using PostgreSQL"
-		echo -e "\t edit {com/pro/dev/key}: Edit settings"
+		echo -e "  start: Start Viking (Supervisor)"
+		echo -e "  stop: Stop Viking (Supervisor)"
+		echo -e "  restart: Restart Viking (Supervisor)"
+		echo -e "  manage {args}: Run manage.py"
+		echo -e "  createmigrationdirectories: Create migration directories in each app folder"
+		echo -e "  migrate: Run django migrations"
+		echo -e "  daphne: Run daphne"
+		echo -e "  runworker: Run workers for daphne"
+		echo -e "  celerycam: Run celery camera"
+		echo -e "  celeryworker: Run workers for celery"
+		echo -e "  debug: Run manage.py runserver"
+		echo -e "  pip {args}: Run virtualenv pip"
+		echo -e "  bash: Run bash inside virtualenv"
+		echo -e "  geoip: Update GeoIP database"
+		echo -e "  clean [migration]: Clean pycache [and migration files]"
+		echo -e "  backup {file}: Backup database using PostgreSQL"
+		echo -e "  restore {file}: Restore database using PostgreSQL"
+		echo -e "  edit {common/production/development/keys}: Edit settings"
 		exit 1
 		;;
 esac
