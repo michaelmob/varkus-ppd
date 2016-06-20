@@ -9,7 +9,7 @@ fi
 source exports
 
 # Run as desired user
-if [ $USER != "$RUN_AS" ]; then
+if [ "$USER" != "$RUN_AS" ]; then
 	sudo -u $RUN_AS ./viking $@
 	exit 0
 fi
