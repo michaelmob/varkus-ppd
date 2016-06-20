@@ -43,8 +43,6 @@ class Table_Conversions(Table_Conversions_Base):
 
 class Table_Statistics_Base(Table_Conversions_Base):
 	distinct_field = "offer_id"
-	clicks_key = "offer.id"
-	conversions_key = "conversion.offer_id"
 
 	class Meta(Table_Conversions_Base.Meta):
 		model = Conversion
@@ -120,11 +118,9 @@ class Table_Statistics_Countries(Table_Statistics_Base):
 	chargebacks = tables.Column(empty_values=())
 
 	distinct_field = "country"
-	clicks_key = "offer.country"
-	conversions_key = "conversion.country"
 
 	class Meta(Table_Statistics_Base.Meta):
-		fields = ("country", "clicks", "conversions", "offer")
+		fields = ("country", "clicks", "conversions")
 
 	def foreach_token(self, tokens):
 		for token in tokens:
