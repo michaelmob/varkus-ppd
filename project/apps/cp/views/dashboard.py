@@ -12,11 +12,12 @@ def index(request):
 	return render(request, "cp/dashboard/dashboard.html", {
 		"offers": Table_Offer(request, Offer.objects.order_by("-date")[:5]),
 
-		"top_offers": Table_Offer(request,Offer.objects.filter(
+		"top_offers": Table_Offer(request, Offer.objects.filter(
 			payout__gt=0.75).order_by("-success_rate")[:5]),
 
 		"conversions": Table_Conversions(request, Conversion.objects.filter(
-			user=request.user).order_by("-datetime")[:5])
+			user=request.user, approved=True
+		).prefetch_related("locker").order_by("-datetime")[:5])
 	})
 
 

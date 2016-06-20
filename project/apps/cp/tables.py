@@ -1,8 +1,13 @@
 import django_tables2 as tables
 
+from django.utils.timesince import timesince
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
+
 from apps.conversions.models import Conversion
 from apps.offers.models import Offer
-from apps.offers.tables import Table_Offer_Base, Table_Offer_Conversions
+from apps.site.tables import Table_Base
+from apps.offers.tables import Table_Offer_Base
 
 
 class Table_Offer(Table_Offer_Base):
@@ -15,8 +20,22 @@ class Table_Offer(Table_Offer_Base):
 		fields = ("name", "flag", "earnings_per_click", "payout")
 
 
-class Table_Conversions(Table_Offer_Conversions):
-	class Meta(Table_Offer_Conversions.Meta):
+class Table_Conversions(Table_Offer_Base):
+	locker = tables.Column(verbose_name="Locker")
+
+	class Meta(Table_Base.Meta):
 		model = Conversion
 		orderable = False
+		fields = ("locker", "user_ip_address", "user_payout", "datetime")
 		empty_text = "You haven't received any conversions, yet."
+
+	def render_datetime(self, value):
+		return timesince(value) + " ago"
+
+	def render_user_payout(self, record, value):
+		return mark_safe("%s %s" % (
+			super(__class__, self).render_user_payout(value),
+			"<a href=\"%s\"><i class=\"tag icon\"></i></a>" % (
+				reverse("offers-manage", args=(record.offer_id,))
+			)
+		))
