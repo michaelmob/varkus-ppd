@@ -39,7 +39,7 @@ def adgate_sync():
 		# Offer vars
 		payout	= Decimal(offer["payout"])
 		epc 	= Decimal(offer["epc"])
-		country = offer["country"].lower()
+		country = offer["country"].upper()
 
 		# {o} == Offer ID, {a} == Aff ID, {u} == Unique hash
 		tracking_url = str(offer["tracking_url"]) 	\

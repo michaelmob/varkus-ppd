@@ -55,17 +55,17 @@ class Offer(models.Model):
 	def pick_flag(country):
 		""" Picks the flag for the offer, if it above 10 then
 			use intl, otherwise US if under 10 with US in it """
-		country = country.lower().split(',')
+		country = country.upper().split(',')
 		count = len(country)
 		result = None
 
 		# Less than 10 countries and US is in the country list
-		if (count < 10) and ("us" in country):
-			result = "us"
+		if (count < 10) and ("US" in country):
+			result = "US"
 
 		# More than 10 countries or country is "-"
 		elif (count > 10) or (country == "-"):
-			result = "intl"
+			result = "INTL"
 
 		else:
 			result = country[0]

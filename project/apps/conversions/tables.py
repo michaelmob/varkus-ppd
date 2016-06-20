@@ -1,3 +1,4 @@
+from collections import defaultdict
 import django_tables2 as tables
 
 from django.conf import settings
@@ -54,44 +55,44 @@ class Table_Statistics_Base(Table_Conversions_Base):
 	def __init__(self, request, date_range=None, per_page=2147483647, **kwargs):
 		super(__class__, self).__init__(request, date_range, per_page, **kwargs)
 
-	def add_or_one(self, dict_, key):
-		try:
-			dict_[key] += 1
-		except:
-			dict_[key] = 1
-
-	def data(self, **kwargs):
-		data = Conversion.objects.filter(**self.args).defer("locker") \
-			.prefetch_related("offer").distinct(self.distinct_field)
-
-		# Create class variable
-		self.offers = { "clicks": { }, "conversions": { }, "chargebacks": { } }
-
-		### CLICKS ###
-		# All IDs of offers inside tokens owned by user
-		offer_ids = list(set([ n[0] for n in data.values_list("offer_id") ]))
-
-		# All related tokens
-		tokens = Token.objects.filter(offers__in=offer_ids, **self.args) \
-			.prefetch_related("offers")
-
-		# For each offer of token, add 1 on every occurence
+	def foreach_token(self, tokens):
 		for token in tokens:
 			for offer in token.offers.all():
-				self.add_or_one(self.offers["clicks"], eval(self.clicks_key))
+				# Add Click
+				self.offers["clicks"][offer.id] += 1
+
+	def foreach_conversion(self, conversions):
+		for conversion in conversions:
+			# Add Conversion
+			self.offers["conversions"][conversion.offer_id] += 1
+
+			# Add Chargeback
+			if conversion.approved == False:
+				self.offers["chargebacks"][conversion.offer_id] += 1
+
+	def data(self, **kwargs):
+		# Create class variable
+		self.offers = {
+			"clicks": defaultdict(int),
+			"conversions": defaultdict(int),
+			"chargebacks": defaultdict(int)
+		}
+
+		# Related Offer IDs
+		#offer_ids = list(set([n[0] for n in data.values_list("offer_id")]))
+
+		### CLICKS ###
+		self.foreach_token(
+			Token.objects.filter(**self.args).prefetch_related("offers")
+		)
 
 		### CONVERSIONS and CHARGEBACKS ###
-		conversions = Conversion.objects.filter(**self.args)
+		self.foreach_conversion(
+			Conversion.objects.filter(**self.args)
+		)
 
-		for conversion in conversions:
-			# Conversions
-			self.add_or_one(self.offers["conversions"], eval(self.conversions_key))
-
-			# Chargebacks
-			if conversion.approved == False:
-				self.add_or_one(self.offers["chargebacks"], eval(self.conversions_key))
-
-		return data
+		return Conversion.objects.filter(**self.args).defer("locker") \
+			.prefetch_related("offer").distinct(self.distinct_field)
 
 	def render_clicks(self, record):
 		return self.offers["clicks"].get(eval("record." + self.distinct_field), 0)
@@ -124,6 +125,22 @@ class Table_Statistics_Countries(Table_Statistics_Base):
 
 	class Meta(Table_Statistics_Base.Meta):
 		fields = ("country", "clicks", "conversions", "offer")
+
+	def foreach_token(self, tokens):
+		for token in tokens:
+			self.offers["clicks"][token.country] += 1
+
+	def foreach_conversion(self, conversions):
+		for conversion in conversions:
+			# Set uppercase just in case some are lower
+			conversion.country = conversion.country.upper()
+
+			# Add Conversion
+			self.offers["conversions"][conversion.country] += 1
+
+			# Add Chargeback
+			if conversion.approved == False:
+				self.offers["chargebacks"][conversion.country] += 1
 
 	def render_country(self, value):
 		return mark_safe("<i class='%s flag'></i>%s" % (
