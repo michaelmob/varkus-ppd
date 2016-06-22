@@ -59,13 +59,10 @@ $(".line.chart.container").api({
 	on: "now",
 
 	onSuccess: function(response) {
-		if(!desktopScreen) {
-			for (var i = 0; i < response.data.length; i++) {
-				if(response.data[i].data) {
-					response.data[i].data.splice(hour < 1 ? 0 : 12, 12);
-				}
-			};
-		}
+		if(!desktopScreen)
+			for (var i = 0; i < response.data.length; i++)
+				if(response.data[i].data)
+					response.data[i].data.splice(hour < 1 ? 12 : 0, 12);
 
 		$.plot(".line.chart.container", response.data, flotOptions);
 	}

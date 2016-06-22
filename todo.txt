@@ -1,23 +1,2 @@
-API
-
-Billing
-
-Conversions
-
-Control Panel
-	Announcements (50%)
-	
-Lockers
-	Widgets
-		Viral Mode
-
-Offers
-
-Site
-
-Support
-
-Tickets
-
-User
-	Make registration more user friendly
+Viral mode for Widgets
+Custom themes for lockers
