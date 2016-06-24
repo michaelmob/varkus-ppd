@@ -154,7 +154,7 @@ class Earnings_Base(models.Model):
 
 	def add(self, amount, cut=0):
 		amount = Decimal(amount)
-		amount_cut = Decimal(amount - (amount * Decimal(cut)))
+		amount_cut = amount - (amount * cut)
 
 		self.conversions 		= F("conversions") + 1
 		self.conversions_today 	= F("conversions_today") + 1

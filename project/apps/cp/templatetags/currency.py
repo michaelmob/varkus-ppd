@@ -15,11 +15,6 @@ def currency(value):
 
 
 @register.filter
-def currencyd(value):
-	return "$" + currency(value)
-
-
-@register.filter
 def percentage(value):
 	try:
 		value = Decimal(value)
@@ -31,9 +26,14 @@ def percentage(value):
 
 @register.filter
 def cut_percent(value, percent):
-	getcontext().prec = 2
-	value = Decimal(value)
-	amount_cut = value - (value * Decimal(percent))
-
+	"""Cut percent from number; useful for getting a user's cut amount
+	
+	Args:
+	    value (DECIMAL): Original value
+	    percent (INTEGER): Percent to be cut
+	
+	Returns:
+	    STRING: Percentage removed from value
+	"""
+	amount_cut = value - (value * percent)
 	return currency(amount_cut)
-	return "%.2f" % value
