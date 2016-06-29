@@ -32,17 +32,3 @@ class View_Map_Chart(View_Map_Chart_Base):
 
 class View_Delete(View_Delete_Base):
 	model 		= Widget
-
-
-def verify(user, code):
-	""" Verify code and user owns object """
-	if not code:
-		return None
-
-	obj = None
-
-	try:
-		obj = Widget.objects.get(user=user, code=code)
-		return obj
-	except Widget.DoesNotExist:
-		return None

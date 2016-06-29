@@ -23,9 +23,6 @@ html, body {
 	width: .75em;
 	height: .75em;
 	content: '';
-	-ms-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	-moz-transform: rotate(45deg);
 	transform: rotate(45deg);
 	background-color: #222;
 }
@@ -37,9 +34,6 @@ html, body {
 	padding: 0.5rem 0.75rem;
 	border-radius: 0.2rem;
 	left: 50%;
-	-ms-transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	-moz-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	color: white;
 	text-align: center;
@@ -56,7 +50,7 @@ html, body {
 }
 
 /* Continue Button */
-.widget .centered {
+.widget .center {
 	display: block;
 	text-align: center;
 	padding: 1rem;
@@ -108,4 +102,22 @@ html, body {
 /* Special Icon */
 .widget .item .gold.icon {
 	color: gold;
+}
+
+/* Content */
+.widget .message {
+  padding-bottom: 1rem;
+}
+
+.widget #amount {
+  font-weight: bold;
+}
+
+.widget .url {
+  color: #F44336;
+  text-decoration: none;
+}
+
+.widget .url:hover {
+  text-decoration: underline;
 }

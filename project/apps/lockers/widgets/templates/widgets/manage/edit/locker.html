@@ -1,5 +1,11 @@
 {% extends 'lockers/bases/manage/manage.html' %}
-{% block title %}Widget Locker{% endblock %}
+{% block title %}Select Locker{% endblock %}
+
+{% block breadcrumbs_active %}
+Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url 'widgets-edit-locker' obj.code %}" class="active section">Select Locker</a>
+{% endblock %}
 
 {% block content %}
 <div class="wrapper">
@@ -69,7 +75,7 @@
 						Set Locker
 					</button>
 					<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-						Cancel
+						Back
 					</a>
 				</div>
 			</form>

@@ -1,5 +1,11 @@
 {% extends 'lockers/bases/manage/manage.html' %}
-{% block title %}Widget Locker{% endblock %}
+{% block title %}Custom CSS{% endblock %}
+
+{% block breadcrumbs_active %}
+Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url 'widgets-edit-css' obj.code %}" class="active section">Custom CSS</a>
+{% endblock %}
 
 {% block content %}
 <div class="wrapper">
@@ -29,7 +35,7 @@
 							Set Custom CSS URL
 						</button>
 						<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-							Cancel
+							Back
 						</a>
 					</div>
 				</div>
@@ -57,7 +63,7 @@
 					<div class="ui header">JSFiddle</div>
 					<div class="ui list">
 						<div class="item">
-							<a href="https://jsfiddle.net/t1Ljyaav/">Default CSS Template</a>
+							<a href="https://jsfiddle.net/2gakyudf/">Default CSS Template</a>
 						</div>
 					</div>
 				</div>

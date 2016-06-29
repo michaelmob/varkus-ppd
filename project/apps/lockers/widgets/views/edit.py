@@ -4,9 +4,9 @@ from django.shortcuts import render, redirect
 from django.core.validators import URLValidator
 
 from ...bases.manage import View_Overview_Base, View_Manage_Base
-from .manage import verify
-from apps.lockers.fields import locker_ref_to_object
+from apps.lockers.utils import locker_ref_to_object
 
+from ..forms import Form_Viral
 from ..models import Widget
 from apps.lockers.files.models import File
 from apps.lockers.links.models import Link
@@ -22,16 +22,13 @@ class View_Set_Locker(View_Manage_Base):
 		links = Link.objects.filter(user=request.user)
 		lists = List.objects.filter(user=request.user)
 
-		return render(
-			request, self.template,
-			{
-				"locker": self.model.__name__.lower(),
-				"obj": obj,
-				"files": files,
-				"links": links,
-				"lists": lists,
-			}
-		)
+		return render(request, self.template, {
+			"locker": self.model.__name__.lower(),
+			"obj": obj,
+			"files": files,
+			"links": links,
+			"lists": lists,
+		})
 
 	def post_return(self, request, obj):
 		ref = request.POST.get("locker", None)
@@ -64,7 +61,7 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 	model = Widget
 
 	disable_message = "HTTP Notifications have been disabled for this widget."
-	edit_message = "HTTP Notifications have been enabled."
+	edit_message = "HTTP Notifications have been updated."
 
 	field = "http_notification_url"
 
@@ -74,13 +71,10 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 			messages.error(request, self.disable_message)
 			return redirect("widgets-manage", obj.code)
 
-		return render(
-			request, self.template,
-			{
-				"locker": self.model.__name__.lower(),
-				"obj": obj
-			}
-		)
+		return render(request, self.template, {
+			"locker": self.model.__name__.lower(),
+			"obj": obj
+		})
 
 	def post_return(self, request, obj):
 		url = request.POST.get(self.field, "").strip()
@@ -94,7 +88,7 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 
 		messages.success(request, self.edit_message)
 
-		return redirect("widgets-manage", obj.code)
+		return self.get_return(request, obj)
 
 	def modify_object(self, obj, value):
 		obj.http_notification_url = value
@@ -106,10 +100,24 @@ class View_Set_CSS(View_Set_HTTP_Notifications):
 	model = Widget
 	
 	disable_message = "This widget will no longer use a custom stylesheet."
-	edit_message = "This widget's will use a custom stylesheet."
+	edit_message = "This widget custom stylesheet setting has been updated."
 	
 	field = "custom_css_url"
 
 	def modify_object(self, obj, value):
 		obj.custom_css_url = value
 		obj.save()
+
+
+class View_Set_Viral(View_Manage_Base):
+	template = "widgets/manage/edit/viral.html"
+	model = Widget
+	form = Form_Viral
+
+	def get_return(self, request, obj):
+		return render(request, self.template, {
+			"locker": self.model.__name__.lower(),
+			"form": self.form(instance=obj),
+			"obj": obj, 
+			"message": settings.VIRAL_MESSAGE
+		})

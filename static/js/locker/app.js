@@ -8,10 +8,20 @@ var openSocket = function() {
 		if(!result.success)
 			return;
 
-		if(result.data.locker == obj[1] && result.data.code == obj[2])
+		if(result.type == "UNLOCK" && result.data.locker == obj[1] && result.data.code == obj[2])
 			window.location = result.data.url;
+
+		else if(result.type == "CLICK") {
+			document.querySelector(".message").innerHTML = result.message;
+
+			if (parseInt(document.getElementById("amount").innerHTML) < 1)
+				window.location.reload();
+		}
 	};
 };
+
+if(typeof instant === "boolean" && instant)
+	openSocket();
 
 var items = document.querySelectorAll(".widget .item");
 

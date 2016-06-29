@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.shortcuts import render, redirect
 from datetime import datetime
 from random import randint
 
@@ -10,25 +9,6 @@ from urllib.parse import quote_plus
 
 
 def notify(conversion_obj, test=False):
-	# offer_id 			- ID of Offer
-	# offer_name 		- offer_name, url encoded
-	# ip 				- IP that created token
-	# user_agent 		- user agent that created token
-	# token 			- Token ID
-	# widget 			- widget code
-	# payout			- payout
-	# approved 			- True or False
-	# date 				- date
-	# time 				- time
-	# datetime 			- datetime
-	# rand 				- Random number 1-1000000
-	# custom			- custom text
-	# custom2			- custom text2
-	# custom3			- custom text3
-	# custom4			- custom text4
-	# custom5			- custom text5
-	# test				- test
-
 	#http://varkus.com/notify/?offer_id={offer_id}&offer_name={offer_name}&ip={ip}&user_agent={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&date={date}&time={time}&datetime={datetime}&rand={rand}
 
 	# Get Locker and Token from Conversion Object
@@ -52,31 +32,23 @@ def notify(conversion_obj, test=False):
 		.replace("{rand}", 			str(randint(1, 1000000)))\
 		.replace("{test}", 			str(test))
 
+	# Use Proxy
 	if settings.HTTP_NOTIFICATION_USE_PROXY:
 		try:
-			opener = urllib.request.build_opener(
-				SocksiPyHandler(
-					socks.SOCKS5,
-					settings.SOCKS5_SERVER,
-					settings.SOCKS5_PORT, True,
-					settings.SOCKS5_USERNAME,
-					settings.SOCKS5_PASSWORD
-				)
-			)
+			opener = urllib.request.build_opener(SocksiPyHandler(
+				socks.SOCKS5, settings.SOCKS5_SERVER,
+				settings.SOCKS5_PORT, True,
+				settings.SOCKS5_USERNAME, settings.SOCKS5_PASSWORD
+			))
 
 			urllib.request.install_opener(opener)
 		except:
-			print("Proxy error")
 			return False
 
+	# Attempt
 	try:
 		html = str(urllib.request.urlopen(url).read(), "utf-8")
 	except:
 		return False
 
 	return True
-
-
-
-def test(request):
-	pass

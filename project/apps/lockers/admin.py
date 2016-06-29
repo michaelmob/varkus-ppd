@@ -2,7 +2,7 @@ from django.contrib import admin
 from .lists.models import 	List, Earnings as List_Earnings
 from .files.models import 	File, Earnings as File_Earnings
 from .links.models 	import 	Link, Earnings as Link_Earnings
-from .widgets.models import Widget, Earnings as Widget_Earnings
+from .widgets.models import Widget, Widget_Visitor, Earnings as Widget_Earnings
 
 from apps.cp.templatetags.currency import currency
 
@@ -29,6 +29,21 @@ class ModelAdminBase(admin.ModelAdmin):
 
 
 
+
+###############################
+# Widgets
+class Inline_Widget_Earnings(admin.StackedInline):
+	model = Widget_Earnings
+
+@admin.register(Widget)
+class Admin_Widget(ModelAdminBase):
+	inlines = (Inline_Widget_Earnings,)
+
+@admin.register(Widget_Visitor)
+class Admin_Widget_Visitor(ModelAdminBase):
+	list_display = ("id", "widget", "ip_address", "datetime")
+
+
 ###############################
 # Files
 class Inline_File_Earnings(admin.StackedInline):
@@ -43,7 +58,6 @@ class Admin_File(ModelAdminBase):
 		"earnings_month", "earnings_total", "datetime")
 
 
-
 ###############################
 # Lists
 class Inline_List_Earnings(admin.StackedInline):
@@ -54,7 +68,6 @@ class Admin_List(ModelAdminBase):
 	inlines = (Inline_List_Earnings,)
 
 
-
 ###############################
 # Links
 class Inline_Link_Earnings(admin.StackedInline):
@@ -63,14 +76,3 @@ class Inline_Link_Earnings(admin.StackedInline):
 @admin.register(Link)
 class Admin_Link(ModelAdminBase):
 	inlines = (Inline_Link_Earnings,)
-
-
-
-###############################
-# Links
-class Inline_Widget_Earnings(admin.StackedInline):
-	model = Widget_Earnings
-
-@admin.register(Widget)
-class Admin_Widget(ModelAdminBase):
-	inlines = (Inline_Widget_Earnings,)

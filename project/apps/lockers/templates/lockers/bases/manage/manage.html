@@ -13,8 +13,10 @@
 	<i class="right chevron icon divider"></i>
 	<a href="{% url locker|add:'s' %}" class="section">{{ locker|title }}s</a>
 	<i class="right chevron icon divider"></i>
-	<strong>{{ locker|title }}:</strong>
-	<a href="{% url locker|add:'s-manage' obj.code %}" class="active section">{{ obj.name }}</a>
+	{% block breadcrumbs_active %}
+		<strong>{{ locker|title }}:</strong>
+		<a href="{% url locker|add:'s-manage' obj.code %}" class="active section">{{ obj.name }}</a>
+	{% endblock %}
 </div>
 {% endblock %}
 

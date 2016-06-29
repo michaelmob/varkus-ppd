@@ -26,7 +26,7 @@
 	<div class="progress indicator"></div>
 
 	{% if unlocked %}
-		<a href="{{ obj.get_unlock_url }}" class="centered continue">Click to Continue</a>
+		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
 	{% else %}
 		<!-- {{ ip_address }},{{ country_code }} -->
 		<div class="items">
@@ -38,7 +38,7 @@
 					{% if offer.priority %}<i class="gold star right icon"></i>{% endif %}
 				</a>
 				{% empty %}
-					<div class="centered">There are no offers that you can currently participate in.</div>
+					<div class="center">There are no offers that you can currently participate in.</div>
 				{% endfor %}
 			{% endwith %}
 		</div>

@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from django.core.cache import cache
 from apps.conversions.models import Conversion
 from .models import Notification
-from apps.lockers.fields import locker_ref_to_object
 
 
 @receiver(post_save, sender=Conversion)
@@ -15,13 +14,6 @@ def charts_conversion_signal(sender, instance, created, **kwargs):
 	# Conversion must be being created and token must exist with a user
 	if not (created and instance.offer and instance.user and not instance.blocked):
 		return
-
-	# Sometimes instance.locker is the reference, and sometimes it's the object
-	if isinstance(instance.locker, str):
-		instance.locker = locker_ref_to_object(instance.locker)
-
-		if not instance.locker:
-			return
 
 	locker_ref = instance.locker.get_type() + "." + str(instance.locker.id)
 	user_ref = instance.user.__class__.__name__.lower() + "." + str(instance.user.id)

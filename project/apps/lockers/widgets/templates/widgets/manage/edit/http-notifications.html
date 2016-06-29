@@ -1,5 +1,11 @@
 {% extends 'lockers/bases/manage/manage.html' %}
-{% block title %}Widget Locker{% endblock %}
+{% block title %}HTTP Notifications{% endblock %}
+
+{% block breadcrumbs_active %}
+Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url 'widgets-edit-http-notifications' obj.code %}" class="active section">HTTP Notifications</a>
+{% endblock %}
 
 {% block content %}
 <div class="wrapper">

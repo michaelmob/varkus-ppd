@@ -1,9 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.api.views.notifications import notify
+from .views.notifications import notify
 from apps.conversions.models import Conversion
-from apps.lockers.fields import locker_ref_to_object
 
 
 @receiver(post_save, sender=Conversion)

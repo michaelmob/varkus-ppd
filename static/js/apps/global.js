@@ -12,9 +12,9 @@ $(function() {
 		$(this).closest(".message").slideUp(100);
 	});
 
-	$(".ui.sidebar").sidebar(
-		{ scrollLock: true }
-	).sidebar("attach events", ".app.icon");
+	$(".ui.sidebar").sidebar({
+		scrollLock: true 
+	}).sidebar("attach events", ".app.icon");
 
 	$(".ui.notifications").popup({ on: "click", position: "bottom right" });
 });

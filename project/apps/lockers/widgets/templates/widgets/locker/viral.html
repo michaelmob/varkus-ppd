@@ -1,0 +1,40 @@
+{% load static %}
+
+{% if not inline %}
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
+{% endif %}
+
+{% if custom_css_url %}
+	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
+{% else %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
+{% endif %}
+
+{% if not inline %}
+</head>
+<body>
+{% endif %}
+
+<section class="widget">
+	{% if unlocked %}
+		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
+	{% else %}
+		<!-- {{ ip_address }},{{ country_code }} -->
+		<div class="center">
+			<p class="message">{{ message|safe }}</p>
+			<a href="{{ url }}" class="url">{{ url }}</a>
+		</div>
+	{% endif %}
+</section>
+
+<script>var obj=["{% websocket_url %}/lockers/","{{ obj.get_type }}","{{ obj.code }}"];var instant=true;</script>
+<script src="{% static 'js/socket.js' %}"></script>
+<script src="{% static 'js/locker/app.js' %}"></script>
+
+{% if not inline %}
+</body>
+</html>
+{% endif %}

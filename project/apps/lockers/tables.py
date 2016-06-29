@@ -44,7 +44,7 @@ class Table_Locker_Base(tables.Table):
 
 
 class Table_Locker_Conversions(Table_Offer_Base):
-	approved = tables.Column(accessor="approved", verbose_name="")
+	approved = tables.Column(accessor="approved", verbose_name="Status")
 	cut_amount = 1
 
 	class Meta(Table_Base.Meta):

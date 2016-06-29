@@ -17,16 +17,12 @@ class View_Overview_Base(View):
 	def get(self, request):
 		#if self.form: self.form = self.form(request.POST)
 
-		return render(
-			request,
-			self.template,
-			{
-				"locker": self.table.Meta.model.__name__.lower(),
-				"table": self.table(request),
-				"MAX": self.maximum,
-				"form": self.form
-			}
-		)
+		return render(request, self.template, {
+			"locker": self.table.Meta.model.__name__.lower(),
+			"table": self.table(request),
+			"MAX": self.maximum,
+			"form": self.form
+		})
 
 	# Creation
 	def post(self, request):
@@ -88,18 +84,15 @@ class View_Manage_Base(View):
 
 
 	def get_return(self, request, obj):
-		return render(
-			request, self.template,
-			{
-				"locker": self.model.__name__.lower(),
-				"form": self.form(instance=obj),
-				"obj": obj,				
-				"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
-				"clicks": Table_Locker_Clicks(request, obj.earnings.get_tokens()),
-				"conversions": Table_Locker_Conversions(request,
-					obj.earnings.get_conversions().prefetch_related("offer")),
-			}
-		)
+		return render(request, self.template, {
+			"locker": self.model.__name__.lower(),
+			"form": self.form(instance=obj),
+			"obj": obj,				
+			"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),
+			"clicks": Table_Locker_Clicks(request, obj.earnings.get_tokens()),
+			"conversions": Table_Locker_Conversions(request,
+				obj.earnings.get_conversions().prefetch_related("offer")),
+		})
 
 
 	def post(self, request, code=None):
@@ -115,8 +108,8 @@ class View_Manage_Base(View):
 
 	def post_return(self, request, obj):
 		# Save form data
-		self.form(request.POST, instance=obj).save()
-		messages.success(request, "Your changes have been saved.")
+		if self.form(request.POST, instance=obj).save():
+			messages.success(request, "Your changes have been saved.")
 		
 		return self.get_return(request, obj)
 

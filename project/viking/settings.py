@@ -44,7 +44,6 @@ INSTALLED_APPS = (
 	"apps.tickets",
 	"apps.conversions",
 	"apps.billing",
-	"apps.api",
 	"apps.lockers",
 	"apps.lockers.widgets",
 	"apps.lockers.lists",
@@ -61,7 +60,7 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	"django.contrib.auth.middleware.SessionAuthenticationMiddleware",
 	"django.contrib.messages.middleware.MessageMiddleware",
-	"django.middleware.clickjacking.XFrameOptionsMiddleware",
+	#"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"axes.middleware.FailedLoginMiddleware",
 	"viking.middleware.cloudflare.CFMiddleware",
 	"viking.middleware.session_verify.SessionVerifyMiddleware",
@@ -234,6 +233,7 @@ OFFERS_COUNT = 10
 
 # Widgets Locker
 MAX_WIDGETS = 10
+VIRAL_MESSAGE = "Send the link below to {amount} more {name} to continue."
 
 # Files Locker
 MAX_FILES = 10

@@ -43,6 +43,7 @@ urlpatterns = [
 	url(r"^widgets/manage/(?P<code>\w+)/edit/locker/$", login_required(edit_widgets.View_Set_Locker.as_view()), name="widgets-edit-locker"),
 	url(r"^widgets/manage/(?P<code>\w+)/edit/http-notifications/$", login_required(edit_widgets.View_Set_HTTP_Notifications.as_view()), name="widgets-edit-http-notifications"),
 	url(r"^widgets/manage/(?P<code>\w+)/edit/css/$", login_required(edit_widgets.View_Set_CSS.as_view()), name="widgets-edit-css"),
+	url(r"^widgets/manage/(?P<code>\w+)/edit/viral/$", login_required(edit_widgets.View_Set_Viral.as_view()), name="widgets-edit-viral"),
 	url(r"^widgets/manage/(?P<code>\w+)/chart/line.json$", login_required(widgets.View_Line_Chart.as_view()), name="widgets-manage-line-chart"),
 	url(r"^widgets/manage/(?P<code>\w+)/delete/$", login_required(widgets.View_Delete.as_view()), name="widgets-manage-delete"),
 

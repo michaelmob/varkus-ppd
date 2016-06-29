@@ -23,9 +23,6 @@ urlpatterns = [
 	# Conversions
 	url(r"^conversions/", include("apps.conversions.urls")),
 
-	# API
-	url(r"^api/", include("apps.api.urls")),
-
 	# Offers
 	url(r"^offers/", include("apps.offers.urls")),
 

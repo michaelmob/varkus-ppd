@@ -26,7 +26,7 @@
 	<div class="content">
 		<div class="header">Custom CSS</div>
 		{{ obj.custom_css_url|default:"<em>Not Set</em>" }}
-		(<a href="{% url 'widgets-edit-css' obj.code %}">Edit Custom CSS</a>)
+		(<a href="{% url 'widgets-edit-css' obj.code %}">Edit</a>)
 	</div>
 </div>
 <div class="item">
@@ -34,7 +34,15 @@
 	<div class="content">
 		<div class="header">HTTP Notifications</div>
 		{{ obj.http_notification_url|yesno:"<em>Enabled</em>,<em>Disabled</em>"|safe }}
-		(<a href="{% url 'widgets-edit-http-notifications' obj.code %}">Edit Notification URL</a>)
+		(<a href="{% url 'widgets-edit-http-notifications' obj.code %}">Edit</a>)
+	</div>
+</div>
+<div class="item">
+	<i class="leaf icon"></i>
+	<div class="content">
+		<div class="header">Viral Mode</div>
+		{{ obj.viral_mode|yesno:"<em>Enabled</em>,<em>Disabled</em>"|safe }}
+		(<a href="{% url 'widgets-edit-viral' obj.code %}">Edit</a>)
 	</div>
 </div>
 {% endblock %}

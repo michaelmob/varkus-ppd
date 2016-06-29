@@ -16,9 +16,6 @@ class View_Locker_Base(View):
 	template = None
 	model = None
 
-	_request = None
-	_obj = None
-
 	def obj(self, code):
 		# Redirect to overview if no code provided
 		if not code:
@@ -41,7 +38,7 @@ class View_Locker_Base(View):
 				return HttpResponseForbidden("View \"robots.txt\"")
 
 		# Set class variables
-		self._request = request
+		self.request = request
 		self._obj = self.obj(code)
 
 		# Redirect if not existant
@@ -53,23 +50,23 @@ class View_Locker_Base(View):
 			request.session.create()
 
 		# Set unlock if token is set to conversion
-		unlocked = False
+		self.unlocked = False
 		token = Token.get(request, self._obj)
 		if token:
-			unlocked = token.access()
+			self.unlocked = token.access()
 
-		return render(
-			request,
-			self.template,
-			{
-				"ip_address": request.META.get("REMOTE_ADDR"),
-				"country_code": country_code(request.META.get("REMOTE_ADDR")),
-				"theme": self._obj.theme or "DEFAULT",
-				"obj": self._obj,
-				"unlocked": unlocked,
-				"offers": Offer.get_cache(request, self._obj)
-			}
-		)
+		return self.get_return()
+
+	def get_return(self):
+		ip_address = self.request.META.get("REMOTE_ADDR")
+		return render(self.request, self.template, {
+			"ip_address": ip_address,
+			"country_code": country_code(ip_address),
+			"theme": self._obj.theme or "DEFAULT",
+			"obj": self._obj,
+			"unlocked": self.unlocked,
+			"offers": Offer.get_cache(self.request, self._obj)
+		})
 
 
 class View_Redirect_Base(View_Locker_Base):
@@ -81,13 +78,18 @@ class View_Redirect_Base(View_Locker_Base):
 		if not self._obj:
 			return redirect("locker-404")
 
+		self.request = request
+		self.id = id
+		return self.get_return()
+
+	def get_return(self):
 		try:
 			# Retrieve offer if ID is an integer
-			int(id)
-			offer = Offer.objects.get(pk=id)
+			int(self.id)
+			offer = Offer.objects.get(pk=self.id)
 
 			# Get or create a unique token
-			token, created = Token.get_or_create(request, self._obj)
+			token, created = Token.get_or_create(self.request, self._obj)
 
 			token.offers.add(offer)
 			token.save()
@@ -95,7 +97,7 @@ class View_Redirect_Base(View_Locker_Base):
 		except (KeyError, Offer.DoesNotExist):
 			# Offer doesn't exist, or they were directly linked the offer
 			return redirect(
-				request.META.get("HTTP_REFERER", self._obj.get_locker_url()))
+				self.request.META.get("HTTP_REFERER", self._obj.get_locker_url()))
 
 		except Token.DoesNotExist:
 			# Offer doesn't exist
@@ -133,14 +135,14 @@ class View_Unlock_Base(View_Locker_Base):
 	def access(self):
 		# Get token using request and the locker object
 		try:
-			self.token = Token.get(self._request, self._obj)
+			self.token = Token.get(self.request, self._obj)
 			return self.token.access()
 		except:
 			return False
 
 	def get(self, request, code=None):
 		# Set class variables
-		self._request = request
+		self.request = request
 		self._obj = self.obj(code)
 
 		# Redirect if not existant
@@ -154,15 +156,11 @@ class View_Unlock_Base(View_Locker_Base):
 		return self.get_return()
 
 	def get_return(self):
-		return render(
-			self._request,
-			self.template,
-			{
-				"theme": self._obj.theme or "DEFAULT",
-				"obj": self._obj,
-				"data": self.data()
-			}
-		)
+		return render(self.request, self.template, {
+			"theme": self._obj.theme or "DEFAULT",
+			"obj": self._obj,
+			"data": self.data()
+		})
 
 	def data(self):
 		return self.token.data

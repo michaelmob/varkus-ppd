@@ -6,8 +6,6 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 
 from .models import Conversion, Token
-from utils.dicts import keep_wanted
-from apps.lockers.fields import locker_ref_to_object
 
 
 @receiver(post_save, sender=Token)
@@ -19,17 +17,11 @@ def unlock_signal(sender, instance, created, **kwargs):
 	if not (instance.locker and instance.session and instance.access()):
 		return
 
-	# Sometimes instance.locker is the reference, and sometimes it's the object
-	if isinstance(instance.locker, str):
-		instance.locker = locker_ref_to_object(instance.locker)
-		
-		if not instance.locker:
-			return
-
 	# Send response to Locker
 	response = {
 		"success": True,
 		"message": "Unlocked " + instance.locker.get_type().title(),
+		"type": "UNLOCK",
 		"data": {
 			"locker": instance.locker.get_type(),
 			"code": instance.locker.code,

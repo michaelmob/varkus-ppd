@@ -33,6 +33,9 @@ class Table_Conversions(Table_Offer_Base):
 		return timesince(value) + " ago"
 
 	def render_user_payout(self, record, value):
+		if not record.offer_id:
+			return
+			
 		return mark_safe("%s %s" % (
 			super(__class__, self).render_user_payout(value),
 			"<a href=\"%s\"><i class=\"tag icon\"></i></a>" % (

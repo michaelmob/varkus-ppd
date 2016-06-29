@@ -14,10 +14,20 @@ class Form_Create(ModelForm):
 		return Widget.create(
 			user 		= user,
 			name 		= self.cleaned_data["name"],
-			description = self.cleaned_data["description"])
+			description = self.cleaned_data["description"]
+		)
 
 
 class Form_Edit(ModelForm):
 	class Meta:
 		model = Widget
 		fields = ["name", "description"]
+
+
+class Form_Viral(ModelForm):
+	class Meta:
+		model = Widget
+		fields = [
+			"viral_mode", "viral_visitor_count", "viral_visitor_name",
+			"viral_message"
+		]
