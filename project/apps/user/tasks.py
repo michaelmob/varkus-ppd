@@ -7,7 +7,6 @@ from django.core.cache import cache
 @shared_task
 def reset_today():
 	# Clear
-	cache.clear()
 	Token.clear()
 
 	# Resets

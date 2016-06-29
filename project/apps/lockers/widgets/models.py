@@ -64,11 +64,15 @@ class Widget(Locker_Base):
 			owner = Widget_Visitor.objects.filter(pk=pk).defer("widget").first()
 
 			# Check if owner of widgets Widget_Visitor object exists and after
-			# then check that the Widget_Visitor object is not already in the
+			# then check that the user isn't clicking on their own link, if that
+			# passes then make sure the Widget_Visitor object is not already in the
 			# owners visitors list
-			if owner and not owner.visitors.filter(
-				session=request.session.session_key
-			).exists():
+			if (
+				owner and (request.META.get("REMOTE_ADDR") != owner.ip_address)
+				and not owner.visitors.filter(
+					session=request.session.session_key
+				).exists()
+			):
 				# Add to 
 				owner.visitors.add(visitor)
 				owner.visitor_count = F("visitor_count") + 1

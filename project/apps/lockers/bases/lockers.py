@@ -10,7 +10,7 @@ from apps.conversions.models import Token, Deposit
 from utils.geoip import country_code
 
 CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
-	"baiduspider", "speedy spider", "dotbot", "google favicon")
+	"baiduspider", "speedy spider", "dotbot", "google favicon", "twitterbot", "telegrambot", "discord")
 
 class View_Locker_Base(View):
 	template = None
@@ -27,15 +27,20 @@ class View_Locker_Base(View):
 		except self.model.DoesNotExist:
 			return None
 
-	def get(self, request, code=None):
+	def deny_crawlers(self, user_agent):
 		# Deny webcrwalers and people with no user-agent
-		UA = request.META.get("HTTP_USER_AGENT", None)
-		if not UA:
+		if not user_agent:
 			return HttpResponseForbidden("You must have a user-agent to continue")
 			
 		for c in CRAWLERS:
-			if c in UA.lower():
+			if c in user_agent.lower():
 				return HttpResponseForbidden("View \"robots.txt\"")
+
+	def get(self, request, code=None):
+		# Block bots/webcrawlers
+		deny = self.deny_crawlers(request.META.get("HTTP_USER_AGENT", None))
+		if deny:
+			return deny
 
 		# Set class variables
 		self.request = request
