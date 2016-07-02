@@ -20,13 +20,16 @@ class View_Locker(View_Locker_Base):
 			)
 
 			try:
+				# Custom URL, if it validates
 				validate = URLValidator()
-				url = urllib.parse.unquote(self.request.GET.get("url")) 
+				url = urllib.parse.unquote(self.request.GET.get("url"))
 				validate(url)
 			except:
+				# URL to Widget
 				url = self.request.build_absolute_uri().split("?")[0]
 
-			url += "?v=" + str(visitor.pk)
+			url = url.split("?")[0]
+			url += ("&" if "?" in url else "?") + "v=" + str(visitor.pk)
 
 			if visitor.visitor_count < self._obj.viral_visitor_count:
 				return render(self.request, "widgets/locker/viral.html", {

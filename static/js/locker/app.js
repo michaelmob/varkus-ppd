@@ -23,6 +23,11 @@ var openSocket = function() {
 if(typeof instant === "boolean" && instant)
 	openSocket();
 
+document.querySelector(".ignore").onclick = function(e) {
+	e.preventDefault();
+	return false;
+};
+
 var items = document.querySelectorAll(".widget .item");
 
 for (var i = 0; i < items.length; i++) {

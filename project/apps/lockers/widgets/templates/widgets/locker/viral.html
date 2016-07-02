@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8" />
 	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
 {% endif %}
 
@@ -25,7 +26,7 @@
 		<!-- {{ ip_address }},{{ country_code }} -->
 		<div class="center">
 			<p class="message">{{ message|safe }}</p>
-			<a href="{{ url }}" class="url">{{ url }}</a>
+			<a href="{{ url }}" class="url ignore">{{ url }}</a>
 		</div>
 	{% endif %}
 </section>
