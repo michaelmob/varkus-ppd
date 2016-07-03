@@ -8,8 +8,8 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
 {% endif %}
 
-{% if custom_css_url %}
-	<link rel="stylesheet" type="text/css" href="{{ custom_css_url }}">
+{% if obj.has_custom_css_url %}
+	<link rel="stylesheet" type="text/css" href="{{ obj.custom_css_url }}">
 {% else %}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
 {% endif %}

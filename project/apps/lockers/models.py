@@ -94,6 +94,9 @@ class Locker_Base(models.Model):
 
 		return code
 
+	def has_custom_css_url(self):
+		return self.get_type() == "widget" and self.custom_css_url
+
 	def __str__(self):
 		return "%s %s: %s" % (self.__class__.__name__, self.pk, self.name)
 
