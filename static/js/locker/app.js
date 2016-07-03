@@ -23,10 +23,13 @@ var openSocket = function() {
 if(typeof instant === "boolean" && instant)
 	openSocket();
 
-document.querySelector(".ignore").onclick = function(e) {
-	e.preventDefault();
-	return false;
-};
+
+var ignoreUrl = document.querySelector(".ignore");
+if(ignoreUrl != null)
+	ignoreUrl.onclick = function(e) {
+		e.preventDefault();
+		return false;
+	};
 
 var items = document.querySelectorAll(".widget .item");
 

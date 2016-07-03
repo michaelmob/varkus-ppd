@@ -2,6 +2,14 @@
 {% load semanticui %}
 {% block title %}Viral Options{% endblock %}
 
+{% block headstyle %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+{% endblock %}
+
+{% block headjs %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+{% endblock %}
+
 {% block breadcrumbs_active %}
 Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.name }}</a>
 <i class="right chevron icon divider"></i>
@@ -74,6 +82,11 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 						is reached, they will be able to complete an offer and unlock the
 						locker.
 					</p>
+	
+					<h3>Embed Code</h3>
+					<pre><code class="html">&lt;iframe id="widget"&gt;&lt;/iframe&gt;
+&lt;script&gt;document.getElementById("widget").src="{{ url }}"+(document.location.href.indexOf("?v=")>1?"?v="+document.location.href.split("?v=")[1].split("&")[0]+"&":"?")+"url="+encodeURIComponent(document.location.href);&lt;/script&gt;</code></pre>
+					<script>hljs.initHighlightingOnLoad();</script>
 
 				</div>
 			</div>

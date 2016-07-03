@@ -115,9 +115,12 @@ class View_Set_Viral(View_Manage_Base):
 	form = Form_Viral
 
 	def get_return(self, request, obj):
+		url = request.build_absolute_uri("/")[:-1] + obj.get_locker_url()
+
 		return render(request, self.template, {
 			"locker": self.model.__name__.lower(),
 			"form": self.form(instance=obj),
-			"obj": obj, 
+			"obj": obj,
+			"url": url,
 			"message": settings.VIRAL_MESSAGE
 		})
