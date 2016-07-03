@@ -105,8 +105,8 @@ html, body {
 }
 
 /* Content */
-.widget .message {
-  padding-bottom: 1rem;
+.widget .message, .widget .url {
+  margin-bottom: 1.5rem;
 }
 
 .widget #amount {
@@ -114,10 +114,34 @@ html, body {
 }
 
 .widget .url {
-  color: #F44336;
-  text-decoration: none;
+	display: block;
+	color: #F44336;
+	text-decoration: none;
 }
 
 .widget .url:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
+
+/* Share Buttons */
+.share .button {
+	color: white;
+	text-shadow: 0 0 0.1rem #777;
+	text-decoration: none;
+	padding: 0.5rem 0;
+	border-radius: 0.25rem;
+}
+
+.share .button span {
+	padding: 0.5rem 1rem;
+	border-radius: 0.25rem;
+}
+
+.share .button span:hover {
+	transition: background-color 0.2s;
+	background-color: rgba(0, 0, 0, .25);
+}
+
+.twitter.button { background-color: #00aced; }
+.facebook.button { background-color: #3b5998; }
+.google.button { background-color: #d34836; }

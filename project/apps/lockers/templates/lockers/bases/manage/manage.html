@@ -107,7 +107,8 @@
 								<div class="ui inverted black segment">
 									<div class="ui stackable middle aligned two column grid">
 
-										{% with url=obj.get_locker_url %}
+										{% absolute obj.get_locker_url as url %}
+										
 										<div class="column">
 											<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
 										</div>
@@ -135,7 +136,6 @@
 												</a>
 											</div>
 										</div>
-										{% endwith %}
 
 									</div>
 								</div>

@@ -120,7 +120,7 @@ class Widget_Visitor(models.Model):
 
 	datetime		= models.DateTimeField(auto_now=True, verbose_name="Date")
 
-
+	# ALTER SEQUENCE widgets_widget_visitor_id_seq RESTART WITH 1000;
 	class Meta:
 		verbose_name = "Visitor"
 

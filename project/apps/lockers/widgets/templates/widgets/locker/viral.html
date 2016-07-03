@@ -19,7 +19,7 @@
 <body>
 {% endif %}
 
-<section class="widget">
+<div class="widget">
 	{% if unlocked %}
 		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
 	{% else %}
@@ -27,9 +27,14 @@
 		<div class="center">
 			<p class="message">{{ message|safe }}</p>
 			<a href="{{ url }}" class="url ignore">{{ url }}</a>
+			<div class="share">
+				<a class="twitter button" href="https://twitter.com/share?text=Visit%20this%20link%20and%20help%20me%20unlock%20it!&url={{ url }}"><span><i class="twitter icon"></i> Tweet</span></a>
+				<a class="facebook button" href="https://www.facebook.com/sharer/sharer.php?u={{ url }}"><span><i class="facebook icon"></i> Share</span></a>
+				<a class="google button" href="https://plus.google.com/share?url={{ url }}"><span><i class="google plus icon"></i> Share</span></a>
+			</div>
 		</div>
 	{% endif %}
-</section>
+</div>
 
 <script>var obj=["{% websocket_url %}/lockers/","{{ obj.get_type }}","{{ obj.code }}"];var instant=true;</script>
 <script src="{% static 'js/socket.js' %}"></script>

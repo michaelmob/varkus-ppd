@@ -32,3 +32,8 @@ def table(context, data, title, icon):
 @register.inclusion_tag("_blueprint/titlebar.html")
 def titlebar(context, title, icon):
 	return locals()
+
+
+@register.simple_tag(takes_context=True)
+def absolute(context, uri):
+	return context["request"].build_absolute_uri("/")[:-1] + uri
