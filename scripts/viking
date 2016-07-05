@@ -35,7 +35,7 @@ case "$1" in
 
 	# Stop Viking's Supervisor services
 	stop)
-		sudo supervisorctl stop viking: ;;
+		sudo supervisorctl stop viking-workers: ;;
 
 	# Restart all Viking's services
 	full-restart)
