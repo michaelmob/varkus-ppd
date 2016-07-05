@@ -55,11 +55,9 @@
 		<div class="nine wide column">
 			<div class="ui one column stackable grid">
 				{# Conversions #}
-				{% if conversions.data.data|length > 0 %}
-					<div class="column">
-						{% table conversions 'Most Recent Conversions' 'lightning' %}
-					</div>
-				{% endif %}
+				<div class="column">
+					{% table conversions 'Most Recent Conversions' 'lightning' %}
+				</div>
 
 				{# Newest Offers #}
 				<div class="column">

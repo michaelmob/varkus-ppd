@@ -1,0 +1,1 @@
+&lt;iframe id="widget" src="{{ url }}" height="500" width="800" frameborder="0"&gt;&lt;/iframe&gt;

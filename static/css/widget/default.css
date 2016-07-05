@@ -7,7 +7,8 @@ html, body {
 .widget .header {
 	font-size: 1.1rem;
 	text-align: center;
-	margin-bottom: 0.5rem;
+	margin-bottom: 1rem;
+	text-shadow: 0 0 5px #FFF;
 }
 
 .widget .header:after {
@@ -74,6 +75,10 @@ html, body {
 	color: black;
 }
 
+.widget .item {
+	background-color: white;
+}
+
 .widget .item:nth-child(odd) {
 	background-color: #F7F7F7;
 }
@@ -106,11 +111,11 @@ html, body {
 
 /* Content */
 .widget .message, .widget .url {
-  margin-bottom: 1.5rem;
+	margin-bottom: 1.5rem;
 }
 
 .widget #amount {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .widget .url {
@@ -129,6 +134,7 @@ html, body {
 	text-shadow: 0 0 0.1rem #777;
 	text-decoration: none;
 	padding: 0.5rem 0;
+	margin: 0 0.1rem;
 	border-radius: 0.25rem;
 }
 

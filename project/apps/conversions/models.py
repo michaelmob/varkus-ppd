@@ -198,7 +198,7 @@ class Token(models.Model):
 	def clear():
 		"""Clear/delete all tokens"""
 		return Token.objects.filter(
-			datetime__gt=datetime.now() - timedelta(days=2)
+			datetime__gt=datetime.now() - timedelta(days=31)
 		).delete()
 
 

@@ -84,7 +84,7 @@ class Table_Offer_All(Table_Offer_Base):
 
 
 class Table_Offer_Conversions(Table_Offer_Base):
-	approved = tables.Column(accessor="approved", verbose_name="")
+	approved = tables.Column(accessor="approved", verbose_name="Status")
 
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion

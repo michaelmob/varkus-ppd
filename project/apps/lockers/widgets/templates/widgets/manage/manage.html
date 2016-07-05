@@ -1,9 +1,53 @@
 {% extends 'lockers/bases/manage/manage.html' %}
 {% load semanticui %}
+{% load blueprints %}
+
+{% block headstyle %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/themes/prism.min.css">
+{% endblock %}
+
+{% block headjs %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/prism/1.5.1/prism.min.js"></script>
+{% endblock %}
 
 {% block modal_edit_content %}
 	{% render_field form.name %}
 	{% render_field form.description %}
+{% endblock %}
+
+{% block modal_extra %}
+<div class="ui modal embed">
+	<i class="close icon"></i>
+	<div class="header">
+		Embed Widget
+	</div>
+	<div class="content">
+		<p>
+			Embedding a Widget into another webpage is a simple thing to do. With
+			some very basic HTML, CSS, and Javascript skills, one could easily
+			make the Widget look completely native to a webpage.
+		</p>
+
+		<h3>Widget</h3>
+		<p>
+			Widgets are very easy to embed and can be embedded with only one line. 
+		</p>
+		{% absolute obj.get_locker_url as url %}
+		<pre><code class="language-html">{% include 'widgets/examples/embed.txt' %}</code></pre>
+
+		<h3>Viral Mode</h3>
+		<p>
+			Viral Mode is a tad different on the way it is embedded. Because of the
+			way Viarl Mode works, the iframe's source must be set with javascript.
+			This is because the "v" parameter (Visitor ID) must be in the URL and the
+			only way to add it is through Javascript. 
+		</p>
+		<pre><code class="language-html">{% include 'widgets/examples/embed-viral.txt' %}</code></pre>
+
+		<h3>Examples</h3>
+		<a href="https://jsfiddle.net/Varkus/bkxqmayr/" target="_blank">Widget Overlay</a>
+	</div>
+</div>
 {% endblock %}
 
 {% block details %}
@@ -44,5 +88,11 @@
 		{{ obj.viral_mode|yesno:"<em>Enabled</em>,<em>Disabled</em>"|safe }}
 		(<a href="{% url 'widgets-edit-viral' obj.code %}">Edit</a>)
 	</div>
+</div>
+{% endblock %}
+
+{% block bottomattached %}
+<div class="ui bottom attached embed button">
+	Embed Widget
 </div>
 {% endblock %}

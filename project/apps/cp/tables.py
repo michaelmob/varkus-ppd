@@ -14,8 +14,8 @@ class Table_Offer(Table_Offer_Base):
 	name = tables.Column(accessor="name")
 
 	class Meta(Table_Offer_Base.Meta):
-		orderable = False
 		model = Offer
+		orderable = False
 		attrs = {"class": "ui table"}
 		fields = ("name", "flag", "earnings_per_click", "payout")
 
@@ -26,8 +26,9 @@ class Table_Conversions(Table_Offer_Base):
 	class Meta(Table_Base.Meta):
 		model = Conversion
 		orderable = False
+		attrs = {"class": "ui table"}
 		fields = ("locker", "user_ip_address", "user_payout", "datetime")
-		empty_text = "You haven't received any conversions, yet."
+		empty_text = "Your most recent conversions will appear here."
 
 	def render_datetime(self, value):
 		return timesince(value) + " ago"
