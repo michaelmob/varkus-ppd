@@ -43,7 +43,7 @@ case "$1" in
 
 	# Restart Viking's workers
 	restart)
-		sudo supervisorctl restart viking-workers:worker ;;
+		sudo supervisorctl restart viking-workers: ;;
 
 	# Bash shell inside virtualenv
 	bash)
