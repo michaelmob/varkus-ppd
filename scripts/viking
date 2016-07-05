@@ -35,7 +35,7 @@ case "$1" in
 
 	# Stop Viking's Supervisor services
 	stop)
-		sudo supervisorctl stop viking-workers: ;;
+		sudo supervisorctl stop viking: ;;
 
 	# Restart all Viking's services
 	full-restart)
@@ -43,7 +43,7 @@ case "$1" in
 
 	# Restart Viking's workers
 	restart)
-		sudo supervisorctl restart viking:worker ;;
+		sudo supervisorctl restart viking-workers:worker ;;
 
 	# Bash shell inside virtualenv
 	bash)
