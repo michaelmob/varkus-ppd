@@ -29,39 +29,55 @@ function manage() {
 }
 
 case "$1" in
+	# Start Viking's Supervisor services
 	start)
 		sudo supervisorctl start viking: ;;
-	
+
+	# Stop Viking's Supervisor services
 	stop)
 		sudo supervisorctl stop viking: ;;
-	
-	restart)
+
+	# Restart all Viking's services
+	full-restart)
 		sudo supervisorctl restart viking: ;;
 
+	# Restart Viking's workers
+	restart)
+		sudo supervisorctl restart viking:worker ;;
+
+	# Bash shell inside virtualenv
 	bash)
 		bash ;;
 
+	# Django's manage.py
 	manage)
 		manage ${@:2} ;;
 
+	# Create migration directories in each app folder
 	createmigrationdirectories)
 		find apps/ -name "models.py" | xargs -L1 dirname | xargs -I % mkdir %/migrations/\;touch %/migrations/__init__.py ;;
 
+	# Run Migrations
 	migrate)
 		manage makemigrations && manage migrate ;;
 
+	# Run daphne
 	daphne)
 		daphne viking.asgi:channel_layer ;;
 
+	# Run django workers
 	runworker)
 		manage runworker ;;
 
+	# Run celery camera
 	celerycam)
 		manage celerycam --frequency=30.0 ;;
 
+	# Run celery workers
 	celeryworker)
 		celery worker --app=viking --beat --events --pidfile=celeryw.pid ;;
 
+	# Run debugger with Celerycam
 	debug)
 		export DEBUG=true
 
@@ -75,9 +91,11 @@ case "$1" in
 		manage runserver
 		stop ;;
 
+	# Pip within virtualenv
 	pip)
 		pip ${@:2} ;;
 
+	# Update GeoIP database
 	geoip)
 		echo "Updating GeoLite2 City Database"
 		rm GeoLite2-City.mmdb
@@ -85,12 +103,14 @@ case "$1" in
 		gunzip -f GeoLite2-City.mmdb.gz
 		;;
 
+	# Compile LESS
 	less)
 		echo "Compiling less stylesheet"
 		lessc ../static/css/_less/semantic.less \
 			--clean-css="--s1 --advanced --compatibility=ie8" > ../static/css/base.css
 		;;
 
+	# Clean *.pyc files and migration files if "migrations" parameter
 	clean)
 		find ../ -name "*.pyc" -type f -delete
 
@@ -103,6 +123,7 @@ case "$1" in
 		fi
 		;;
 
+	# Backup database to 'backups/' dir in root project folder
 	backup)
 		export PGPASSWORD=$DB_PASS
 		mkdir -p ../backups
@@ -110,10 +131,12 @@ case "$1" in
 			../backups/BACKUP_$(date +"%Y-%m-%d_%H-%M-%S")
 		;;
 
+	# Restore database from earlier backup
 	restore)
 		psql $PGDATABASE < $2
 		;;
 
+	# Edit settings with your favorite editor
 	edit)
 		case "$2" in
 			common) sensible-editor viking/private/settings_common.py ;;
@@ -128,7 +151,8 @@ case "$1" in
 		echo -e "Usage: viking arg\nList of args:"
 		echo -e "  start: Start Viking (Supervisor)"
 		echo -e "  stop: Stop Viking (Supervisor)"
-		echo -e "  restart: Restart Viking (Supervisor)"
+		echo -e "  full-restart: Restart all Viking services (Supervisor)"
+		echo -e "  restart: Restart Viking workers (Supervisor)"
 		echo -e "  manage {args}: Run manage.py"
 		echo -e "  createmigrationdirectories: Create migration directories in each app folder"
 		echo -e "  migrate: Run django migrations"
