@@ -7,11 +7,9 @@
 {% block content %}
 <div class="ui middle aligned center aligned grid">
 	<div class="column" style="max-width:450px">
-		<h2 class="ui image header">
-			<div class="content">
-				Varkus
-			</div>
-		</h2>
+		<h3 class="ui image header">
+			<img class="ui tiny image" src="/static/img/logo/icon.svg" />
+		</h3>
 
 		{% if form.errors %}
 			<div class="ui message red">
@@ -25,8 +23,8 @@
 		<form class="ui large form" method="POST" action="{% url 'login' %}">
 			{% csrf_token %}
 			<div class="ui segment">
-				{% render_field_icon form.username 'user' placeholder='Username' _noLabel=True %}
-				{% render_field_icon form.password 'lock' placeholder='Password' _noLabel=True %}
+				{% render_field form.username _icon='user' placeholder='Username' _no_label=True %}
+				{% render_field form.password _icon='lock' placeholder='Password' _no_label=True %}
 				<div class="ui fluid large primary submit button">Login</div>
 			</div>
 		</form>

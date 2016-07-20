@@ -1,10 +1,18 @@
 from datetime import date, timedelta
 from django import forms
 
+CALENDAR_ATTRS = {
+	"attrs":{
+		"placeholder": "Select Date",
+		"_icon": "calendar",
+	}
+}
 
 class Form_Conversions_Range(forms.Form):
-	f = forms.DateField(label="From Date", required=False)
-	t = forms.DateField(label="To Date", required=False)
+	f = forms.DateField(label="From Date",
+		widget=forms.DateInput(**CALENDAR_ATTRS),required=False)
+	t = forms.DateField(label="To Date",
+		widget=forms.DateInput(**CALENDAR_ATTRS), required=False)
 
 	def __init__(self, request, **kwargs):
 		self.r = request.GET.get("r", None)

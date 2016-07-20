@@ -2,11 +2,7 @@
 {% load semanticui %}
 
 {% block modal_edit_content %}
-	{% render_field form.name %}
-	{% render_field form.description %}
-	{% render_field form.item_name %}
-	{% render_field_dropdown form.order %}
-	{% render_field_checkbox form.reuse 'toggle' %}
+	{% render_form form %}
 {% endblock %}
 
 {% block details %}

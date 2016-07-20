@@ -25,13 +25,13 @@
 		<form class="ui large form" method="POST" action="{% url 'signup' %}">
 			{% csrf_token %}
 			<div class="ui segment">
-				{% render_field_icon form.name 'write' 'right' %}
-				{% render_field_icon form.email 'at' 'right' %}
-				{% render_field_icon form.username 'user' 'right' %}
-				{% render_field_icon form.password1 'lock' 'right' %}
-				{% render_field_icon form.password2 'repeat' 'right' %}
+				{% render_field form.name _icon='write' %}
+				{% render_field form.email _icon='at' %}
+				{% render_field form.username _icon='user' %}
+				{% render_field form.password1 _icon='lock' %}
+				{% render_field form.password2 _icon='repeat' %}
 				{% render_field form.birthday %}
-				{% render_field_checkbox form.agree 'toggle' _noRequired=True %}
+				{% render_field form.agree _style='toggle' _no_required=True %}
 
 				<div class="ui fluid large primary submit button">Continue</div>
 			</div>

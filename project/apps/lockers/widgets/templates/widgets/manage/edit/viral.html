@@ -30,7 +30,7 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 				<div class="ui bottom attached segment">
 					{% csrf_token %}
 					
-					{% render_field_checkbox form.viral_mode 'toggle' %}
+					{% render_field form.viral_mode %}
 					{% render_field form.viral_visitor_count %}
 					{% render_field form.viral_visitor_name placeholder='person,people' %}
 					{% render_field form.viral_message placeholder=message %}

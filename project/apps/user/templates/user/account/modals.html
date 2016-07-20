@@ -19,7 +19,7 @@
 			{% render_field form_personal.address %}
 			{% render_field form_personal.city %}
 			{% render_field form_personal.state %}
-			{% render_field_country form_personal.country user.profile.country %}
+			{% render_field form_personal.country value=user.profile.country placeholder='Select Country' _style='search' _override='CountryField' %}
 			{% render_field form_personal.postal_code %}
 		</div>
 

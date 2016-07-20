@@ -45,8 +45,8 @@
 					</a>
 					<div class="range-custom content">
 						<form class="ui form" method="GET">
-							{% render_field_date form.f _noRequired=True placeholder="Select Date" %}
-							{% render_field_date form.t _noRequired=True placeholder="Select Date" %}
+							{% render_field form.f _noRequired=True placeholder="Select Date" %}
+							{% render_field form.t _noRequired=True placeholder="Select Date" %}
 							<input class="ui fluid button" type="submit" value="Apply" />
 						</form>
 					</div>

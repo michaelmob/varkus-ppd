@@ -53,8 +53,7 @@
 					</a>
 					<div class="statistics-range-custom content">
 						<form class="ui form" method="GET">
-							{% render_field_date form.f _noRequired=True placeholder="Select Date" %}
-							{% render_field_date form.t _noRequired=True placeholder="Select Date" %}
+							{% render_form form %}
 							<input class="ui fluid button" type="submit" value="Apply" />
 						</form>
 					</div>
@@ -69,8 +68,11 @@
 <script src="{% static 'js/comp/calendar.min.js' %}"></script>
 <script src="{% static 'js/comp/tablesort.min.js' %}"></script>
 <script>
-	$("#f").calendar({ type: "date", endCalendar: $("#t") });
-	$("#t").calendar({ type: "date", startCalendar: $("#f") });
+	var fromDate = $("#id_f").parent().parent();
+	var toDate = $("#id_t").parent().parent();
+
+	fromDate.calendar({ type: "date", endCalendar: toDate });
+	toDate.calendar({ type: "date", startCalendar: fromDate });
 
 	$(".ui.accordion").accordion();
 	$(".statistics-{{ page|default:'month' }}").addClass("active");

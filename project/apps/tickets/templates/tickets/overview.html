@@ -26,8 +26,8 @@
 			{% csrf_token %}
 
 			<div class="two fields">
-				{% render_field_dropdown form.category %}
-				{% render_field_dropdown form.priority %}
+				{% render_field form.category %}
+				{% render_field form.priority %}
 			</div>
 
 			{% render_field form.subject %}
