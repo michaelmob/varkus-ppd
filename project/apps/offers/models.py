@@ -42,15 +42,11 @@ class Offer(models.Model):
 		except:
 			return "#"
 
-	def get_absolute_url(self, obj):
-		return self.get_manage_url()
-
-	def get_by_offer_id(offer_id):
-		""" Get offer by its id from the ad company """
+	def get_redirect_url(self, obj):
 		try:
-			return Offer.objects.get(offer_id=offer_id)
-		except Offer.DoesNotExist:
-			return None
+			return reverse(obj.get_type() + "s-redirect", args=(obj.code, self.pk))
+		except:
+			return "#"
 
 	def pick_flag(country):
 		""" Picks the flag for the offer, if it above 10 then

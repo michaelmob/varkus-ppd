@@ -10,7 +10,7 @@ from ..models import Widget, Widget_Visitor as Visitor
 
 class View_Locker(View_Locker_Base):
 	model = Widget
-	template = "widgets/locker/widget.html"
+	template = "widgets/locker/external/widget.html"
 
 	def get_return(self):
 		# Viral Mode
@@ -32,7 +32,7 @@ class View_Locker(View_Locker_Base):
 			url += ("&" if "?" in url else "?") + "v=" + str(visitor.pk)
 
 			if visitor.visitor_count < self._obj.viral_visitor_count:
-				return render(self.request, "widgets/locker/viral.html", {
+				return render(self.request, "widgets/locker/external/viral.html", {
 					"obj": self._obj,
 					"unlocked": self.unlocked,
 					"visitor": visitor,
@@ -40,6 +40,7 @@ class View_Locker(View_Locker_Base):
 					"url": url
 				})
 
+		# Normal Mode
 		return super(__class__, self).get_return()
 
 

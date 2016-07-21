@@ -1,55 +1,36 @@
 {% load offers %}
 {% load static %}
 
-{% if not inline %}
-<!DOCTYPE html>
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-{% endif %}
+{% block content %}
+<menu type="context" id="menu">
+	<menuitem label="Report This Locker" onclick="window.location='{% url 'report' %}?content='+window.location;"></menuitem>
+</menu>
 
-{% if obj.has_custom_css_url %}
-	<link rel="stylesheet" type="text/css" href="{{ obj.custom_css_url }}">
-{% else %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
-{% endif %}
-
-{% if not inline %}
-</head>
-<body>
-{% endif %}
-
-<div class="widget">
-	<h3 class="header"></h3>
-
-	<div class="progress indicator"></div>
+<!-- {{ ip_address }},{{ country_code }} -->
+{% spaceless %}
+<div class="widget" contextmenu="menu">
+	<div class="header"></div>
+	<div class="indicator"></div>
 
 	{% if unlocked %}
-		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
+		<a href="{{ obj.get_unlock_url }}" class="url message continue">Click to Continue</a>
 	{% else %}
-		<!-- {{ ip_address }},{{ country_code }} -->
-		<div class="items">
-			{% with redirect_url=obj.get_type|add:'s-redirect' %}
-				{% for offer in offers %}
-				<a class="item" href="{% url redirect_url obj.code offer.pk %}" target="_blank" data-content="{{ offer.requirements }}">
-					{{ offer.category|category_icon|safe }}
-					<div class="anchor">{{ offer.anchor }}</div>
-					{% if offer.priority %}<i class="gold star right icon"></i>{% endif %}
-				</a>
-				{% empty %}
-					<div class="center">There are no offers that you can currently participate in.</div>
-				{% endfor %}
-			{% endwith %}
-		</div>
+		{% for offer in offers %}
+		<a href="{{ offer|redirect_url:obj }}" target="_blank" class="item" data-text="{{ offer.requirements }}">
+			{{ offer.category|render_cat_icon }}
+			<div class="anchor">{{ offer.anchor }}</div>
+			{% if offer.priority %}
+				{{ "item"|render_icon }}
+			{% endif %}
+		</a>
+		{% empty %}
+			<div class="center">There are no offers that you can currently participate in.</div>
+		{% endfor %}
 	{% endif %}
 </div>
+{% endspaceless %}
 
 <script>var obj=["{% websocket_url %}/lockers/","{{ obj.get_type }}","{{ obj.code }}"];</script>
 <script src="{% static 'js/socket.js' %}"></script>
 <script src="{% static 'js/locker/app.js' %}"></script>
-
-{% if not inline %}
-</body>
-</html>
-{% endif %}
+{% endblock %}

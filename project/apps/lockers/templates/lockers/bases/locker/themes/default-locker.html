@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block type %}{% endblock %}
+{% block pagetype %}{% endblock %}
+
+{% block headstyle %}
+	<link rel="stylesheet" href="{% static 'css/comp/tooltip.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/widget/base.css' %}" />
+{% endblock %}
 
 {% block content %}
 <div class="ui modal">
 	<i class="close icon"></i>
 	<div class="content">
-		{% include 'widgets/locker/widget.html' with inline=True %}
+		{% include 'widgets/locker/widget.html' %}
 	</div>
 </div>
 
@@ -29,7 +34,7 @@
 		<h2><i class="legal icon"></i> Report</h2>
 		<div class="ui segment">
 			<p>
-				Should this {% block locker %}{{ locker }}{% endblock %} violate {% site_name %}'s
+				Should this content violate {% site_name %}'s
 				<a href="{% url 'terms' %}">Terms and Conditions</a>, please do
 				not hesitate to report it and help keep {% site_name %}'s community
 				clean.

@@ -6,8 +6,8 @@ $(".ui.modal.delete")
 	.modal({onApprove: function() { return false; }})
 	.modal("attach events", ".delete.button", "show");
 
-$(".ui.modal.embed")
-	.modal("attach events", ".embed.button", "show");
+$(".ui.modal.embedder")
+	.modal("attach events", ".embedder.button", "show");
 
 $("form").form({
 	inline : true,

@@ -2,6 +2,7 @@
 {% load static %}
 {% load currency %}
 {% load blueprints %}
+{% load share %}
 
 {% block title %}{{ locker|title }}s{% endblock %}
 
@@ -123,20 +124,20 @@
 											</div>
 
 											<div class="ui four buttons">
-												<a href="https://twitter.com/share?text=Check%20out%20my%20{{ locker }}!&url={{ url }}" target="popup" class="ui fluid twitter icon button">
+												<a href="{% twitter url 'Check out my '|add:locker|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
 													<i class="twitter icon"></i>
 												</a>
 
-												<a href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="popup" class="ui fluid facebook icon button">
+												<a href="{% facebook url %}" target="_blank" class="ui fluid facebook icon button">
 													<i class="facebook icon"></i>
 												</a>
 
-												<a href="https://plus.google.com/share?url={{ url }}" target="popup" class="ui fluid google plus icon button">
+												<a href="{% googleplus url %}" target="_blank" class="ui fluid google plus icon button">
 													<i class="google plus icon"></i>
 												</a>
 
-												<a href="https://vk.com/share.php?url={{ url }}" target="popup" class="ui fluid vk icon button">
-													<i class="vk icon"></i>
+												<a href="{% email 'My new '|add:locker 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
+													<i class="at icon"></i>
 												</a>
 											</div>
 										</div>

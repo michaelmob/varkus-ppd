@@ -1,9 +1,9 @@
 {% extends 'base-panel.html' %}
 
 {% load static %}
-{% load cache %}
 {% load country %}
 {% load blueprints %}
+{% load share %}
 
 {% block title %}Account Settings{% endblock %}
 
@@ -205,19 +205,19 @@
 											<i class="copy icon"></i> Copy
 										</button>
 										<input id="referral" type="text" value="{{ url }}" readonly />
-										{# site_name as site_name #}
-										{% with txt='Register on '|add:'Varkus'|add:' with my Referral Link!' %}
-											<a href="https://twitter.com/intent/tweet?text={{ txt }}&url={{ url }}" target="popup" class="ui twitter icon button">
+										{% site_name as name %}
+										{% with txt='Register on '|add:name|add:' with my referral link!' %}
+											<a href="{% twitter url txt %}" target="_target" class="ui twitter icon button">
 												<i class="twitter icon"></i>
 											</a>
-											<a href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="popup" class="ui facebook icon button">
+											<a href="{% facebook url %}" target="_target" class="ui facebook icon button">
 												<i class="facebook icon"></i>
 											</a>
-											<a href="https://plus.google.com/share?url={{ url }}" target="popup" class="ui google plus icon button">
+											<a href="{% googleplus url %}" target="_target" class="ui google plus icon button">
 												<i class="google plus icon"></i>
 											</a>
-											<a href="http://vk.com/share.php?url={{ url }}" target="popup" class="ui vk icon button">
-												<i class="vk icon"></i>
+											<a href="{% email 'Let\'s make money together with '|add:name txt|add:' '|add:url %}" target="_target" class="ui grey icon button">
+												<i class="at icon"></i>
 											</a>
 										{% endwith %}
 									</div>

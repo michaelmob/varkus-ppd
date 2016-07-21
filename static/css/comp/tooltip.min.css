@@ -1,0 +1,10 @@
+/*!
+ * # Semantic UI 2.2.2 - Popup
+ * http://github.com/semantic-org/semantic-ui/
+ *
+ *
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
+[data-text]:after,[data-text]:before{position:absolute;font-size:1rem;background:#1B1C1D;pointer-events:none;visibility:hidden}[data-text]{position:relative}[data-text]:not([data-position]):before{top:auto;right:auto;bottom:100%;left:50%;margin-left:-.07rem;margin-bottom:.15rem}[data-text]:not([data-position]):after{left:50%;-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%);transform:translateX(-50%);bottom:100%;margin-bottom:.5em}[data-text]:before{content:'';width:.7em;height:.7em;z-index:2;opacity:0;-webkit-transform:rotate(45deg) scale(0)!important;-ms-transform:rotate(45deg) scale(0)!important;transform:rotate(45deg) scale(0)!important;-webkit-transform-origin:center top;-ms-transform-origin:center top;transform-origin:center top;-webkit-transition:all .1s ease;transition:all .1s ease}[data-text]:hover:after,[data-text]:hover:before{visibility:visible;pointer-events:auto}[data-text]:hover:before{-webkit-transform:rotate(45deg) scale(1)!important;-ms-transform:rotate(45deg) scale(1)!important;transform:rotate(45deg) scale(1)!important;opacity:1}[data-text]:after{content:attr(data-text);text-transform:none;white-space:normal;text-align:center;overflow:hidden;word-wrap:break-word;border:1px solid #D4D4D5;line-height:1.4em;max-width:95%;padding:.5em 1em;font-weight:400;font-style:normal;border-radius:.25rem;z-index:1;opacity:1;-webkit-transform-origin:center bottom;-ms-transform-origin:center bottom;transform-origin:center bottom;-webkit-transition:all .1s ease;transition:all .1s ease;-webkit-transform:translateX(-50%) scale(0)!important;-ms-transform:translateX(-50%) scale(0)!important;transform:translateX(-50%) scale(0)!important}[data-text]:hover:after{-webkit-transform:translateX(-50%) scale(1)!important;-ms-transform:translateX(-50%) scale(1)!important;transform:translateX(-50%) scale(1)!important}

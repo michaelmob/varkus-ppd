@@ -20,37 +20,13 @@ var openSocket = function() {
 	};
 };
 
-if(typeof instant === "boolean" && instant)
+if(typeof immediateOpen === "boolean" && immediateOpen)
 	openSocket();
 
-
-var ignoreUrl = document.querySelector(".ignore");
-if(ignoreUrl != null)
-	ignoreUrl.onclick = function(e) {
-		e.preventDefault();
-		return false;
-	};
-
 var items = document.querySelectorAll(".widget .item");
-
 for (var i = 0; i < items.length; i++) {
 	items[i].onclick = function() {
-		document.querySelector(".progress.indicator").style.display = "block";
+		document.querySelector(".indicator").style.display = "block";
 		openSocket();
-	};
-
-	items[i].onmouseover = function(e) {
-		if(e.target.className == "item")
-			return;
-
-		var node = document.createElement("p");
-		node.className += "popup";
-		node.textContent = e.target.parentNode.getAttribute("data-content");
-
-		e.target.parentNode.appendChild(node);
-	};
-
-	items[i].onmouseout = function(e) {
-		e.target.parentNode.querySelector(".widget .popup").remove();
 	};
 }

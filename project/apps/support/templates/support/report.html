@@ -4,7 +4,7 @@
 
 {% block title %}Report Abuse{% endblock %}
 
-{% block type %}normal{% endblock %}
+{% block pagetype %}normal{% endblock %}
 
 {% block content %}
 <div class="ui stackable grid">
@@ -16,7 +16,15 @@
 			{% render_field form.name %}
 			{% render_field form.email %}
 			{% render_field form.complaint %}
-			{% render_field form.message %}
+
+			<div class="required field">
+				<label for="id_message">Content Links, Reasons and Evidence</label>
+
+				<textarea cols="40" id="id_message" maxlength="5000" name="message" rows="10">
+{% if content %}Content: {{ content }}
+Include additional information below this line ---
+{% endif %}</textarea>
+			</div>
 
 			<div class="field">
 				<label>Upload Files (4mb max)</label>
@@ -48,7 +56,7 @@
 				Using this form you can submit an abuse report to us. We dislike
 				rule breaking/illegal content just as much as you do. We
 				thoroughly investigate each report to make sure that an innocent
-				user does not get punished. So, please do not submit false abuse
+				user does not get punished. So please do not submit false abuse
 				reports.
 			</p>
 
@@ -72,7 +80,7 @@
 
 					<li>
 						<strong>Provide a valid reason.</strong> We cannot
-						punish a user or remove content if you put in just one
+						punish a user or remove content if you only submit just one
 						or two words.<br/><br/>
 					</li>
 

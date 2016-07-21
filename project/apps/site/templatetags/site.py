@@ -3,11 +3,11 @@ from django.conf import settings
 
 register = template.Library()
 
-@register.simple_tag()
+@register.simple_tag
 def site_name():
 	return settings.SITE_NAME
 
-@register.simple_tag()
+@register.simple_tag
 def site_domain():
 	return settings.SITE_DOMAIN
 

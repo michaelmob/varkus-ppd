@@ -1,0 +1,133 @@
+@import url(//fonts.googleapis.com/css?family=Roboto);
+
+/*
+* Widget Page
+*/
+.widget {
+	font-family: "Roboto", "Arial", sans;
+	text-align: center;
+}
+
+.widget a {
+	outline: none;
+}
+
+/* Header */
+.widget .header:after {
+	display: block;
+	content: "Complete one of the offers below to continue";
+	padding: .5rem;
+	font-size: 1.15rem;
+	font-weight: bold;
+}
+
+/* Indicator */
+.widget .indicator {
+	display: none;
+	background: url(https://i.imgur.com/4EUgkH4.gif) no-repeat;
+	background-position: center;
+	height: 20px;
+	margin: -.2rem 0 .5rem 0;
+}
+
+/* Item Layout */
+.widget .item, .widget .item div {
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+.widget .item {
+	transition: background 50ms, color 50ms;
+	color: #222;
+	background: #F0F0F0;
+	text-decoration: none;
+}
+
+.widget .item:nth-child(odd) {
+	background: #F9F9F9;
+}
+
+.widget .item:hover {
+	color: white;
+	background: #F44336;
+}
+
+.widget .item div {
+	align-items: center;
+	flex: 1;
+}
+
+/* Anchor */
+.widget div.anchor {
+	padding: .75rem;
+}
+
+/* Icon */
+.widget div.icon {
+	-webkit-flex: 0 0 4rem;
+	-ms-flex: 0 0 4rem;
+	flex: 0 0 4rem;
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.widget i.icon {
+	display: block;
+	margin: 0;
+	padding: 1rem;
+	font-size: 1.75rem;
+	line-height: 90%;
+	height: auto;
+	width: 100%;
+}
+
+/*
+* Text Page
+*/
+.widget .message {
+	font-size: 1.2rem;
+}
+
+.widget .message #amount {
+	padding: .1rem .5rem;
+	border: .1rem solid black;
+	border-radius: .25rem;
+	font-weight: bold;
+}
+
+.widget .url {
+	text-decoration: none;
+	color: #F44336;
+}
+
+.widget .url:hover {
+	text-decoration: underline;
+}
+
+.widget .share {
+	padding: .5rem;
+}
+
+.widget .button {
+	display: inline-block;
+	margin: .1rem;
+	text-decoration: none;
+	color: #FFF;
+	border-radius: .25rem;
+}
+
+.widget .button i {
+	transition: background 150ms, color 150ms;
+	display: block;
+	border-radius: .25rem;
+	width: 2rem;
+}
+
+.widget .button i:hover {
+	background: rgba(255, 255, 255, 0.2);
+}
+
+.widget .twitter.button { background: #00ACED; }
+.widget .facebook.button { background: #3B5998; }
+.widget .google.button { background: #DD4B39; }
+.widget .email.button { background: #777; }

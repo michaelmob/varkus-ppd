@@ -1,46 +1,23 @@
 {% load static %}
+{% load share %}
 
-{% if not inline %}
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/icons/icon.min.css' %}" />
-{% endif %}
-
-{% if obj.has_custom_css_url %}
-	<link rel="stylesheet" type="text/css" href="{{ obj.custom_css_url }}">
-{% else %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
-{% endif %}
-
-{% if not inline %}
-</head>
-<body>
-{% endif %}
-
+{% block content %}
 <div class="widget">
 	{% if unlocked %}
 		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
 	{% else %}
-		<!-- {{ ip_address }},{{ country_code }} -->
-		<div class="center">
-			<p class="message">{{ message|safe }}</p>
-			<a href="{{ url }}" class="url ignore">{{ url }}</a>
-			<div class="share">
-				<a class="twitter button" href="https://twitter.com/share?text=Visit%20this%20link%20and%20help%20me%20unlock%20it!&url={{ url }}" target="_blank"><span><i class="twitter icon"></i> Tweet</span></a>
-				<a class="facebook button" href="https://www.facebook.com/sharer/sharer.php?u={{ url }}" target="_blank"><span><i class="facebook icon"></i> Share</span></a>
-				<a class="google button" href="https://plus.google.com/share?url={{ url }}" target="_blank"><span><i class="google plus icon"></i> Share</span></a>
-			</div>
+		<p class="message">{{ message|safe }}</p>
+		<a href="{{ url }}" class="url ignore" onclick="return false;">{{ url }}</a>
+		<div class="share">
+			<a class="twitter button" href="{% twitter url 'Help me unlock this!' %}" target="_blank"><i class="twitter icon"></i></a>
+			<a class="facebook button" href="{% facebook url %}" target="_blank"><i class="facebook icon"></i></a>
+			<a class="google button" href="{% googleplus url %}" target="_blank"><i class="google plus icon"></i></a>
+			<a class="email button" href="{% email 'Need your help to unlock this' 'Help me unlock this, visit this link... '|add:url %}" target="_blank"><i class="at icon"></i></a>
 		</div>
-	{% endif %}
+  {% endif %}
 </div>
 
-<script>var obj=["{% websocket_url %}/lockers/","{{ obj.get_type }}","{{ obj.code }}"];var instant=true;</script>
+<script>var obj=["{% websocket_url %}/lockers/","{{ obj.get_type }}","{{ obj.code }}"];var immediateOpen=true;</script>
 <script src="{% static 'js/socket.js' %}"></script>
 <script src="{% static 'js/locker/app.js' %}"></script>
-
-{% if not inline %}
-</body>
-</html>
-{% endif %}
+{% endblock %}

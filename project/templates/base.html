@@ -173,7 +173,7 @@
 		{% endblock %}
 
 		{% block wrapper %}
-		<div class="ui main {% block type %}text{% endblock %} container">
+		<div class="ui main {% block pagetype %}text{% endblock %} container">
 			{% block messages %}
 				{% for message in messages %}
 					<div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">

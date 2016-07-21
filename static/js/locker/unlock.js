@@ -3,7 +3,7 @@ var title = document.title;
 
 setInterval(function() {
 	if(!document.hasFocus()) {
-		document.title = toggle ? "_ Unlocked ‾" : "‾ Unlocked _";
+		document.title = toggle ? "◦ " + title : "• " + title;
 		toggle = !toggle;
 	}
 	else
