@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.views.generic import View
 from django.shortcuts import render, redirect
@@ -101,6 +103,7 @@ class View_Redirect_Base(View_Locker_Base):
 			token, created = Token.get_or_create(self.request, self._obj)
 
 			token.offers.add(offer)
+			token.last_access = datetime.now()
 			token.save()
 
 		except (KeyError, Offer.DoesNotExist):

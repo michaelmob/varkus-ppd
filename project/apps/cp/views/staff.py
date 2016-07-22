@@ -43,10 +43,11 @@ class Server(View):
 
 				if widget:
 					for n in range(randint(0, 15)):
-						Token.random(widget)
+						Token.create_random(widget)
 
 					conversion = Conversion.get_or_create(
-						Token.random(widget), datetime="TOKEN")
+						Token.create_random(widget),  datetime="TOKEN"
+					)
 
 					if conversion:
 						created = True

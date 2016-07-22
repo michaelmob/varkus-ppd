@@ -1,5 +1,3 @@
-import django_tables2 as tables
-
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
@@ -21,12 +19,15 @@ class Table_Offer_Base(tables.Table):
 			paginate={"per_page": per_page}).configure(self)
 
 	def render_name(self, value, record):
-		return mark_safe("<a href='%s'>%s</a>" % (reverse("offers-manage", args=(record.id,)), value))
+		return mark_safe("<a href='%s'>%s</a>" % (
+			reverse("offers-manage", args=(record.id,)), value
+		))
 
 	def render_offer(self, value, record):
 		offer = record.offer
 		return mark_safe("<a href='%s'>%s</a>" % (
-			reverse("offers-manage", args=(offer.id,)), offer.name))
+			reverse("offers-manage", args=(offer.id,)), offer.name
+		))
 
 	def render_locker(self, value, record):
 		locker = record.locker
@@ -34,9 +35,10 @@ class Table_Offer_Base(tables.Table):
 			locker.get_type().title() + ": " + locker.name))
 
 	def render_approved(self, record):
-		return mark_safe("<span class=\"ui %s horizontal label\">%s</span>" % \
-			("green" if record.approved else "red",
-				"Approved" if record.approved else "Chargeback"))
+		return mark_safe("<span class=\"ui %s horizontal label\">%s</span>" % (
+			"green" if record.approved else "red",
+			"Approved" if record.approved else "Chargeback"
+		))
 
 	def render_earnings_per_click(self, value):
 		return "$%s" % currency(cut_percent(value, self.cut_amount))
@@ -85,11 +87,15 @@ class Table_Offer_All(Table_Offer_Base):
 
 class Table_Offer_Conversions(Table_Offer_Base):
 	approved = tables.Column(accessor="approved", verbose_name="Status")
+	ttc = tables.Column(empty_values=(), orderable=False, verbose_name="TTC")
 
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
 		empty_text = "You haven't received any conversions with this offer."
-		fields = ("user_ip_address", "user_payout", "datetime", "approved")
+		fields = ("user_ip_address", "user_payout", "ttc", "datetime", "approved")
+
+	def render_ttc(self, record):
+		return record.time_to_complete()
 
 
 class Table_Offer_Options(Table_Offer_Base):
@@ -102,5 +108,6 @@ class Table_Offer_Options(Table_Offer_Base):
 
 	def render_remove(self, record):
 		return mark_safe(
-			"<a data-id='%s' class='ui fluid left labeled icon remove button mini'><i class='remove icon'></i>Remove</a>" %\
-				(record.pk,))
+			"<a data-id='%s' class='ui fluid left labeled icon remove button " +
+			"mini'><i class='remove icon'></i>Remove</a>" % (record.pk,)
+		)

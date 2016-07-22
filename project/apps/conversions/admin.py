@@ -8,6 +8,7 @@ class Admin_Conversion(admin.ModelAdmin):
 		return super(__class__, self).get_queryset(request) \
 			.prefetch_related("user", "locker").defer("offer")
 
+	#exclude = ("seconds",)
 	list_display = ("offer_name", "user", "locker", "sender_ip_address", "user_ip_address", "deposit", "payout", "datetime")
 	search_fields = ("user_ip_address", "locker")
 
@@ -17,7 +18,7 @@ class Admin_Token(admin.ModelAdmin):
 	def get_queryset(self, request):
 		return super(__class__, self).get_queryset(request) \
 			.prefetch_related("user", "locker")
-
+			
 	list_display = ("unique", "locker", "ip_address", "user_agent", "datetime", "conversion")
 	search_fields = ("unique", "locker", "ip_address", "user_agent")
 	filter_horizontal = ("offers",)

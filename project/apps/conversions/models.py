@@ -83,14 +83,14 @@ class Token(models.Model):
 	ip_address 	= models.GenericIPAddressField(verbose_name="IP Address")
 	country 	= models.CharField(max_length=5)
 	datetime	= models.DateTimeField()
-	last_access	= models.DateTimeField(auto_now=True, verbose_name="Last Access")
+	last_access	= models.DateTimeField(auto_now_add=True, verbose_name="Last Access")
 
 	conversion 	= models.BooleanField(default=False, verbose_name="Conversion")
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.unique)
 
-	def random(obj, offer=None):
+	def create_random(obj, offer=None):
 		""" Generate random Token (for debugging purposes) """
 		country = "XX"
 
@@ -101,6 +101,7 @@ class Token(models.Model):
 				country = country_code(ip_address)
 			except:
 				country = "XX"
+			print(ip_address, country)
 
 		# Random Date
 		date = datetime.now().replace(hour=randint(0, 23), minute=randint(0, 59))
@@ -229,7 +230,17 @@ class Conversion(models.Model):
 	approved			= models.BooleanField(verbose_name="Approved", default=True)
 
 	deposit				= models.CharField(max_length=32, default="DEFAULT_DEPOSIT", choices=Deposit.names(), **BLANK_NULL)
+	seconds 			= models.IntegerField(default=0)
 	datetime			= models.DateTimeField(verbose_name="Date")
+
+	
+	def time_to_complete(self):
+		""" Time it took for the offer to be completed """
+		if 0 > self.seconds > 1800:
+			return "Unknown"
+
+		d = datetime(1, 1, 1) + timedelta(seconds=self.seconds)
+		return "{}m {}s".format(d.minute, d.second)
 
 
 	def get_or_create(token, offer=None, sender=None, payout=None,
@@ -260,6 +271,9 @@ class Conversion(models.Model):
 		if obj:
 			return (obj, False)
 
+		_datetime = datetime.now()
+		seconds = int((_datetime - token.last_access).total_seconds())
+
 		# Conversion does not exist
 		# Creation values for conversion
 		values = {
@@ -272,13 +286,17 @@ class Conversion(models.Model):
 			"blocked"			: blocked,
 			"approved"			: approved,
 			"deposit"			: deposit,
-			"datetime" 			: datetime.now()
+			"datetime" 			: _datetime,
+			"seconds" 			: seconds
 		}
 
 		# Datetime optional
 		if "datetime" in kwargs:
 			if kwargs["datetime"] == "TOKEN":
-				values["datetime"] = token.datetime
+				values["datetime"] = token.datetime.replace(
+					minute=randint(token.datetime.minute, 59),
+					second=randint(token.datetime.second, 59),
+				)
 			else:
 				values["datetime"] = kwargs["datetime"]
 

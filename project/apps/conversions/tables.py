@@ -4,6 +4,7 @@ import django_tables2 as tables
 from django.conf import settings
 from django.db.models import Count
 from django.utils.safestring import mark_safe
+from django.template.defaultfilters import truncatechars
 
 from utils.country import COUNTRIES
 from apps.offers.tables import Table_Offer_Base
@@ -11,7 +12,6 @@ from apps.offers.models import Offer
 from .models import Conversion, Token
 
 class Table_Conversions_Base(Table_Offer_Base):
-
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
 		fields = ()
@@ -31,15 +31,19 @@ class Table_Conversions_Base(Table_Offer_Base):
 		# Create Table
 		super(__class__, self).__init__(request, self.data(), per_page)
 
+	def render_ttc(self, record):
+		return record.time_to_complete()
+
 
 class Table_Conversions(Table_Conversions_Base):
 	locker = tables.Column(verbose_name="Locker")
 	approved = tables.Column(verbose_name="Status")
+	ttc = tables.Column(verbose_name="TTC", empty_values=(), orderable=False)
 
 	class Meta(Table_Offer_Base.Meta):
 		model = Conversion
 		empty_text = "There doesn't seem to be any conversions here for this category or date range."
-		fields = ("locker", "offer", "user_ip_address", "user_payout", "datetime", "approved")
+		fields = ("locker", "offer", "user_ip_address", "user_payout", "ttc", "datetime", "approved")
 
 
 class Table_Statistics_Base(Table_Conversions_Base):
