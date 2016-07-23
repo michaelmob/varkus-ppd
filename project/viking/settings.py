@@ -24,7 +24,6 @@ INSTALLED_APPS = (
 	"django.contrib.messages",
 	"django.contrib.staticfiles",
 	"django.contrib.postgres",
-	"django.contrib.sites",
 
 	"debug_toolbar",		# django-debug-toolbar
 	"captcha",				# django-recaptcha
