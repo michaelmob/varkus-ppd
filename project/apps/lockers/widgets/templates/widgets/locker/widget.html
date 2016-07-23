@@ -15,17 +15,19 @@
 	{% if unlocked %}
 		<a href="{{ obj.get_unlock_url }}" class="url message continue">Click to Continue</a>
 	{% else %}
+		<div class="items">
 		{% for offer in offers %}
-		<a href="{{ offer|redirect_url:obj }}" target="_blank" class="item" data-text="{{ offer.requirements }}">
-			{{ offer.category|render_cat_icon }}
-			<div class="anchor">{{ offer.anchor }}</div>
-			{% if offer.priority %}
-				{{ "item"|render_icon }}
-			{% endif %}
-		</a>
+			<a href="{{ offer|redirect_url:obj }}" target="_blank" class="item" data-text="{{ offer.requirements }}">
+				{{ offer.category|render_cat_icon }}
+				<div class="anchor">{{ offer.anchor }}</div>
+				{% if offer.priority %}
+					{{ "item"|render_icon }}
+				{% endif %}
+			</a>
 		{% empty %}
-			<div class="center">There are no offers that you can currently participate in.</div>
+			<p>There are no offers that you can currently participate in.</p>
 		{% endfor %}
+		</div>
 	{% endif %}
 </div>
 {% endspaceless %}

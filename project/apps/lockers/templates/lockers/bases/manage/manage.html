@@ -4,19 +4,19 @@
 {% load blueprints %}
 {% load share %}
 
-{% block title %}{{ locker|title }}s{% endblock %}
+{% block title %}{{ obj.get_type|title }}s{% endblock %}
 
-{% block tab %}{{ locker }}s{% endblock %}
+{% block tab %}{{ obj.get_type }}s{% endblock %}
 
 {% block breadcrumbs %}
 <div class="ui breadcrumb">
 	<div class="section">Lockers</div>
 	<i class="right chevron icon divider"></i>
-	<a href="{% url locker|add:'s' %}" class="section">{{ locker|title }}s</a>
+	<a href="{% url obj.get_type|add:'s' %}" class="section">{{ obj.get_type|title }}s</a>
 	<i class="right chevron icon divider"></i>
 	{% block breadcrumbs_active %}
-		<strong>{{ locker|title }}:</strong>
-		<a href="{% url locker|add:'s-manage' obj.code %}" class="active section">{{ obj.name }}</a>
+		<strong>{{ obj.get_type|title }}:</strong>
+		<a href="{% url obj.get_type|add:'s-manage' obj.code %}" class="active section">{{ obj.name }}</a>
 	{% endblock %}
 </div>
 {% endblock %}
@@ -25,14 +25,14 @@
 
 {% block modals %}
 	{% block modal_delete %}
-	<form class="ui basic modal delete" method="POST" action="{% url locker|add:'s-manage-delete' obj.code %}">
+	<form class="ui basic modal delete" method="POST" action="{% url obj.get_type|add:'s-manage-delete' obj.code %}">
 		<i class="close icon"></i>
 		<div class="header">
 			Confirm
 		</div>
 		<div class="content">
 			{% csrf_token %}
-			<p>Are you sure you want to delete this {{ locker }}?</p>
+			<p>Are you sure you want to delete this {{ obj.get_type }}?</p>
 		</div>
 		<div class="actions">
 			<div class="ui black deny button">
@@ -47,10 +47,10 @@
 	{% endblock %}
 
 	{% block modal_edit %}
-	<form class="ui modal edit" method="POST" action="{% url locker|add:'s-manage' obj.code %}">
+	<form class="ui modal edit" method="POST" action="{% url obj.get_type|add:'s-manage' obj.code %}">
 		<i class="close icon"></i>
 		<div class="header">
-			Edit {{ locker|title }}
+			Edit {{ obj.get_type|title }}
 		</div>
 		<div class="content">
 			<div class="ui form">
@@ -124,7 +124,7 @@
 											</div>
 
 											<div class="ui four buttons">
-												<a href="{% twitter url 'Check out my '|add:locker|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
+												<a href="{% twitter url 'Check out my '|add:obj.get_type|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
 													<i class="twitter icon"></i>
 												</a>
 
@@ -136,7 +136,7 @@
 													<i class="google plus icon"></i>
 												</a>
 
-												<a href="{% email 'My new '|add:locker 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
+												<a href="{% email 'My new '|add:obj.get_type 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
 													<i class="at icon"></i>
 												</a>
 											</div>
@@ -156,12 +156,12 @@
 						<div class="ui top attached inverted red menu">
 							<div class="icon header item"><i class="tag icon"></i></div>
 							<div class="header item">
-								{{ locker|title }}:&nbsp;<strong>{{ obj.name }}</strong>
+								{{ obj.get_type|title }}:&nbsp;<strong>{{ obj.name }}</strong>
 							</div>
 
 							<div class="right menu">
 								{% if user.is_staff %}
-								<a href="{% url 'admin:lockers_'|add:locker|add:'_change' obj.id %}" class="ui inverted icon item">
+								<a href="{% url 'admin:lockers_'|add:obj.get_type|add:'_change' obj.id %}" class="ui inverted icon item">
 									<i class="shield icon"></i>
 								</a>
 								{% endif %}
@@ -227,5 +227,5 @@
 	</div>
 </div>
 
-<script src="{% static 'js/apps/lockers/'|add:locker|add:'s/manage.js' %}"></script>
+<script src="{% static 'js/apps/lockers/'|add:obj.get_type|add:'s/manage.js' %}"></script>
 {% endblock %}

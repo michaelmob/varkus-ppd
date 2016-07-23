@@ -54,12 +54,7 @@
 				<i class="code icon"></i>
 				<div class="content">
 					<div class="header">Custom CSS</div>
-					{% if obj.custom_css_url|length > 0 %}
-						Custom CSS is set
-					{% else %}
-						<em>Not set</em>
-					{% endif %}
-					(<a href="{% url 'widgets-edit-css' obj.code %}">Edit Custom CSS</a>)
+					<a href="{% url 'widgets-edit-css' obj.code %}">Edit CSS</a>
 				</div>
 			</div>
 

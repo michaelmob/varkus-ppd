@@ -95,18 +95,23 @@ class View_Set_HTTP_Notifications(View_Manage_Base):
 		obj.save()
 
 
-class View_Set_CSS(View_Set_HTTP_Notifications):
+class View_Set_CSS(View_Manage_Base):
 	template = "widgets/manage/edit/css.html"
 	model = Widget
-	
-	disable_message = "This widget will no longer use a custom stylesheet."
-	edit_message = "This widget custom stylesheet setting has been updated."
-	
-	field = "custom_css_url"
 
-	def modify_object(self, obj, value):
-		obj.custom_css_url = value
-		obj.save()
+	def get_return(self, request, obj):
+		return render(request, self.template, {
+			"obj": obj,
+			"content": request.POST.get("content") or obj.read_css_file()
+		})
+
+	def post_return(self, request, obj):
+		if len(request.POST.get("content")) > 100000:
+			messages.error(request, "The maximum character amount is 100,000.")
+		else:
+			obj.write_css_file(request.POST.get("content"))
+
+		return self.get_return(request, obj)
 
 
 class View_Set_Viral(View_Manage_Base):

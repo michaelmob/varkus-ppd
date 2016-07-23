@@ -1,3 +1,4 @@
+import os.path
 from json import dumps
 from datetime import datetime, timedelta
 from channels import Group
@@ -5,12 +6,13 @@ from channels import Group
 from django.conf import settings
 from django.db import models
 from django.db.models import F
+from django.core.files.base import ContentFile
 from django.utils.html import escape
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from ..models import Locker_Base, Earnings_Base
-from utils.constants import BLANK_NULL
+from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL
 from utils.strings import random, WORDS
 
 DEFAULTS = { "max_length": 300, "blank": True, "null": True }
@@ -21,7 +23,7 @@ class Widget(Locker_Base):
 	locker_id 	= models.PositiveIntegerField(**BLANK_NULL)
 	locker 		= GenericForeignKey("locker_type", "locker_id")
 
-	custom_css_url 			= models.CharField(default=None, **DEFAULTS)
+	css_file 				= models.FileField(upload_to="widgets/css/", **DEFAULT_BLANK_NULL)
 	http_notification_url 	= models.CharField(default=None, **DEFAULTS)
 	standalone_redirect_url = models.CharField(default=settings.SITE_URL, **DEFAULTS)
 
@@ -41,10 +43,20 @@ class Widget(Locker_Base):
 			name 		= name,
 			description	= description
 		)
-
 		Earnings.objects.get_or_create(obj=obj)
-
 		return obj
+
+	def read_css_file(self):
+		buf = None
+		if self.has_css_file():
+			with open(self.css_file.path, "r") as f:
+				buf = "".join(f.readlines())
+		return buf
+
+	def write_css_file(self, content):
+		if self.has_css_file() or not content:
+			self.css_file.delete()
+		self.css_file.save(self.code + ".css", ContentFile(content), save=True)
 
 	def visitor(self, request, pk=None):
 		visitor, created = Widget_Visitor.objects.get_or_create(

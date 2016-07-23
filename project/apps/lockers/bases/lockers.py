@@ -66,17 +66,14 @@ class View_Locker_Base(View):
 
 	def get_return(self):
 		ip_address = self.request.META.get("REMOTE_ADDR")
-		custom_css_url = self._obj.custom_css_url \
-			if self._obj.get_type() == "widget" else None
 			
 		return render(self.request, self.template, {
+			"obj": self._obj,
+			"offers": Offer.get_cache(self.request, self._obj),
+			"unlocked": self.unlocked,
 			"ip_address": ip_address,
 			"country_code": country_code(ip_address),
 			"theme": self._obj.theme or "DEFAULT",
-			"custom_css_url": custom_css_url,
-			"obj": self._obj,
-			"unlocked": self.unlocked,
-			"offers": Offer.get_cache(self.request, self._obj)
 		})
 
 

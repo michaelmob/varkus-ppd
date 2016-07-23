@@ -85,7 +85,6 @@ class View_Manage_Base(View):
 
 	def get_return(self, request, obj):
 		return render(request, self.template, {
-			"locker": self.model.__name__.lower(),
 			"form": self.form(instance=obj),
 			"obj": obj,				
 			"viewers": "Clicks&nbsp;<small>(<strong>%s</strong> clicks in the last 5 minutes)</small>" % obj.earnings.get_viewers(),

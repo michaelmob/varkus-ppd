@@ -1,3 +1,5 @@
+import os.path
+
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
@@ -94,8 +96,9 @@ class Locker_Base(models.Model):
 
 		return code
 
-	def has_custom_css_url(self):
-		return self.get_type() == "widget" and self.custom_css_url
+	def has_css_file(self):
+		return (self.get_type() == "widget" and self.css_file
+			and os.path.isfile(self.css_file.path))
 
 	def __str__(self):
 		return "%s %s: %s" % (self.__class__.__name__, self.pk, self.name)

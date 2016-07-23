@@ -1,5 +1,11 @@
 {% extends 'lockers/bases/manage/manage.html' %}
+{% load static %}
+
 {% block title %}Custom CSS{% endblock %}
+
+{% block headjs %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+{% endblock %}
 
 {% block breadcrumbs_active %}
 Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.name }}</a>
@@ -16,23 +22,17 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 			<form class="ui form box" action="{% url 'widgets-edit-css' obj.code %}" method="POST">
 				<div class="ui top attached inverted red menu">
 					<div class="icon header item"><i class="code icon"></i></div>
-					<div class="header item">Custom CSS</div>
+					<div class="header item">CSS Editor</div>
 				</div>
-				<div class="ui bottom attached segment">
+				<div class="ui bottom attached" style="margin-bottom:1px">
 					{% csrf_token %}
-					<div class="field">
-						<label>Custom CSS URL
-							<small style="font-weight:normal">
-								(Only use stylesheets from a server that uses the HTTPS protocol)
-							</small>
-						</label>
-						<input type="url" name="custom_css_url" value="{{ obj.custom_css_url|default:'' }}" placeholder="https://example.com/stylesheet.css" />
-					</div>
+					<input name="content" type="hidden" style="display:none" />
+					<div id="editor" style="font-size:1rem;min-height:40rem">{{ content|default:'' }}</div>
 				</div>
 				<div class="field">
 					<div class="ui bottom attached fluid buttons">
 						<button class="ui primary submit button">
-							Set Custom CSS URL
+							Save
 						</button>
 						<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
 							Back
@@ -51,25 +51,32 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 				</div>
 				<div class="ui bottom attached segment">
 					<div class="ui header">Custom CSS</div>
-
 					<p>
-						Using a cascading style sheet to make your widget
-						look native to your website is a huge advantage in
-						gaining a client. A widget that does not match your site
-						makes it look like it should not be there and may deter
-						your client from filling out your offer.
+						Using a cascading style sheet to make your widget look native to
+						your website is a huge advantage. A widget that does not match your
+						site makes it look like it should not be there and may deter
+						your visitor from filling out your offer.
 					</p>
 
-					<div class="ui header">JSFiddle</div>
-					<div class="ui list">
-						<div class="item">
-							<a href="https://jsfiddle.net/Varkus/q9qpv66L/" target="_blank">Default CSS Template</a>
-						</div>
-					</div>
+					<p>
+						Your code will override the base CSS code for your widget. All defaults
+						can be found in the base CSS file for widgets located
+						<a href="{% static 'css/widget/base.css' %}" target="_blank">here</a>.
+					</p>
+
+					<div class="ui header">Realtime Editor</div>
+					<p>
+						For an interactive and realtime editor you can add to or modify the
+						pre-made CSS template included in this
+						<a href="https://codepen.io/Varkus/pen/XKqbRq" target="_blank">CodePen pen</a> and
+						then paste it into the editor on this page.
+					</p>
 				</div>
 			</div>
 		</div>
 
 	</div>
 </div>
+
+<script src="{% static 'js/apps/lockers/widgets/css.js' %}"></script>
 {% endblock %}

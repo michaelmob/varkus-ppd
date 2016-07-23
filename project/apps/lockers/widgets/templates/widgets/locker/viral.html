@@ -2,7 +2,7 @@
 {% load share %}
 
 {% block content %}
-<div class="widget">
+<div class="widget v-mode">
 	{% if unlocked %}
 		<a href="{{ obj.get_unlock_url }}" class="center continue">Click to Continue</a>
 	{% else %}

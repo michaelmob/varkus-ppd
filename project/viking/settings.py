@@ -236,6 +236,7 @@ OFFERS_COUNT = 10
 # Widgets Locker
 MAX_WIDGETS = 10
 VIRAL_MESSAGE = "Send the link below to {amount} more {name} to continue."
+CSS_MAX_FILE_SIZE = 1 * 1024 * 1024  # 1mb
 
 # Files Locker
 MAX_FILES = 10

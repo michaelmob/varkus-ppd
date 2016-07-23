@@ -69,8 +69,7 @@
 	<i class="code icon"></i>
 	<div class="content">
 		<div class="header">Custom CSS</div>
-		{{ obj.custom_css_url|default:"<em>Not Set</em>" }}
-		(<a href="{% url 'widgets-edit-css' obj.code %}">Edit</a>)
+		<a href="{% url 'widgets-edit-css' obj.code %}">Edit</a>
 	</div>
 </div>
 <div class="item">

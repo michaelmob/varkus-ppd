@@ -1,11 +1,5 @@
 {% load static %}
 
-{% if obj.has_custom_css_url %}
-	<link rel="stylesheet" type="text/css" href="{{ obj.custom_css_url }}">
-{% else %}
-	<link rel="stylesheet" type="text/css" href="{% static 'css/widget/default.css' %}" />
-{% endif %}
-
 <div class="widget">
 	<div class="center">
 		<h2>You have completed an offer!</h2>
