@@ -5,11 +5,15 @@
 *.pid
 *.mmdb
 .fuse*
+.sync-conflict*
 exports
 
 # Binary
 __pycache__/
 .env/
+
+# Logs
+logs/
 
 # Project Directories
 private/
