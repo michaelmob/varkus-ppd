@@ -60,7 +60,7 @@
 
 /* Anchor */
 .widget div.anchor {
-	padding: .75rem;
+	padding: 1.2rem;
 }
 
 /* Icon */
@@ -74,7 +74,6 @@
 .widget i.icon {
 	display: block;
 	margin: 0;
-	padding: 1rem;
 	font-size: 1.75rem;
 	line-height: 90%;
 	height: auto;

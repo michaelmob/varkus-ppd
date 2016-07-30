@@ -12,7 +12,8 @@ from apps.conversions.models import Token, Deposit
 from utils.geoip import country_code
 
 CRAWLERS = ("googlebot", "slurp", "twiceler", "msnbot", "aloogaot", "yodaobot",
-	"baiduspider", "speedy spider", "dotbot", "google favicon", "twitterbot", "telegrambot", "discord")
+	"baiduspider", "speedy spider", "dotbot", "google favicon", "twitterbot",
+	"telegrambot", "discord", "bot")
 
 class View_Locker_Base(View):
 	template = None

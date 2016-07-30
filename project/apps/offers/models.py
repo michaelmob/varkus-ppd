@@ -199,6 +199,8 @@ class Offer(models.Model):
 		# GeoIP
 		country, region = retrieve(ip_address)
 
+		print(country, region)
+
 		if not country:
 			country = "US"
 			region = "your area"
@@ -215,7 +217,7 @@ class Offer(models.Model):
 
 		# User Agent Args
 		args = (Q(user_agent__icontains=user_agent) if user_agent else Q() | \
-			Q(user_agent=None),)
+			Q(user_agent__isnull=True) | Q(user_agent=""),)
 
 		# Staff Priority
 		_offers += Offer.objects.filter(
