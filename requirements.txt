@@ -1,0 +1,25 @@
+# Python
+setuptools
+cython==0.24.1
+django==1.10
+psycopg2==2.6.2
+pysocks==1.5.7
+geoip2==2.4.0
+psutil==4.3.0
+asgi-redis==0.14.0
+
+# Django
+channels
+django-tables2
+django-recaptcha==1.0.5
+django-storages==1.5.0
+django-axes==2.2.0
+django-countries==3.4.1
+django-gravatar2==1.4.0
+django-redis==4.4.4
+django-debug-toolbar==1.5
+
+# Git
+git+https://github.com/thetarkus/django-semantic-ui-forms
+git+https://github.com/thetarkus/anora
+git+https://github.com/celery/django-celery

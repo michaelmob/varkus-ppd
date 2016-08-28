@@ -1,3 +1,4 @@
+from decimal import Decimal
 from datetime import datetime, timedelta
 from random import randint
 from utils import strings
@@ -13,6 +14,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 import apps.offers.models
+
 
 class Deposit():
 	user_id		= None
@@ -81,16 +83,18 @@ class Token(models.Model):
 
 	user_agent 	= models.CharField(max_length=300)
 	ip_address 	= models.GenericIPAddressField(verbose_name="IP Address")
-	country 	= models.CharField(max_length=5)
+	country 	= models.CharField(max_length=5, **DEFAULT_BLANK_NULL)
 	datetime	= models.DateTimeField()
 	last_access	= models.DateTimeField(auto_now_add=True, verbose_name="Last Access")
 
 	conversion 	= models.BooleanField(default=False, verbose_name="Conversion")
 
+
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.unique)
 
-	def create_random(obj, offer=None):
+
+	def create_random(obj, offer=None, date=None):
 		""" Generate random Token (for debugging purposes) """
 		country = "XX"
 
@@ -101,10 +105,10 @@ class Token(models.Model):
 				country = country_code(ip_address)
 			except:
 				country = "XX"
-			print(ip_address, country)
 
 		# Random Date
-		date = datetime.now().replace(hour=randint(0, 23), minute=randint(0, 59))
+		if not date:
+			date = datetime.now().replace(hour=randint(0, 23), minute=randint(0, 59))
 
 		# Create the actual token
 		token = Token.objects.create(
@@ -118,13 +122,15 @@ class Token(models.Model):
 			datetime 	= date
 		)
 
-		# Add offer
+		# Random offer
 		if not offer:
 			offer = apps.offers.models.Offer.objects.filter(
 				earnings_per_click__gt=0.01
 			).order_by("?").first()
 
-		token.offers.add(offer)
+		# Add offer
+		if offer:
+			token.offers.add(offer)
 
 		# Increment clicks
 		try:
@@ -148,13 +154,18 @@ class Token(models.Model):
 			**obj.lookup_args()
 		).first()
 
+
 	def get_or_create(request, obj):
 		"""Get or create token
 
 		request -- http request
 		obj -- Locker object to create for
 		"""
-		country = country_code(request.META.get("REMOTE_ADDR").upper() if request.META.get("REMOTE_ADDR") != "127.0.0.1" else "173.63.97.160")
+		country = country_code(
+			(request.META.get("REMOTE_ADDR").upper()
+				if request.META.get("REMOTE_ADDR") != "127.0.0.1"
+				else "173.63.97.160")
+		)
 		
 		if not country:
 			country = "XX"
@@ -185,22 +196,18 @@ class Token(models.Model):
 
 		return (token, created)
 
+
 	def access(self):
 		"""Check if token has access to continue"""
 		return self.conversion
 
-	def get_verify(unique, ip_address):
-		"""Verify token for unique and ip_address exists by returning the object"""
-		try:
-			return Token.objects.get(unique=unique, ip_address=ip_address)
-		except Token.DoesNotExist:
-			return None
 
 	def clear():
 		"""Clear/delete all tokens"""
 		return Token.objects.filter(
 			datetime__gt=datetime.now() - timedelta(days=31)
 		).delete()
+
 
 
 class Conversion(models.Model):
@@ -282,7 +289,7 @@ class Conversion(models.Model):
 			"sender_ip_address"	: sender,
 			"user_ip_address"	: token.ip_address,
 			"user_user_agent" 	: token.user_agent,
-			"payout"			: payout or offer.payout, 
+			"payout"			: Decimal(payout or offer.payout), 
 			"blocked"			: blocked,
 			"approved"			: approved,
 			"deposit"			: deposit,

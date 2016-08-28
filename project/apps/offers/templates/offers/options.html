@@ -17,18 +17,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-	<div class="ui two column grid stackable">
+<div class="ui two column grid stackable">
 
-		<div class="column">
-			{% table prioritized 'Prioritized Offers' 'checkmark' %}
-		</div>
-
-		<div class="column">
-			{% table blocked 'Blocked Offers' 'ban' %}
-		</div>
-
+	<div class="column">
+		{% table prioritized 'Prioritized Offers' 'checkmark' %}
 	</div>
+
+	<div class="column">
+		{% table blocked 'Blocked Offers' 'ban' %}
+	</div>
+
 </div>
 
 <script src="{% static 'js/api.js' %}"></script>

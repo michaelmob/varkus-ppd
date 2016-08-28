@@ -34,22 +34,16 @@ class Party(models.Model):
 		default="0.10",
 		help_text="This and cut_amount should not sum up to be more than 100% (or 1)")
 
-	def initiate():
-		""" Initiate default party """
-		try:
-			party, created = Party.objects.get_or_create(
-				name=settings.DEFAULT_PARTY_NAME,
-				defaults={
-					"cut_amount": settings.DEFAULT_CUT_AMOUNT,
-					"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
-				}
-			)
-			return party
-		except:
-			return None
-
 	def default():
-		return Party.objects.get(id=settings.DEFAULT_PARTY_ID)
+		""" Return or create default party """
+		return Party.objects.get_or_create(
+			id=settings.DEFAULT_PARTY_ID,
+			defaults={
+				"name": settings.DEFAULT_PARTY_NAME,
+				"cut_amount": settings.DEFAULT_CUT_AMOUNT,
+				"referral_cut_amount": settings.DEFAULT_REFERRAL_CUT_AMOUNT
+			}
+		)[0]
 
 	def __str__(self):
 		return self.name
@@ -86,8 +80,10 @@ class Profile(models.Model):
 			self.party = self.party.default()
 			self.save()
 
-		return (Decimal(self.party.cut_amount),
-			Decimal(self.party.referral_cut_amount))
+		return (
+			Decimal(self.party.cut_amount),
+			Decimal(self.party.referral_cut_amount)
+		)
 
 
 class Earnings(Earnings_Base):

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.contrib.auth.models import User
@@ -24,6 +26,7 @@ def user_conversion_signal(sender, instance, **kwargs):
 
 	# Shortcut
 	user = instance.user
+	instance.payout = Decimal(instance.payout)
 
 	# Get cut_amount
 	cut_amount, ref_cut_amount = user.profile.party_cut_amounts()

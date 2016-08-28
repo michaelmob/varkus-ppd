@@ -1,5 +1,5 @@
 """
-Viking 0.5.0
+Viking 0.6.0
 """
 
 # Overwrite any setting in ./private/settings_production.py for production servers
@@ -62,7 +62,6 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.auth.middleware.SessionAuthenticationMiddleware",
 	"django.contrib.messages.middleware.MessageMiddleware",
 	#"django.middleware.clickjacking.XFrameOptionsMiddleware",
-	"axes.middleware.FailedLoginMiddleware",
 	"viking.middleware.cloudflare.CFMiddleware",
 	"viking.middleware.session_verify.SessionVerifyMiddleware",
 )
@@ -90,28 +89,26 @@ DATETIME_FORMAT = "N j, Y, P"
 SHORT_DATE_FORMAT = "N j, Y"
 DATE_FORMAT = "N j, Y"
 
-TEMPLATES = [
-	{
-		"BACKEND": "django.template.backends.django.DjangoTemplates",
-		"DIRS": [
-			os.path.join(BASE_DIR, "templates/")
+TEMPLATES = [{
+	"BACKEND": "django.template.backends.django.DjangoTemplates",
+	"DIRS": [
+		os.path.join(BASE_DIR, "templates/")
+	],
+	"OPTIONS": {
+		"context_processors": [
+			"django.template.context_processors.debug",
+			"django.template.context_processors.request",
+			"django.contrib.auth.context_processors.auth",
+			"django.contrib.messages.context_processors.messages",
+			"django.template.context_processors.request",
 		],
-		"OPTIONS": {
-			"context_processors": [
-				"django.template.context_processors.debug",
-				"django.template.context_processors.request",
-				"django.contrib.auth.context_processors.auth",
-				"django.contrib.messages.context_processors.messages",
-				"django.template.context_processors.request",
-			],
-			"loaders": [
-				"django.template.loaders.filesystem.Loader",
-				"django.template.loaders.app_directories.Loader",
-			],
-			"builtins": ["apps.site.templatetags.site"],
-		},
+		"loaders": [
+			"django.template.loaders.filesystem.Loader",
+			"django.template.loaders.app_directories.Loader",
+		],
+		"builtins": ["apps.site.templatetags.site"],
 	},
-]
+}]
 
 # SMTP
 EMAIL_HOST = "localhost"

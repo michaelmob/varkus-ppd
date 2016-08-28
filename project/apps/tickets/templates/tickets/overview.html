@@ -15,7 +15,7 @@
 </div>
 {% endblock %}
 
-{% block content %}
+{% block modal %}
 <form class="ui modal" action="{% url 'tickets' %}" enctype="multipart/form-data" method="POST">
 	<div class="header">
 		New Ticket
@@ -46,41 +46,41 @@
 		</div>
 	</div>
 </form>
+{% endblock %}
 
-<div class="wrapper">
-	<div class="ui grid stackable">
-		<div class="six wide column">
-			<div class="box">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="add square icon"></i></div>
-					<div class="header item">Create</div>
+{% block content %}
+<div class="ui grid stackable">
+	<div class="six wide column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="add square icon"></i></div>
+				<div class="header item">Create</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<div class="ui left labeled icon fluid basic create button">
+					<i class="plus icon"></i>
+					New Ticket
 				</div>
-				<div class="ui bottom attached segment">
-					<div class="ui left labeled icon fluid basic create button">
-						<i class="plus icon"></i>
-						New Ticket
-					</div>
 
-					<br/>
+				<br/>
 
-					<div class="ui header">Ticketing System</div>
-					<p>
-						Create a ticket on any issues you may be having. Whether
-						it be a bug report, an offer problem, or even a payment
-						issue.
-					</p>
+				<div class="ui header">Ticketing System</div>
+				<p>
+					Create a ticket on any issues you may be having. Whether
+					it be a bug report, an offer problem, or even a payment
+					issue.
+				</p>
 
-					<p>
-						You can expect a response within <strong>24-hours</strong>, but usually
-						much sooner.
-					</p>
-				</div>
+				<p>
+					You can expect a response within <strong>24-hours</strong>, but usually
+					much sooner.
+				</p>
 			</div>
 		</div>
-		
-		<div class="ten wide column">
-			{% table table 'Tickets' 'ticket' %}
-		</div>
+	</div>
+	
+	<div class="ten wide column">
+		{% table table 'Tickets' 'ticket' %}
 	</div>
 </div>
 

@@ -19,4 +19,4 @@ urlpatterns = [
 ]
 
 # Initiate default party, if it does not exist
-Party.initiate()
+Party.default()

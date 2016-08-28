@@ -8,145 +8,143 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-	<div class="ui two column grid stackable">
+<div class="ui two column grid stackable">
 
-		<div class="column">
-			<form class="ui form box" action="{% url 'widgets-edit-http-notifications' obj.code %}" method="POST">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="exchange icon"></i></div>
-					<div class="header item">HTTP Notifications</div>
-				</div>
-				<div class="ui bottom attached segment">
-					{% csrf_token %}
-					<div class="field">
-						<label>HTTP Notification URL</label>
-						<input type="url" name="http_notification_url" value="{{ obj.http_notification_url|default:'' }}" placeholder="http://example.com/notify/?offer_name={offer_name}&ip={ip}&payout={payout}&approved={approved}&datetime={datetime}" />
-					</div>
-
-					<div class="ui header">GET Values</div>
-
-					<table class="ui very basic celled table" style="overflow:hidden">
-						<thead>
-							<tr>
-								<th>Value</th>
-								<th>Description</th>
-								<th>Example</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>{offer_id}</td>
-								<td>ID of Offer</td>
-								<td>56</td>
-							</tr>
-							<tr>
-								<td>{offer_name}</td>
-								<td>Offer's name (url encoded)</td>
-								<td>Survey+Sample+Savings+-+Bur...</td>
-							</tr>
-							<tr>
-								<td>{ip}</td>
-								<td>Client's IP address</td>
-								<td>173.49.23.39</td>
-							</tr>
-							<tr>
-								<td>{user_agent}</td>
-								<td>Client's user agent (url encoded)</td>
-								<td>Mozilla%2F5.0...</td>
-							</tr>
-							<tr>
-								<td>{token}</td>
-								<td>Token of client's session</td>
-								<td>o6roooedfxg0aw1w8za6e9o8kmct205j</td>
-							</tr>
-							<tr>
-								<td>{widget}</td>
-								<td>Widget's code</td>
-								<td>{{ obj.code }}</td>
-							</tr>
-							<tr>
-								<td>{payout}</td>
-								<td>Conversion's payout</td>
-								<td>3.98</td>
-							</tr>
-							<tr>
-								<td>{approved}</td>
-								<td>True or False if conversion is approved</td>
-								<td>True</td>
-							</tr>
-							<tr>
-								<td>{date}</td>
-								<td>Date in YY-MM-DD format</td>
-								<td>{% now "Y-m-d" %}</td>
-							</tr>
-							<tr>
-								<td>{time}</td>
-								<td>Time in HH:MM:SS format</td>
-								<td>{% now "H:i:s" %}</td>
-							</tr>
-							<tr>
-								<td>{datetime}</td>
-								<td>Date and time in YY-MM-DD HH:MM:SS format</td>
-								<td>{% now "Y-m-d H:i:s" %}</td>
-							</tr>
-							<tr>
-								<td>{rand}</td>
-								<td>Random number from 1-1000000</td>
-								<td>59382</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+	<div class="column">
+		<form class="ui form box" action="{% url 'widgets-edit-http-notifications' obj.code %}" method="POST">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="exchange icon"></i></div>
+				<div class="header item">HTTP Notifications</div>
+			</div>
+			<div class="ui bottom attached segment">
+				{% csrf_token %}
 				<div class="field">
-					<div class="ui bottom attached fluid buttons">
-						<button class="ui primary submit button">
-							Set HTTP Notification URL
-						</button>
-						<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-							Cancel
-						</a>
-					</div>
+					<label>HTTP Notification URL</label>
+					<input type="url" name="http_notification_url" value="{{ obj.http_notification_url|default:'' }}" placeholder="http://example.com/notify/?offer_name={offer_name}&ip={ip}&payout={payout}&approved={approved}&datetime={datetime}" />
 				</div>
-			</form>
-		</div>
 
-		<div class="column">
-			<div class="box">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="info circle icon"></i></div>
-					<div class="header item">Information</div>
-				</div>
-				<div class="ui bottom attached segment">
-					<div class="ui header">HTTP Notifications</div>
+				<div class="ui header">GET Values</div>
 
-					<p>
-						HTTP Notifications are what makes standalone widgets useful.
-						To notify you and your server that one of your clients
-						has completed an offer so that you can take action. The
-						request contains a bunch of useful information that you
-						can use to identify specific clients.
-					</p>
-
-					<p>
-						HTTP Notifications are sometimes called Postbacks by others.
-						They are essentially the same thing and function the same.
-						However, in most cases, others calling them postbacks are
-						technically wrong in the sense that a GET request is sent
-						instead of a POST request.
-					</p>
-
-					<p>
-						In the previous panel there are many GET values you can use
-						to aid yourself with information on the conversion. A request is
-						sent to your notification URL replacing the values with the 
-						proper information.
-					</p>
-
+				<table class="ui very basic celled table" style="overflow:hidden">
+					<thead>
+						<tr>
+							<th>Value</th>
+							<th>Description</th>
+							<th>Example</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{offer_id}</td>
+							<td>ID of Offer</td>
+							<td>56</td>
+						</tr>
+						<tr>
+							<td>{offer_name}</td>
+							<td>Offer's name (url encoded)</td>
+							<td>Survey+Sample+Savings+-+Bur...</td>
+						</tr>
+						<tr>
+							<td>{ip}</td>
+							<td>Client's IP address</td>
+							<td>173.49.23.39</td>
+						</tr>
+						<tr>
+							<td>{user_agent}</td>
+							<td>Client's user agent (url encoded)</td>
+							<td>Mozilla%2F5.0...</td>
+						</tr>
+						<tr>
+							<td>{token}</td>
+							<td>Token of client's session</td>
+							<td>o6roooedfxg0aw1w8za6e9o8kmct205j</td>
+						</tr>
+						<tr>
+							<td>{widget}</td>
+							<td>Widget's code</td>
+							<td>{{ obj.code }}</td>
+						</tr>
+						<tr>
+							<td>{payout}</td>
+							<td>Conversion's payout</td>
+							<td>3.98</td>
+						</tr>
+						<tr>
+							<td>{approved}</td>
+							<td>True or False if conversion is approved</td>
+							<td>True</td>
+						</tr>
+						<tr>
+							<td>{date}</td>
+							<td>Date in YY-MM-DD format</td>
+							<td>{% now "Y-m-d" %}</td>
+						</tr>
+						<tr>
+							<td>{time}</td>
+							<td>Time in HH:MM:SS format</td>
+							<td>{% now "H:i:s" %}</td>
+						</tr>
+						<tr>
+							<td>{datetime}</td>
+							<td>Date and time in YY-MM-DD HH:MM:SS format</td>
+							<td>{% now "Y-m-d H:i:s" %}</td>
+						</tr>
+						<tr>
+							<td>{rand}</td>
+							<td>Random number from 1-1000000</td>
+							<td>59382</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="field">
+				<div class="ui bottom attached fluid buttons">
+					<button class="ui primary submit button">
+						Set HTTP Notification URL
+					</button>
+					<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+						Cancel
+					</a>
 				</div>
 			</div>
-		</div>
-
+		</form>
 	</div>
+
+	<div class="column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="info circle icon"></i></div>
+				<div class="header item">Information</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<div class="ui header">HTTP Notifications</div>
+
+				<p>
+					HTTP Notifications are what makes standalone widgets useful.
+					To notify you and your server that one of your clients
+					has completed an offer so that you can take action. The
+					request contains a bunch of useful information that you
+					can use to identify specific clients.
+				</p>
+
+				<p>
+					HTTP Notifications are sometimes called Postbacks by others.
+					They are essentially the same thing and function the same.
+					However, in most cases, others calling them postbacks are
+					technically wrong in the sense that a GET request is sent
+					instead of a POST request.
+				</p>
+
+				<p>
+					In the previous panel there are many GET values you can use
+					to aid yourself with information on the conversion. A request is
+					sent to your notification URL replacing the values with the 
+					proper information.
+				</p>
+
+			</div>
+		</div>
+	</div>
+
 </div>
 {% endblock %}

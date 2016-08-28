@@ -37,6 +37,10 @@
 		{% endfor %}
 
 		{% if user.is_staff %}
+			<div class="ui horizontal special divider">
+				Staff
+			</div>
+
 			{% staff_notifications as staff_notifications %}
 
 			{% if staff_notifications.tickets > 0 %}
@@ -99,7 +103,7 @@
 				</div>
 			{% endif %}
 
-			<script>if($(".special.event").length) { $(".special-notification").removeClass("hidden"); }</script>
+			<script>if($(".special.event").length){$(".special-notification").removeClass("hidden");}else{$(".special.divider").remove();}</script>
 		{% endif %}
 	</div>
 </div>

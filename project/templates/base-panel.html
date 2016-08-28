@@ -61,7 +61,7 @@
 				<i class="setting icon link"></i>
 				<div class="menu">
 					<div class="item disabled">
-						{{ user.username|title }}'s Account
+						{{ user.first_name|title }}'s Account
 					</div>
 					<div class="ui options item">
 						<i class="options icon"></i>
@@ -95,7 +95,7 @@
 {% endblock %}
 
 {% block wrapper %}
-	{% block options-modal %}
+	{% block modal-options %}
 		{% include 'cp/dashboard/options.html' %}
 	{% endblock %}
 
@@ -128,9 +128,9 @@
 		{% endif %}
 	{% endblock %}
 
-	{% block content %}
-
-	{% endblock %}
+	<div class="wrapper">
+		{% block content %}{% endblock %}
+	</div>
 {% endblock %}
 
 {% block sidemenu %} default{% endblock %}

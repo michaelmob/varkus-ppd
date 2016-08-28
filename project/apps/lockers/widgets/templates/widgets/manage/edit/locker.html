@@ -8,115 +8,113 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-	<div class="ui two column stackable grid">
+<div class="ui two column stackable grid">
 
-		{# Select Locker #}
-		<div class="column">
-			<form class="ui form box" action="{% url 'widgets-edit-locker' obj.code %}" method="POST">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="lock icon"></i></div>
-					<div class="header item">Select Locker</div>
+	{# Select Locker #}
+	<div class="column">
+		<form class="ui form box" action="{% url 'widgets-edit-locker' obj.code %}" method="POST">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="lock icon"></i></div>
+				<div class="header item">Select Locker</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<div class="ui header">Standalone</div>
+				{% csrf_token %}
+				<div class="field">
+					<div class="ui radio checkbox slider">
+						<input type="radio" name="locker" value="standalone" tabindex="0">
+						<label>I want this widget to be unpaired</label>
+					</div>
 				</div>
-				<div class="ui bottom attached segment">
-					<div class="ui header">Standalone</div>
-					{% csrf_token %}
-					<div class="field">
-						<div class="ui radio checkbox slider">
-							<input type="radio" name="locker" value="standalone" tabindex="0">
-							<label>I want this widget to be unpaired</label>
+
+				<div class="field">
+					<label>Redirect URL <em>(standalone only)</em></label>
+					<input type="url" name="redirect" value="{{ obj.standalone_redirect_url }}" />
+				</div>
+
+				{% if files|length > 0 %}
+					<div class="ui header">Files</div>
+					{% for o in files %}
+						<div class="field">
+							<div class="ui radio checkbox slider">
+								<input type="radio" name="locker" value="file,{{ o.code }}" tabindex="0">
+								<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
+							</div>
 						</div>
-					</div>
+					{% endfor %}
+				{% endif %}
 
-					<div class="field">
-						<label>Redirect URL <em>(standalone only)</em></label>
-						<input type="url" name="redirect" value="{{ obj.standalone_redirect_url }}" />
-					</div>
-
-					{% if files|length > 0 %}
-						<div class="ui header">Files</div>
-						{% for o in files %}
-							<div class="field">
-								<div class="ui radio checkbox slider">
-									<input type="radio" name="locker" value="file,{{ o.code }}" tabindex="0">
-									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
-								</div>
+				{% if links|length > 0 %}
+					<div class="ui header">Links</div>
+					{% for o in links %}
+						<div class="field">
+							<div class="ui radio checkbox slider">
+								<input type="radio" name="locker" value="link,{{ o.code }}" tabindex="0">
+								<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
 							</div>
-						{% endfor %}
-					{% endif %}
+						</div>
+					{% endfor %}
+				{% endif %}
 
-					{% if links|length > 0 %}
-						<div class="ui header">Links</div>
-						{% for o in links %}
-							<div class="field">
-								<div class="ui radio checkbox slider">
-									<input type="radio" name="locker" value="link,{{ o.code }}" tabindex="0">
-									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
-								</div>
+				{% if lists|length > 0 %}
+					<div class="ui header">Lists</div>
+					{% for o in lists %}
+						<div class="field">
+							<div class="ui radio checkbox slider">
+								<input type="radio" name="locker" value="list,{{ o.code }}" tabindex="0">
+								<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
 							</div>
-						{% endfor %}
-					{% endif %}
+						</div>
+					{% endfor %}
+				{% endif %}
+			</div>
 
-					{% if lists|length > 0 %}
-						<div class="ui header">Lists</div>
-						{% for o in lists %}
-							<div class="field">
-								<div class="ui radio checkbox slider">
-									<input type="radio" name="locker" value="list,{{ o.code }}" tabindex="0">
-									<label><strong>[{{ o.code }}]</strong> {{ o.name }}</label>
-								</div>
-							</div>
-						{% endfor %}
-					{% endif %}
-				</div>
+			<div class="ui fluid bottom attached buttons">
+				<button class="ui primary submit button">
+					Set Locker
+				</button>
+				<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+					Back
+				</a>
+			</div>
+		</form>
+	</div>
 
-				<div class="ui fluid bottom attached buttons">
-					<button class="ui primary submit button">
-						Set Locker
-					</button>
-					<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-						Back
-					</a>
-				</div>
-			</form>
-		</div>
+	{# Information #}
+	<div class="column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="info circle icon"></i></div>
+				<div class="header item">Information</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<div class="ui header">Standalone Widget</div>
+				<p>
+					Standalone widgets are usually combined with HTTP
+					Notifications allowing a user to add a widget to their
+					website and be notified, via GET request, that their widget
+					has received a conversion. Once the client has completed the
+					survey they will be redirected to the URL provided by the
+					user. This is the most flexible and dynamic option.
+				</p>
 
-		{# Information #}
-		<div class="column">
-			<div class="box">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="info circle icon"></i></div>
-					<div class="header item">Information</div>
-				</div>
-				<div class="ui bottom attached segment">
-					<div class="ui header">Standalone Widget</div>
-					<p>
-						Standalone widgets are usually combined with HTTP
-						Notifications allowing a user to add a widget to their
-						website and be notified, via GET request, that their widget
-						has received a conversion. Once the client has completed the
-						survey they will be redirected to the URL provided by the
-						user. This is the most flexible and dynamic option.
-					</p>
+				<div class="ui header">Widget-Locker Pair</div>
+				<p>
+					Widgets that are paired with a locker are different than
+					standalone widgets. While they can still be to receive an HTTP
+					Notification, your clients will be served the result of the
+					locker that the user has selected.
+				</p>
 
-					<div class="ui header">Widget-Locker Pair</div>
-					<p>
-						Widgets that are paired with a locker are different than
-						standalone widgets. While they can still be to receive an HTTP
-						Notification, your clients will be served the result of the
-						locker that the user has selected.
-					</p>
-
-					<p>
-						Understand that the earnings that the locker item makes will
-						not be added to the locker itself, but will be added to the widget
-						instead.
-					</p>
-				</div>
+				<p>
+					Understand that the earnings that the locker item makes will
+					not be added to the locker itself, but will be added to the widget
+					instead.
+				</p>
 			</div>
 		</div>
-
 	</div>
+
 </div>
 
 <script type="text/javascript">

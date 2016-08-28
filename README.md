@@ -22,8 +22,12 @@ sudo apt install -y software-properties-common sudo git build-essential python3-
 2. Git clone this repository on the server into "/var/www/".
 
 #### Step 2: PostgreSQL Setup
-1. Create a user for your database. ```sudo -u postgres createuser -D -A -P $USER```
-2. Create a database for Viking and give user full access. ```sudo -u postgres createdb -O $USER $DATABASE```
+1. Create a user for your database. ```sudo -u postgres createuser -D -A -P $DB_USER```
+2. Set your database user's password. ```sudo -u postgres psql -c "ALTER USER $DB_USER WITH PASSWORD '$DB_PASS';"```
+3. Create a database for Viking and give user full access. ```sudo -u postgres createdb -O $DB_USER $DB_NAME```
+
+## Set User to Create Databases for Tests (Optional)  
+```sudo -u postgres psql -c "ALTER USER $DB_USER CREATEDB;"```
 
 #### Step 3: Setup Environment
 1. Create a virtual environment in the Viking directory. ```virtualenv -p $(which python3) .env```

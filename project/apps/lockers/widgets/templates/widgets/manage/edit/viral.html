@@ -17,81 +17,79 @@ Widget: <a href="{% url 'widgets-manage' obj.code %}" class="section">{{ obj.nam
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-	<div class="ui two column grid stackable">
+<div class="ui two column grid stackable">
 
-		{# Viral Mode #}
-		<div class="column">
-			<form class="ui form box" action="{% url 'widgets-edit-viral' obj.code %}" method="POST">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="leaf icon"></i></div>
-					<div class="header item">Viral Mode</div>
-				</div>
-				<div class="ui bottom attached segment">
-					{% csrf_token %}
-					
-					{% render_field form.viral_mode %}
-					{% render_field form.viral_visitor_count %}
-					{% render_field form.viral_visitor_name placeholder='person,people' %}
-					{% render_field form.viral_message placeholder=message %}
+	{# Viral Mode #}
+	<div class="column">
+		<form class="ui form box" action="{% url 'widgets-edit-viral' obj.code %}" method="POST">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="leaf icon"></i></div>
+				<div class="header item">Viral Mode</div>
+			</div>
+			<div class="ui bottom attached segment">
+				{% csrf_token %}
+				
+				{% render_field form.viral_mode %}
+				{% render_field form.viral_visitor_count %}
+				{% render_field form.viral_visitor_name placeholder='person,people' %}
+				{% render_field form.viral_message placeholder=message %}
 
-				</div>
-				<div class="field">
-					<div class="ui bottom attached fluid buttons">
-						<button class="ui primary submit button">
-							Save
-						</button>
-						<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
-							Back
-						</a>
-					</div>
-				</div>
-			</form>
-		</div>
-
-		{# Information #}
-		<div class="column">
-			<div class="box">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="info circle icon"></i></div>
-					<div class="header item">Information</div>
-				</div>
-				<div class="ui bottom attached segment">
-					<div class="ui header">Viral Mode</div>
-
-					<p>
-						Viral Mode is a way for your lockers to gain even more traffic by
-						using the power of your visitors to promote your content on your
-						behalf.
-					</p>
-
-					<p>
-						The way it works is simple. Before your visitor can fill out an offer,
-						they will be greeted with a message defined by you along with a link
-						that is unique to them. Afterwards, the visitor must forward this
-						link to the amount of people that you have specified. The process repeats
-						itself for the new visitor that the link was forwaded to. The new visitor
-						must also forward their link with your specified amount of visitors,
-						therefore: going viral.
-					</p>
-
-					<p>
-						When a visitor receives a click from a visitor that they had referred,
-						their count will instantly be updated to show how many more people
-						must click on their link. Once the required amount of visitors
-						is reached, they will be able to complete an offer and unlock the
-						locker.
-					</p>
-	
-					<h3>Embed Code</h3>
-					<pre><code class="html">&lt;iframe id="widget"&gt;&lt;/iframe&gt;
-&lt;script&gt;document.getElementById("widget").src="{{ url }}"+(document.location.href.indexOf("?v=")>1?"?v="+document.location.href.split("?v=")[1].split("&")[0]+"&":"?")+"url="+encodeURIComponent(document.location.href);&lt;/script&gt;</code></pre>
-					<script>hljs.initHighlightingOnLoad();</script>
-
+			</div>
+			<div class="field">
+				<div class="ui bottom attached fluid buttons">
+					<button class="ui primary submit button">
+						Save
+					</button>
+					<a href="{% url 'widgets-manage' obj.code %}" class="ui button">
+						Back
+					</a>
 				</div>
 			</div>
-		</div>
-
+		</form>
 	</div>
+
+	{# Information #}
+	<div class="column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="info circle icon"></i></div>
+				<div class="header item">Information</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<div class="ui header">Viral Mode</div>
+
+				<p>
+					Viral Mode is a way for your lockers to gain even more traffic by
+					using the power of your visitors to promote your content on your
+					behalf.
+				</p>
+
+				<p>
+					The way it works is simple. Before your visitor can fill out an offer,
+					they will be greeted with a message defined by you along with a link
+					that is unique to them. Afterwards, the visitor must forward this
+					link to the amount of people that you have specified. The process repeats
+					itself for the new visitor that the link was forwaded to. The new visitor
+					must also forward their link with your specified amount of visitors,
+					therefore: going viral.
+				</p>
+
+				<p>
+					When a visitor receives a click from a visitor that they had referred,
+					their count will instantly be updated to show how many more people
+					must click on their link. Once the required amount of visitors
+					is reached, they will be able to complete an offer and unlock the
+					locker.
+				</p>
+
+				<h3>Embed Code</h3>
+				<pre><code class="html">&lt;iframe id="widget"&gt;&lt;/iframe&gt;
+&lt;script&gt;document.getElementById("widget").src="{{ url }}"+(document.location.href.indexOf("?v=")>1?"?v="+document.location.href.split("?v=")[1].split("&")[0]+"&":"?")+"url="+encodeURIComponent(document.location.href);&lt;/script&gt;</code></pre>
+				<script>hljs.initHighlightingOnLoad();</script>
+
+			</div>
+		</div>
+	</div>
+
 </div>
 {% endblock %}

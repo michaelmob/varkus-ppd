@@ -9,12 +9,16 @@ from .models import User, Party
 
 
 class Test_User(TestCase):
-	# Not a test by itself, use in other tests to
-	# create user
-	def create():
-		Party.initiate()
+	""" Test user app """
 
-		user = User.objects.create_user(username="tester", email="tester@tester.com", password="tester")
+	def create():
+		""" Not a test; use in other tests to create user """
+		user = User.objects.create_user(
+			username="tester",
+			email="tester@tester.com",
+			password="tester"
+		)
+
 		user.is_active = True
 		user.first_name = "John"
 		user.last_name = "Smith"
@@ -26,6 +30,6 @@ class Test_User(TestCase):
 		return user
 
 
-	def test_sign_up(self):
+	def test_sign_up_has_group(self):
 		user = Test_User.create()
 		self.assertEqual(user.profile.party, Party.default())

@@ -23,6 +23,4 @@ class Test(TestCase):
 		request.user = self.user
 		response = manage.process(request)
 
-		print(str(response))
-
 		self.assertEqual(response.status_code, 200)

@@ -20,34 +20,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-	<div class="ui one column grid stackable">
-		<div class="column">
-			<div class="box">
-				<div class="ui top attached inverted red menu">
-					<div class="icon header item"><i class="tags icon"></i></div>
-					<div class="header item">Offers{% if query|length > 0 %}&nbsp;<small>[Filter: "{{ query }}"]{% endif %}</small></div>
+<div class="ui one column grid stackable">
+	<div class="column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="tags icon"></i></div>
+				<div class="header item">Offers{% if query|length > 0 %}&nbsp;<small>[Filter: "{{ query }}"]{% endif %}</small></div>
 
-					<div class="right menu">
-						<form class="inverted item" method="GET">
-							<div class="ui inverted transparent icon input">
-								<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
-								<i class="search icon"></i>
-							</div>
-						</form>
-						<a class="inverted item" href="{% url 'offers-options' %}">
-							<i class="options icon"></i> Options
-						</a>
-						{% if user.is_superuser %}
-						<a class="ui inverted sync item">
-							<i class="refresh icon"></i> Sync
-						</a>
-						{% endif %}
-					</div>
+				<div class="right menu">
+					<form class="inverted item" method="GET">
+						<div class="ui inverted transparent icon input">
+							<input name="q" type="text" {% if query|length > 0 %}value="{{ query }}" {% endif %}placeholder="Search Offers...">
+							<i class="search icon"></i>
+						</div>
+					</form>
+					<a class="inverted item" href="{% url 'offers-options' %}">
+						<i class="options icon"></i> Options
+					</a>
+					{% if user.is_superuser %}
+					<a class="ui inverted sync item">
+						<i class="refresh icon"></i> Sync
+					</a>
+					{% endif %}
 				</div>
-				<div class="ui bottom attached compact segment">
-					{% render_table offers '_blueprint/_table.html' %}
-				</div>
+			</div>
+			<div class="ui bottom attached compact segment">
+				{% render_table offers '_blueprint/_table.html' %}
 			</div>
 		</div>
 	</div>

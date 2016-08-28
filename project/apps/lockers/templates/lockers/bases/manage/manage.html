@@ -21,10 +21,8 @@
 </div>
 {% endblock %}
 
-{% block content %}
-
-{% block modals %}
-	{% block modal_delete %}
+{% block modal %}
+	{% block modal-delete %}
 	<form class="ui basic modal delete" method="POST" action="{% url obj.get_type|add:'s-manage-delete' obj.code %}">
 		<i class="close icon"></i>
 		<div class="header">
@@ -46,7 +44,7 @@
 	</form>
 	{% endblock %}
 
-	{% block modal_edit %}
+	{% block modal-edit %}
 	<form class="ui modal edit" method="POST" action="{% url obj.get_type|add:'s-manage' obj.code %}">
 		<i class="close icon"></i>
 		<div class="header">
@@ -56,9 +54,7 @@
 			<div class="ui form">
 				{% csrf_token %}
 
-				{% block modal_edit_content %}
-
-				{% endblock %}
+				{% block modal-edit-content %}{% endblock %}
 			</div>
 		</div>
 		<div class="actions">
@@ -77,152 +73,149 @@
 	</form>
 	{% endblock %}
 
-	{% block modal_extra %}
-
-	{% endblock %}
+	{% block modal-extra %}{% endblock %}
 {% endblock %}
 
-<div class="wrapper">
-	<div class="ui two column stackable grid">
-		<div class="column">
-			<div class="ui one column grid">
+{% block content %}
+<div class="ui two column stackable grid">
+	<div class="column">
+		<div class="ui one column grid">
 
-				<div class="column">
-					<div class="ui two column equal height stretched stackable grid">
-						{# Data Blocks #}
-						<div class="column">
-							{% data_block_two 'red' obj.earnings.clicks_today 'Clicks' obj.earnings.clicks 'Total' 'pointing up' 'locker clicks today' 'locker clicks total' %}
-						</div>
-
-						<div class="column">
-							{% data_block_two 'blue' obj.earnings.conversions_today 'Conversions' obj.earnings.conversions 'Total' 'lightning' 'locker conversions today' 'locker conversions total' %}
-						</div>
-
-						<div class="column">
-							{% data_block_two 'green' obj.earnings.today 'Earnings' obj.earnings.total 'Total' 'dollar' 'locker earnings today' 'locker earnings total' %}
-						</div>
-
-						<div class="column">
-							{% data_block 'orange' obj.earnings.epc|currency 'Earnings per Click' 'bullseye' 'locker epc today' %}
-						</div>
-
-						{# View Locker Page and Share Buttons #}
-						<div class="one column row">
-							<div class="column">
-								<div class="ui inverted black segment">
-									<div class="ui stackable middle aligned two column grid">
-
-										{% absolute obj.get_locker_url as url %}
-										
-										<div class="column">
-											<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
-										</div>
-
-										<div class="column">
-											<div class="center aligned column">
-												<strong>Share on...</strong>
-											</div>
-
-											<div class="ui four buttons">
-												<a href="{% twitter url 'Check out my '|add:obj.get_type|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
-													<i class="twitter icon"></i>
-												</a>
-
-												<a href="{% facebook url %}" target="_blank" class="ui fluid facebook icon button">
-													<i class="facebook icon"></i>
-												</a>
-
-												<a href="{% googleplus url %}" target="_blank" class="ui fluid google plus icon button">
-													<i class="google plus icon"></i>
-												</a>
-
-												<a href="{% email 'My new '|add:obj.get_type 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
-													<i class="at icon"></i>
-												</a>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-
+			<div class="column">
+				<div class="ui two column equal height stretched stackable grid">
+					{# Data Blocks #}
+					<div class="column">
+						{% data_block_two 'red' obj.earnings.clicks_today 'Clicks' obj.earnings.clicks 'Total' 'pointing up' 'locker clicks today' 'locker clicks total' %}
 					</div>
-				</div>
 
-				{# Locker Information #}
-				<div class="column">
-					<div class="box">
-						<div class="ui top attached inverted red menu">
-							<div class="icon header item"><i class="tag icon"></i></div>
-							<div class="header item">
-								{{ obj.get_type|title }}:&nbsp;<strong>{{ obj.name }}</strong>
-							</div>
+					<div class="column">
+						{% data_block_two 'blue' obj.earnings.conversions_today 'Conversions' obj.earnings.conversions 'Total' 'lightning' 'locker conversions today' 'locker conversions total' %}
+					</div>
 
-							<div class="right menu">
-								{% if user.is_staff %}
-								<a href="{% url 'admin:lockers_'|add:obj.get_type|add:'_change' obj.id %}" class="ui inverted icon item">
-									<i class="shield icon"></i>
-								</a>
-								{% endif %}
+					<div class="column">
+						{% data_block_two 'green' obj.earnings.today 'Earnings' obj.earnings.total 'Total' 'dollar' 'locker earnings today' 'locker earnings total' %}
+					</div>
 
-								<a class="inverted item edit button">
-									<i class="edit icon"></i>
-									Edit
-								</a>
+					<div class="column">
+						{% data_block 'orange' obj.earnings.epc|currency 'Earnings per Click' 'bullseye' 'locker epc today' %}
+					</div>
+
+					{# View Locker Page and Share Buttons #}
+					<div class="one column row">
+						<div class="column">
+							<div class="ui inverted black segment">
+								<div class="ui stackable middle aligned two column grid">
+
+									{% absolute obj.get_locker_url as url %}
+									
+									<div class="column">
+										<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
+									</div>
+
+									<div class="column">
+										<div class="center aligned column">
+											<strong>Share on...</strong>
+										</div>
+
+										<div class="ui four buttons">
+											<a href="{% twitter url 'Check out my '|add:obj.get_type|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
+												<i class="twitter icon"></i>
+											</a>
+
+											<a href="{% facebook url %}" target="_blank" class="ui fluid facebook icon button">
+												<i class="facebook icon"></i>
+											</a>
+
+											<a href="{% googleplus url %}" target="_blank" class="ui fluid google plus icon button">
+												<i class="google plus icon"></i>
+											</a>
+
+											<a href="{% email 'My new '|add:obj.get_type 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
+												<i class="at icon"></i>
+											</a>
+										</div>
+									</div>
+
+								</div>
 							</div>
 						</div>
+					</div>
 
-						<div class="ui bottom attached segment">
-							<div class="ui divided relaxed list">
-							{% block information %}
-								<div class="item">
-									<i class="quote left icon"></i>
-									<div class="content">
-										<div class="header">Name</div>
-										{{ obj.name }}
-									</div>
+				</div>
+			</div>
+
+			{# Locker Information #}
+			<div class="column">
+				<div class="box">
+					<div class="ui top attached inverted red menu">
+						<div class="icon header item"><i class="tag icon"></i></div>
+						<div class="header item">
+							{{ obj.get_type|title }}:&nbsp;<strong>{{ obj.name }}</strong>
+						</div>
+
+						<div class="right menu">
+							{% if user.is_staff %}
+							<a href="{% url 'admin:lockers_'|add:obj.get_type|add:'_change' obj.id %}" class="ui inverted icon item">
+								<i class="shield icon"></i>
+							</a>
+							{% endif %}
+
+							<a class="inverted item edit button">
+								<i class="edit icon"></i>
+								Edit
+							</a>
+						</div>
+					</div>
+
+					<div class="ui bottom attached segment">
+						<div class="ui divided relaxed list">
+						{% block information %}
+							<div class="item">
+								<i class="quote left icon"></i>
+								<div class="content">
+									<div class="header">Name</div>
+									{{ obj.name }}
 								</div>
-								<div class="item">
-									<i class="ellipsis horizontal icon"></i>
-									<div class="content">
-										<div class="header">Description</div>
-										{{ obj.description|default:'<i>None</i>' }}
-									</div>
+							</div>
+							<div class="item">
+								<i class="ellipsis horizontal icon"></i>
+								<div class="content">
+									<div class="header">Description</div>
+									{{ obj.description|default:'<i>None</i>' }}
 								</div>
+							</div>
 
-								{% block details %}
-
-								{% endblock %}
+							{% block details %}
 
 							{% endblock %}
-							</div>
+
+						{% endblock %}
 						</div>
-						{% block bottomattached %}{% endblock %}
 					</div>
+					{% block bottomattached %}{% endblock %}
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="column">
-			<div class="ui one column grid">
+	<div class="column">
+		<div class="ui one column grid">
 
-				{# Chart #}
-				<div class="column">
-					{% line_chart dataUrl %}
-				</div>
-
-				{# Conversions #}
-				<div class="column">
-					{% table clicks viewers|safe 'pointing up' %}
-				</div>
-
-				{# Conversions #}
-				<div class="column">
-					{% table conversions 'Conversions' 'lightning' %}
-				</div>
-
+			{# Chart #}
+			<div class="column">
+				{% line_chart dataUrl %}
 			</div>
+
+			{# Conversions #}
+			<div class="column">
+				{% table clicks viewers|safe 'pointing up' %}
+			</div>
+
+			{# Conversions #}
+			<div class="column">
+				{% table conversions 'Conversions' 'lightning' %}
+			</div>
+
 		</div>
 	</div>
 </div>

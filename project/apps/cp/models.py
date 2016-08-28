@@ -1,5 +1,5 @@
 import json
-from decimal import Decimal, getcontext
+from decimal import Decimal
 from datetime import datetime, date, timedelta
 
 from django.db import models
@@ -10,7 +10,7 @@ from utils.constants import CURRENCY, BLANK_NULL
 import apps.conversions as conversions
 from apps.cp.templatetags.currency import currency
 
-getcontext().prec = 2
+
 NOTIFICATION_ICONS = (
 	("announcement", "Announcement"),
 	("warning", "Warning"),
@@ -29,6 +29,7 @@ NOTIFICATION_COLORS = (
 	("yellow", "Yellow"),
 	("orange", "Orange"),
 	("green", "Green"))
+
 
 class Notification(models.Model):
 	user		= models.ForeignKey(User, blank=True, null=True)
@@ -155,7 +156,7 @@ class Earnings_Base(models.Model):
 	def add(self, amount, cut=0):
 		amount = Decimal(amount)
 		amount_cut = amount - (amount * cut)
-
+		
 		self.conversions 		= F("conversions") + 1
 		self.conversions_today 	= F("conversions_today") + 1
 

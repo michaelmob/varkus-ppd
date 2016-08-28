@@ -1,8 +1,4 @@
-{% extends 'base-panel.html' %}
-{% load static %}
-{% load blueprints %}
-{% load semanticui %}
-
+{% extends 'conversions/overview.html' %}
 {% block title %}Statistics{% endblock %}
 
 {% block tab %}statistics{% endblock %}
@@ -15,73 +11,16 @@
 </div>
 {% endblock %}
 
-{% block content %}
-<div class="wrapper">
-	<div class="ui stackable grid">
-		{# Table #}
-		<div class="twelve wide column">
-			{% table table title table_icon|default:'bar graph' %}
-		</div>
-
-		{# Menu #}
-		<div class="four wide column">
-			<div class="ui fluid vertical accordion menu">
-	
-				{% block menuitem %}
-				<div class="item">
-					<div class="header">Category</div>
-					<div class="menu">
-						<a class="statistics-offers item" href="{% url 'statistics-offers' %}">Offers</a>
-						<a class="statistics-countries item" href="{% url 'statistics-countries' %}">Countries</a>
-					</div>
-				</div>
-				{% endblock %}
-
-				<div class="item">
-					<div class="header">Date Range</div>
-					<div class="menu">
-						<a class="statistics-range-today item" href="?r=today">Today</a>
-						<a class="statistics-range-week item" href="?r=week">Week</a>
-						<a class="statistics-range-month item" href="?r=month">Month</a>
-						<a class="statistics-range-year item" href="?r=year">Year</a>
-					</div>
-				</div>
-
-				<div class="item">
-					<a class="statistics-range-custom title header">
-						<i class="dropdown icon"></i> Custom Date Range
-					</a>
-					<div class="statistics-range-custom content">
-						<form class="ui form" method="GET">
-							{% render_form form %}
-							<input class="ui fluid button" type="submit" value="Apply" />
-						</form>
-					</div>
-				</div>
-
-			</div>
-		</div>
+{% block menuitem %}
+<div class="item">
+	<div class="header">Category</div>
+	<div class="menu">
+		<a class="page-offers item" href="{% url 'statistics-offers' %}">Offers</a>
+		<a class="page-countries item" href="{% url 'statistics-countries' %}">Countries</a>
 	</div>
 </div>
-
-<link rel="stylesheet" type="text/css" href="{% static 'css/comp/calendar.min.css' %}">
-<script src="{% static 'js/comp/calendar.min.js' %}"></script>
-<script src="{% static 'js/comp/tablesort.min.js' %}"></script>
-<script>
-	var fromDate = $("#id_f").parent().parent();
-	var toDate = $("#id_t").parent().parent();
-
-	fromDate.calendar({ type: "date", endCalendar: toDate });
-	toDate.calendar({ type: "date", startCalendar: fromDate });
-
-	$(".ui.accordion").accordion();
-	$(".statistics-{{ page|default:'month' }}").addClass("active");
-
-	{% if date_range %}
-	$(".statistics-range-{{ date_range }}").addClass("active");
-	{% endif %}
-</script>
-{% block tablesort %}
-<script>$("table").tablesort();</script>
 {% endblock %}
+
+{% block afterjs %}
+<script>$("table").tablesort();$(".page-{{ page }}").addClass("active");</script>
 {% endblock %}

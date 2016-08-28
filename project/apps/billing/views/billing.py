@@ -12,16 +12,20 @@ from ..tables import Table_Invoice
 
 
 class View_Overview(View):
+
 	def get(self, request):
+		data = request.user.billing.data
+		data = data if isinstance(data, dict) else json.loads(data or "{}")
+
 		return render(request, "billing/overview.html", {
 			"invoices": Table_Invoice(request),
 			"choice": request.user.billing.choice,
-			"data": json.loads(request.user.billing.data or "{}"),
+			"data": data,
 
-			"form_paypal": 	Form_Paypal(request),
-			"form_check": 	Form_Check(request),
-			"form_wire": 	Form_Wire(request),
-			"form_direct": 	Form_Direct(request)
+			"form_paypal": 	Form_Paypal.from_request(request),
+			"form_check": 	Form_Check.from_request(request),
+			"form_wire": 	Form_Wire.from_request(request),
+			"form_direct": 	Form_Direct.from_request(request)
 		})
 
 	def post(self, request):
@@ -30,16 +34,16 @@ class View_Overview(View):
 
 		# Validate choice
 		if form == "PAYPAL":
-			success = Form_Paypal(request).save()
+			success = Form_Paypal.from_request(request).save()
 
 		elif form == "CHECK":
-			success = Form_Check(request).save()
+			success = Form_Check.from_request(request).save()
 
 		elif form == "WIRE":
-			success = Form_Wire(request).save()
+			success = Form_Wire.from_request(request).save()
 
 		elif form == "DIRECT":
-			success = Form_Direct(request).save()
+			success = Form_Direct.from_request(request).save()
 
 		# Success Message
 		if success:

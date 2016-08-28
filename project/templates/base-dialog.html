@@ -6,18 +6,18 @@
 {% endblock %}
 
 {% block wrapper %}
-  {% block messages %}
-    {% for message in messages %}
-      <div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
-        <i class="close icon"></i>
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endblock %}
+	{% block messages %}
+		{% for message in messages %}
+			<div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
+				<i class="close icon"></i>
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endblock %}
 
-  {% block content %}
+	{% block content %}
 
-  {% endblock %}
+	{% endblock %}
 {% endblock %}
 
 {% block footer %}{% endblock %}

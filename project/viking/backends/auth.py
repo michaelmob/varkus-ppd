@@ -10,10 +10,11 @@ class CaseInsensitiveModelBackend(ModelBackend):
 	"""
 	def authenticate(self, username=None, password=None):
 		try:
-			if "@" in username:
+			if "@" in username and "." in username:
 				user = User.objects.get(email__iexact=username)
 			else:
 				user = User.objects.get(username__iexact=username)
+
 			if user.check_password(password):
 				return user
 			else:

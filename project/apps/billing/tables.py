@@ -19,7 +19,7 @@ class Table_Invoice(tables.Table):
 		model = Invoice
 		empty_text = "There are no invoices associated with your account."
 		attrs = {"class": "ui sortable table"}
-		fields = ("creation_date", "billing_period", "total_amount", "referral_amount", "paid", "due_date", "details")
+		fields = ("billing_period", "total_amount", "referral_amount", "paid", "due_date", "details")
 
 	def __init__(self, request, data=None, **kwargs):
 		if not data:

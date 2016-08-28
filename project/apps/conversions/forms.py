@@ -14,24 +14,26 @@ class Form_Conversions_Range(forms.Form):
 	t = forms.DateField(label="To Date",
 		widget=forms.DateInput(**CALENDAR_ATTRS), required=False)
 
-	def __init__(self, request, **kwargs):
-		self.r = request.GET.get("r", None)
-		super(__class__, self).__init__(request.GET or None, **kwargs)
+	@classmethod
+	def from_request(cls, request, **kwargs):
+		form = cls(request.GET or None, **kwargs)
+		form._range = request.GET.get("r", None)
+		return form
 
 	def date_range(self):
 		today = date.today()
 		tomorrow = today + timedelta(days=1)
 
-		if self.r == "month" or not self.is_valid():
+		if self._range == "month" or not self.is_valid():
 			return (today - timedelta(days=30), tomorrow)
 
-		elif self.r == "today":
+		elif self._range == "today":
 			return (today, tomorrow)
 
-		elif self.r == "week":
+		elif self._range == "week":
 			return (today - timedelta(days=7), tomorrow)
 
-		elif self.r == "year":
+		elif self._range == "year":
 			return (today - timedelta(days=365), tomorrow)
 
 		return (self.cleaned_data["f"], self.cleaned_data["t"])

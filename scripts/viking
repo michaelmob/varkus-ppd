@@ -82,14 +82,13 @@ case "$1" in
 		export DEBUG=true
 
 		if [ $DEBUG_CELERY == true ]; then
-			manage celerycam --frequency=30.0 &
+			manage celerycam --frequency=30 &
 
-			manage celery worker --app=viking --beat --events \
+			manage celery worker --heartbeat-interval=30 --app=viking --beat --events \
 				--pidfile=celeryw.pid --loglevel=INFO &
 		fi
 
-		manage runserver
-		stop ;;
+		manage runserver ;;
 
 	# Pip within virtualenv
 	pip)

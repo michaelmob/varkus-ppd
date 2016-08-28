@@ -17,7 +17,7 @@ from utils.geoip import retrieve
 from utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL, CURRENCY
 
 class Offer(models.Model):
-	offer_id	 		= models.IntegerField()
+	offer_id	 		= models.IntegerField(null=True)
 	priority 			= models.BooleanField(default=False)
 	name 				= models.CharField(max_length=250, verbose_name="Name")
 	anchor 				= models.CharField(max_length=1000, verbose_name="Anchor")
@@ -198,8 +198,6 @@ class Offer(models.Model):
 
 		# GeoIP
 		country, region = retrieve(ip_address)
-
-		print(country, region)
 
 		if not country:
 			country = "US"

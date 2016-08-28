@@ -1,12 +1,12 @@
 from datetime import date, timedelta
 from calendar import monthrange
+from decimal import Decimal
 
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q, Sum
+from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import User
 
-from apps.conversions.models import Conversion
 from utils.constants import CURRENCY, DEFAULT_BLANK_NULL, BLANK_NULL
 
 
@@ -30,9 +30,6 @@ PAYMENT_CHOICES_DICT = dict(PAYMENT_CHOICES)
 PAYMENT_CHOICE_LIST = list(PAYMENT_CHOICES_DICT.keys())
 PAYMENT_CHOICE_LIST.remove("NONE")
 
-
-# Null, Blank, and Empty Default preset
-DEFAULTS = { "null": True, "blank": True, "default": "" }
 
 class Billing(models.Model):
 	user = models.OneToOneField(User, primary_key=True)
@@ -67,45 +64,49 @@ class Invoice(models.Model):
 		# the $20 on February 15th
 
 		# Dates
-		due_date 	= date.today().replace(day=15)
-		start 		= (due_date.replace(day=1) - timedelta(days=1)).replace(day=1)
-		end 		= start.replace(day=monthrange(start.year, start.month)[1])
+		due 	= date.today().replace(day=15)
+		start 	= (due.replace(day=1) - timedelta(days=1)).replace(day=1)
+		end 	= start.replace(day=monthrange(start.year, start.month)[1])
 
 		# No duplicate invoices allowed
-		if Invoice.objects.filter(user=user, due_date=due_date).exists():
+		if Invoice.objects.filter(user=user, due_date=due).exists():
 			return
 
 		# Sum all of user's conversions up to get user_earnings
-		user_earnings = user.earnings.get_conversions_u((start, end)) \
-			.aggregate(e=Sum("user_payout"))["e"] or 0
+		user_earnings = (user.earnings.get_conversions_u((start, end))
+			.aggregate(sum=Sum("user_payout"))["sum"] or 0)
+
+		c = user.earnings.get_conversions_u((start, end))[0]
 
 		# Sum all of user's referral earnings up
 		if user.profile.referrer:
-			referral_earnings = user.profile.referrer.earnings.get_conversions_u((start, end)) \
-				.aggregate(e=Sum("referral_payout"))["e"] or 0
+			referral_earnings = (user.profile.referrer.earnings.get_conversions_u((start, end))
+				.aggregate(sum=Sum("referral_payout"))["sum"] or 0)
 		else:
 			referral_earnings = 0
 
+		# Sum up user's earnings, referral's earnings, and pending earnings
 		total_earnings = user_earnings + referral_earnings
 
-		# Add pending earnings
-		user.billing.pending_earnings += total_earnings
+		# Add to pending_earnings
+		user.billing.pending_earnings += Decimal(total_earnings)
 		user.billing.save()
 
-		# Total and pending must be greater than minimum payout for an invoice
-		if total_earnings + user.billing.pending_earnings < user.profile.party.minimum_payout:
+		# Pending earnings must be greater than minimum payout for an invoice
+		if user.billing.pending_earnings < Decimal(user.profile.party.minimum_payout):
 			return
 
 		return Invoice.objects.create(
-			user 			= user,
-			creation_date 	= date.today(),
-			due_date 		= due_date,
+			user 				= user,
+			creation_date 		= date.today(),
+			due_date 			= due,
 
-			billing_start 	= start,
-			billing_end 	= end,
+			billing_start_date 	= start,
+			billing_end_date 	= end,
 
-			total_amount	= total_earnings,
-			referral_amount	= referral_earnings)
+			total_amount		= total_earnings,
+			referral_amount		= referral_earnings
+		)
 
 
 	def create_all():

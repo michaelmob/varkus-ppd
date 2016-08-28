@@ -46,7 +46,7 @@ class Server(View):
 						Token.create_random(widget)
 
 					conversion = Conversion.get_or_create(
-						Token.create_random(widget),  datetime="TOKEN"
+						Token.create_random(widget), datetime="TOKEN"
 					)
 
 					if conversion:

@@ -1,4 +1,4 @@
-$(".ui.modal")
+$(".ui.create.modal")
 	.modal({ onApprove: function() { return false; } })
 	.modal("attach events", ".create.button", "show");
 
