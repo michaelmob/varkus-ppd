@@ -2,6 +2,9 @@ def get_user_agent(user_agent):
 	"""
 	Return formatted and cleaned user-agent string.
 	"""
+	if not user_agent:
+		return None
+
 	user_agent = user_agent.lower()
 
 	if "windows" in user_agent:

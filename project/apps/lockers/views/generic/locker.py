@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -34,6 +34,16 @@ class LockerMixin():
 		return "%ss/locker/%s%s.html" % (
 			self.model_name, self.model_name, self.template_name_suffix
 		)
+
+
+	def get(self, request, *args, **kwargs):
+		"""
+		Disallow crawlers.
+		"""
+		if not request.META.get("HTTP_USER_AGENT"):
+			return HttpResponseForbidden("User-agent required.")
+
+		return super(__class__, self).get(request, *args, **kwargs)
 
 
 	def get_object(self, *args, **kwargs):

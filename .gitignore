@@ -19,7 +19,7 @@ logs/
 # Project Directories
 private/
 backups/
-media/**
+media/
 
 # Static Files
 static/admin

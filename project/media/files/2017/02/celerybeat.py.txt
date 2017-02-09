@@ -1,0 +1,34 @@
+import os
+import time
+from copy import copy
+from celery.apps.beat import Beat
+
+# It's main Django app settings
+from novtest import settings as novtest_settings
+# It's your celery app
+from novtest.celery import app
+
+DATABASES = copy(novtest_settings.DATABASES)
+if 'postgis' in DATABASES['default']['ENGINE']:
+    # Just my case, postgis asks for additional libraries, but it's not needed here
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
+from django.conf import settings
+settings.configure(
+    INSTALLED_APPS = (
+        'djcelery',
+    ),
+    TIME_ZONE = novtest_settings.TIME_ZONE,
+    DATABASES = DATABASES,
+)
+
+if hasattr(time, 'tzset'):
+    # Check that it's not development server on Windows
+    os.environ['TZ'] = settings.TIME_ZONE
+    time.tzset()
+
+if __name__ == '__main__':
+    import django
+    django.setup()
+    beat = Beat(app=app, scheduler_cls='djcelery.schedulers.DatabaseScheduler')
+    beat.run()
