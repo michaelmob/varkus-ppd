@@ -1,0 +1,15 @@
+.pusher, .middle.aligned {
+	height: 100%;
+}
+
+.ui.huge.header {
+	font-size: 8rem;
+}
+
+.ui.huge.header .sub.header {
+	font-size: 2rem;
+}
+
+.ui.segment {
+	text-align: left;
+}

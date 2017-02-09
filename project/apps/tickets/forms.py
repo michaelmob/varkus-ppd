@@ -1,68 +1,73 @@
-import re
+from re import sub
 from django import forms
-from django.http import QueryDict
 from django.forms import ModelForm
 from .models import Thread, Post
 
-class Form_Thread(ModelForm):
+
+
+class ThreadForm(ModelForm):
+	"""
+	ModelForm for the ticket Thread model.
+	"""
 	message = forms.CharField(label="Message", widget=forms.Textarea)
 	file = forms.FileField(label="File", required=False)
 
+
 	class Meta:
 		model = Thread
-		fields = ("category", "priority", "subject", "message", "file")
-
-	def __init__(self, request, **kwargs):
-		self.request = request
-		super(__class__, self).__init__(request.POST or None, **kwargs)
-
-	def save(self):
-		# Validate
-		if not self.is_valid():
-			return None
-
-		# Create object
-		obj = super(__class__, self).save(commit=False)
-
-		# Set Thread Fields
-		obj.user = self.request.user
-		obj.save()
-
-		# Create post
-		Form_Post(self.request, obj).save()
-
-		return obj
+		fields = ("subject", "category", "priority", "message", "file")
 
 
-class Form_Post(ModelForm):
+	def save(self, commit=True):
+		"""
+		Creates opening post.
+		"""
+		self.instance = super(__class__, self).save(commit)
+
+		if commit:
+			post = PostForm(self.data, self.files).save(commit=False)
+			post.original = True
+			post.user = self.instance.user
+			post.ip_address = self.ip_address
+			post.thread = self.instance
+			post.save()
+
+		return self.instance
+
+
+
+class PostForm(ModelForm):
+	"""
+	ModelForm for the ticket Post model.
+	"""
 	class Meta:
 		model = Post
 		fields = ("message", "file")
 
-	def __init__(self, request, thread, **kwargs):
-		self.request = request
-		self.thread = thread
-
-		super(__class__, self).__init__(request.POST or None,
-			request.FILES or None, **kwargs)
 
 	def clean_message(self):
-		return re.sub(r"(\r?\n){2,}", "\n\n", self.cleaned_data["message"])
+		"""
+		Clean the message to not include too many whitespace or new lines.
+		"""
+		return sub(r"(\r?\n){2,}", "\n\n", self.cleaned_data["message"])
 
-	def save(self):
-		# Validate
-		if not self.is_valid():
-			return None
 
-		# Create object
-		obj = super(__class__, self).save(commit=False)
+	def save(self, commit=True):
+		"""
+		Creates opening post.
+		"""
+		self.instance = super(__class__, self).save(commit)
 
-		# Set Thread Fields
-		obj.thread 	= self.thread
-		obj.user 	= self.request.user
-		obj.save()
-		
-		# Reset Form
-		self.request.POST = QueryDict()
-		
-		return obj
+		if commit:
+			user = self.instance.user
+
+			if user.is_staff:
+				name = "%s %s." % (user.first_name, user.last_name[:1])
+			else:
+				name = user.username
+
+			self.instance.thread.last_replier = name
+			self.instance.thread.closed = False
+			self.instance.thread.save()
+
+		return self.instance

@@ -1,0 +1,68 @@
+{% extends 'staff/staff_detail_base.html' %}
+{% load molds %}
+
+{% block title %}Staff | System{% endblock %}
+{% block stafftab %}system{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'staff:system' %}" class="active section">System</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui two columns stackable grid">
+
+	<div class="column">
+		<div class="box">
+			{% render_titlebar 'Specifications' 'tasks' %}
+			<table class="ui bottom attached definition table">
+				<tr>
+					<td>System</td>
+					<td>{{ system }}</td>
+				</tr>
+				<tr>
+					<td>Release</td>
+					<td>{{ release }}</td>
+				</tr>
+				<tr>
+					<td>Version</td>
+					<td>{{ version }}</td>
+				</tr>
+				<tr>
+					<td>Machine</td>
+					<td>{{ machine }}</td>
+				</tr>
+				<tr>
+					<td>Python</td>
+					<td>{{ python }}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="column">
+		<div class="box">
+			{% render_titlebar 'Monitor' 'terminal' %}
+			<table class="ui bottom attached definition table">
+				<tr>
+					<td>CPU</td>
+					<td>{{ cpu }}%</td>
+				</tr>
+				<tr>
+					<td>RAM</td>
+					<td>{{ ram.0|filesizeformat }} / {{ ram.1|filesizeformat }}</td>
+				</tr>
+				<tr>
+					<td>SWAP</td>
+					<td>{{ swap.0|filesizeformat }} / {{ swap.1|filesizeformat }}</td>
+				</tr>
+				<tr>
+					<td>Disk</td>
+					<td>{{ disk.0|filesizeformat }} / {{ disk.1|filesizeformat }}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+</div>
+{% endblock %}

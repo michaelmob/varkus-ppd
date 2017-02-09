@@ -1,0 +1,102 @@
+{% extends 'staff/staff_detail_base.html' %}
+{% load static currency molds billing %}
+
+{% block title %}Staff | Invoices{% endblock %}
+{% block stafftab %}users{% endblock %}
+
+{% block breadcrumbs_section %}
+<a href="{% url 'staff:invoice-list' %}" class="section">Invoices</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'staff:invoice-detail' object.pk %}" class="active section">Invoice #{{ object.id }}</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui two columns stackable grid">
+
+	{# Left Column #}
+	<div class="column">
+		<div class="box">
+			{% render_titlebar 'Invoice Details' 'fax' %}
+			<table class="ui bottom attached definition table">
+				<tr>
+					<td>User</td>
+					<td>
+						<a href="{% url 'staff:user-detail' object.user.pk %}">
+							{{ object.user.username }}
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Period</td>
+					<td>{{ object.period_start_date }} - {{ object.period_end_date }}</td>
+				</tr>
+				<tr>
+					<td>Created</td>
+					<td>{{ object.creation_date }} ({{ object.creation_date|timesince }} ago)</td>
+				</tr>
+				<tr>
+					<td>Due</td>
+					<td>{{ object.due_date }} ({{ object.due_date|timeuntil }})</td>
+				</tr>
+				<tr>
+					<td>Paid</td>
+					<td>{{ object.paid|yesno:"Yes,No" }}</td>
+				</tr>
+				<tr>
+					<td>Error</td>
+					<td>{{ object.error|yesno:"Yes,No" }}</td>
+				</tr>
+				<tr>
+					<td>Total Amount</td>
+					<td>${{ object.total_amount|currency }}</td>
+				</tr>
+				<tr>
+					<td>Referral Amount</td>
+					<td>${{ object.referral_amount|currency }}</td>
+				</tr>
+				<tr>
+					<td>Notes</td>
+					<td>{{ object.notes|linebreaksbr|default:"<i>No notes specified.</i>"|safe }}</td>
+				</tr>
+			</table>
+			<a href="{% url 'admin:billing_invoice_change' object.pk %}" class="ui bottom attached button">
+				Edit Invoice in Admin
+			</a>
+		</div>
+	</div>
+
+	{# Right Column #}
+	<div class="column">
+		<div class="box">
+			{% render_titlebar 'Payment' 'credit card' %}
+			<table class="ui bottom attached definition table">
+				<tr>
+					<td>Payment Method</td>
+					<td>{{ object.user.billing.choice|payment_humanize }}</td>
+				</tr>
+
+				<tr>
+					<td>Payment Frequency</td>
+					<td>{{ object.user.billing.frequency }} days</td>
+				</tr>
+
+				{% for key, value in payment_data.items %}
+				<tr>
+					<td>{{ key|title }}</td>
+					<td>{{ value }}</td>
+				</tr>
+				{% endfor %}
+				
+			</table>
+			<a href="{% url 'staff:invoice-update' object.pk %}" class="ui bottom attached button">
+				Start Payment
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock %}

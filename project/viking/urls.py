@@ -3,49 +3,63 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
+
 admin.site.login = login_required(admin.site.login)
 
-handler400 = "apps.site.errors._400"
-handler403 = "apps.site.errors._403"
-handler404 = "apps.site.errors._404"
-handler500 = "apps.site.errors._500"
+
+handler400 = "core.errors._400"
+handler403 = "core.errors._403"
+handler404 = "core.errors._404"
+handler500 = "core.errors._500"
+
 
 urlpatterns = [
-	# Home
-	url(r"^", include("apps.site.urls")),
+	# Core
+	url(r"^", include("core.urls")),
 
 	# Control Panel / Dashboard
-	url(r"^", include("apps.cp.urls")),
+	url(r"^", include("controlpanel.urls")),
 
-	# User
-	url(r"^", include("apps.user.urls")),
-
-	# Conversions
-	url(r"^conversions/", include("apps.conversions.urls")),
-
-	# Offers
-	url(r"^offers/", include("apps.offers.urls")),
-
-	# Support
-	url(r"^support/", include("apps.support.urls")),
-
-	# Support
-	url(r"^tickets/", include("apps.tickets.urls")),
-
-	# Billing
-	url(r"^billing/", include("apps.billing.urls")),
+	# Users
+	url(r"^", include("users.urls")),
 
 	# Lockers
-	url(r"^", include("apps.lockers.urls")),
+	url(r"^", include("lockers.urls")),
+
+	# Conversions
+	url(r"^conversions/", include("conversions.urls")),
+
+	# Offers
+	url(r"^offers/", include("offers.urls", namespace="offers")),
+
+	# Support
+	url(r"^support/", include("support.urls", namespace="support")),
+
+	# Tickets
+	url(r"^tickets/", include("tickets.urls", namespace="tickets")),
+
+	# Billing
+	url(r"^billing/", include("billing.urls", namespace="billing")),
+
+	# Staff
+	url(r"^staff/", include("staff.urls", namespace="staff")),
 
 	# Admin
 	url(r"^admin/", include(admin.site.urls)),
 ]
 
+
 if settings.DEBUG:
+	# debug toolbar
+	import debug_toolbar
+	urlpatterns += [
+		url(r"^__debug__/", include(debug_toolbar.urls))
+	]
+
+	# serve media files
 	from django.views.static import serve
-	
 	urlpatterns += [
 		url(r"^media/(?P<path>.*)$", serve, {
-			"document_root": settings.MEDIA_ROOT })
+			"document_root": settings.MEDIA_ROOT 
+		})
 	]

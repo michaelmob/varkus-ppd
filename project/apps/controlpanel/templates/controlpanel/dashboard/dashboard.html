@@ -1,0 +1,100 @@
+{% extends 'base_panel.html' %}
+{% load static %}
+{% load currency %}
+{% load molds %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+{# Information Blocks #}
+<div class="ui four column equal height stretched stackable grid">
+	{% with e=user.earnings %}
+	<div class="column">
+		{% data_block_content e.clicks_today 'Clicks' 'user clicks today' as content_1 %}
+		{% data_block_content e.clicks 'Total' 'user clicks total' as content_2 %}
+		{% data_block_duo 'red' 'pointing up' content_1 content_2 %}
+	</div>
+
+	<div class="column">
+		{% data_block_content e.conversions_today 'Conversions' 'user conversions today' as content_1 %}
+		{% data_block_content e.conversions 'Total' 'user conversions total' as content_2 %}
+		{% data_block_duo 'blue' 'lightning' content_1 content_2 %}
+	</div>
+
+	<div class="column">
+		{% data_block_content e.today 'Earnings' 'user earnings today' as content_1 %}
+		{% data_block_content e.total 'Total' 'user earnings total' as content_2 %}
+		{% data_block_duo 'green' 'dollar' content_1 content_2 %}
+	</div>
+
+	<div class="column">
+		{% data_block_content e.epc|currency 'Earnings Per Click' 'user epc today' as content_1 %}
+		{% data_block 'orange' 'bullseye' content_1 %}
+	</div>
+	{% endwith %}
+</div>
+
+<div class="ui stackable grid">
+
+	{# Left Column #}
+	<div class="seven wide column">
+		<div class="ui one column stackable grid">
+			{# Line #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Activity' 'line chart' %}
+					{% render_activity_chart %}
+				</div>
+			</div>
+
+			{# Map #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'World Map' 'world' %}
+					{% render_map_chart %}
+				</div>
+			</div>
+
+			{# Twitter #}
+			<div class="column">
+				<div class="ui segment">
+					<a class="twitter-timeline" data-dnt="true" data-theme="light" data-link-color="#F44336" href="https://twitter.com/varkuscom">Tweets by varkuscom</a>
+					<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# Right Column #}
+	<div class="nine wide column">
+		<div class="ui one column stackable grid">
+			{# Conversions #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Most Recent Conversions' 'lightning' %}
+					{% render_table tables.0 %}
+				</div>
+			</div>
+
+			{# Newest Offers #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Newest Offers' 'tags' %}
+					{% render_table tables.1 %}
+				</div>
+			</div>
+
+			{# Top Performing Offers #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Top Performing Offers' 'pie chart' %}
+					{% render_table tables.2 %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+{% endblock %}

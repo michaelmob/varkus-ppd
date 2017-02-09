@@ -1,0 +1,116 @@
+{% load cache currency offers %}
+
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="tag icon"></i></div>
+	<div class="header item">Offer:&nbsp;<strong>{{ object.name }}</strong></div>
+
+	<div class="right menu">
+		{% if user.is_staff %}
+		<a href="{% url 'admin:offers_offer_change' object.id %}" class="ui inverted icon item">
+			<i class="shield icon"></i>
+		</a>
+		{% endif %}
+
+		{% with priority=object|priority:user %}
+		<div class="ui inverted item dropdown">
+			<i class="options icon"></i> Options
+			<div class="menu">
+				<div class="header">Priority</div>
+				<div data-id="{{ object.pk }}" data-value="priority" class="ui priority item radio checkbox">
+					<input class="hidden" tabindex="0" name="priority" type="radio" {% if priority == 'priority' %}checked {% endif %}/>
+					<label>Priority</label>
+				</div>
+
+				<div data-id="{{ object.pk }}" data-value="neutral" class="ui priority item radio checkbox">
+					<input class="hidden" tabindex="0" name="priority" type="radio" {% if priority == 'neutral' %}checked {% endif %}/>
+					<label>Neutral</label>
+				</div>
+
+				<div data-id="{{ object.pk }}" data-value="block" class="ui priority item radio checkbox">
+					<input class="hidden" tabindex="0" name="priority" type="radio" {% if priority == 'block' %}checked {% endif %}/>
+					<label>Block</label>
+				</div>
+
+				<div class="header">Boost</div>
+				<div data-id="{{ object.pk }}" class="ui boost item">
+					<i class="rocket icon"></i> Boost Offer
+				</div>
+				<div data-id="{{ object.pk }}" class="ui reset item">
+					<i class="erase icon"></i> Reset Boost
+				</div>
+			</div>
+		</div>
+		{% endwith %}
+	</div>
+</div>
+
+<div class="ui bottom attached segment">
+	<div class="ui divided relaxed list">
+		<div class="item">
+			<i class="quote left icon"></i>
+			<div class="content">
+				<div class="header">Name</div>
+				{{ object.name }}
+			</div>
+		</div>
+		<div class="item">
+			<i class="money icon"></i>
+			<div class="content">
+				<div class="header">Payout</div>
+				${{ object.payout|cut_percent:user.profile.party.cut_amount }}
+			</div>
+		</div>
+		<div class="item">
+			<i class="ellipsis horizontal icon"></i>
+			<div class="content">
+				<div class="header">Anchor</div>
+				{{ object.anchor }}
+			</div>
+		</div>
+		<div class="item">
+			<i class="sitemap icon"></i>
+			<div class="content">
+				<div class="header">Category</div>
+				{{ object.category }}
+			</div>
+		</div>
+		<div class="item">
+			<i class="asterisk icon"></i>
+			<div class="content">
+				<div class="header">Requirements</div>
+				{{ object.requirements }}
+			</div>
+		</div>
+		{% if object.user_agent %}
+			<div class="item">
+				<i class="disk outline icon"></i>
+				<div class="content">
+					<div class="header">User Agent</div>
+					{{ object.user_agent }}
+				</div>
+			</div>
+		{% endif %}
+		<div class="item">
+			<i class="world icon"></i>
+			<div class="content">
+				{% cache 7200 offers_manage object.pk %}
+					<div class="header">Countr{{ object.country_count|pluralize:'y,ies' }}</div>
+					{% if object.country_count > 1 %}
+						{% for code, country in object.get_countries.items %}
+							<i class="{{ code|lower }} flag popup" data-content="{{ country }}" data-variation="inverted"></i>
+						{% endfor %}
+					{% else %}
+						<i class="{{ object.country|lower }} flag"></i>{{ object.get_country }}
+					{% endif %}
+				{% endcache %}
+			</div>
+		</div>
+		<div class="item">
+			<i class="calendar icon"></i>
+			<div class="content">
+				<div class="header">Added on</div>
+				{{ object.date }}
+			</div>
+		</div>
+	</div>
+</div>

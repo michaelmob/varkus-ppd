@@ -1,0 +1,35 @@
+@media only screen and (min-width: 992px) {
+	.pusher, .djdt-panelContent {
+		margin-left: 15rem !important;
+	}
+}
+
+.ui.main.menu .item {
+	color: #4c4e54;
+}
+
+.ui.main.menu .item:before {
+	width: 0;
+}
+
+body .wrapper {
+	padding: 0.5rem;
+}
+
+.menu.push {
+	height: 2.5rem !important;
+}
+
+.plotTip {
+	background: rgba(255, 255, 255, 0.75) !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+}
+
+.legendLabel {
+	color: #000;
+}
+
+.ui.notifications.floating {
+	top: initial !important;
+}

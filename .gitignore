@@ -11,6 +11,7 @@ exports
 # Binary
 __pycache__/
 .env/
+celerybeat-schedule
 
 # Logs
 logs/
@@ -26,5 +27,7 @@ static/admin
 # Migrations
 migrations/
 
-# LetsEncrypt Directories
-.well-known/
+# Docker
+nginx/certs/**
+postgres/data/
+docker-compose.production.yml

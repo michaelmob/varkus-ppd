@@ -1,0 +1,28 @@
+# Python
+setuptools
+cython
+django
+psycopg2
+pysocks
+geoip2
+psutil
+cryptography
+asgi-redis
+Celery
+
+# Django
+channels
+django-celery-results
+django-tables2
+django-braces
+django-recaptcha
+django-storages
+django-axes
+django-countries
+django-gravatar2
+django-redis
+django-debug-toolbar
+django-semanticui-forms
+
+# Git
+git+https://github.com/thetarkus/anora

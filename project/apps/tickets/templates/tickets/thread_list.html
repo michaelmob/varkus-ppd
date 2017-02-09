@@ -1,0 +1,44 @@
+{% extends 'tickets/thread_base.html' %}
+{% load molds %}
+
+{% block breadcrumbs_section %}
+{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'tickets:list' %}" class="active section">Tickets</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui grid stackable">
+	<div class="ten wide column">
+		{% render_titlebar "Tickets" "ticket" %}
+		{% render_table table %}
+	</div>
+
+	<div class="six wide column">
+		<div class="box">
+			{% render_titlebar "Create" "add square" %}
+			<div class="ui bottom attached segment">
+				<a href="{% url 'tickets:create' %}" class="ui left labeled icon fluid basic create button">
+					<i class="plus icon"></i>
+					New Ticket
+				</a>
+
+				<div class="ui header">Ticket System</div>
+				<p>
+					Using the ticket system, you can get support from the
+					{% site_name %} team. Whether it be: a bug report, an offer
+					problem, or even a payment issue; we will always try to
+					help and solve the problem to the best of our abilities.
+				</p>
+
+				<p>
+					You can expect a response within <strong>24-hours</strong>, but usually
+					much sooner.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

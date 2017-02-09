@@ -1,0 +1,28 @@
+{% load django_tables2 %}
+
+{% if table.paginator.page_range|length > 1 %}
+	<div class="ui {% if class %}{{ class }} {% endif %}pagination fluid {% if inverted %}inverted {% endif %}menu">
+
+		<a href="{% querystring table.prefixed_page_field=1 %}" class="icon item{% if not table.page.has_previous %} disabled{% endif %}">
+			<i class="step backward icon"></i>
+		</a>
+
+		<a href="{% if table.page.has_previous %}{% querystring table.prefixed_page_field=table.page.previous_page_number %}{% endif %}" class="icon item{% if not table.page.has_previous %} disabled{% endif %}">
+			<i class="backward icon"></i>
+		</a>
+
+		{% for page in pages %}
+			<a href="{% querystring table.prefixed_page_field=page %}" class="{% if page == table.page.number %}active {% endif %}item">
+				{{ page }}
+			</a>
+		{% endfor %}
+
+		<a href="{% if table.page.has_next %}{% querystring table.prefixed_page_field=table.page.next_page_number %}{% endif %}" class="icon item{% if table.page.number == table.paginator.num_pages %} disabled{% endif %}">
+			<i class="forward icon"></i>
+		</a>
+
+		<a href="{% querystring table.prefixed_page_field=table.paginator.num_pages %}" class="icon item{% if not table.page.has_next %} disabled{% endif %}">
+			<i class="step forward icon"></i>
+		</a>
+	</div>
+{% endif %}

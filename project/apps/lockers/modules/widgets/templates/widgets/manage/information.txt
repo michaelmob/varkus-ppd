@@ -1,0 +1,10 @@
+<div class="ui header">Widget Lockers</div>
+<p>
+	The widget locker is the most generic locker out of all of the Varkus
+	lockers. It is dynamic and can be used for multiple purposes other than
+	just a single, specific thing.
+</p>
+<p>
+	More importantly, widgets are the only lockers that have the
+	ability to send out an HTTP Notification when a conversion goes through.
+</p>

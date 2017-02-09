@@ -1,0 +1,31 @@
+{% extends 'base_panel.html' %}
+
+
+{% block title %}{{ model_name|title }}s{% endblock %}
+
+
+{% block tab %}{{ model_name }}s{% endblock %}
+
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	
+	{% block breadcrumbs_app %}
+	<div class="section">Lockers</div>
+	<i class="right chevron icon divider"></i>
+	{% endblock %}
+
+	{% block breadcrumbs_section %}
+	<a href="{% url model_name|add:'s:list' %}" class="section">
+		{{ model_name|title }}s
+	</a>
+	<i class="right chevron icon divider"></i>
+	{% endblock %}
+
+	{% block breadcrumbs_active %}
+	<a href="{% url model_name|add:'s:list' %}" class="active section">
+		{{ model_name|title }}s
+	</a>
+	{% endblock %}
+</div>
+{% endblock %}

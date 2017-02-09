@@ -1,0 +1,12 @@
+{% extends 'lockers/generic/locker/unlock_base.html' %}
+
+
+{% block title %}Download {{ object.name }}{% endblock %}
+
+
+{% block content %}
+<h1>Click the button below to start your Download</h1>
+<a class="ui massive primary fluid button" href="?download=1">
+	Download {{ object.name }}
+</a>
+{% endblock %}

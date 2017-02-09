@@ -1,0 +1,44 @@
+{% load gravatar %}
+
+<div class="ui bottom attached segment">
+	<div class="ui comments">
+		{% for post in object.get_posts %}
+		<div class="comment">
+			<a class="avatar">
+				{% gravatar post.user.email 32 %}
+			</a>
+			<div class="content">
+				<a class="author">
+					{% if post.user.is_staff %}
+						{{ post.user.first_name|title }}
+					{% else %}
+						{{ post.user.username }}
+					{% endif %}
+				</a>
+				<div class="metadata">
+					<span class="date">{{ post.datetime }}</span>
+					{% if post.user.is_staff %}
+						<span class="ui orange horizontal label">Staff</span>
+					{% endif %}
+				</div>
+				<div class="text">{{ post.message|linebreaksbr }}</div>
+				<div class="actions">
+					{% if post.file %}
+						<a target="_blank" href="{{ post.file.url }}">View Attachment</a>
+					{% endif %}
+					{% if user == post.user and post.can_delete %}
+					<a class="delete" data-pid="{{ post.id }}">Delete</a>
+					{% endif %}
+					{% if user.is_staff %}
+					<span>({{ post.ip_address }})</span>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% empty %}
+		<div class="comment">
+			No posts here!
+		</div>
+		{% endfor %}
+	</div>
+</div>

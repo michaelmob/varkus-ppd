@@ -1,0 +1,14 @@
+{% extends 'staff/staff_list_base.html' %}
+{% load static molds %}
+
+{% block title %}Staff | Invoices{% endblock %}
+{% block stafftab %}invoices{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'staff:invoice-list' %}" class="active section">Invoices</a>
+{% endblock %}
+
+
+{% block content %}
+	{% render_table table %}
+{% endblock %}

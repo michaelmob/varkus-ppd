@@ -1,0 +1,80 @@
+{% load offers %}
+{% load cache %}
+
+<div class="ui equal width padded divided grid" style="margin:.1rem">
+	<div class="column">
+		<div class="ui header">Priority</div>
+		<div class="ui very relaxed small list">
+			{% cache 5 prioritized_offers user.pk %}
+				{% for offer in user.profile.offer_priority.all %}
+				<div class="item">
+					<div class="right floated content">
+						<a data-id="{{ offer.pk }}" class="ui compact mini icon remove offer button">
+							<i class="close icon"></i>
+						</a>
+					</div>
+					{{ offer.category|render_category_icon }}
+					<div class="middle aligned content">
+						<a href="{% url 'offers:detail' offer.pk %}">{{ offer.name }}</a>
+					</div>
+				</div>
+				{% empty %}
+				<div class="item">
+					You have no prioritized offers.
+				</div>
+				{% endfor %}
+			{% endcache %}
+		</div>
+	</div>
+
+	<div class="column">
+		<div class="ui header">Blocked</div>
+		<div class="ui very relaxed small list">
+			{% cache 5 blocked_offers user.pk %}
+				{% for offer in user.profile.offer_block.all %}
+				<div class="item">
+					<div class="right floated content">
+						<a data-id="{{ offer.pk }}" class="ui compact mini icon remove offer button">
+							<i class="close icon"></i>
+						</a>
+					</div>
+					{{ offer.category|render_category_icon }}
+					<div class="content">
+						<a href="{% url 'offers:detail' offer.pk %}">{{ offer.name }}</a>
+					</div>
+				</div>
+				{% empty %}
+				<div class="item">
+					You have no blocked offers.
+				</div>
+				{% endfor %}
+			{% endcache %}
+		</div>
+	</div>
+
+	<div class="two column row">
+		<div class="column">
+			<div class="ui divider"></div>
+			<div class="ui header">Boosted</div>
+			<div class="ui very relaxed small list">
+				{% for offer in boosted_offers %}
+				<div class="item">
+					<div class="right floated content">
+						<a data-id="{{ offer.pk }}" class="ui compact mini icon reset offer button">
+							<i class="close icon"></i>
+						</a>
+					</div>
+					{{ offer.category|render_category_icon }}
+					<div class="content">
+						<a href="{% url 'offers:detail' offer.pk %}">{{ offer.name }}</a>
+					</div>
+				</div>
+				{% empty %}
+				<div class="item">
+					You have no boosted offers.
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,16 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}Tickets{% endblock %}
+{% block tab %}tickets{% endblock %}
+
+
+{% block breadcrumbs_app %}
+<div class="section">Support</div>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+
+{% block breadcrumbs_section %}
+<a href="{% url 'tickets:list' %}" class="section">Tickets</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}

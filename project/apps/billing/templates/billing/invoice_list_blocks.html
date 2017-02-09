@@ -1,0 +1,21 @@
+{% load molds currency %}
+
+<div class="column">
+	{% data_block_content user.profile.party.minimum_payout 'Minimum Payout' 'user minimum payout' as content %}
+	{% data_block 'red' 'sort numeric descending' content %}
+</div>
+
+<div class="column">
+	{% data_block_content user.billing.pending_earnings 'Pending Earnings' 'user pending earnings' as content %}
+	{% data_block 'blue' 'wait' content %}
+</div>
+
+<div class="column">
+	{% data_block_content user.earnings.total 'Total Earnings' 'user total earnings' as content %}
+	{% data_block 'green' 'dollar' content %}
+</div>
+
+<div class="column">
+	{% data_block_content user.billing.paid_earnings 'Paid Earnings' 'user paid earnings' as content %}
+	{% data_block 'orange' 'send' content %}
+</div>

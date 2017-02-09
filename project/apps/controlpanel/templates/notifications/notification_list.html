@@ -1,0 +1,71 @@
+<body>
+<div id="content">
+	{# Broadcasts #}
+	{% if broadcast_object_list|length > 0 %}
+	<h5>Broadcasts</h5>
+	<div class="ui feed">
+		{% for object in broadcast_object_list %}
+		<div class="event">
+			<div class="label">
+				<i class="{{ object.icon }} icon"></i>
+			</div>
+			<div class="content">
+				<div class="summary">
+					{{ object.content }}
+				</div>
+				<div class="meta">
+					{% if object.url %}
+						<a href="{{ object.url|safe }}">
+							<i class="linkify icon"></i> View
+						</a> |
+					{% endif %}
+
+					{{ object.datetime|timesince }} ago
+
+					{% if object.unread %}
+					<span class="ui yellow empty circular label"></span>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	{# Notifications #}
+	<h5>Notifications</h5>
+	<div class="ui feed">
+		{% for object in object_list %}
+		<div class="event">
+			<div class="label">
+				<i class="{{ object.icon }} icon"></i>
+			</div>
+			<div class="content">
+				<div class="summary">
+					{{ object.content }}
+				</div>
+				<div class="meta">
+					{% if object.url %}
+						<a href="{{ object.url|safe }}">
+							<i class="linkify icon"></i> View
+						</a> |
+					{% endif %}
+
+					{{ object.datetime|timesince }} ago
+
+					{% if object.unread %}
+					<span class="ui yellow empty circular label"></span>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% empty %}
+		<div class="event">
+			<div class="content">
+				You have no new notifications.
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+</body>

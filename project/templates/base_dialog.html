@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headstylebase %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/base_dialog.css' %}" />
+{% endblock %}
+
+{% block wrapper %}
+	{% block messages %}
+		{% for message in messages %}
+			<div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
+				<i class="close icon"></i>
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endblock %}
+
+	{% block content %}
+
+	{% endblock %}
+{% endblock %}
+
+{% block footer %}{% endblock %}

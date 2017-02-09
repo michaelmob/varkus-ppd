@@ -1,0 +1,49 @@
+{% load share %}
+
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="info icon"></i></div>
+	<div class="header item">Referral Guide</div>
+</div>
+
+<div class="ui bottom attached segment">
+	<div class="ui form">
+		<div class="field">
+			<label>Your Referral URL</label>
+			<div class="ui action input">
+				<button class="ui primary left labeled icon copy button" data-clipboard-target="#referral">
+					<i class="copy icon"></i> Copy
+				</button>
+				<input id="referral" type="text" value="{{ url }}" readonly />
+				{% site_name as name %}
+				{% with txt='Register on '|add:name|add:" and let's earn together!" %}
+					<a href="{% twitter url txt %}" target="_target" class="ui twitter icon button">
+						<i class="twitter icon"></i>
+					</a>
+					<a href="{% facebook url %}" target="_target" class="ui facebook icon button">
+						<i class="facebook icon"></i>
+					</a>
+					<a href="{% googleplus url %}" target="_target" class="ui google plus icon button">
+						<i class="google plus icon"></i>
+					</a>
+					<a href="{% email 'Let\'s make money together with '|add:name txt|add:' '|add:url %}" target="_target" class="ui grey icon button">
+						<i class="at icon"></i>
+					</a>
+				{% endwith %}
+			</div>
+		</div>
+	</div>
+
+	<div class="ui header">Referrals</div>
+	<p>
+		Referrals are a great way to earn some extra profit with little to no work.
+		All you have to do is mention {% site_name %} to a friend, family member,
+		or even acquaintance and have them sign up with your referral URL.
+	</p>
+
+	<div class="ui header">Benefits</div>
+	<p>
+		There are more pros than cons to referring someone; in fact, there are
+		no cons at all. You receive <b>{{ percent }}%</b> of your referral's
+		earnings for each and every conversion that they earn.
+	</p>
+</div>

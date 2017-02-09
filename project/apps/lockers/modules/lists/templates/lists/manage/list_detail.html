@@ -1,0 +1,33 @@
+{% extends 'lockers/generic/manage/detail_base.html' %}
+{% load static %}
+
+{% block details %}
+<div class="item">
+	<i class="block layout icon"></i>
+	<div class="content">
+		<div class="header">Item Name</div>
+		{{ object.item_name }}
+	</div>
+</div>
+<div class="item">
+	<i class="sort content ascending icon"></i>
+	<div class="content">
+		<div class="header">Distribution Order</div>
+		{{ object.order|title }}
+	</div>
+</div>
+<div class="item">
+	<i class="repeat icon"></i>
+	<div class="content">
+		<div class="header">Reuse Items</div>
+		{{ object.reuse|yesno:'Yes,No' }}
+	</div>
+</div>
+<div class="item">
+	<i class="calendar icon"></i>
+	<div class="content">
+		<div class="header">Created on</div>
+		{{ object.datetime }}
+	</div>
+</div>
+{% endblock %}

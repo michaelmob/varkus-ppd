@@ -1,25 +1,41 @@
-from .conversions import View_Conversions
-from ..tables import Table_Statistics_Offers, Table_Statistics_Countries
+from .conversions import ConversionsView
+from ..tables import OfferStatisticsTable, CountryStatisticsTable
 
-class View_Statistics(View_Conversions):
-	page = "month"
-	title = "Statistics"
+
+
+class StatisticsViewBase(ConversionsView):
+	"""
+	Base statistics view.
+	"""
 	table_icon = "bar graph"
-	template = "conversions/statistics.html"
+	template_name = "conversions/statistic_list.html"
 
 
-class View_Offers(View_Statistics):
-	page = "offers"
-	title = "Offer Statistics"
-	table = Table_Statistics_Offers
+	def get_context_data(self, **kwargs):
+		"""
+		Add 'category' element to context dictionary.
+		Returns context dictionary.
+		"""
+		context = super(__class__, self).get_context_data(**kwargs)
+		context["category"] = self.category
+		return context
 
 
-class View_Countries(View_Statistics):
-	page = "countries"
-	title = "Country Statistics"
-	table = Table_Statistics_Countries
+
+class OffersView(StatisticsViewBase):
+	"""
+	Statistics view for offers.
+	"""
+	category = "offers"
+	table_title = "Offer Statistics"
+	table_class = OfferStatisticsTable
 
 
-class View_Chargebacks(View_Statistics):
-	page = "chargebacks"
-	title = "Chargeback Statistics"
+
+class CountriesView(StatisticsViewBase):
+	"""
+	Statistics view for countries.
+	"""
+	category = "countries"
+	table_title = "Country Statistics"
+	table_class = CountryStatisticsTable

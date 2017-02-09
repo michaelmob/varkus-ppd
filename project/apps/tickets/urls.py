@@ -1,10 +1,10 @@
-from django.contrib.auth.decorators import login_required
 from django.conf.urls import url
+from .views import TicketListView, TicketCreateView, TicketDetailView
 
-from .views.manage import View_Overview, View_Manage
 
 urlpatterns = [
-	url(r"^$", login_required(View_Overview.as_view()), name="tickets"),
-	url(r"^manage/(?P<id>\w+)/$", login_required(View_Manage.as_view()), name="tickets-manage"),
-	url(r"^manage/(?P<id>\w+)/(?P<action>\w+)/$", login_required(View_Manage.as_view()), name="tickets-manage-action"),
+	url(r"^$", TicketListView.as_view(), name="list"),
+	url(r"^create/$", TicketCreateView.as_view(), name="create"),
+	url(r"^(?P<pk>[0-9]+)/$", TicketDetailView.as_view(), name="detail"),
+	url(r"^(?P<pk>[0-9]+)/(?P<action>[A-z]+)/$", TicketDetailView.as_view(), name="detail"),
 ]

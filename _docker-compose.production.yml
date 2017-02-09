@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+    nginx:
+        image: steveltn/https-portal:1.0.0
+        restart: always
+        ports:
+            - 80:80
+            - 443:443
+        volumes_from:
+            - django
+        volumes:
+            - ./docker/nginx/certs:/var/lib/https-portal
+            - ./docker/nginx/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb
+        environment:
+            - STAGE=production
+            - DOMAINS=viking.com -> http://django:8000
+
+    django:
+        build: ./project
+        command: daphne viking.asgi:channel_layer -b 0.0.0.0 -p 8000
+        environment:
+            - DEBUG=false
+
+    worker:
+        build: ./project
+        command: python manage.py runworker
+        depends_on:
+            - django
+        volumes_from:
+            - django

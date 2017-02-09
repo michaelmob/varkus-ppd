@@ -1,1 +1,0 @@
-default_app_config = "apps.cp.app.Config_CP"

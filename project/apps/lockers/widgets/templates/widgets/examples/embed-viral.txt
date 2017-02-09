@@ -1,2 +1,0 @@
-&lt;iframe id="widget" height="500" width="800" frameborder="0"&gt;&lt;/iframe&gt;
-&lt;script&gt;document.getElementById("widget").src="{{ url }}"+(document.location.href.indexOf("?v=")&gt;1?"?v="+document.location.href.split("?v=")[1].split("&")[0]+"&":"?")+"url="+encodeURIComponent(document.location.href);&lt;/script&gt;

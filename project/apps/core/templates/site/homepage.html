@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headstyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/apps/site/homepage.css' %}">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+{% endblock %}
+
+{% block headjs %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+<script type="text/javascript" src="{% static 'js/apps/site/homepage.js' %}"></script>
+{% endblock %}
+
+{% block titlefull %}{% site_name %}{% endblock %}
+
+{% block wrapper %}
+	{% block content %}
+
+	{# Masthead #}
+	<div class="ui masthead inverted segment">
+		<div class="background one"></div>
+		<div class="dimmer"></div>
+		<div class="ui container">
+			<h1 class="ui inverted header">{% site_name %}</h1>
+			<h2>First Class Monetization Solutions</h2>
+
+			<a href="{% url 'signup' %}" class="ui huge button">
+				Get Started
+			</a>
+
+			{% if user.is_anonymous %}
+				<a href="{% url 'login' %}" class="ui huge inverted basic button">
+					Login
+				</a>
+			{% else %}
+				<a href="{% url 'dashboard' %}" class="ui huge inverted basic button">
+					Dashboard
+				</a>
+			{% endif %}
+		</div>
+	</div>
+
+	{# Hook #}
+	<div class="ui secondary vertical stripe segment">
+		<div class="ui text container">
+			<p>Ever wanted to earn real money from your content?</p>
+			<p>Read on to see if <strong>{% site_name %}</strong> is right for you!</p>
+		</div>
+	</div>
+
+	{# Lockers #}
+	<div class="ui very relaxed middle aligned stackable grid container">
+
+		{# Lockers #}
+		<div class="two column row">
+			<div class="column">
+				<h2 class="ui header">
+					<div class="content">
+						Secure <strong>Lockers</strong>
+					</div>
+					<div class="sub header">
+						Straightforward and painless locker setup means your content is locked
+						and ready to be <strong>monetized</strong> immediately.
+					</div>
+				</h2>
+
+				<p class="text">
+					Securely lock precious content and earn a profit whenever someone
+					unlocks it. Nobody will be able to unlock your content from our
+					website without you earning.
+				</p>
+			</div>
+
+			<div class="column">
+				<div class="ui divided items">
+					<div class="item">
+						<h3 class="ui header">
+							<i class="file outline icon"></i>
+							<div class="content">
+								<strong>File</strong> Locker
+								<div class="sub header">
+									Upload your files that people want, like your new song
+									or the application you created. For every time your file
+									is unlocked and downloaded you get a pay day.
+								</div>
+							</div>
+						</h3>
+					</div>
+					<div class="item">
+						<h3 class="ui header">
+							<i class="linkify icon"></i>
+							<div class="content">
+								<strong>Link</strong> Locker
+								<div class="sub header">
+									Lock links to private websites that you know people
+									would like to access. Earn each time your link is unlocked.
+								</div>
+							</div>
+						</h3>
+					</div>
+					<div class="item">
+						<h3 class="ui header">
+							<i class="list layout icon"></i>
+							<div class="content">
+								<strong>List</strong> Locker
+								<div class="sub header">
+									Lock lists of items, such as a list of keys to your new game,
+									that you would like to distribute individually to different
+									people while earning profit for each item that is unlocked.
+								</div>
+							</div>
+						</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui inverted vertical segment">
+		<div class="ui center aligned stackable three column grid container">
+			<div class="column">
+				<h2 class="ui center aligned inverted icon header">
+					<i class="mobile icon"></i>
+					Responsively Designed
+
+					<div class="sub header">
+						Every built-in theme for our lockers is designed for mobile
+						use first, but also looks and works fantastic on tablets and desktops!
+					</div>
+				</h2>
+			</div>
+			<div class="column">
+				<h2 class="ui center aligned inverted icon header">
+					<i class="world icon"></i>
+					GeoTargetting
+
+					<div class="sub header">
+						Targetting your audience is important. Your clients will
+						receive the best offers for their location 100% of the time.
+					</div>
+				</h2>
+			</div>
+			<div class="column">
+				<h2 class="ui center aligned inverted icon header">
+					<i class="pie chart icon"></i>
+					Reports and Statistics
+
+					<div class="sub header">
+						View all clicks and conversions from inside your Control Panel.
+						View in-depth reports about all clicks and conversions from
+						any time period.
+					</div>
+				</h2>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui very relaxed middle aligned stackable two column grid container">
+		{# Widgets #}
+		<div class="row">
+			<div class="column">
+				<h2 class="ui header">
+					<div class="content">
+						Themeable <strong>Widgets</strong>
+					</div>
+					<div class="sub header">
+						Customize your widget to your liking using your own CSS or
+						by using pre-defined themes.
+					</div>
+				</h2>
+
+				<p class="text">
+					Using our widget tool you can lock any piece of content, whether it be
+					entire websites or simply extending one of the other lockers. You can
+					customize every visual component of your offer wall using CSS.
+				</p>
+			</div>
+
+			<div class="column">
+				<pre>
+					<code class="css">/* Row */
+.w .item {
+	display: table;
+	width: 100%;
+	text-decoration: none;
+	color: black;
+}
+
+/* Columns */
+.w .item .anchor,
+.w .item .icon {
+	display: table-cell;
+	vertical-align: middle;
+	padding: .75rem 1rem;
+}</code>
+				</pre>
+			</div>
+		</div>
+
+		<div class="ui divider"></div>
+
+		{# HTTP Notifications #}
+		<div class="row">
+			<div class="column">
+				<div class="ui items">
+					<div class="item">
+						<h3 class="ui header">
+							<i class="exchange icon"></i>
+							<div class="content">
+								Extensive <strong>API</strong>
+							</div>
+						</h3>
+					</div>
+					<div class="item">
+						<h3 class="ui header">
+							<i class="code icon"></i>
+							<div class="content">
+								Custom <strong>CSS</strong>
+							</div>
+						</h3>
+					</div>
+					<div class="item">
+						<h3 class="ui header">
+							<i class="star icon"></i>
+							<div class="content">
+								User-specified <strong>Priority</strong>
+							</div>
+						</h3>
+					</div>
+				</div>
+			</div>
+
+			<div class="column">
+				<h2 class="ui header">
+					<div class="content">
+						HTTP/S <strong>Notifications</strong>
+					</div>
+					<div class="sub header">
+						Get HTTP/S Notifications sent to your server for each of your conversions.
+					</div>
+				</h2>
+
+				<p class="text">
+					Take over the reins and use us as your platform. You will have all the
+					information from your conversion sent to your server where you can process
+					the data however you wish.
+				</p>
+			</div>
+		</div>
+
+		<div class="ui divider"></div>
+
+		{# Referrals #}
+		<div class="one column row">
+			<div class="ui text container column">
+				<h2 class="ui center aligned icon header">
+					<i class="users icon"></i>
+					<div class="content">
+						<strong>Referrals</strong>
+					</div>
+					<div class="sub header">
+						Earn 10% of the profits of every person that you refer.
+					</div>
+				</h2>
+
+				<p class="text">
+					Sound to good to be true? Well, it's completely true! For every earning
+					that your referral makes, you earn 10% of their earnings! That's a bonus
+					which really adds up on payday.
+				</p>
+			</div>
+		</div>
+
+		<div class="center aligned one column row">
+			<div class="column">
+				<a href="{% url 'signup' %}" class="ui massive red right labeled icon button">
+					Get Started
+					<i class="right arrow icon"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	{# API #}
+
+	{# Referrals #}
+
+	{# Get Started #}
+	{% endblock %}
+{% endblock %}

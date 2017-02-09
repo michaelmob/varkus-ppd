@@ -1,0 +1,220 @@
+{% extends 'staff/staff_detail_base.html' %}
+{% load static currency molds %}
+
+{% block title %}Staff | Users{% endblock %}
+{% block stafftab %}users{% endblock %}
+
+{% block breadcrumbs_section %}
+<a href="{% url 'staff:user-list' %}" class="section">Users</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'staff:user-detail' object.pk %}" class="active section">{{ object.username }}</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui stackable grid">
+
+	{# Left Column #}
+	<div class="seven wide column">
+		<div class="ui one column stackable grid">
+			{# User Details #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Details: '|add:object.username|safe 'user' %}
+					<table class="ui bottom attached definition table">
+						<tr>
+							<td>Username</td>
+							<td>{{ object.username }}</td>
+						</tr>
+						<tr>
+							<td>Name</td>
+							<td>{{ object.first_name }} {{ object.last_name }}</td>
+						</tr>
+						<tr>
+							<td>E-mail</td>
+							<td>{{ object.email }}</td>
+						</tr>
+						<tr>
+							<td>Party</td>
+							{% with party=object.profile.party %}
+							<td>
+								<a target="_blank" href="{% url 'admin:users_party_change' party.id %}">
+									{{ party.name }} <i class="shield icon"></i>
+								</a>
+							</td>
+							{% endwith %}
+						</tr>
+						<tr>
+							<td>Referrer</td>
+							<td>
+								{% if object.profile.referrer %}
+									<a href="{% url 'admin:auth_user_change' object.referrer.pk %}">
+										{{ object.referrer.username }} <i class="shield icon"></i>
+									</a>
+								{% else %}
+									<i>None</i>
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td>Pending Earnings</td>
+							<td>${{ object.billing.pending_earnings|currency }}</td>
+						</tr>
+						<tr>
+							<td>Paid Earnings</td>
+							<td>${{ object.billing.paid_earnings|currency }}</td>
+						</tr>
+					</table>
+					<a href="{% url 'admin:auth_user_change' object.pk %}" class="ui bottom attached button">
+						Edit User in Admin
+					</a>
+				</div>
+			</div>
+
+			{# Earnings #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Earnings' 'money' %}
+					<table class="ui bottom attached definition table">
+						<tr style="background:rgba(0,0,0,.03)">
+							<td></td>
+							<td><strong>E</strong></td>
+							<td><strong>R</strong></td>
+						</tr>
+						<tr>
+							<td>Clicks</td>
+							<td>{{ object.earnings.clicks }}</td>
+							<td>{{ object.referralearnings.clicks }}</td>
+						</tr>
+						<tr>
+							<td>Conversions</td>
+							<td>{{ object.earnings.conversions }}</td>
+							<td>{{ object.referralearnings.conversions }}</td>
+						</tr>
+						<tr>
+							<td>Clicks (Today)</td>
+							<td>{{ object.earnings.clicks }}</td>
+							<td>{{ object.referralearnings.clicks }}</td>
+						</tr>
+						<tr>
+							<td>Conversions (Today)</td>
+							<td>{{ object.earnings.conversions_today }}</td>
+							<td>{{ object.referralearnings.conversions_today }}</td>
+						</tr>
+						<tr>
+							<td>Today</td>
+							<td>${{ object.earnings.today|currency }}</td>
+							<td>${{ object.referralearnings.today|currency }}</td>
+						</tr>
+						<tr>
+							<td>Yesterday</td>
+							<td>${{ object.earnings.yesterday|currency }}</td>
+							<td>${{ object.referralearnings.yesterday|currency }}</td>
+						</tr>
+						<tr>
+							<td>Week</td>
+							<td>${{ object.earnings.week|currency }}</td>
+							<td>${{ object.referralearnings.week|currency }}</td>
+						</tr>
+						<tr>
+							<td>Month</td>
+							<td>${{ object.earnings.month|currency }}</td>
+							<td>${{ object.referralearnings.month|currency }}</td>
+						</tr>
+						<tr>
+							<td>Yestermonth</td>
+							<td>${{ object.earnings.yestermonth|currency }}</td>
+							<td>${{ object.referralearnings.yestermonth|currency }}</td>
+						</tr>
+						<tr>
+							<td>Year</td>
+							<td>${{ object.earnings.year|currency }}</td>
+							<td>${{ object.referralearnings.year|currency }}</td>
+						</tr>
+						<tr>
+							<td>Total</td>
+							<td>${{ object.earnings.total|currency }}</td>
+							<td>${{ object.referralearnings.total|currency }}</td>
+						</tr>
+					</table>
+					<div class="ui bottom attached recalculate button">
+						Re-calculate Earnings
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{# Right Column #}
+	<div class="nine wide column">
+		{% with username=object.username|title %}
+		{% if invoice_count > 0 %}
+		<div class="ui warning message">{{ username }} has {{ invoice_count }} unpaid/errored invoice(s).</div>
+		{% endif %}
+
+		{% if ticket_count > 0 %}
+		<div class="ui info message">{{ username }} has {{ ticket_count }} open ticket(s).</div>
+		{% endif %}
+
+		<div class="ui one column grid">
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Viewings' 'spy' %}
+					<div class="ui bottom attached segment">
+						<div class="ui relaxed divided list">
+							<div class="ui header">Lockers</div>
+							<a href="{% url 'admin:lockers_widget_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Widgets <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'admin:lockers_file_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Files <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'admin:lockers_link_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Links <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'admin:lockers_list_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Lists <i class="shield icon"></i>
+							</a>
+
+							<div class="ui header">Other</div>
+							<a href="{% url 'admin:conversions_conversion_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Conversions <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'admin:conversions_token_changelist' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Tokens <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'admin:axes_accesslog_changelist' %}?username={{ object.username }}" class="item">
+								View {{ username }}'s Access Logs <i class="shield icon"></i>
+							</a>
+							<a href="{% url 'staff:invoice-list' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Invoices
+							</a>
+							<a href="{% url 'staff:ticket-list' %}?user_id={{ object.pk }}" class="item">
+								View {{ username }}'s Tickets
+							</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Recent Login History' 'privacy' %}
+					{% render_table access_log_table %}
+				</div>
+			</div>
+		</div>
+		{% endwith %}
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/apps/staff/user_staff_detail.js' %}"></script>
+{% endblock %}

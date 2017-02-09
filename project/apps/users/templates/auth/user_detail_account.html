@@ -1,0 +1,60 @@
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="setting icon"></i></div>
+	<div class="header item">Account Details</div>
+
+	<div class="right menu">
+		<a href="{% url 'account-update' %}" class="inverted item edit account">
+			<i class="edit icon"></i> Edit
+		</a>
+	</div>
+</div>
+
+<div class="ui bottom attached segment">
+	<div class="ui divided relaxed list">
+
+		<div class="item">
+			<i class="cubes icon"></i>
+			<div class="content">
+				<div class="header">Company</div>
+				{{ user.profile.company|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="linkify icon"></i>
+			<div class="content">
+				<div class="header">Website</div>
+				{% if user.profile.website %}
+					<a href="{{ user.profile.website }}">{{ user.profile.website }}</a>
+				{% else %}
+					{{ DEFAULT_TEXT }}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="at icon"></i>
+			<div class="content">
+				<div class="header">E-mail Address</div>
+				{{ user.email|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="credit card icon"></i>
+			<div class="content">
+				<div class="header">Billing Details</div>
+				<a href="{% url 'billing:update' %}">View Billing Details</a>
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="lock icon"></i>
+			<div class="content">
+				<div class="header">Password</div>
+				<a href="{% url 'password_change' %}">Change Password</a>
+			</div>
+		</div>
+
+	</div>
+</div>

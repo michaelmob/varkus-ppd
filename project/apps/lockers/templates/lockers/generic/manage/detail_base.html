@@ -1,0 +1,137 @@
+{% extends 'lockers/generic/manage/base_detail_base.html' %}
+{% load molds %}
+{% load currency %}
+{% load share %}
+
+
+{# Data Blocks #}
+{% block blocks_wrapper %}
+{% with e=object.earnings %}
+<div class="column">
+	{% data_block_content e.clicks_today 'Clicks' 'locker clicks today' as content_1 %}
+	{% data_block_content e.clicks 'Total' 'locker clicks total' as content_2 %}
+	{% data_block_duo 'red' 'pointing up' content_1 content_2 %}
+</div>
+
+<div class="column">
+	{% data_block_content e.conversions_today 'Conversions' 'locker conversions today' as content_1 %}
+	{% data_block_content e.conversions 'Total' 'locker conversions total' as content_2 %}
+	{% data_block_duo 'blue' 'lightning' content_1 content_2 %}
+</div>
+
+<div class="column">
+	{% data_block_content e.today 'Earnings' 'locker earnings today' as content_1 %}
+	{% data_block_content e.total 'Total' 'locker earnings total' as content_2 %}
+	{% data_block_duo 'green' 'dollar' content_1 content_2 %}
+</div>
+
+<div class="column">
+	{% data_block_content e.epc|currency 'Earnings Per Click' 'locker epc today' as content_1 %}
+	{% data_block 'orange' 'bullseye' content_1 %}
+</div>
+{% endwith %}
+{% endblock %}
+
+
+{# Locker Link and Sharing Buttons #}
+{% block share_wrapper %}
+<div class="ui inverted black segment">
+	<div class="ui stackable middle aligned two column grid">
+		{% absolute_url object.get_locker_url as url %}
+		
+		<div class="column">
+			<a href="{{ url }}" target="_blank" class="ui fluid inverted massive button">Your Link</a>
+		</div>
+
+		<div class="column">
+			<div class="center aligned column">
+				<strong>Share on...</strong>
+			</div>
+
+			<div class="ui four buttons">
+				<a href="{% twitter url 'Check out my '|add:model_name|add:'!' %}" target="_blank" class="ui fluid twitter icon button">
+					<i class="twitter icon"></i>
+				</a>
+
+				<a href="{% facebook url %}" target="_blank" class="ui fluid facebook icon button">
+					<i class="facebook icon"></i>
+				</a>
+
+				<a href="{% googleplus url %}" target="_blank" class="ui fluid google plus icon button">
+					<i class="google plus icon"></i>
+				</a>
+
+				<a href="{% email 'My new '|add:model_name 'Check out what I just created... '|add:url %}" target="_blank" class="ui fluid grey icon button">
+					<i class="at icon"></i>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{# Object Details #}
+{% block details_wrapper %}
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="tag icon"></i></div>
+	<div class="header item">
+		{{ model_name|title }}:&nbsp;<strong>{{ object.name }}</strong>
+	</div>
+
+	<div class="right menu">
+		{% if user.is_staff %}
+		<a href="{% url 'admin:lockers_'|add:model_name|add:'_change' object.id %}" class="ui inverted icon item">
+			<i class="shield icon"></i>
+		</a>
+		{% endif %}
+
+		<div class="ui inverted item dropdown">
+			<i class="options icon"></i> Options
+
+			<div class="menu">
+				<div class="header">Actions</div>
+
+				<a href="{% url model_name|add:'s:update' object.code %}" class="ui item">
+					<i class="edit icon"></i> Edit
+				</a>
+
+				{% block actions_menu %}{% endblock actions_menu %}
+
+				<a href="{% url model_name|add:'s:delete' object.code %}" class="ui item">
+					<i class="remove icon"></i> Delete
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui bottom attached segment">
+	<div class="ui divided relaxed list">
+		<div class="item">
+			<i class="quote left icon"></i>
+			<div class="content">
+				<div class="header">Name</div>
+				{{ object.name }}
+			</div>
+		</div>
+		<div class="item">
+			<i class="ellipsis horizontal icon"></i>
+			<div class="content">
+				<div class="header">Description</div>
+				{{ object.description|default:'<i>No description set</i>' }}
+			</div>
+		</div>
+
+		{% block details %}{% endblock details %}
+
+		<div class="item">
+			<i class="calendar icon"></i>
+			<div class="content">
+				<div class="header">Created on</div>
+				{{ object.datetime }}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

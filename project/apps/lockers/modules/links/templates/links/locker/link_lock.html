@@ -1,0 +1,31 @@
+{% extends 'lockers/generic/locker/lock_base.html' %}
+
+
+{% block title %}Unlock {{ object.name }}{% endblock %}
+{% block header_text %}Locked Link{% endblock %}
+{% block button_text %}Unlock {{ object.name }}{% endblock %}
+
+
+{% block information %}
+<h3 class="ui header">
+	<i class="quote left icon"></i>
+	<div class="content">
+		Name
+		<p class="sub header">{{ object.name }}</p>
+	</div>
+</h3>
+<h3 class="ui header">
+	<i class="calendar icon"></i>
+	<div class="content">
+		Created on
+		<p class="sub header">{{ object.datetime }}</p>
+	</div>
+</h3>
+<h3 class="ui header">
+	<i class="unlock icon"></i>
+	<div class="content">
+		Unlocks
+		<div class="sub header">{{ object.earnings.conversions }}</div>
+	</div>
+</h3>
+{% endblock %}

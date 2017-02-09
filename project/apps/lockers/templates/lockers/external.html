@@ -1,17 +1,18 @@
 <!DOCTYPE html>{% load static %}
 <html>
 <head>
-	<title></title>
+	<title>Locked</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/components/icon.min.css">
 	<link rel="stylesheet" href="{% static 'css/comp/tooltip.min.css' %}" />
 	<link rel="stylesheet" href="{% static 'css/widget/base.css' %}" />
 
-	{% if obj.theme and obj.theme|lower != 'default' %}
-		<link rel="stylesheet" href="{% static 'css/widget/'|add:obj.theme|lower|add:'.css' %}" />
+	{% if object.theme and object.theme|lower != 'default' %}
+	<link rel="stylesheet" href="{% static 'css/widget/'|add:object.theme|lower|add:'.css' %}" />
 	{% endif %}
 
-	{% if obj.has_css_file %}
-		<link rel="stylesheet" href="{{ obj.css_file.url }}" />
+	{% if object.has_css_file %}
+	<link rel="stylesheet" href="{{ object.css_file.url }}" />
 	{% endif %}
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

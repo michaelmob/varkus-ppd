@@ -1,113 +1,168 @@
+from django_tables2.utils import A
+
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
-from apps.conversions.models import Conversion
 from .models import Offer
-from apps.site.tables import Table_Base, tables
-from apps.cp.templatetags.currency import currency, cut_percent
+from conversions.models import Conversion
+from core.tables import tables, TableBase
 
 
-class Table_Offer_Base(tables.Table):
-	class Meta(Table_Base.Meta):
-		pass
 
-	def __init__(self, request, data, per_page=5, **kwargs):
-		self.cut_amount = request.user.profile.party.cut_amount
-		super(__class__, self).__init__(data)
-		tables.RequestConfig(request,
-			paginate={"per_page": per_page}).configure(self)
+class OfferTableBase(TableBase):
+	"""
+	Base class for tables that displays offers
+	"""
+	cut_amount = 1
 
-	def render_name(self, value, record):
-		return mark_safe("<a href='%s'>%s</a>" % (
-			reverse("offers-manage", args=(record.id,)), value
-		))
-
-	def render_offer(self, value, record):
-		offer = record.offer
-		return mark_safe("<a href='%s'>%s</a>" % (
-			reverse("offers-manage", args=(offer.id,)), offer.name
-		))
 
 	def render_locker(self, value, record):
+		"""
+		Render locker object as 'Locker: Name'
+		"""
 		locker = record.locker
-		return mark_safe("<a href='%s'>%s</a>" % (locker.get_manage_url(),
-			locker.get_type().title() + ": " + locker.name))
+		return format_html(
+			"{}: <a href=\"{}\">{}</a>",
+			locker.type.title(), locker.get_absolute_url(), locker.name
+		)
 
-	def render_approved(self, record):
-		return mark_safe("<span class=\"ui %s horizontal label\">%s</span>" % (
-			"green" if record.approved else "red",
-			"Approved" if record.approved else "Chargeback"
-		))
 
 	def render_earnings_per_click(self, value):
-		return "$%s" % currency(cut_percent(value, self.cut_amount))
+		"""
+		Render earnings_per_click with a cut amount
+		"""
+		return self.currency(value, self.cut_amount)
+
 
 	def render_payout(self, value):
-		return "$%s" % currency(cut_percent(value, self.cut_amount))
+		"""
+		Render payout with a cut amount
+		"""
+		return self.currency(value, self.cut_amount)
 
-	def render_user_payout(self, value):
-		return "$" + str(value)
 
-	def render_flag(self, value, record):
+	def render_country(self, value, record):
+		"""
+		Render flag with varying 'x more'
+		"""
 		value = value.lower()
 
 		if value == "intl":
 			value = "world icon"
 
-		result = "<i class='%s flag' alt='%s'></i> " % (value, value.upper())
+		result = self.flag(value)
 
 		if record.country_count > 1:
-			result += "<small>%s more</small>" % (record.country_count - 1)
+			result += format_html("<small>{} more</small>", record.country_count - 1)
 
-		return mark_safe(result)
+		return result
+
+
+	def render_approved(self, record):
+		"""
+		Render approved column with a colored label
+		"""
+		if record.is_approved:
+			color, text = ("green", "Approved")
+		else:
+			color, text = ("red", "Chargeback")
+
+		return format_html(
+			"<span class=\"ui {} horizontal label\">{}</span>", color, text
+		)
+
 
 	def render_ip_address(self, value, record):
-		country = record.country.lower()
-		result = "<i class='%s flag' alt='%s'></i>%s" % (country, country.upper(), value)
+		"""
+		Render IP Address with its country's flag
+		"""
+		return self.flag(record.country) + format_html("{}", value)
 
-		return mark_safe(result)
-
-	def render_user_ip_address(self, value, record):
-		return self.render_ip_address(value, record)
 
 	def render_success_rate(self, value):
+		"""
+		Render success rate of an offer with a percent sign
+		"""
 		return "%.3g%%" % value
 
 
-class Table_Offer_All(Table_Offer_Base):
-	cut_amount = 1
 
-	class Meta(Table_Offer_Base.Meta):
+class OfferTable(OfferTableBase):
+	"""
+	Table that displays offers
+	"""
+	name = tables.LinkColumn("offers:detail", verbose_name="Offer", args=(A("pk"),))
+	boost = tables.Column(empty_values=(), verbose_name="Boost")
+
+
+	class Meta(OfferTableBase.Meta):
 		model = Conversion
 		empty_text = "No offers matching your search exist."
-		fields = ("name", "category", "flag",
-			"user_agent", "earnings_per_click", "payout")
+		fields = (
+			"name", "category", "country", "user_agent", "earnings_per_click",
+			"payout", "boost"
+		)
 
 
-class Table_Offer_Conversions(Table_Offer_Base):
-	approved = tables.Column(accessor="approved", verbose_name="Status")
-	ttc = tables.Column(empty_values=(), orderable=False, verbose_name="TTC")
+	def render_boost(self, value, record):
+		"""
+		Returns boost button.
+		"""
+		return format_html(
+			"<a data-id='{}' class='ui fluid icon compact orange boost offer button'>"
+				"<i class='rocket icon'></i>"
+			"</a>", record.pk
+		)
 
-	class Meta(Table_Offer_Base.Meta):
+
+class OfferConversionsTable(OfferTableBase):
+	"""
+	Table that displays conversions of an offer
+	"""
+	ttc = tables.Column(accessor="time_to_complete", verbose_name="TTC", orderable=False)
+
+
+	class Meta(OfferTableBase.Meta):
 		model = Conversion
 		empty_text = "You haven't received any conversions with this offer."
-		fields = ("user_ip_address", "user_payout", "ttc", "datetime", "approved")
-
-	def render_ttc(self, record):
-		return record.time_to_complete()
+		fields = ("ip_address", "payout", "ttc", "datetime")
+		exclude = ("offer",)
 
 
-class Table_Offer_Options(Table_Offer_Base):
-	remove = tables.Column(empty_values=(), orderable=False)
-
-	class Meta(Table_Offer_Base.Meta):
-		model = Conversion
-		empty_text = "There are no offers in this list."
-		fields = ("name", "category", "flag")
-
-	def render_remove(self, record):
-		return mark_safe(
-			"<a data-id='%s' class='ui fluid left labeled icon remove button " +
-			"mini'><i class='remove icon'></i>Remove</a>" % (record.pk,)
+	def get_queryset(args):
+		"""
+		Returns queryset for table.
+		"""
+		return (
+			Conversion.objects
+				.filter(**args)
+				.prefetch_related("locker", "offer")
+				.order_by("-datetime")
 		)
+
+
+	def render_offer(self, value, record):
+		"""
+		Cannot use LinkColumn because default text is forced. 
+		Returns offer or offer_name if offer object does not exist.
+		"""
+		if value is None:
+			return record.offer_name
+
+		return format_html(
+			"<a href=\"{url}\">{text}</a>",
+			url=record.offer.get_absolute_url(),
+			text=record.offer_name
+		)
+
+
+	def render_payout(self, value, record):
+		"""
+		Return payout; if unapproved, render a chargeback label.
+		"""
+		if not record.is_approved:
+			return format_html(
+				"<span class=\"ui red horizontal label\">Chargeback</span>"
+			)
+
+		return self.currency(value, self.cut_amount)

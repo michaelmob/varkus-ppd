@@ -1,0 +1,84 @@
+{% extends 'lockers/generic/manage/update_base.html' %}
+{% load static semanticui %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:detail' object.code %}" class="section">{{ object.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url model_name|add:'s:update-css' object.code %}" class="active section">Pair Locker</a>
+{% endblock %}
+
+
+{% block form_header %}
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="anchor icon"></i></div>
+	<div class="header item">Pair Locker</div>
+</div>
+{% endblock %}
+
+
+{% block form_content %}
+<div class="ui bottom attached form segment">
+	{% site_domain as site_domain %}
+	{% render_field form.redirect_url placeholder='https://'|add:site_domain|add:"/" %}
+	<div class="field">
+		<div class="ui radio checkbox">
+			<input name="locker" tabindex="0" class="hidden" type="radio" value="redirect"{% if not ref %} checked{% endif %}>
+			<label>Redirect visitor to URL after completion.</label>
+		</div>
+	</div>
+
+	{% for model in objects.items %}
+		{% if model.1|length > 0 %}
+			<h3 class="ui header">{{ model.0|title }}s</h3>
+			{% for object in model.1 %}
+			<div class="field">
+				<div class="ui radio checkbox">
+					{% with locker_ref=model.0|add:','|add:object.code %}
+					<input name="locker" tabindex="0" class="hidden" type="radio" value="{{ locker_ref }}"{% if ref == locker_ref %} checked{% endif %}>
+					{% endwith %}
+					<label>
+						[{{ object.code }}] {{ object.name }}
+						{# <a href="{% url object.type|add:'-detail' object.code %}">View</a> #}
+					</label>
+				</div>
+			</div>
+			{% endfor %}
+		{% endif %}
+	{% endfor %}
+</div>
+{% endblock %}
+
+
+{% block information_content %}
+<div class="ui bottom attached segment">
+	<div class="ui header">Standalone Widget</div>
+	<p>
+		Standalone widgets are usually combined with HTTP
+		Notifications allowing a user to add a widget to their
+		website and be notified, via GET request, that their widget
+		has received a conversion. Once the client has completed the
+		survey they will be redirected to the URL provided by the
+		user. This is the most flexible and dynamic option.
+	</p>
+
+	<div class="ui header">Widget-Locker Pair</div>
+	<p>
+		Widgets that are paired with a locker are different than
+		standalone widgets. While they can still be to receive an HTTP
+		Notification, your clients will be served the result of the
+		locker that the user has selected.
+	</p>
+
+	<p>
+		Understand that the earnings that the locker item makes will
+		not be added to the locker itself, but will be added to the widget
+		instead.
+	</p>
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+{# <script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/widget_update_locker.js' %}"></script> #}
+{% endblock %}

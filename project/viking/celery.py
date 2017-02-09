@@ -12,12 +12,14 @@ app = Celery("viking")
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
 app.config_from_object("django.conf:settings")
+app.conf.beat_schedule = CELERYBEAT_SCHEDULE
 app.conf.update(
-	CELERY_ACCEPT_CONTENT=["pickle", "json"],
-	CELERY_TIMEZONE="America/New_York",
-	CELERY_RESULT_BACKEND="djcelery.backends.database:DatabaseBackend",
-	CELERYBEAT_SCHEDULER="djcelery.schedulers.DatabaseScheduler",
-	CELERYBEAT_SCHEDULE=CELERYBEAT_SCHEDULE,
+    timezone="America/New_York",
+	task_serializer="json",
+    accept_content=["json"],
+    result_serializer="json",
+	result_backend="django-db",
+	broker_url="amqp://guest:guest@rabbitmq:5672//"
 )
 
 app.autodiscover_tasks(lambda: INSTALLED_APPS)

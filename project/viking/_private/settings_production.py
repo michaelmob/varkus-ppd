@@ -1,21 +1,20 @@
-import os
-from ..settings import BASE_DIR
-
 # Site Info
 SITE_NAME = "Viking"
 SITE_DOMAIN = "viking.com"
 SITE_URL = "https://" + SITE_DOMAIN
 
+ALLOWED_HOSTS = ["." + SITE_DOMAIN, SITE_DOMAIN]
+
+# Admins
+ADMINS = (
+	("Owner", "admin@" + SITE_DOMAIN),
+)
+
 # SMTP
+SERVER_EMAIL = "error@" + SITE_DOMAIN
+DEFAULT_FROM_EMAIL = "noreply@" + SITE_DOMAIN
 EMAIL_HOST = "localhost"
 EMAIL_PORT = 25
 
-# Admin
-ADMINS = (
-	("Owner", "admin@viking.com"),
-)
-
-SERVER_EMAIL = "error@viking.com"
-DEFAULT_FROM_EMAIL = "noreply@viking.com"
-
-ALLOWED_HOSTS = [".viking.com", SITE_DOMAIN]
+# Secret Key
+SECRET_KEY = "################################################################"

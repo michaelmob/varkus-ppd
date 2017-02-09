@@ -1,0 +1,15 @@
+{% extends 'base_panel.html' %}
+
+{% block title %}My Account{% endblock %}
+
+{% block tab %}account{% endblock %}
+
+{% block breadcrumbs_app %}
+<div class="section">Support</div>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_section %}
+<a href="{% url 'account' %}" class="section">My Account</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}

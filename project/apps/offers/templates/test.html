@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<table>
+		{% for object in objects %}
+			<tr>
+				<td>{{ object.priority|yesno:"Yes,No" }}</td>
+				<td>{{ object.id }}</td>
+				<td>{{ object.name }}</td>
+				<td>{{ object.anchor }}</td>
+				<td>{{ object.payout }}</td>
+				<td>{{ object.earnings_per_click }}</td>
+				<td>{{ object.country }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+</body>
+</html>

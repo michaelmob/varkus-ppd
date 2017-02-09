@@ -1,0 +1,60 @@
+{% extends 'base_dialog.html' %}
+{% load static semanticui %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block headstyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/comp/calendar.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1></h1>
+<div class="ui main text container">
+
+	{% if INVITE_ONLY %}
+	<div class="ui message error">
+		<i class="close icon"></i>
+		{% site_name %} is currently closed to new registration. Your account
+		will be created but will not be activated, therefore, you will not be able to
+		log in. When your account has been activated you will be notified via e-mail.
+	</div>
+	{% endif %}
+
+	<form class="ui form segment" method="POST">
+		<h1>Sign up for {% site_name %}</h1>
+		{% csrf_token %}
+		<input name="referrer" type="hidden" style="display:none" value="{{ referrer }}">
+
+		{% render_field form.username placeholder='JohnSmith35' %}
+		{% render_field form.email placeholder='john@smith.com' %}
+
+		<div class="two fields">
+			{% render_field form.password1 %}
+			{% render_field form.password2 %}
+		</div>
+
+		<div class="two fields">
+			{% render_field form.first_name placeholder='John' %}
+			{% render_field form.last_name placeholder='Smith' %}
+		</div>
+
+		{% render_field form.birthdate placeholder='MM/DD/YYYY' %}
+
+		<div class="inline field">
+			<div class="ui checkbox">
+				{{ form.agree }}<label for="id_agree">{{ form.agree.label|safe }}</label>
+			</div>
+		</div>
+
+		<div class="ui primary fluid submit button">
+			Create My Account
+		</div>
+	</form>
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/comp/calendar.min.js' %}"></script>
+<script src="{% static 'js/apps/users/register.js' %}"></script>
+{% endblock %}

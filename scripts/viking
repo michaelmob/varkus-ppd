@@ -1,174 +1,199 @@
 #!/bin/bash
-cd $(dirname $0)
+cd "$(dirname $0)/.."
 
-# Verify exports script exists
-if [ ! -f "exports" ]; then
-	echo "exports script does not exist"
-fi
 
-source exports
-
-# Run as desired user
-if [ "$USER" != "$RUN_AS" ]; then
-	sudo -u $RUN_AS ./viking $@
-	exit 0
-fi
-
-# Verify virtualenv exists
-if [ ! -d "../.env" ]; then
-	echo "virtualenv does not exist"
-	exit 1
-fi
-
-# Activate virtualenv
-cd ../project/
-source ../.env/bin/activate
-
-function manage() {
-	python manage.py $@
+#
+# shortcut function for docker-compose as superuser 
+#
+function compose() {
+	sudo docker-compose $@
 }
 
+
+#
+# shortcut function for docker-compose on a production server
+#
+function compose_production() {
+	compose -f docker-compose.yml -f docker-compose.production.yml $@
+}
+
+
+#
+# shortcut function for managing Django project within container 
+#
+function manage() {
+	compose run --rm django python manage.py $@
+}
+
+
+#
+# shortcut function for managing Django project within container 
+#
+function manage_production() {
+	compose_production run --rm django python manage.py $@
+}
+
+
+#
+# shortcut function for running pip within container 
+#
+function pip() {
+	sudo docker-compose run --rm django pip $@
+}
+
+
 case "$1" in
-	# Start Viking's Supervisor services
-	start)
-		sudo supervisorctl start viking: ;;
 
-	# Stop Viking's Supervisor services
-	stop)
-		sudo supervisorctl stop viking: ;;
+	#
+	# equivalent to 'docker-compose'
+	#
+	compose)
+		compose ${@:2} ;;
 
-	# Restart all Viking's services
-	full-restart)
-		sudo supervisorctl restart viking: ;;
-
-	# Restart Viking's workers
-	restart)
-		sudo supervisorctl restart viking-workers: ;;
-
-	# Bash shell inside virtualenv
-	bash)
-		bash ;;
-
-	# Django's manage.py
+	#
+	# equivalent to 'manage.py ...'
+	#
 	manage)
 		manage ${@:2} ;;
 
-	# Create migration directories in each app folder
-	createmigrationdirectories)
-		find apps/ -name "models.py" | xargs -L1 dirname | xargs -I % mkdir %/migrations/\;touch %/migrations/__init__.py ;;
+	#
+	# equivalent to 'manage.py ...' for production
+	#
+	manage-production)
+		manage_production ${@:2} ;;
 
-	# Run Migrations
-	migrate)
-		manage makemigrations && manage migrate ;;
-
-	# Run daphne
-	daphne)
-		daphne viking.asgi:channel_layer ;;
-
-	# Run django workers
-	runworker)
-		manage runworker ;;
-
-	# Run celery camera
-	celerycam)
-		manage celerycam --frequency=30.0 ;;
-
-	# Run celery workers
-	celeryworker)
-		celery worker --app=viking --beat --events --pidfile=celeryw.pid ;;
-
-	# Run debugger with Celerycam
-	debug)
-		export DEBUG=true
-
-		if [ $DEBUG_CELERY == true ]; then
-			manage celerycam --frequency=30 &
-
-			manage celery worker --heartbeat-interval=30 --app=viking --beat --events \
-				--pidfile=celeryw.pid --loglevel=INFO &
-		fi
-
-		manage runserver ;;
-
-	# Pip within virtualenv
+	#
+	# equivalent to 'pip ...'
+	#
 	pip)
 		pip ${@:2} ;;
 
-	# Update GeoIP database
+	#
+	# upgrade all required pip packages
+	#
+	pip-upgrade)
+		pip install -r "/viking/requirements.txt" --upgrade ;;
+
+
+	#
+	# create migration directories
+	#
+	c-m-d)
+		find apps/ -name "models.py" | xargs -L1 dirname | xargs -I % mkdir %/migrations/\;touch %/migrations/__init__.py ;;
+
+	#
+	# run migrations
+	#
+	migrate)
+		manage makemigrations
+		manage migrate ;;
+
+	#
+	# run migrations for production
+	#
+	migrate-production)
+		manage_production makemigrations
+		manage_production migrate ;;
+		
+
+	#
+	# start containers (useful for debug)
+	#
+	start)
+		compose -f docker-compose.yml up -d ;;
+
+
+	#
+	# start containers in production mode
+	#
+	start-production)
+		compose_production up -d 
+		compose_production scale worker=4 ;;
+
+
+	#
+	# stop containers (optional: --remove-orphans)
+	#
+	stop)
+		compose down ${@:2} ;;
+
+	#
+	# stop containers in production mode
+	#
+	stop-production)
+		compose -f docker-compose.yml -f docker-compose.production.yml down ;;
+
+
+	#
+	# restart containers
+	#
+	restart)
+		compose down --remove-orphans && compose -f docker-compose.yml -f docker-compose.production.yml up -d ;;
+
+
+	#
+	# compile less stylesheet
+	# apt-get install npm && npm install -g less less-plugin-clean-css
+	#
+	less)
+		lessc ../project/static/_less/semantic.less \
+			--clean-css="--s1 --advanced --compatibility=ie8" > ../project/static/css/base.css
+		;;
+
+
+	#
+	# equivalent to 'compose logs -f django'
+	#
+	logs)
+		compose logs -f django
+		;;
+
+
+	#
+	# remove .pyc/.pyo files (optional: --remove-migrations)
+	#
+	clean)
+		sudo py3clean .
+		if [ "$2" = "--remove-migrations" ]; then
+			sudo find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+		fi ;;
+
+
+	#
+	# chown all files to '$LOGNAME'
+	#
+	chown)
+		sudo chown -R $LOGNAME: . ;;
+
+
+	#
+	# update geoip database
+	#
 	geoip)
-		echo "Updating GeoLite2 City Database"
+		cd ./project
 		rm GeoLite2-City.mmdb
 		wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
 		gunzip -f GeoLite2-City.mmdb.gz
 		;;
+		
 
-	# Compile LESS
-	less)
-		echo "Compiling less stylesheet"
-		lessc ../static/css/_less/semantic.less \
-			--clean-css="--s1 --advanced --compatibility=ie8" > ../static/css/base.css
-		;;
-
-	# Clean *.pyc files and migration files if "migrations" parameter
-	clean)
-		find ../ -name "*.pyc" -type f -delete
-
-		echo "Cleaned python files"
-
-		if [ "$2" = "migrations" ]; then
-			cd ../project/
-			find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-			echo "Cleaned migration files"
-		fi
-		;;
-
-	# Backup database to 'backups/' dir in root project folder
-	backup)
-		export PGPASSWORD=$DB_PASS
-		mkdir -p ../backups
-		pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME > \
-			../backups/BACKUP_$(date +"%Y-%m-%d_%H-%M-%S")
-		;;
-
-	# Restore database from earlier backup
-	restore)
-		psql $PGDATABASE < $2
-		;;
-
-	# Edit settings with your favorite editor
-	edit)
-		case "$2" in
-			common) sensible-editor viking/private/settings_common.py ;;
-			production) sensible-editor viking/private/settings_production.py ;;
-			development) sensible-editor viking/private/settings_development.py ;;
-			keys) sensible-editor viking/private/keys.py ;;
-			*) exit 1 ;;
-		esac
-		;;
-
+	#
+	# list commands
+	#
 	*)
-		echo -e "Usage: viking arg\nList of args:"
-		echo -e "  start: Start Viking (Supervisor)"
-		echo -e "  stop: Stop Viking (Supervisor)"
-		echo -e "  full-restart: Restart all Viking services (Supervisor)"
-		echo -e "  restart: Restart Viking workers (Supervisor)"
-		echo -e "  manage {args}: Run manage.py"
-		echo -e "  createmigrationdirectories: Create migration directories in each app folder"
-		echo -e "  migrate: Run django migrations"
-		echo -e "  daphne: Run daphne"
-		echo -e "  runworker: Run workers for daphne"
-		echo -e "  celerycam: Run celery camera"
-		echo -e "  celeryworker: Run workers for celery"
-		echo -e "  debug: Run manage.py runserver"
-		echo -e "  pip {args}: Run virtualenv pip"
-		echo -e "  bash: Run bash inside virtualenv"
-		echo -e "  geoip: Update GeoIP database"
-		echo -e "  clean [migration]: Clean pycache [and migration files]"
-		echo -e "  backup {file}: Backup database using PostgreSQL"
-		echo -e "  restore {file}: Restore database using PostgreSQL"
-		echo -e "  edit {common/production/development/keys}: Edit settings"
-		exit 1
+		echo -e "\e[1mViking\e[0m"
+		echo -e "  compose\t equivalent to 'docker-compose'"
+		echo -e "  pip\t\t equivalent to 'pip ...'"
+		echo -e "  pip-upgrade\t upgrade pip requirements"
+		echo -e "  manage\t equivalent to 'python manage.py ...'"
+		echo -e "  c-m-d\t\t create migration directories"
+		echo -e "  migrate\t run migrations"
+		echo -e "  start\t\t start containers"
+		echo -e "  stop\t\t stop containers (optional: --remove-orphans)"
+		echo -e "  logs\t\t show docker-compose logs for django"
+		echo -e "  clean\t\t remove .pyc/.pyo files (optional: --remove-migrations)"
+		echo -e "  chown\t\t chown all files to '$LOGNAME'"
+		echo -e "  geoip\t\t update geoip database"
 		;;
-esac
 
-exit 0
+esac

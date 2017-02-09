@@ -1,0 +1,70 @@
+{% extends 'base_panel.html' %}
+{% load static %}
+{% load molds %}
+{% load offers %}
+
+{% block title %}Offers{% endblock %}
+
+{% block tab %}offers{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Control Panel</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'offers:list' %}" class="section">Offers</a>
+	<i class="right chevron icon divider"></i>
+	<strong>Offer:</strong>
+	<a href="{% url 'offers:detail' object.pk %}" class="active section">{{ object.name }}</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="ui two column stackable grid">
+	<div class="column">
+		<div class="ui one column grid">
+
+			{# Data Blocks #}
+			<div class="column">
+				<div class="ui two column equal height stretched stackable grid">
+					{% include 'offers/offer_detail_blocks.html' %}
+				</div>
+
+				<div class="ui boost message info {% if boost < 1 %}hidden{% endif %}">
+					This Offer is currently boosted and will receive <strong class="boost count">{{ boost }}</strong>
+					guaranteed click{{ boost|pluralize }}.
+				</div>
+			</div>
+
+			{# Offer Information #}
+			<div class="column">
+				<div class="box">
+					{% include 'offers/offer_detail_details.html' %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="column">
+		<div class="ui one column grid">
+
+			{# Chart #}
+			<div class="column">
+				{% render_titlebar 'Activity' 'line chart' %}
+				{% render_activity_chart %}
+			</div>
+
+			{# Conversions #}
+			<div class="column">
+				{% render_titlebar 'Your Conversions&nbsp;<small>(with this offer)</small>' 'lightning' %}
+				{% render_table table %}
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{% csrf_token %}
+<script src="{% static 'js/api.js' %}"></script>
+<script src="{% static 'js/apps/offers/offer_detail.js' %}"></script>
+{% endblock %}

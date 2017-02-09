@@ -1,0 +1,8 @@
+{% extends 'lockers/generic/manage/list_base.html' %}
+{% load molds %}
+
+
+{% block table %}
+	{% render_titlebar 'Links' 'linkify' %}
+	{% render_table table %}
+{% endblock %}

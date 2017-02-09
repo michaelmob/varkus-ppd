@@ -1,0 +1,62 @@
+{% extends 'billing/billing_base.html' %}
+{% load static semanticui %}
+
+{% block breadcrumbs_section %}
+<a href="{% url 'billing:list' %}" class="section">Billing</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'billing:update' %}" class="active section">Update</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui text container">
+	<div class="box">
+		<div class="ui inverted red top attached tabular menu">
+			<a class="active item" data-tab="paypal"><i class="paypal icon"></i> Paypal</a>
+			<a class="item" data-tab="check"><i class="pencil icon"></i> Check</a>
+			<a class="item" data-tab="wire"><i class="credit card icon"></i> Wire</a>
+			<a class="item" data-tab="direct"><i class="fast forward icon"></i> Direct Deposit/ACH</a>
+		</div>
+
+		<div class="ui bottom attached segment form">
+			<form class="ui active tab" data-tab="paypal" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="PAYPAL" />
+				{% render_form form.paypal %}
+			</form>
+
+			<form class="ui tab" data-tab="check" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="CHECK" />
+				{% render_form form.check %}
+			</form>
+
+			<form class="ui tab" data-tab="wire" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="WIRE" />
+				{% render_form form.wire %}
+			</form>
+
+			<form class="ui tab" data-tab="direct" method="POST">
+				{% csrf_token %}
+				<input type="hidden" name="form" value="DIRECT" />
+				{% render_form form.direct %}
+			</form>
+		</div>
+	</div>
+
+	<div class="ui bottom attached buttons">
+		<div class="ui primary submit button">Save</div>
+		<div class="ui cancel button">Cancel</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script>var active_tab = "{{ active_tab|default:user.billing.choice|lower }}";</script>
+<script src="{% static 'js/apps/billing/billing_update.js' %}"></script>
+{% endblock %}

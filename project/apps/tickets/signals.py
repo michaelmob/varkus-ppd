@@ -1,20 +1,43 @@
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
+from controlpanel.models import Notification
 from .models import Post
-from apps.cp.models import Notification
+
 
 @receiver(post_save, sender=Post)
 def post_create_signal(sender, instance, created, **kwargs):
-	""" Signal for when a ticket post is created """
+	"""
+	Signal that is activated when a Ticket is posted to.
+	"""
 	if not (created and instance.user):
 		return
 
-	# Send Notification to User if staff user posted
-	if instance.user.is_staff:
-		Notification.create(instance.thread.user, "ticket",
-			"%s has replied to your ticket." % instance.user.first_name,
-			instance.thread.get_absolute_url())
+	# When the last_user_id has changed there is a new replier
+	new_reply = instance.user_id != instance.thread.last_user_id
 
-	# Set thread to unread if user is not staff
-	instance.thread.unread = not instance.user.is_staff
+	# Send Notification to User
+	if new_reply and instance.thread.last_user_id:
+		Notification.objects.create_notification(
+			recipient=instance.user,
+			icon="ticket",
+			content="Your ticket has a new response.",
+			url=instance.get_absolute_url()
+		)
+
+	# Set thread's unread status and set the last replier field
+	instance.thread.unread = new_reply
+	instance.thread.last_user = instance.user
+	instance.thread.staff_unread = not instance.user.is_staff
 	instance.thread.save()
+
+
+@receiver(post_delete, sender=Post)
+def post_delete_signal(sender, instance, **kwargs):
+	"""
+	Signal activated when an Abuse Report is deleted.
+	This signal removes empty threads and deletes leftover files.
+	"""
+	if not instance.thread.get_posts().exists():
+		instance.thread.delete()
+
+	instance.file.delete()

@@ -1,148 +1,205 @@
-from collections import defaultdict
 import django_tables2 as tables
 
-from django.conf import settings
-from django.db.models import Count
-from django.utils.safestring import mark_safe
-from django.template.defaultfilters import truncatechars
+from django.utils.html import format_html
+from django.db.models import Count, Sum, Case, When, IntegerField
+from django.core.urlresolvers import reverse
 
-from utils.country import COUNTRIES
-from apps.offers.tables import Table_Offer_Base
-from apps.offers.models import Offer
+from viking.utils.country import COUNTRIES
+from offers.tables import OfferTableBase
+from core.tables import CurrencyColumn
 from .models import Conversion, Token
 
-class Table_Conversions_Base(Table_Offer_Base):
-	class Meta(Table_Offer_Base.Meta):
+
+
+class ConversionsTableBase(OfferTableBase):
+	"""
+	Table base for any Conversions table
+	"""
+	offer = tables.LinkColumn("offers:detail", text=lambda r: r.offer_name, args=(tables.A("offer.id"),), empty_values=())
+	ttc = tables.Column(verbose_name="TTC", accessor="time_to_complete", order_by=("seconds",))
+
+
+	class Meta(OfferTableBase.Meta):
 		model = Conversion
+		empty_text = "There doesn't seem to be any conversions here for this category or date range."
 		fields = ()
 
-	def data(self, **kwargs):
-		return Conversion.objects.filter(**self.args) \
-			.prefetch_related("locker", "offer").order_by("-datetime")
 
-	def __init__(self, request, date_range=None,
-		per_page=settings.ITEMS_PER_PAGE_LARGE, **kwargs):
-		# Filter Args
-		self.cut_amount = request.user.profile.party.cut_amount
-		self.args = { "user": request.user }
-		if date_range != None and date_range[0] != None:
-			self.args["datetime__range"] = date_range
-
-		# Create Table
-		super(__class__, self).__init__(request, self.data(), per_page)
-
-	def render_ttc(self, record):
-		return record.time_to_complete()
+	def get_queryset(args):
+		"""
+		Returns queryset for table.
+		"""
+		return (
+			Conversion.objects
+				.filter(**args)
+				.prefetch_related("locker", "offer")
+				.order_by("-datetime")
+		)
 
 
-class Table_Conversions(Table_Conversions_Base):
-	locker = tables.Column(verbose_name="Locker")
-	approved = tables.Column(verbose_name="Status")
-	ttc = tables.Column(verbose_name="TTC", empty_values=(), orderable=False)
+	def render_offer(self, value, record):
+		"""
+		Cannot use LinkColumn because default text is forced. 
+		Returns offer or offer_name if offer object does not exist.
+		"""
+		if value is None:
+			return record.offer_name
 
-	class Meta(Table_Offer_Base.Meta):
-		model = Conversion
-		empty_text = "There doesn't seem to be any conversions here for this category or date range."
-		fields = ("locker", "offer", "user_ip_address", "user_payout", "ttc", "datetime", "approved")
+		return format_html(
+			"<a href=\"{url}\">{text}</a>",
+			url=record.offer.get_absolute_url(),
+			text=record.offer_name
+		)
 
 
-class Table_Statistics_Base(Table_Conversions_Base):
-	distinct_field = "offer_id"
+	def render_payout(self, value, record):
+		"""
+		Return payout; if unapproved, render a chargeback label.
+		"""
+		if not record.is_approved:
+			return format_html(
+				"<span class=\"ui red horizontal label\">Chargeback</span>"
+			)
 
-	class Meta(Table_Conversions_Base.Meta):
-		model = Conversion
+		return self.currency(value, self.cut_amount)
+
+
+
+class ConversionsTable(ConversionsTableBase):
+	"""
+	Conversions table
+	"""
+	locker = tables.Column(verbose_name="Locker", accessor="locker_type")
+
+
+	class Meta(ConversionsTableBase.Meta):
+		fields = ("locker", "offer", "ip_address", "payout", "ttc", "datetime")
+
+
+
+class StatisticsTableBase(ConversionsTableBase):
+	"""
+	Table base for any statistics table
+	"""
+	distinct_field = None
+
+
+	class Meta(ConversionsTableBase.Meta):
 		orderable = False
-		empty_text = "There doesn't seem to be any conversions here for this category or date range."
 		fields = ("clicks", "conversions")
 
-	def __init__(self, request, date_range=None, per_page=2147483647, **kwargs):
-		super(__class__, self).__init__(request, date_range, per_page, **kwargs)
 
-	def foreach_token(self, tokens):
-		for token in tokens:
-			for offer in token.offers.all():
-				# Add Click
-				self.offers["clicks"][offer.id] += 1
+	@classmethod
+	def get_queryset(cls, args):
+		"""
+		Returns queryset for table.
+		"""
+		objects = (
+			Conversion.objects
+				.filter(**args)
+				.prefetch_related("locker", "offer")
+				.distinct(cls.distinct_field)
+				.exclude(**{cls.distinct_field: None})
+		)
 
-	def foreach_conversion(self, conversions):
-		for conversion in conversions:
-			# Add Conversion
-			self.offers["conversions"][conversion.offer_id] += 1
+		# Allow modifications of queryset through modify_queryset() method
+		return cls.modify_queryset(objects)
 
-			# Add Chargeback
-			if conversion.approved == False:
-				self.offers["chargebacks"][conversion.offer_id] += 1
 
-	def data(self, **kwargs):
-		# Create class variable
-		self.offers = {
-			"clicks": defaultdict(int),
-			"conversions": defaultdict(int),
-			"chargebacks": defaultdict(int)
+	@classmethod
+	def modify_queryset(cls, objects):
+		"""
+		Add conversions, chargebacks, and earnings to conversion objects.
+		Returns modified queryset.
+		"""
+		# Get conversion and chargebacks count
+		conversions = (
+			Conversion.objects
+				.only(cls.distinct_field, "payout", "is_approved")
+				.values(cls.distinct_field)
+				.annotate(
+					earnings=Sum("payout"),
+					conversions=Count(cls.distinct_field),
+					chargebacks=Sum(
+						Case(When(is_approved=False, then=1), output_field=IntegerField())
+					)
+				)
+		)
+
+		# Format data into a dict we can index for offer id
+		data = {
+			obj[cls.distinct_field]: (
+				obj["conversions"] or 0,
+				obj["chargebacks"] or 0,
+				obj["earnings"] or 0
+			) for obj in conversions if obj[cls.distinct_field]
 		}
 
-		# Related Offer IDs
-		#offer_ids = list(set([n[0] for n in data.values_list("offer_id")]))
-
-		### CLICKS ###
-		self.foreach_token(
-			Token.objects.filter(**self.args).prefetch_related("offers")
+		# Get all tokens attached to conversions
+		tokens = list(
+			Token.objects
+				.filter(offers__in=objects.values_list("id", flat=True))
+				.only("offers")
+				.values_list("offers__id", flat=True)
 		)
 
-		### CONVERSIONS and CHARGEBACKS ###
-		self.foreach_conversion(
-			Conversion.objects.filter(**self.args)
-		)
+		# Loop through each object in objects and add data to it
+		for obj in objects:
+			obj.clicks = tokens.count(obj.id)
+			field = obj.__dict__[cls.distinct_field]
+			
+			if not field:
+				continue
 
-		return Conversion.objects.filter(**self.args).defer("locker") \
-			.prefetch_related("offer").distinct(self.distinct_field)
+			obj.conversions = data[field][0]  # 0 is conversions
+			obj.chargebacks = data[field][1]  # 1 is chargebacks
+			obj.earnings = data[field][2]	  # 2 is earnings
 
-	def render_clicks(self, record):
-		return self.offers["clicks"].get(eval("record." + self.distinct_field), 0)
-
-	def render_conversions(self, record):
-		return self.offers["conversions"].get(eval("record." + self.distinct_field), 0)
-
-	def render_chargebacks(self, record):
-		return self.offers["chargebacks"].get(eval("record." + self.distinct_field), 0)
+		return objects
 
 
-class Table_Statistics_Offers(Table_Statistics_Base):
-	clicks = tables.Column(empty_values=())
-	conversions = tables.Column(empty_values=())
-	user_payout = tables.Column()
-	chargebacks = tables.Column(empty_values=())
 
-	class Meta(Table_Statistics_Base.Meta):
-		fields = ("offer", "clicks", "conversions", "user_payout", "chargebacks")
+class OfferStatisticsTable(StatisticsTableBase):
+	"""
+	Statistics for Offers
+	"""
+	clicks = tables.Column()
+	chargebacks = tables.Column()
+	earnings = CurrencyColumn(accessor="earnings")
+
+	distinct_field = "offer_id"
 
 
-class Table_Statistics_Countries(Table_Statistics_Base):
-	clicks = tables.Column(empty_values=())
-	conversions = tables.Column(empty_values=())
-	chargebacks = tables.Column(empty_values=())
+	class Meta(StatisticsTableBase.Meta):
+		model = None
+		fields = ("offer",)
+		exclude = ("ttc",)
+
+
+
+class CountryStatisticsTable(StatisticsTableBase):
+	"""
+	Statistics for Countries
+	"""
+	country = tables.Column()
+	clicks = tables.Column()
+	chargebacks = tables.Column()
+	earnings = CurrencyColumn(accessor="earnings")
 
 	distinct_field = "country"
 
-	class Meta(Table_Statistics_Base.Meta):
-		fields = ("country", "clicks", "conversions")
 
-	def foreach_token(self, tokens):
-		for token in tokens:
-			self.offers["clicks"][token.country] += 1
+	class Meta(StatisticsTableBase.Meta):
+		model = None
+		fields = ("country",)
+		exclude = ("offer", "ttc",)
 
-	def foreach_conversion(self, conversions):
-		for conversion in conversions:
-			# Set uppercase just in case some are lower
-			conversion.country = conversion.country.upper()
-
-			# Add Conversion
-			self.offers["conversions"][conversion.country] += 1
-
-			# Add Chargeback
-			if conversion.approved == False:
-				self.offers["chargebacks"][conversion.country] += 1
 
 	def render_country(self, value):
-		return mark_safe("<i class='%s flag'></i>%s" % (
-			value.lower(), COUNTRIES[value.upper()]))
+		"""
+		Return country flag as 'i' element.
+		"""
+		return format_html(
+			"<i class=\"{} flag\"></i>{}",
+			value.lower(), COUNTRIES[value.upper()]
+		)

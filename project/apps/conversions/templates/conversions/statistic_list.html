@@ -1,0 +1,24 @@
+{% extends 'conversions/conversion_list.html' %}
+{% block title %}Statistics{% endblock %}
+
+
+{% block tab %}statistics{% endblock %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url 'statistics' %}" class="active section">Statistics</a>
+{% endblock %}
+
+{% block menu_items %}
+<div class="item">
+	<div class="header">Category</div>
+	<div class="menu">
+		<a class="item{% if category == 'offers' %} active{% endif %}" href="{% url 'statistics-offers' %}">Offers</a>
+		<a class="item{% if category == 'countries' %} active{% endif %}" href="{% url 'statistics-countries' %}">Countries</a>
+	</div>
+</div>
+{% endblock %}
+
+{% block footerjs %}
+<script>$("table").tablesort();</script>
+{% endblock %}

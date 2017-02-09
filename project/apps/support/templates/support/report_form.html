@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static semanticui %}
+
+{% block title %}Report Abuse{% endblock %}
+
+{% block pagetype %}normal{% endblock %}
+
+
+{% block content %}
+<div class="ui stackable grid">
+	<div class="ten wide column">
+		<form class="ui form segment" method="POST" enctype="multipart/form-data" action="{% url 'support:report' %}">
+			<h2 class="ui header">Report Abuse</h2>
+			{% csrf_token %}
+
+			{% render_field form.name %}
+			{% render_field form.email %}
+			{% render_field form.complaint %}
+			{% render_field form.message %}
+
+			<div class="field">
+				<label>Upload Files (4mb max)</label>
+				{% render_field form.file1 _no_label=1 %}
+				{% render_field form.file2 _no_label=1 %}
+				{% render_field form.file3 _no_label=1 %}
+			</div>
+
+			{% render_field form.captcha %}
+
+			<div class="field">
+				<p>
+					By submitting this Abuse Report, you declare under penalty
+					of perjury that the report abuse is true and correct. You
+					also state that you believe the reported content is illegal
+					under U.S. or International law and/or violates our
+					<a href="{% url 'terms' %}">Terms and Conditions</a>.
+				</p>
+			</div>
+
+			<div class="ui fluid primary submit button">Submit Abuse Report</div>
+		</form>
+	</div>
+
+	<div class="six wide column">
+		<div class="ui segment">
+			<h2 class="ui heaer">Rule Breaking Content</h2>
+			<p>
+				Using this form you can submit an abuse report to us. We dislike
+				rule breaking/illegal content just as much as you do. We
+				thoroughly investigate each report to make sure that an innocent
+				user does not get punished. So please do not submit false abuse
+				reports.
+			</p>
+
+			<p>
+				You can view what we deem as Rule Breaking Content in the <a target="_blank" href="{% url 'terms' %}#general-prohibitions">General Prohibitions</a> section of our <a target="_blank" href="{% url 'terms' %}#general-prohibitions">Terms and Conditions</a>.
+			</p>
+		</div>
+
+		<div class="ui segment">
+			<h2 class="ui header">Instructions</h2>
+
+			<p>
+				When creating an abuse report please make sure you:
+
+				<ul>
+					<li>
+						<strong>Enter a valid e-mail,</strong> as we
+						<em>will</em> e-mail you if action is taken towards the
+						content you reported.<br/><br/>
+					</li>
+
+					<li>
+						<strong>Provide a valid reason.</strong> We cannot
+						punish a user or remove content if you only submit just one
+						or two words.<br/><br/>
+					</li>
+
+					<li>
+						<strong>Provide evidence.</strong> A link to a website
+						or a blog that might be taken down quickly does not
+						help. An archived page or a screenshot is much more
+						helpful.
+					</li>
+				</ul>
+			</p>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/apps/support/report_form.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block pagetype %}{% endblock %}
+
+
+{% block headstyle %}
+	<link rel="stylesheet" href="{% static 'css/comp/tooltip.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/widget/base.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+<div class="ui modal">
+	<i class="close icon"></i>
+	<div class="content">
+		{% include 'widgets/locker/widget.html' %}
+	</div>
+</div>
+
+<div class="ui grid stackable">
+	<div class="six wide column computer tablet only">
+		<h2><i class="circle help icon"></i> Questions</h2>
+		<div class="ui segment">
+			<p>
+				Have a question about {% site_name %} or something involving {% site_name %}?
+				Contact us via the button below or sign up to use our support
+				ticket system for an on-site response. 
+			</p>
+
+			<a class="ui mini fluid button blue" target="_blank" href="{% url 'support:contact' %}">
+				Contact
+			</a>
+		</div>
+
+		<h2><i class="legal icon"></i> Report</h2>
+		<div class="ui segment">
+			<p>
+				Should this content violate {% site_name %}'s
+				<a href="{% url 'terms' %}">Terms and Conditions</a>, please do
+				not hesitate to report it and help keep {% site_name %}'s community
+				clean.
+			</p>
+			<a class="ui mini fluid button primary" target="_blank" href="{% url 'support:report' %}">
+				Report
+			</a>
+		</div>
+	</div>
+
+	<div class="ten wide column">
+		<div class="row">
+			<div class="column">
+				<h2><i class="lock icon"></i> {% block header_text %}Locked{% endblock %}</h2>
+				<div class="ui fluid massive primary unlock button">
+					{% block button_text %}{% endblock %}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="column">
+				<br/>
+				<div class="ui top attached tabular menu">
+					<a class="active item" data-tab="first">Information</a>
+					<a class="item" data-tab="second">Description</a>
+				</div>
+				<div class="ui bottom attached active tab segment" data-tab="first">
+					{% block information %}{% endblock %}
+				</div>
+				<div class="ui bottom attached tab segment" data-tab="second">
+					{% block description %}
+						<h3 class="ui header">
+							<i class="ellipsis horizontal icon"></i>
+							<div class="content">
+								Description
+								<p class="sub header">
+									{{ obj.description|default:'<em>The owner has not added a description.</em>' }}
+								</p>
+							</div>
+						</h3>
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(".menu>.item").tab();
+
+$(".ui.modal")
+	.modal({ onApprove: function() { return false; } })
+	.modal("attach events", ".unlock.button", "show");
+</script>
+{% endblock %}

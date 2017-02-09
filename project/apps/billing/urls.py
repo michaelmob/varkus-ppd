@@ -1,9 +1,8 @@
 from django.conf.urls import url
-from django.contrib.auth.decorators import login_required
-from .views import billing
+from .views import invoices, billing
+
 
 urlpatterns = [
-	url(r"^$",
-		login_required(billing.View_Overview.as_view()),
-		name="billing"),
+	url(r"^$", invoices.InvoiceListView.as_view(), name="list"),
+	url(r"^update/$", billing.BillingUpdateView.as_view(), name="update"),
 ]

@@ -1,0 +1,50 @@
+{% extends 'lockers/generic/manage/base_manage.html' %}
+
+
+{% block breadcrumbs_section %}{% endblock %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:list' %}" class="active section">
+	{{ model_name|title }}s
+</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui grid stackable">
+	<div class="ten wide column">
+		<div class="box">
+			{% block table %}{% endblock %}
+		</div>
+	</div>
+	<div class="six wide column">
+		<div class="box">
+			{% block information %}
+			{% block information_header %}
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="info icon"></i></div>
+				<div class="header item">Information</div>
+			</div>
+			{% endblock information_header %}
+			<div class="ui bottom attached segment">
+				{% block information_create %}
+				<a href="{% url model_name|add:'s:create' %}" class="ui left labeled icon fluid basic create button{% if table.rows|length >= maximum_objects %} disabled{% endif %}">
+					<i class="plus icon"></i>
+					Create {{ model_name|title }} 
+				</a>
+
+				<br/>
+
+				<p>You have created {{ table.rows|length }} {{ model_name }}(s) out of your maximum {{ model_name }} limit of {{ maximum_objects }}.</p>
+				{% endblock information_create %}
+
+				{% block information_content %}
+					{% include model_name|add:'s/manage/information.txt' %}
+				{% endblock information_content %}
+			</div>
+			{% endblock information %}
+		</div>
+	</div>
+</div>
+{% endblock %}

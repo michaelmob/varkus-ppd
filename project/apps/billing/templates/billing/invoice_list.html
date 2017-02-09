@@ -1,0 +1,50 @@
+{% extends 'billing/billing_base.html' %}
+{% load static molds %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'billing:list' %}" class="active section">Billing</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui grid stackable">
+
+	<div class="seven wide column">
+		<div class="ui one column grid">
+
+			<div class="column">
+				<div class="ui two column equal height stretched stackable grid">
+					{% include 'billing/invoice_list_blocks.html' %}
+				</div>
+			</div>
+
+			<div class="column">
+				<div class="box">
+					<div class="ui top attached inverted red menu">
+						<div class="icon header item"><i class="credit card icon"></i></div>
+						<div class="header item">Billing Details</div>
+
+						<div class="right menu">
+							<a href="{% url 'billing:update' %}" class="inverted item edit button">
+								<i class="edit icon"></i> Edit
+							</a>
+						</div>
+					</div>
+					<div class="ui bottom attached segment">
+						<div class="ui divided relaxed list">
+							{% include 'billing/invoice_list_details.html' %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="nine wide column">
+		{% render_titlebar 'Invoices' 'list layout' %}
+		{% render_table table %}
+	</div>
+
+</div>
+{% endblock %}

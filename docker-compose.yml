@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+    postgres:
+        image: postgres
+        restart: always
+        volumes:
+            - ./docker/postgres/localdata:/var/lib/postgresql/data
+            
+    redis:
+        image: redis:alpine
+        restart: always
+
+    rabbitmq:
+        image: rabbitmq
+        restart: always
+
+    smtp:
+        image: namshi/smtp
+        restart: always
+
+    django:
+        build: ./project
+        command: python manage.py runserver 0.0.0.0:8000
+        restart: always
+        ports:
+            - 8000:8000
+        volumes:
+            - ./project:/viking
+            - ./backups:/var/backups
+        depends_on:
+            - postgres
+            - redis
+            - rabbitmq
+        environment:
+            DEBUG: "true"
+
+    beat:
+        build: ./project
+        command: celery beat -A viking
+        restart: always
+        volumes_from:
+            - django
+        depends_on:
+            - django
+
+    celery:
+        build: ./project
+        command: celery worker -A viking
+        restart: always
+        volumes_from:
+            - django
+        depends_on:
+            - django
+        environment:
+            C_FORCE_ROOT: "true"

@@ -1,0 +1,14 @@
+<div class="ui header">File Lockers</div>
+<p>
+	The file locker is a locker created specifically for the purpose of locking important files
+	that you would otherwise not want to share without any sort of compensation.
+	You can use the various options to customize how the user obtains
+	your file.
+</p>
+
+<p>
+	Example usage for this locker would be to upload homemade applications that
+	you created. Another example is to upload your band's music that you would
+	like to earn some revenue from. Basically, anything you think would be
+	worth something.
+</p>

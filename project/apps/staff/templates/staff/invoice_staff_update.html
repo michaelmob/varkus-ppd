@@ -1,0 +1,93 @@
+{% extends 'staff/staff_detail_base.html' %}
+{% load static molds semanticui billing %}
+
+{% block title %}Staff | Invoices{% endblock %}
+
+{% block breadcrumbs_section %}
+<a href="{% url 'staff:user-list' %}" class="section">Invoices</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url 'staff:invoice-detail' object.pk %}" class="section">Invoice #{{ object.id }}</a>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_active %}
+<a href="{% url 'staff:invoice-update' object.pk %}" class="active section">Pay</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui text container">
+
+	<form class="ui form box" enctype="multipart/form-data" method="POST">
+		{% render_titlebar 'Send Payment' 'credit card' %}
+		<div class="ui bottom attached segment">
+
+			<h3>Payment Details</h3>
+			{% csrf_token %}
+			<table class="ui definition table">
+				<tr>
+					<td>Payment Method</td>
+					<td>{{ object.user.billing.choice|payment_humanize }}</td>
+				</tr>
+
+				<tr>
+					<td>Payment Frequency</td>
+					<td>{{ object.user.billing.frequency }} days</td>
+				</tr>
+
+				<tr>
+					<td>Payment Amount</td>
+					<td><input type="text" value="{{ object.total_amount }}" readonly /></td>
+				</tr>
+
+				{% for key, value in payment_data.items %}
+				<tr>
+					<td>{{ key|title }}</td>
+					<td><input type="text" value="{{ value }}" readonly /></td>
+				</tr>
+				{% endfor %}
+			</table>
+
+			<h3>Send Payment</h3>
+
+			<div class="field">
+				<div class="ui checkbox">
+					<input checked="checked" id="id_notify" name="notify" type="checkbox" tabindex="0" class="hidden" checked>
+					<label for="id_notify">Notify User</label>
+				</div>
+			</div>
+
+			{% render_field form.paid %}
+			{% render_field form.error %}
+			{% render_field form.notes %}
+
+			{% if object.file.file %}
+			<div class="field">
+				<label>Current File</label>
+				<a href="{{ object.file.url }}">{{ object.file.url }}</a>
+			</div>
+			{% endif %}
+
+			<input id="id_file" name="file" style="display:none" type="file">
+			<label for="id_file" class="ui icon button">
+				<i class="file icon"></i> <span>Choose File</span>
+			</label>
+		</div>
+
+		<div class="ui bottom attached fluid buttons">
+			<button class="ui left labeled primary submit icon button">
+				<i class="check icon"></i> Save
+			</button>
+			<a href="{% url 'staff:invoice-detail' object.pk %}" class="ui button">
+				Back
+			</a>
+		</div>
+	</form>
+
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/apps/staff/invoice_staff_update.js' %}"></script>
+{% endblock %}

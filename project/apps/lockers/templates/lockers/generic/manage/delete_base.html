@@ -1,0 +1,20 @@
+{% extends 'lockers/generic/manage/base_manage.html' %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:detail' object.code %}" class="section">{{ object.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url model_name|add:'s:delete' object.code %}" class="active section">Delete</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui clearing segment">
+	<form action="" method="post">{% csrf_token %}
+		<p>Are you sure you want to delete your {{ model_name }} <em>{{ object.name }}</em>?</p>
+
+		<a href="{% url model_name|add:'s:detail' object.code %}" class="ui right floated button">No</a>
+		<input type="submit" class="ui right floated red button" value="Yes" />
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'lockers/generic/manage/update_base.html' %}
+{% load static semanticui %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:detail' object.code %}" class="section">{{ object.name }}</a>
+<i class="right chevron icon divider"></i>
+<a href="{% url model_name|add:'s:update-embed' object.code %}" class="active section">Embed</a>
+{% endblock %}
+
+{% block headcss %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="ui two column grid stackable">
+
+	<div class="column">
+		<div class="box">
+
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="info icon"></i></div>
+				<div class="header item">Documentation</div>
+			</div>
+
+			<div class="ui bottom attached segment">
+				<h3>Embedding Your Widget</h3>
+				<p>
+					Embedding your Widget is very straight forward. Some knowledge of
+					HTML, CSS, and Javascript would be beneficial but is mostly not
+					needed for embedding a basic Widget.
+				</p>
+
+				<p>
+					The embedding is done through an iframe, and is all a simple line
+					of HTML that you can style to your heart's content.
+				</p>
+
+
+				<h3>Embedding Your Viral Widget</h3>
+				<p>
+					Embedding your Viral Widget is more advanced than a basic widget. Some
+					Javascript is needed to make everything run smoothly. However, it's
+					not too tough and can be understood in less than ten minutes.
+				</p>
+
+				<p>
+					The way it works, out of the box, is the Javascript sets the iframe's
+					source to the Widget's lock page. A GET parameter is attached to the
+					Widget's url named <span class="code">url</span> so that the user's
+					viral link will look native to your website.
+				</p>
+
+				<p>
+					For the more advanced user that wishes to have the visiter ID in a
+					different location of the URL: within the URL, <span class="code">{id}</span>
+					will be replaced with the visiter ID.
+				</p>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="column">
+		<div class="box">
+			<div class="ui top attached inverted red menu">
+				<div class="icon header item"><i class="code icon"></i></div>
+				<div class="header item">Code</div>
+			</div>
+			<div class="ui bottom attached segment">
+				<h3>Embed Widget</h3>
+				<pre><code class="html">&lt;iframe id="widget" src="{{ url }}" height="500" width="800" frameborder="0"&gt;&lt;/iframe&gt;</code></pre>
+
+				<h3>Embed Viral Widget</h3>
+				<pre><code class="html">&lt;iframe id="widget" height="500" width="800" frameborder="0"&gt;&lt;/iframe&gt;
+&lt;script&gt;var id="";if(matches=document.location.href.match(/\#[0-9]+/g))id=matches[0].split("#")[1]+"/";document.querySelector("#widget").src="{{ url }}"+id+"?url="+document.location.href;&lt;/script&gt;</code></pre>
+			</div>
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}

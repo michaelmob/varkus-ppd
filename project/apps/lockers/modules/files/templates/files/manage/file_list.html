@@ -1,0 +1,20 @@
+{% extends 'lockers/generic/manage/list_base.html' %}
+{% load molds %}
+
+
+{% block table %}
+	{% render_titlebar 'Files' 'file image outline' %}
+	{% render_table table %}
+{% endblock %}
+
+
+{% block information_create %}
+<a href="{% url model_name|add:'s:create' %}" class="ui left labeled icon fluid basic create button{% if table.rows|length >= maximum_objects %} disabled{% endif %}">
+	<i class="plus icon"></i>
+	Upload {{ model_name|title }} 
+</a>
+
+<br/>
+
+<p>You have uploaded {{ table.rows|length }} {{ model_name }}(s) out of your maximum {{ model_name }} limit of {{ maximum_objects }}.</p>
+{% endblock %}

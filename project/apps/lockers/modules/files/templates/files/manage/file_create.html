@@ -1,0 +1,129 @@
+{% extends 'lockers/generic/manage/create_base.html' %}
+{% load static %}
+{% load semanticui %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:create' %}" class="active section">Upload</a>
+{% endblock %}
+
+
+{% block modal %}
+<div class="ui upload modal">
+	<div class="header">
+		Uploading your File: <span class="file name"></span>
+	</div>
+
+	<div class="content">
+		<div class="ui indicating progress">
+			<div class="bar">
+				<div class="progress"></div>
+			</div>
+			<div class="label"></div>
+		</div>
+	</div>
+
+	<div class="actions">
+		<a class="ui negative button">
+			Cancel
+		</a>
+	</div>
+</div>
+
+<div class="ui basic small error modal">
+	<div class="ui icon header">
+		<i class="warning sign icon"></i>
+		Error
+	</div>
+	<div class="content">
+		<p id="error-message" style="text-align:center"></p>
+	</div>
+	<div class="actions">
+		<div class="ui ok inverted button">
+			Ok
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block form_header %}
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="add circle icon"></i></div>
+	<div class="header item">Upload {{ model_name|title }}</div>
+</div>
+{% endblock form_header %}
+
+
+{% block form_content %}
+{% render_field form.name %}
+{% render_field form.description %}
+{% render_field form.file _no_label=1 %}
+
+<label for="id_file" class="ui icon button">
+	<i class="file icon"></i> <span>Choose File</span>
+</label>
+
+<p style="margin-bottom:0">
+	By uploading a file you agree to our <a href="{% url 'terms' %}">Terms and Conditions</a>
+	and that your file does not violate any of the Uploader's Rules in the next panel.
+</p>
+{% endblock form_content %}
+
+
+{% block form_submit %}
+<div class="ui bottom attached fluid buttons">
+	<label class="ui left labeled red icon submit upload button disabled">
+		<i class="upload icon"></i>
+		Upload
+	</label>
+	<a href="{% url model_name|add:'s:list' %}" class="ui cancel button" style="max-width:20rem">
+		Cancel
+	</a>
+</div>
+{% endblock form_submit %}
+
+
+{% block information_content %}
+<div class="ui header">File Uploading</div>
+<p>
+	Currently, the maximum file size your upload can be is
+	<strong>50 megabytes</strong>. Earn more for
+	this limit to be raised.
+</p>
+
+<p>Keep your file's name clean! Nothing too raunchy or provocative.</p>
+
+<div class="ui header">Uploader's Rules</div>
+<p>
+	We know uploading files is something you want to get
+	right to straight away, so we'll keep this short and simple.
+	Below is some information on the things you can and cannot upload.
+</p>
+
+<strong>Cans</strong>
+<p>
+	Anything you have created and that you have permission to
+	upload is allowed as long as it does not violate the cannots.
+</p>
+<p>
+	You can upload files of any file format excluding executables.
+	If you wish to distribute executables you must archive them.
+</p>
+
+<strong>Cannots</strong>
+<ul class="ui list" style="margin-top:0.2rem">
+	<li>Malware or Spyware</li>
+	<li>Child Pornography</li>
+	<li>Copyrighted Music, Videos or Photos</li>
+	<li>Anything illegal in the United States</li>
+</ul>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/comp/upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/comp/upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/comp/upload/jquery.fileupload.js' %}"></script>
+<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/'|add:model_name|add:'_create.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'lockers/generic/manage/detail_base.html' %}
+
+
+{% block actions_menu %}
+<a href="{% url model_name|add:'s:update-css' object.code %}" class="ui item">
+	<i class="code icon"></i> Custom CSS
+</a>
+
+<a href="{% url model_name|add:'s:update-locker' object.code %}" class="ui item">
+	<i class="anchor icon"></i> Pair Locker
+</a>
+
+<a href="{% url model_name|add:'s:update-embed' object.code %}" class="ui item">
+	<i class="code icon"></i> Embed
+</a>
+{% endblock %}
+
+
+{% block details %}
+<div class="item">
+	<i class="anchor icon"></i>
+	<div class="content">
+		<div class="header">Locker</div>
+		{% with object_locker=object.locker %}
+			{% if object_locker %}
+				{{ object_locker.type|title }}: <a target="_blank" href="{# object_locker.get_absolute_url #}">{{ object_locker.name }}</a>
+			{% else %}
+				<em>Not paired</em>
+			{% endif %}
+		{% endwith %}
+
+		(<a href="{% url model_name|add:'s:update-locker' object.code %}">Edit</a>)
+	</div>
+</div>
+
+<div class="item">
+	<i class="leaf icon"></i>
+	<div class="content">
+		<div class="header">Viral Mode</div>
+		{% if object.viral_mode %}
+			Enabled
+		{% else %}
+			<em>Disabled</em>
+		{% endif %}
+
+		(<a href="{% url model_name|add:'s:update' object.code %}#viral">Edit</a>)
+	</div>
+</div>
+
+<div class="item">
+	<i class="reply icon"></i>
+	<div class="content">
+		<div class="header">Webhook URL</div>
+		{% if object.postback_url|length > 0 %}
+			Webhook URL is active
+		{% else %}
+			<em>No webhook URL set</em>
+		{% endif %}
+
+		(<a href="{% url model_name|add:'s:update' object.code %}#webhooks">Edit</a>)
+	</div>
+</div>
+{% endblock %}

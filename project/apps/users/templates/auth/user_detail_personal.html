@@ -1,0 +1,91 @@
+{% load country %}
+
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="write icon"></i></div>
+	<div class="header item">Personal Details</div>
+
+	<div class="right menu">
+		<a href="{% url 'account-update' %}" class="inverted item edit personal">
+			<i class="edit icon"></i> Edit
+		</a>
+	</div>
+</div>
+
+<div class="ui bottom attached segment">
+	<div class="ui divided relaxed list">
+
+		<div class="item">
+			<i class="quote left icon"></i>
+			<div class="content">
+				<div class="header">Name</div>
+				{% if not user.first_name and not user.last_name %}
+					{{ DEFAULT_TEXT }}
+				{% else %}
+					{{ user.first_name|default:DEFAULT_TEXT }} {{ user.last_name|default:DEFAULT_TEXT }}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="phone icon"></i>
+			<div class="content">
+				<div class="header">Phone Number</div>
+				{{ user.profile.phone_number|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="world icon"></i>
+			<div class="content">
+				<div class="header">Country</div>
+				{% if not user.profile.country %}
+					{{ DEFAULT_TEXT }}
+				{% else %}
+					<i class="{{ user.profile.country|lower }} flag"></i><!--
+					!-->{{ user.profile.country|country }}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="map icon"></i>
+			<div class="content">
+				<div class="header">State / Region</div>
+				{{ user.profile.state|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="building icon"></i>
+			<div class="content">
+				<div class="header">City</div>
+				{{ user.profile.city|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="shipping icon"></i>
+			<div class="content">
+				<div class="header">Postal Code</div>
+				{{ user.profile.postal_code|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="marker icon"></i>
+			<div class="content">
+				<div class="header">Address</div>
+				{{ user.profile.address|default:DEFAULT_TEXT }}
+			</div>
+		</div>
+
+		<div class="item">
+			<i class="birthday icon"></i>
+			<div class="content">
+				<div class="header">Birthdate</div>
+				{{ user.profile.birthdate }}
+			</div>
+		</div>
+
+	</div>
+</div>

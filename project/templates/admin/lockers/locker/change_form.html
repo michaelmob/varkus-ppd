@@ -3,8 +3,8 @@
 
 {% block object-tools-items %}
 
-<li><a href="{% url 'admin:conversions_conversion_changelist' %}?{{ original.admin_lookup_args }}">{% trans "Conversions" %}</a></li>
-<li><a href="{% url 'admin:conversions_token_changelist' %}?{{ original.admin_lookup_args }}">{% trans "Tokens" %}</a></li>
+<li><a href="{% url 'admin:conversions_conversion_changelist' %}?{{ original.admin_filter_args }}">{% trans "Conversions" %}</a></li>
+<li><a href="{% url 'admin:conversions_token_changelist' %}?{{ original.admin_filter_args }}">{% trans "Tokens" %}</a></li>
 
 <li>
 	{% url opts|admin_urlname:'history' original.pk|admin_urlquote as history_url %}

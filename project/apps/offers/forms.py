@@ -7,6 +7,6 @@ CHOICES = (
 )
 
 
-class Form_Offer(forms.Form):
+class OfferForm(forms.Form):
 	priority = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
 

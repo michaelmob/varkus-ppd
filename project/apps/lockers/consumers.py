@@ -1,15 +1,21 @@
-from channels import Group
-from channels.auth import channel_session_user, channel_session_user_from_http
+from channels import Group, auth
 
-# Connected to websocket.connect
-@channel_session_user_from_http
+
+@auth.channel_session_user_from_http
 def ws_connect(message):
+	"""
+	Add user's reply channel to Group on connection.
+	"""
+	message.reply_channel.send({"accept": True})
 	message.channel_session["session_key"] = message.http_session.session_key
-	Group("session-" + str(message.http_session.session_key)).add(
-		message.reply_channel)
+	session_key = message.channel_session["session_key"]
+	Group("session-" + session_key).add(message.reply_channel)
 
-# Disconnected from websocket.disconnect
-@channel_session_user
+
+@auth.channel_session_user
 def ws_disconnect(message):
-	Group("session-" + message.channel_session["session_key"]).discard(
-		message.reply_channel)
+	"""
+	Discard user's reply channel from Group after they have disconnected.
+	"""
+	session_key = message.channel_session["session_key"]
+	Group("session-" + session_key).discard(message.reply_channel)

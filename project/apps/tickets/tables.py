@@ -2,35 +2,41 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 
-from apps.site.tables import tables, Table_Base
+from core.tables import tables, TableBase
 from .models import Thread
 
-class Table_Tickets(tables.Table):
-	status = tables.Column(empty_values=(), orderable=False)
-	last_replier = tables.Column(empty_values=(), orderable=False)
 
-	class Meta(Table_Base.Meta):
+
+class TicketTable(tables.Table):
+	"""
+	Table for Ticket model.
+	"""
+	subject = tables.LinkColumn("tickets:detail", text=lambda r: r.subject, args=(tables.A("id"),))
+	status = tables.Column(accessor="closed")
+
+
+	class Meta(TableBase.Meta):
 		model = Thread
-		attrs = {"class": "ui sortable table"}
 		empty_text = "You have not created a ticket."
 		fields = ("subject", "datetime", "last_replier", "priority", "status")
 
-	def __init__(self, request, data=None, per_page=30, **kwargs):
-		if not data:
-			data = Thread.objects.filter(user=request.user)
 
-		super(__class__, self).__init__(data)
-		tables.RequestConfig(request,
-			paginate={"per_page": per_page}).configure(self)
+	def render_last_replier(self, value):
+		"""
+		Return last replier for Ticket.
+		"""
+		return value.title()
 
-	def render_subject(self, value, record):
-		return mark_safe("<a href='%s'>%s</a>" % (reverse("tickets-manage", args=(record.id,)), value))
-
-	def render_last_replier(self, value, record):
-		return ""
 
 	def render_status(self, value, record):
+		"""
+		Return HTML span element for status column.
+		"""
 		if record.closed:
-			return mark_safe("<span class='ui label red'>Closed</span>")
-		
-		return mark_safe("<span class='ui label green'>Open</span>")
+			color, text = ("red", "Closed")
+		elif record.unread:
+			color, text = ("blue", "Respond")
+		else:
+			color, text = ("green", "Open")
+
+		return mark_safe("<span class='ui label %s'>%s</span>" % (color, text))

@@ -1,6 +1,6 @@
-{% extends 'base-panel.html' %}
+{% extends 'base_panel.html' %}
 {% load static %}
-{% load blueprints %}
+{% load molds %}
 
 {% block title %}Offers{% endblock %}
 
@@ -10,7 +10,7 @@
 <div class="ui breadcrumb">
 	<div class="section">Control Panel</div>
 	<i class="right chevron icon divider"></i>
-	<a href="{% url 'offers' %}" class="section">Offers</a>
+	<a href="{% url 'offers:list' %}" class="section">Offers</a>
 	<i class="right chevron icon divider"></i>
 	<a href="{% url 'offers-options' %}" class="active section">Options</a>
 </div>
@@ -20,11 +20,11 @@
 <div class="ui two column grid stackable">
 
 	<div class="column">
-		{% table prioritized 'Prioritized Offers' 'checkmark' %}
+		{% table_box prioritized 'Prioritized Offers' 'checkmark' %}
 	</div>
 
 	<div class="column">
-		{% table blocked 'Blocked Offers' 'ban' %}
+		{% table_box blocked 'Blocked Offers' 'ban' %}
 	</div>
 
 </div>

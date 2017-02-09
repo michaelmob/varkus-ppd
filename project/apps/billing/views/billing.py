@@ -1,54 +1,80 @@
-import json
-
-from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.generic import View
+from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
+from django.views.generic.edit import FormView
+from .. import forms
+from ..models import Invoice, Billing
+from ..tables import InvoiceTable
 
-from ..models import Invoice, Billing, PAYMENT_CHOICE_LIST
-from ..forms import Form_Paypal, Form_Check, Form_Wire, Form_Direct
-from ..tables import Table_Invoice
 
 
-class View_Overview(View):
+class BillingUpdateView(SuccessMessageMixin, FormView):
+	"""
+	View to update a User's billing profile.
+	"""
+	template_name = "billing/billing_update.html"
+	success_url = reverse_lazy("billing:list")
+	success_message = "Your billing details have been updated."
 
-	def get(self, request):
-		data = request.user.billing.data
-		data = data if isinstance(data, dict) else json.loads(data or "{}")
 
-		return render(request, "billing/overview.html", {
-			"invoices": Table_Invoice(request),
-			"choice": request.user.billing.choice,
-			"data": data,
+	def get_form_class(self):
+		"""
+		Return form class to be used based on 'form' post value.
+		"""
+		form = self.request.POST.get("form")
 
-			"form_paypal": 	Form_Paypal.from_request(request),
-			"form_check": 	Form_Check.from_request(request),
-			"form_wire": 	Form_Wire.from_request(request),
-			"form_direct": 	Form_Direct.from_request(request)
-		})
-
-	def post(self, request):
-		success = False
-		form = request.POST.get("form")
-
-		# Validate choice
-		if form == "PAYPAL":
-			success = Form_Paypal.from_request(request).save()
+		if not form or form == "PAYPAL":
+			self.form_class = forms.PaypalForm
 
 		elif form == "CHECK":
-			success = Form_Check.from_request(request).save()
+			self.form_class = forms.CheckForm
 
 		elif form == "WIRE":
-			success = Form_Wire.from_request(request).save()
+			self.form_class = forms.WireForm
 
 		elif form == "DIRECT":
-			success = Form_Direct.from_request(request).save()
+			self.form_class = forms.DirectDepositForm
 
-		# Success Message
-		if success:
-			messages.success(request, "Your billing information has been saved.")
-		else:
-			messages.error(request, "An error has occured. Your billing information has not been saved.")
+		return self.form_class
 
-		return self.get(request)
+
+	def get_context_data(self, *args, **kwargs):
+		"""
+		Modify context dictionary to add all forms.
+		"""
+		context = super(__class__, self).get_context_data(*args, **kwargs)
+		post_data = self.request.POST or None
+		billing_data = self.request.user.billing.get_data()
+
+		context["form"] = {
+			"paypal": forms.PaypalForm(
+				post_data, initial=billing_data.get("PAYPAL")
+			),
+
+			"check": forms.CheckForm(
+				post_data, initial=billing_data.get("CHECK")
+			),
+
+			"wire": forms.WireForm(
+				post_data, initial=billing_data.get("WIRE")
+			),
+
+			"direct": forms.DirectDepositForm(
+				post_data, initial=billing_data.get("DIRECT")
+			)
+		}
+
+		context["active_tab"] = self.request.POST.get("form")
+
+		return context
+
+
+	def form_valid(self, form):
+		"""
+		Save billing profile from forms.
+		"""
+		form.save_user(self.request.user)
+		return super(__class__, self).form_valid(form)

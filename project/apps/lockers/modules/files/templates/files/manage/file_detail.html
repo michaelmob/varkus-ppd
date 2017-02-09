@@ -1,0 +1,26 @@
+{% extends 'lockers/generic/manage/detail_base.html' %}
+
+
+{% block details %}
+<div class="item">
+	<i class="file outline icon"></i>
+	<div class="content">
+		<div class="header">File Name</div>
+		{{ object.file_name }}
+	</div>
+</div>
+<div class="item">
+	<i class="disk outline icon"></i>
+	<div class="content">
+		<div class="header">File Size</div>
+		{{ object.file_size|filesizeformat }}
+	</div>
+</div>
+<div class="item">
+	<i class="hashtag icon"></i>
+	<div class="content">
+		<div class="header">MD5 Sum</div>
+		{{ object.md5_sum }}
+	</div>
+</div>
+{% endblock %}

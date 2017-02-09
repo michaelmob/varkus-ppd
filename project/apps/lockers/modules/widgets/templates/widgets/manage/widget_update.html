@@ -1,0 +1,174 @@
+{% extends 'lockers/generic/manage/update_base.html' %}
+{% load semanticui %}
+
+
+{% block form_header %}
+<div class="ui top attached inverted red menu">
+	<div class="icon header item"><i class="edit icon"></i></div>
+	<div class="header item">Edit {{ model_name|title }}</div>
+
+	<div class="ui secondary right menu">
+		<a class="active item" data-tab="details">Details</a>
+		<a class="item" data-tab="viral">Viral Mode</a>
+		<a class="item" data-tab="webhooks">Webhooks</a>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block form_content %}
+{# Details #}
+<div class="ui bottom attached tab form segment active" data-tab="details">
+	{% render_field form.name %}
+	{% render_field form.description %}
+</div>
+
+{# Viral #}
+<div class="ui bottom attached tab form segment" data-tab="viral">
+	{% render_field form.viral_mode %}
+	{% render_field form.viral_count placeholder='5' %}
+	{% render_field form.viral_noun placeholder='person,people' %}
+	{% render_field form.viral_message placeholder=viral_message %}
+</div>
+
+{# Webhooks #}
+<div class="ui bottom attached tab form segment" data-tab="webhooks">
+	{% site_domain as site_domain %}
+	{% render_field form.webhook_url placeholder='https://'|add:site_domain|add:'/webhook/?id={offer_id}&name={offer_name}&ip={ip}&ua={user_agent}&token={token}&widget={widget}&payout={payout}&approved={approved}&datetime={datetime}&rand={rand}' %}
+
+	<div class="ui header">GET Values</div>
+	<table class="ui very basic celled table" style="overflow:hidden">
+		<thead>
+			<tr>
+				<th>Value</th>
+				<th>Description</th>
+				<th>Example</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{offer_id}</td>
+				<td>ID of Offer</td>
+				<td>56</td>
+			</tr>
+			<tr>
+				<td>{offer_name}</td>
+				<td>Offer's name (url encoded)</td>
+				<td>Survey+Sample+Savings+-+Bur...</td>
+			</tr>
+			<tr>
+				<td>{ip}</td>
+				<td>Visitor's IP address</td>
+				<td>173.49.23.39</td>
+			</tr>
+			<tr>
+				<td>{user_agent}</td>
+				<td>Visitor's user agent (url encoded)</td>
+				<td>Mozilla%2F5.0...</td>
+			</tr>
+			<tr>
+				<td>{token}</td>
+				<td>Token of visitor's session</td>
+				<td>o6roooedfxg0aw1w8za6e9o8kmct205j</td>
+			</tr>
+			<tr>
+				<td>{widget}</td>
+				<td>Widget's code</td>
+				<td>{{ object.code }}</td>
+			</tr>
+			<tr>
+				<td>{payout}</td>
+				<td>Conversion's payout</td>
+				<td>3.98</td>
+			</tr>
+			<tr>
+				<td>{approved}</td>
+				<td>True or False if conversion is approved</td>
+				<td>True</td>
+			</tr>
+			<tr>
+				<td>{date}</td>
+				<td>Date in YY-MM-DD format</td>
+				<td>{% now "Y-m-d" %}</td>
+			</tr>
+			<tr>
+				<td>{time}</td>
+				<td>Time in HH:MM:SS format</td>
+				<td>{% now "H:i:s" %}</td>
+			</tr>
+			<tr>
+				<td>{datetime}</td>
+				<td>Date and time in YY-MM-DD HH:MM:SS format</td>
+				<td>{% now "Y-m-d H:i:s" %}</td>
+			</tr>
+			<tr>
+				<td>{rand}</td>
+				<td>Random number from 1-1000000</td>
+				<td>59382</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+{% endblock %}
+
+
+{% block information_content %}
+{# Details #}
+<div class="ui bottom attached tab segment active" data-tab-information="details">
+	{% include 'widgets/manage/information.txt' %}
+</div>
+
+{# Viral #}
+<div class="ui bottom attached tab segment" data-tab-information="viral">
+	<div class="ui header">Viral Mode</div>
+	<p>
+		Viral Mode is a way for your lockers to gain even more traffic by
+		using the power of your visitors to promote your content to other potential
+		visitors who also may be interested.
+	</p>
+
+	<p>
+		The way it works is simple. Before your visitor can fill out an offer,
+		they will be greeted with a message, defined by you, along with a link
+		that is unique to them. Afterwards, the visitor must forward the
+		link to an amount of people, that you have specified. The process repeats
+		itself for the new visitor that the link was forwaded to. The new visitor
+		must also forward their link with your specified amount of visitors,
+		therefore: going viral.
+	</p>
+
+	<p>
+		When a visitor receives a click from a visitor that they had referred,
+		their count will instantly be updated to show how many more people
+		must click on their link. Once the required amount of visitors
+		is reached, they will be able to complete an offer and unlock the
+		locked content.
+	</p>
+
+	{% comment %}
+	<h3>Embed Code</h3>
+	<pre><code class="html">&lt;iframe id="widget"&gt;&lt;/iframe&gt;
+&lt;script&gt;document.getElementById("widget").src="{{ url }}"+(document.location.href.indexOf("?v=")>1?"?v="+document.location.href.split("?v=")[1].split("&")[0]+"&":"?")+"url="+encodeURIComponent(document.location.href);&lt;/script&gt;</code></pre>
+	<script>hljs.initHighlightingOnLoad();</script>
+	{% endcomment %}
+</div>
+
+{# Webhooks #}
+<div class="ui bottom attached tab segment" data-tab-information="webhooks">
+	<div class="ui header">Webhooks</div>
+
+	<p>
+		Webhooks are what makes standalone widgets so useful. Webhooks add the
+		ability for you and your server to be notified when one of your visitors
+		has completed an offer so that you can take action. The request contains
+		a bunch of useful information that you can use to identify a specific 
+		visitor.
+	</p>
+
+	<p>
+		In the previous panel there are many GET values you can use to aid yourself
+		with information on the conversion. A GET request is sent to your webhook
+		URL replacing the values with the proper information.
+	</p>
+</div>
+{% endblock %}

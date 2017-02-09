@@ -1,0 +1,18 @@
+<div class="ui header">List Lockers</div>
+<p>
+	The list locker is a locker created specifically to lock lists.
+	You can use the various options to customize how the user obtains
+	one of the items from the list.
+</p>
+
+<p>
+	A list can be set so that its items are distributed: descending,
+	ascending, or randomly. It can also be set to only output an item
+	that was not previously distributed.
+</p>
+
+<p>
+	Common usage for this locker would be to lock a list of serials or
+	keys. For example, keys for your indie game that you want to give
+	out for free but still want to make a profit off of.
+</p>

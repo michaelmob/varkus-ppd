@@ -1,0 +1,81 @@
+{% extends 'lockers/generic/manage/base_manage.html' %}
+{% load static %}
+{% load molds %}
+
+
+{% block breadcrumbs_active %}
+<a href="{% url model_name|add:'s:detail' object.code %}" class="active section">{{ object.name }}</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui two column stackable grid">
+	<div class="column">
+		<div class="ui one column grid">
+
+			<div class="column">
+				{# Data Blocks #}
+				<div class="ui two column equal height stretched stackable grid">
+					{% block blocks_wrapper %}
+
+					{% endblock %}
+				</div>
+
+				{# View Locker Page and Share Buttons #}
+				<div class="ui one column grid">
+					<div class="column">
+						{% block share_wrapper %}
+
+						{% endblock %}
+					</div>
+				</div>
+			</div>
+
+			{# Locker Details #}
+			<div class="column">
+				<div class="box">
+					{% block details_wrapper %}
+
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="column">
+		<div class="ui one column grid">
+			{# Chart #}
+			<div class="column">
+				{% render_titlebar 'Activity' 'line chart' %}
+				{% render_activity_chart %}
+			</div>
+
+			{# Conversions #}
+			<div class="column">
+				<div class="box">
+					<div class="ui top attached inverted red menu">
+						<div class="icon header item"><i class="pointing up icon"></i></div>
+						<div class="header item">
+							Clicks&nbsp;<small>(<strong>{{ visitors }}</strong> clicks in the last 5 minutes)</small>
+						</div>
+					</div>
+					{% render_table tables.0 %}
+				</div>
+			</div>
+
+			{# Conversions #}
+			<div class="column">
+					{% render_titlebar 'Conversions' 'lightning' %}
+					{% render_table tables.1 %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/detail.js' %}"></script>
+{% endblock %}

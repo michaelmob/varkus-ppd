@@ -1,0 +1,44 @@
+{% extends 'base_panel.html' %}
+{% load staff %}
+
+{% block title %}Staff{% endblock %}
+{% block tab %}staff{% endblock %}
+
+{% block breadcrumbs_app %}
+<div class="section">Staff</div>
+<i class="right chevron icon divider"></i>
+{% endblock %}
+
+{% block breadcrumbs_section %}{% endblock %}
+
+
+{% block contentwrapper %}
+	<div class="ui top attached tabular menu">
+		<a href="{% url 'staff:user-list' %}" class="staff-users item">
+			<i class="user icon"></i> Users
+		</a>
+		<a href="{% url 'staff:invoice-list' %}" class="staff-invoices item">
+			<i class="fax icon"></i> Invoices
+			{% invoices_unpaid as invoices_unpaid %}
+			{% if invoices_unpaid > 0 %}
+			<div class="ui red label">{{ invoices_unpaid }}</div>
+			{% endif %}
+		</a>
+		<a href="{% url 'staff:ticket-list' %}" class="staff-tickets item">
+			<i class="ticket icon"></i> Tickets
+			{% tickets_unread as tickets_unread %}
+			{% if tickets_unread > 0 %}
+			<div class="ui red label">{{ tickets_unread }}</div>
+			{% endif %}
+		</a>
+		{% if user.is_superuser %}
+		<div class="right menu">
+			<a href="{% url 'staff:system' %}" class="staff-system item">
+				<i class="server icon"></i> System
+			</a>
+		</div>
+		{% endif %}
+	</div>
+	{% block content %}{% endblock %}
+	<script>$(".staff-{% block stafftab %}{% endblock %}").addClass("active");</script>
+{% endblock %}

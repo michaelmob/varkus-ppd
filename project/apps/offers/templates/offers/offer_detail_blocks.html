@@ -1,0 +1,23 @@
+{% load molds currency %}
+
+{% with object.earnings as e %}
+<div class="column">
+	{% data_block_content e.clicks_today 'Clicks' 'user clicks today' as content %}
+	{% data_block 'red' 'pointing up' content %}
+</div>
+
+<div class="column">
+	{% data_block_content e.conversions_today 'Conversions' 'user conversions today' as content %}
+	{% data_block 'blue' 'lightning' content %}
+</div>
+
+<div class="column">
+	{% data_block_content e.epc|currency 'Earnings Per Click' 'user epc today' as content %}
+	{% data_block 'orange' 'bullseye' content %}
+</div>
+
+<div class="column">
+	{% data_block_content e.epc|currency 'Success Rate' 'user success rate' as content %}
+	{% data_block 'teal' 'checkmark' content %}
+</div>
+{% endwith %}

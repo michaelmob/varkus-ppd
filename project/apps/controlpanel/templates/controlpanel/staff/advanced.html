@@ -1,0 +1,37 @@
+{% extends 'base_panel.html' %}
+{% load static %}
+
+{% block title %}Advanced{% endblock %}
+
+{% block tab %}server{% endblock %}
+
+{% block breadcrumbs %}
+<div class="ui breadcrumb">
+	<div class="section">Staff</div>
+	<i class="right chevron icon divider"></i>
+	<a href="{% url 'staff-advanced' %}" class="active section">Advanced</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="ui stackable grid">
+	<div class="eight wide column">
+		<div class="ui one column grid">
+
+			{# Actions #}
+			<div class="column">
+				<div class="box">
+					<div class="ui top attached inverted red menu">
+						<div class="icon header item"><i class="paint brush icon"></i></div>
+						<div class="header item">Actions</div>
+					</div>
+					<div class="ui bottom attached segment">
+						Nothing implemented, yet.
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}

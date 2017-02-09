@@ -1,0 +1,9 @@
+<div class="ui header">Link Lockers</div>
+<p>
+	The link locker is a locker created specifically to lock links.
+</p>
+
+<p>
+	Common usage for this locker would be to lock an uncommon link,
+	that you would not like others to know for free.
+</p>
