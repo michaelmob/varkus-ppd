@@ -1,6 +1,15 @@
 version: '2'
 
 services:
+    postgres:
+        volumes:
+            - ./docker/postgres/data:/var/lib/postgresql/data
+            - ./docker/postgres/backup:/var/backup
+        environment: &dbenv
+            POSTGRES_DB: CHANGE_THIS
+            POSTGRES_USER: CHANGE_THIS
+            POSTGRES_PASSWORD: CHANGE_THIS
+
     nginx:
         image: steveltn/https-portal:1.0.0
         restart: always
@@ -12,20 +21,30 @@ services:
         volumes:
             - ./docker/nginx/certs:/var/lib/https-portal
             - ./docker/nginx/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb
+            - ./docker/nginx/default.conf.erb:/var/lib/nginx-conf/default.conf.erb
         environment:
-            - STAGE=production
-            - DOMAINS=viking.com -> http://django:8000
+            STAGE: production
+            DOMAINS: "viking.com -> http://django:8000"
 
     django:
         build: ./project
         command: daphne viking.asgi:channel_layer -b 0.0.0.0 -p 8000
         environment:
-            - DEBUG=false
+            <<: *dbenv
+            DEBUG: "false"
 
     worker:
         build: ./project
+        restart: always
         command: python manage.py runworker
         depends_on:
             - django
         volumes_from:
             - django
+        environment: *dbenv
+
+    beat:
+        environment: *dbenv
+        
+    celery:
+        environment: *dbenv
