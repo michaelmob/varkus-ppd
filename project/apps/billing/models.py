@@ -41,6 +41,8 @@ class Billing(models.Model):
 		"""
 		Return 'data' field as a dictionary.
 		"""
+		if not self.data:
+			return ""
 		return json.loads(self.data)
 
 
