@@ -38,7 +38,7 @@ class RegistrationView(AuthenticatedMixin, SuccessMessageMixin, FormView):
 		"""
 		Return a modified success_message.
 		"""
-		message = "Welcome to %s!"
+		message = "Welcome to %s! "
 		if settings.INVITE_ONLY:
 			message += "We'll notify you when your account is activated."
 		return message % settings.SITE_NAME

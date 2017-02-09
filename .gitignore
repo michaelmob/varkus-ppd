@@ -28,6 +28,6 @@ static/admin
 migrations/
 
 # Docker
-nginx/certs/**
+nginx/certs/
 postgres/data/
 docker-compose.production.yml

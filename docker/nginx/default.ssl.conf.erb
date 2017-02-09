@@ -1,6 +1,7 @@
 server {
+	listen 80;
 	listen 443 ssl http2;
-	server_name <%= domain.name %>;
+	server_name <%= domain.name %> insecure.<%= domain.name %>;
 
 	root /var/www/viking/project/;
 	index index.html;

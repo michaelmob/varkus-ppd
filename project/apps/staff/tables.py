@@ -33,6 +33,7 @@ class TicketStaffTable(TicketTable):
 	class Meta(TableBase.Meta):
 		model = Thread
 		fields = ("subject", "user",)
+		empty_text = "There are no tickets."
 
 
 	def render_status(self, value, record):
@@ -65,6 +66,7 @@ class UserStaffTable(TableBase):
 	class Meta(TableBase.Meta):
 		model = User
 		fields = ("username", "email", "last_login")
+		empty_text = "There are no users."
 
 
 	def render_clicks(self, value, record):
@@ -90,6 +92,7 @@ class AccessLogStaffTable(TableBase):
 	class Meta(TableBase.Meta):
 		model = AccessLog
 		fields = ("ip_address", "attempt_time")
+		empty_text = "This user has not logged in."
 
 
 	def render_ip_address(self, value):
