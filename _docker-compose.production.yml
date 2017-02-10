@@ -20,8 +20,8 @@ services:
             - django
         volumes:
             - ./docker/nginx/certs:/var/lib/https-portal
-            - ./docker/nginx/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb
             - ./docker/nginx/default.conf.erb:/var/lib/nginx-conf/default.conf.erb
+            - ./docker/nginx/default.ssl.conf.erb:/var/lib/nginx-conf/default.ssl.conf.erb
         environment:
             STAGE: production
             DOMAINS: "viking.com -> http://django:8000"

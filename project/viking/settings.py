@@ -132,6 +132,8 @@ TEMPLATES = [{
 
 
 # SMTP
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_SSL = True
 EMAIL_HOST = "smtp"
 EMAIL_PORT = 25
 

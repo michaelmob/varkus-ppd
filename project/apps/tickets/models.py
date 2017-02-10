@@ -72,7 +72,7 @@ class Post(models.Model):
 	"""
 	Model for Ticket Post.
 	"""
-	thread 		= models.ForeignKey(Thread, on_delete=models.CASCADE)
+	thread 		= models.ForeignKey(Thread, null=True)
 	original	= models.BooleanField(default=False)
 	user 		= models.ForeignKey(User, on_delete=models.CASCADE)
 	message 	= models.TextField(max_length=5000, verbose_name="Message")

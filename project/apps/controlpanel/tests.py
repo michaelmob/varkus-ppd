@@ -130,6 +130,7 @@ class NotificationTest(test.TestCase):
 		"""
 		Setup testing environment.
 		"""
+		from users.tests import UserTest
 		self.user = UserTest.create_user()
 
 

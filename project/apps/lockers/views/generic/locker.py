@@ -151,10 +151,11 @@ class LockerRedirectView(LockerMixin, DetailView):
 		if created:
 			boost = Boost.objects.filter(user=self.user, offer=self.offer).first()
 
-			if boost.count <= 1:
-				boost.delete()
-			else:
-				boost.decrement_clicks()
+			if boost:
+				if boost.count <= 1:
+					boost.delete()
+				else:
+					boost.decrement_clicks()
 
 		return redirect(self.offer.get_tracking_url(self.offer, self.token))
 

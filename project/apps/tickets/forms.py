@@ -25,11 +25,11 @@ class ThreadForm(ModelForm):
 		self.instance = super(__class__, self).save(commit)
 
 		if commit:
-			post = PostForm(self.data, self.files).save(commit=False)
-			post.original = True
-			post.user = self.instance.user
-			post.ip_address = self.ip_address
-			post.thread = self.instance
+			post = PostForm(self.data, self.files)
+			post.instance.original = True
+			post.instance.user = self.instance.user
+			post.instance.ip_address = self.instance.ip_address
+			post.instance.thread = self.instance
 			post.save()
 
 		return self.instance
@@ -59,6 +59,7 @@ class PostForm(ModelForm):
 		self.instance = super(__class__, self).save(commit)
 
 		if commit:
+			# Find a good name for the user based on if they are Staff or not
 			user = self.instance.user
 
 			if user.is_staff:
@@ -66,8 +67,11 @@ class PostForm(ModelForm):
 			else:
 				name = user.username
 
-			self.instance.thread.last_replier = name
-			self.instance.thread.closed = False
-			self.instance.thread.save()
+			# Update thread 
+			thread = self.instance.thread
+
+			thread.last_replier = name
+			thread.closed = False
+			thread.save()
 
 		return self.instance

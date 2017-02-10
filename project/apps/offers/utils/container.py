@@ -23,10 +23,12 @@ class OfferDataContainer():
 		self.count = count
 
 		# User
-		self.user = self.object.user
-		self.profile = None
-		if self.object and self.user and self.user.profile:
+		if self.object and self.object.user and self.object.user.profile:
+			self.user = self.object.user
 			self.profile = self.user.profile
+		else:
+			self.user = None
+			self.profile = None
 
 		# Setup
 		self.__set_identifiers()

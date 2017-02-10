@@ -26,6 +26,7 @@ class ThreadTest(test.TestCase):
 		form = ThreadForm(data, {"file": SimpleUploadedFile("test.txt", b"x")})
 		instance = form.save(commit=False)
 		instance.user = user
+		instance.ip_address = "173.41.41.41"
 		return form
 
 
@@ -78,6 +79,7 @@ class PostTest(test.TestCase):
 		instance = form.save(commit=False)
 		instance.user = user
 		instance.thread = thread
+		instance.ip_address = "173.41.41.41"
 		return form
 
 

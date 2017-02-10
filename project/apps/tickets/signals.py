@@ -37,7 +37,7 @@ def post_delete_signal(sender, instance, **kwargs):
 	Signal activated when an Abuse Report is deleted.
 	This signal removes empty threads and deletes leftover files.
 	"""
-	if not instance.thread.get_posts().exists():
-		instance.thread.delete()
-
 	instance.file.delete()
+
+	if instance.thread and not instance.thread.get_posts().exists():
+		instance.thread.delete()
