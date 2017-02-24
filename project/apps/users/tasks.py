@@ -10,6 +10,7 @@ def reset_today():
 	# Resets
 	Earnings.run_reset("today")
 	ReferralEarnings.run_reset("today")
+	return "Reset User Earnings: Today"
 
 
 @shared_task
@@ -19,6 +20,7 @@ def reset_week():
 	"""
 	Earnings.run_reset("week")
 	ReferralEarnings.run_reset("week")
+	return "Reset User Earnings: Week"
 
 
 @shared_task
@@ -28,6 +30,7 @@ def reset_month():
 	"""
 	Earnings.run_reset("month")
 	ReferralEarnings.run_reset("month")
+	return "Reset User Earnings: Month"
 
 
 @shared_task
@@ -37,3 +40,4 @@ def reset_year():
 	"""
 	Earnings.run_reset("year")
 	ReferralEarnings.rese("year")
+	return "Reset User Earnings: Year"

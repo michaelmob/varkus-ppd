@@ -122,8 +122,8 @@
 
 
 {% block footerjs %}
-<script src="{% static 'js/comp/upload/vendor/jquery.ui.widget.js' %}"></script>
-<script src="{% static 'js/comp/upload/jquery.iframe-transport.js' %}"></script>
-<script src="{% static 'js/comp/upload/jquery.fileupload.js' %}"></script>
-<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/'|add:model_name|add:'_create.js' %}"></script>
+<script src="{% static 'files/upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'files/upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'files/upload/jquery.fileupload.js' %}"></script>
+<script src="{% static model_name|add:'s/'|add:model_name|add:'_create.js' %}"></script>
 {% endblock %}

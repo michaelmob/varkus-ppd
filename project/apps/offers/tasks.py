@@ -18,7 +18,7 @@ def reset_today():
 	Reset today's earnings for Offer.
 	"""
 	Earnings.run_reset("today")
-	return "Reset User Earnings: Today"
+	return "Reset Offer Earnings: Today"
 
 
 @shared_task
@@ -27,7 +27,7 @@ def reset_week():
 	Reset this week's earnings for Offer.
 	"""
 	Earnings.run_reset("week")
-	return "Reset User Earnings: Week"
+	return "Reset Offer Earnings: Week"
 
 
 @shared_task
@@ -36,7 +36,7 @@ def reset_month():
 	Reset this month's earnings for Offer.
 	"""
 	Earnings.run_reset("month")
-	return "Reset User Earnings: Month"
+	return "Reset Offer Earnings: Month"
 
 
 @shared_task
@@ -45,4 +45,4 @@ def reset_year():
 	Reset this year's earnings for Offer.
 	"""
 	Earnings.run_reset("year")
-	return "Reset User Earnings: Year"
+	return "Reset Offer Earnings: Year"

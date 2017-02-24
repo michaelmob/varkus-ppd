@@ -58,5 +58,5 @@
 
 {% block footerjs %}
 <script>var active_tab = "{{ active_tab|default:user.billing.choice|lower }}";</script>
-<script src="{% static 'js/apps/billing/billing_update.js' %}"></script>
+<script src="{% static 'billing/billing_update.js' %}"></script>
 {% endblock %}

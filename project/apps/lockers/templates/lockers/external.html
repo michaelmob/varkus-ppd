@@ -4,11 +4,11 @@
 	<title>Locked</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/components/icon.min.css">
-	<link rel="stylesheet" href="{% static 'css/comp/tooltip.min.css' %}" />
-	<link rel="stylesheet" href="{% static 'css/widget/base.css' %}" />
+	<link rel="stylesheet" href="{% static 'components/tooltip.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'widget/base.css' %}" />
 
 	{% if object.theme and object.theme|lower != 'default' %}
-	<link rel="stylesheet" href="{% static 'css/widget/'|add:object.theme|lower|add:'.css' %}" />
+	<link rel="stylesheet" href="{% static 'widget/'|add:object.theme|lower|add:'.css' %}" />
 	{% endif %}
 
 	{% if object.has_css_file %}

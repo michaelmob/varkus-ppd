@@ -1,199 +1,146 @@
 #!/bin/bash
 cd "$(dirname $0)/.."
 
+# Check that 'environment' file exists or create it
+if [ ! -e ./scripts/env_type ]; then
+	echo "local" > ./scripts/env_type
+fi
+
+# Set environment 
+ENVIRONMENT=$(cat ./scripts/env_type | xargs)
+
 
 #
 # shortcut function for docker-compose as superuser 
 #
 function compose() {
-	sudo docker-compose $@
+	if [ "$ENVIRONMENT" == "production" ]; then
+		if [ ! -e ./docker-compose.production.yml ]; then
+			echo "docker-compose.production.yml not found"
+			exit 1
+		fi
+
+		EXTRA="-f docker-compose.production.yml"
+	fi
+
+	sudo docker-compose -f docker-compose.yml $EXTRA $@
 }
 
 
 #
-# shortcut function for docker-compose on a production server
+# helper function to display options
 #
-function compose_production() {
-	compose -f docker-compose.yml -f docker-compose.production.yml $@
-}
-
-
-#
-# shortcut function for managing Django project within container 
-#
-function manage() {
-	compose run --rm django python manage.py $@
-}
-
-
-#
-# shortcut function for managing Django project within container 
-#
-function manage_production() {
-	compose_production run --rm django python manage.py $@
-}
-
-
-#
-# shortcut function for running pip within container 
-#
-function pip() {
-	sudo docker-compose run --rm django pip $@
+function add_help() {
+	echo "  $1 ($2)"
+	echo "    usage: ./viking $3"
+	echo ""
 }
 
 
 case "$1" in
 
-	#
-	# equivalent to 'docker-compose'
-	#
+	# List commands and helpful text
+	h) ;&
+	help)
+		echo -e "\nViking Application\n"
+		add_help "* / c / compose" "run compose command" "[compose] {command}"
+		add_help "r / run" "run command in container" "run {container} {command}"
+		add_help "m / manage" "django's management in django container" "manage {command}"
+		add_help "p / pip" "pip in django container" "pip {command}"
+		add_help "clean" "create migration directories" "clean [--remove-migrations]"
+		add_help "update-geoip-db" "update geoip database from maxmind" "update-geoip-db"
+		add_help "create-migration-dirs" "create migration directories" "create-migration-dirs"
+		;;
+
+
+	# For any command that is overriden by script's options
+	# Usage: ./viking compose {command}
+	c) ;&
 	compose)
-		compose ${@:2} ;;
+		compose ${@:2}
+		;;
 
-	#
-	# equivalent to 'manage.py ...'
-	#
+
+	# Run command inside of container
+	# Usage: ./viking run {container} {command}
+	r) ;&
+	run)
+		if [ "$#" -lt "3" ]; then
+			echo "Not enough arguments"
+			exit 1
+		fi
+
+		compose run --rm ${@:2}
+		;;
+
+
+	# Django shortcut command for management
+	# Usage: ./viking manage {command}
+	m) ;&
 	manage)
-		manage ${@:2} ;;
+		compose run --rm django python manage.py ${@:2}
+		;;
 
-	#
-	# equivalent to 'manage.py ...' for production
-	#
-	manage-production)
-		manage_production ${@:2} ;;
 
-	#
-	# equivalent to 'pip ...'
-	#
+	# Django shortcut command for pip
+	# Usage: ./viking pip {command}
+	p) ;&
 	pip)
-		pip ${@:2} ;;
-
-	#
-	# upgrade all required pip packages
-	#
-	pip-upgrade)
-		pip install -r "/viking/requirements.txt" --upgrade ;;
+		compose run --rm django pip ${@:2}
+		;;
 
 
-	#
-	# create migration directories
-	#
-	c-m-d)
-		find apps/ -name "models.py" | xargs -L1 dirname | xargs -I % mkdir %/migrations/\;touch %/migrations/__init__.py ;;
-
-	#
-	# run migrations
-	#
-	migrate)
-		manage makemigrations
-		manage migrate ;;
-
-	#
-	# run migrations for production
-	#
-	migrate-production)
-		manage_production makemigrations
-		manage_production migrate ;;
-		
-
-	#
-	# start containers (useful for debug)
-	#
-	start)
-		compose -f docker-compose.yml up -d ;;
-
-
-	#
-	# start containers in production mode
-	#
-	start-production)
-		compose_production up -d 
-		compose_production scale worker=4 ;;
-
-
-	#
-	# stop containers (optional: --remove-orphans)
-	#
-	stop)
-		compose down ${@:2} ;;
-
-	#
-	# stop containers in production mode
-	#
-	stop-production)
-		compose -f docker-compose.yml -f docker-compose.production.yml down ;;
-
-
-	#
-	# restart containers
-	#
-	restart)
-		compose down --remove-orphans && compose -f docker-compose.yml -f docker-compose.production.yml up -d ;;
-
-
-	#
-	# compile less stylesheet
-	# apt-get install npm && npm install -g less less-plugin-clean-css
-	#
+	# Compile LESS stylesheets
+	# apt-get -y install npm && npm install -g less less-plugin-clean-css
+	# Usage: ./viking create-migration-dirs
+	l) ;&
 	less)
-		lessc ../project/static/_less/semantic.less \
-			--clean-css="--s1 --advanced --compatibility=ie8" > ../project/static/css/base.css
-		;;
-
-
-	#
-	# equivalent to 'compose logs -f django'
-	#
-	logs)
-		compose logs -f django
-		;;
-
-
-	#
-	# remove .pyc/.pyo files (optional: --remove-migrations)
-	#
-	clean)
-		sudo py3clean .
-		if [ "$2" = "--remove-migrations" ]; then
-			sudo find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-		fi ;;
-
-
-	#
-	# chown all files to '$LOGNAME'
-	#
-	chown)
-		sudo chown -R $LOGNAME: . ;;
-
-
-	#
-	# update geoip database
-	#
-	geoip)
 		cd ./project
-		rm GeoLite2-City.mmdb
-		wget -q https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
-		gunzip -f GeoLite2-City.mmdb.gz
+		lessc ./viking/static/less/semantic.less \
+			--clean-css="--s1 --advanced --compatibility=ie8" > ./apps/core/static/base.css &&
+			echo "You must now run 'collectstatic' from manage.py"
 		;;
-		
 
-	#
-	# list commands
-	#
+
+	# Clean cache files and optionally migrations directories
+	# Usage: ./viking clean
+	clean)
+		cd ./project
+		sudo find . -regex "\(.*__pycache__.*\|*.py[co]\)" -delete &&
+			echo "Deleted cached and compiled python files and directories"
+			
+		if [ "$2" == "--remove-migrations" ]; then
+			sudo find . -path "*/migrations/*.py" -not -name "__init__.py" -delete &&
+				echo "Deleted migration files"
+		fi
+		;;
+
+
+	# Update geoip database from maxmind
+	# Usage: ./viking update-geoip-db
+	update-geoip-db)
+		URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz"
+		cd ./project && rm GeoLite2-City.mmdb
+		wget -q $URL && gunzip -f GeoLite2-City.mmdb.gz && echo "Updated GeoIP Database"
+		;;
+
+
+	# Create migration directories
+	# Usage: ./viking create-migration-dirs
+	create-migration-dirs)
+		cd ./project
+		find apps/ -name "models.py" | xargs -L1 dirname \
+			| xargs -I % mkdir %/migrations/ && touch %/migrations/__init__.py
+		echo "Created migration directories"
+		;;
+
+
+	# Any unrecognized command will be ran in the a container
+	# Usage: ./viking {command}
 	*)
-		echo -e "\e[1mViking\e[0m"
-		echo -e "  compose\t equivalent to 'docker-compose'"
-		echo -e "  pip\t\t equivalent to 'pip ...'"
-		echo -e "  pip-upgrade\t upgrade pip requirements"
-		echo -e "  manage\t equivalent to 'python manage.py ...'"
-		echo -e "  c-m-d\t\t create migration directories"
-		echo -e "  migrate\t run migrations"
-		echo -e "  start\t\t start containers"
-		echo -e "  stop\t\t stop containers (optional: --remove-orphans)"
-		echo -e "  logs\t\t show docker-compose logs for django"
-		echo -e "  clean\t\t remove .pyc/.pyo files (optional: --remove-migrations)"
-		echo -e "  chown\t\t chown all files to '$LOGNAME'"
-		echo -e "  geoip\t\t update geoip database"
+		compose $@
 		;;
 
 esac
+
+exit 0

@@ -52,7 +52,7 @@ class AccountUpdateView(braces.LoginRequiredMixin, SuccessMessageMixin, FormView
 	"""
 	Update view for user and profile
 	"""
-	template_name = "auth/user_update.html"
+	template_name = "users/user_update.html"
 	form_class = AccountForm
 	success_url = reverse_lazy("account")
 	success_message = "Your details have been updated!"

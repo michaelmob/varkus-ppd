@@ -14,5 +14,5 @@
 {% endblock %}
 
 {% block footerjs %}
-<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/manage/'|add:model_name|add:'_detail.js' %}"></script>
+<script src="{% static model_name|add:'s/manage/'|add:model_name|add:'_detail.js' %}"></script>
 {% endblock %}

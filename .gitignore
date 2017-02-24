@@ -6,7 +6,7 @@
 *.mmdb
 .fuse*
 .sync-conflict*
-exports
+env_type
 
 # Binary
 __pycache__/
@@ -19,15 +19,15 @@ logs/
 # Project Directories
 private/
 backups/
-media/
-
-# Static Files
-static/admin
+/project/media/
+/project/static/
 
 # Migrations
 migrations/
 
 # Docker
-nginx/certs/
-postgres/data/
+nginx/certs
+postgres/backup
+postgres/data
+postgres/localdata
 docker-compose.production.yml

@@ -1,6 +1,6 @@
 from django import template
-from django.conf import settings
 from django.utils.safestring import mark_safe
+from ..constants import CATEGORY_TYPES_ICONS
 
 register = template.Library()
 
@@ -39,7 +39,7 @@ def render_category_icon(category):
 	"""
 	Returns category icon or None if the category has no icon.
 	"""
-	icon = settings.CATEGORY_TYPES_ICONS.get(category)
+	icon = CATEGORY_TYPES_ICONS.get(category)
 
 	if not icon:
 		icon = "tag"

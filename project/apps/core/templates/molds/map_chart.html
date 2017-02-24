@@ -1,0 +1,8 @@
+{% load static %}
+
+<div class="ui bottom attached map segment loading">
+	<div class="map chart container"{% if not height_maxed|default:False %} style="height:300px"{% endif %}></div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static 'charts/map.js' %}"></script>

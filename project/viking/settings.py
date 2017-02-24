@@ -1,5 +1,5 @@
 """
-Viking 0.9.9
+Viking 0.9.10
 """
 
 # Override any setting in ./private/settings_production.py for production servers
@@ -35,6 +35,7 @@ INSTALLED_APPS = (
 	"django.contrib.postgres",
 
 	# External Modules
+	"dbbackup",					# django-dbbackup
 	"debug_toolbar",			# django-debug-toolbar
 	"captcha",					# django-recaptcha
 	"storages",					# django-storages
@@ -77,7 +78,6 @@ MIDDLEWARE_CLASSES = (
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
 	"django.contrib.auth.middleware.SessionAuthenticationMiddleware",
 	"django.contrib.messages.middleware.MessageMiddleware",
-	"django.middleware.clickjacking.XFrameOptionsMiddleware",
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
 )
 
@@ -159,6 +159,11 @@ DATABASES = {
 	}
 }
 
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+DBBACKUP_STORAGE_OPTIONS = {"location": "/var/backups"}
+DBBACKUP_CLEANUP_KEEP = 5
+DBBACKUP_CLEANUP_KEEP_MEDIA = 2
+
 
 # Redis
 REDIS_HOST = "redis://%s:%s/1" % (
@@ -205,9 +210,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static", "collection")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = ()
 
 
 # Site Settings
@@ -247,16 +252,8 @@ AXES_USE_USER_AGENT = True
 AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_TEMPLATE = "user/lockout.html"
 
-# Debug Toolbar
-'''
-if DEBUG:
-	DEBUG_TOOLBAR_CONFIG = {
-		"SHOW_TOOLBAR_CALLBACK": lambda r: True,
-	}
-'''
 
 # Storage
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 
@@ -326,54 +323,7 @@ DEPOSITS = (
 	(-1,        "ADGATEMEDIA",  1,      "DEFAULT_DEPOSIT",  "Default Deposit",  "PASSWORD"),
 )
 
-CATEGORY_TYPES = (
-	("Android", "Android"),
-	("Downloads", "Downloads"),
-	("Email Submits", "Email Submits"),
-	("Free", "Free"),
-	("Gifts", "Gifts"),
-	("Hard Incentives", "Hard Incentives"),
-	("Health & Beauty", "Health & Beauty"),
-	("Home & Garden", "Home & Garden"),
-	("iOS Devices", "iOS Devices"),
-	("iPad", "iPad"),
-	("iPhone", "iPhone"),
-	("Conversion Gen", "Conversion Gen"),
-	("Mobile Subscription", "Mobile Subscription"),
-	("Mobile WAP", "Mobile WAP"),
-	("Online Services", "Online Services"),
-	("PIN Submit", "PIN Submit"),
-	("Samsung devices", "Samsung devices"),
-	("Special Requests", "Special Requests"),
-	("Surveys", "Surveys"),
-	("", "")
-)
 
-CATEGORY_TYPES_ICONS = {
-	"Android" 				: "android",
-	"Downloads"				: "download",
-	"Email Submits"			: "mail outline",
-	"Free"					: "certificate",
-	"Gifts"					: "gift",
-	"Hard Incentives"		: "bomb",
-	"Health & Beauty"		: "female",
-	"Home & Garden"			: "home",
-	"iOS Devices"			: "apple",
-	"iPad"					: "tablet",
-	"iPhone"				: "mobile",
-	"Conversion Gen"		: "lightning",
-	"Mobile Subscription"	: "mobile",
-	"Mobile WAP"			: "mobile",
-	"Mobile Content"		: "mobile",
-	"Online Services"		: "desktop",
-	"PIN Submit"			: "mobile",
-	"Samsung devices"		: "mobile",
-	"Special Requests"		: "checkered flag",
-	"Surveys"				: "checkmark",
-}
-
-
-from .private.keys import *
 from .private.settings_common import *
 
 

@@ -1,0 +1,63 @@
+{% extends 'auth/user_base.html' %}
+
+{% load static molds %}
+
+{% block breadcrumbs_section %}{% endblock %}
+{% block breadcrumbs_active %}
+<a href="{% url 'account' %}" class="active section">My Account</a>
+{% endblock %}
+
+
+{% block content %}
+<div class="ui two column stackable grid">
+
+	<div class="column">
+		<div class="ui one column grid">
+
+			{# Personal #}
+			<div class="column">
+				<div class="box">
+					{% include 'users/user_detail_personal.html' %}
+				</div>
+			</div>
+
+			{# Account #}
+			<div class="column">
+				<div class="box">
+					{% include 'users/user_detail_account.html' %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<div class="column">
+		<div class="ui one column grid">
+
+			{# Referral Guide #}
+			<div class="column">
+				<div class="box">
+					{% include 'users/user_detail_referral.html' %}
+				</div>
+			</div>
+
+			{# Referral List #}
+			<div class="column">
+				<div class="box">
+					{% render_titlebar 'Referrals' 'users' %}
+					{% render_table table %}
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block footerjs %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.5/clipboard.min.js"></script>
+<script src="{% static 'users/user_detail.js' %}"></script>
+{% endblock %}

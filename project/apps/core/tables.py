@@ -1,8 +1,7 @@
 import django_tables2 as tables
 from django.utils.html import format_html
 from django.utils.formats import date_format
-from core.templatetags.currency import currency as _currency
-from core.templatetags.currency import cut_percent as _cut_percent
+from core.templatetags.currency import currency, cut_percent
 
 
 
@@ -29,7 +28,7 @@ class TableBase(tables.Table):
 		"""
 		Format value into currency format.
 		"""
-		return "$%s" % _currency(_cut_percent(value, cut_amount))
+		return "$%s" % currency(cut_percent(value, cut_amount))
 
 
 	def date(self, value):
@@ -60,4 +59,4 @@ class CurrencyColumn(tables.Column):
 		"""
 		Formats currency column values in US currency format.
 		"""
-		return "$%s" % _currency(value)
+		return "$%s" % currency(value)

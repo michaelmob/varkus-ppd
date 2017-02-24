@@ -2,6 +2,7 @@
 setuptools
 cython
 django
+gnupg
 psycopg2
 pysocks
 geoip2
@@ -9,9 +10,10 @@ psutil
 cryptography
 asgi-redis
 Celery
+channels
 
 # Django
-channels
+django-dbbackup
 django-celery-results
 django-tables2
 django-braces

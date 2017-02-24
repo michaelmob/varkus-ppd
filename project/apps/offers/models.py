@@ -11,6 +11,7 @@ from viking.utils.constants import BLANK_NULL, CURRENCY
 
 from core.models import EarningsBase
 from conversions.deposits import Deposit
+from .constants import CATEGORY_TYPES
 from .utils.container import OfferDataContainer
 
 
@@ -110,7 +111,7 @@ class Offer(models.Model):
 	anchor 			= models.CharField(max_length=1000, verbose_name="Anchor")
 	requirements 	= models.CharField(max_length=1000, verbose_name="Requirements")
 	user_agent 		= models.CharField(max_length=50, default="", verbose_name="User Agent", **BLANK_NULL)
-	category		= models.CharField(max_length=50, choices=settings.CATEGORY_TYPES, verbose_name="Category", **BLANK_NULL)
+	category		= models.CharField(max_length=50, choices=CATEGORY_TYPES, verbose_name="Category", **BLANK_NULL)
 	countries 		= models.CharField(max_length=747)
 	country			= models.CharField(max_length=5)
 	country_count 	= models.IntegerField()

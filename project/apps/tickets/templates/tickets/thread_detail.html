@@ -67,7 +67,6 @@
 
 
 {% block footerjs %}
-<script src="{% static 'js/api.js' %}"></script>
 <script>var tid="{{ object.id }}";</script>
-<script src="{% static 'js/apps/tickets/thread_detail.js' %}"></script>
+<script src="{% static 'tickets/thread_detail.js' %}"></script>
 {% endblock %}

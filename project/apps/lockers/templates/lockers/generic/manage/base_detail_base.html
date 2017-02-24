@@ -77,5 +77,5 @@
 
 
 {% block footerjs %}
-<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/detail.js' %}"></script>
+<script src="{% static model_name|add:'s/'|add:model_name|add:'_detail.js' %}"></script>
 {% endblock %}

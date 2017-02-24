@@ -43,7 +43,7 @@
 	<p>
 		Your code will override the base CSS code for your widget. All defaults
 		can be found in the base CSS file for widgets located
-		<a href="{% static 'css/widget/base.css' %}" target="_blank">here</a>.
+		<a href="{% static 'widget/base.css' %}" target="_blank">here</a>.
 	</p>
 
 	<div class="ui header">Realtime Editor</div>
@@ -59,5 +59,5 @@
 
 {% block footerjs %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
-<script src="{% static 'js/apps/lockers/'|add:model_name|add:'s/widget_update_css.js' %}"></script>
+<script src="{% static model_name|add:'s/widget_update_css.js' %}"></script>
 {% endblock %}

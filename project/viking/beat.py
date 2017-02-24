@@ -15,28 +15,39 @@ CELERYBEAT_SCHEDULE = {
 		"schedule": crontab(minute=0, hour=0, day_of_month="1")
 	},
 
+	# Database Backup
+	"backup-database": {
+		"task": "core.tasks.backup_database",
+		"schedule": crontab(minute=0, hour=0)	
+	},
+
+	"backup-media": {
+		"task": "core.tasks.backup_media",
+		"schedule": crontab(minute=0, hour=0)	
+	},
+
 	###
 	# Keep all resets on bottom!
 	###
 
 	# User Resets
 	"user-reset-today": {
-		"task": "user.tasks.reset_today", 
+		"task": "users.tasks.reset_today", 
 		"schedule": crontab(minute=0, hour=0)	
 	},
 
 	"user-reset-week": {
-		"task": "user.tasks.reset_week",
+		"task": "users.tasks.reset_week",
 		"schedule": crontab(minute=0, hour=0, day_of_week="sunday")
 	},
 
 	"user-reset-month": {
-		"task": "user.tasks.reset_month",
+		"task": "users.tasks.reset_month",
 		"schedule": crontab(minute=0, hour=0, day_of_month="1")
 	},
 
 	"user-reset-year": {
-		"task": "user.tasks.reset_year",
+		"task": "users.tasks.reset_year",
 		"schedule": crontab(minute=0, hour=0, day_of_month="1", month_of_year="1")
 	},
 

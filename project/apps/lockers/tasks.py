@@ -15,7 +15,7 @@ def run_locker_resets(time_period):
 		if not name.isalpha():
 			continue
 		
-		model = eval(name)
+		model = eval(name.title())
 		model.get_earnings_model().run_reset(time_period)
 
 	return "Reset Locker Earnings: %s" % time_period.title()

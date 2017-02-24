@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static currency notifications %}
+
+{% block headstylebase %}
+<link rel="stylesheet" type="text/css" href="{% static 'base_panel.css' %}" />
+{% endblock %}
+
+{% block headjsbase %}
+<script>var wsUrl="{% websocket_url %}/cp/";var hour={% now "H" %};</script>
+<script src="{% static 'socket.js' %}"></script>
+<script src="{% static 'settings.js' %}"></script>
+<script src="{% static 'controlpanel/options.js' %}"></script>
+<script src="{% static 'controlpanel/audio.js' %}"></script>
+<script src="{% static 'controlpanel/app.js' %}"></script>
+<script src="{% static 'notifications/notifications.js' %}"></script>
+{% endblock %}
+
+{% block aside %}{% endblock %}
+
+
+{% block nav %}
+<nav class="ui sticky main menu">
+	<a class="app icon item mobile tablet only">
+		<i class="content icon"></i>
+	</a>
+
+	<div class="item">
+		{% block breadcrumbs %}
+			<div class="ui breadcrumb">
+				{% block breadcrumbs_app %}
+				<div class="section">Control Panel</div>
+				<i class="right chevron icon divider"></i>
+				{% endblock breadcrumbs_app %}
+
+				{% block breadcrumbs_section %}
+				{% endblock breadcrumbs_section %}
+
+				{% block breadcrumbs_active %}
+				<a href="{% url 'dashboard' %}" class="active section">Dashboard</a>
+				{% endblock breadcrumbs_active %}
+			</div>
+		{% endblock breadcrumbs %}
+	</div>
+
+	<div class="right menu tablet computer only">
+		{% if user.is_authenticated %}
+
+			{# Earnings #}
+			<a class="item computer only default">
+				<small>Today:&nbsp;</small>
+				<small class="ui primary text">
+					$<span class="user earnings today">{{ user.earnings.today|currency }}</span>
+				</small>
+			</a>
+
+			<a class="item computer only">
+				<small>Month:&nbsp;</small>
+				<small class="ui primary text">
+					$<span class="user earnings month">{{ user.earnings.month|currency }}</span>
+				</small>
+			</a>
+
+			<a class="notifications icon item">
+				<i class="alarm icon"></i>
+				{% notifications_unread as unread_count %}
+				<div class="ui notifications mini yellow label {% if unread_count < 1 %}hidden{% endif %}">{{ unread_count }}</div>
+			</a>
+
+			<div class="ui notifications popup" style="min-width:500px">
+				<p></p>
+				<div class="content"></div>
+				<div class="ui active inverted notifications dimmer">
+					<div class="ui loader"></div>
+				</div>
+			</div>
+
+			<a class="icon item hover" href="{% url 'dashboard' %}" data-content="Dashboard" data-variation="inverted">
+				<i class="dashboard icon link"></i>
+			</a>
+
+			<div class="ui dropdown wide icon item hover" data-content="Settings" data-variation="inverted">
+				<i class="setting icon link"></i>
+				<div class="menu">
+					<div class="item disabled">
+						{{ user.first_name|title }}'s Account
+					</div>
+					<div class="ui site settings item">
+						<i class="settings icon"></i>
+						Settings
+					</div>
+					<a class="item" href="{% url 'logout' %}">
+						<i class="sign out icon"></i>
+						Logout
+					</a>
+				</div>
+			</div>
+
+		{% else %}
+			<a class="item" href="{% url 'support:contact' %}">
+				<i class="chat icon"></i>
+				<small>Contact</small>
+			</a>
+
+			<a class="item" href="{% url 'signup' %}">
+				<i class="signup icon"></i>
+				<small>Sign up</small>
+			</a>
+
+			<a class="item" href="{% url 'login' %}">
+				<i class="sign in icon"></i>
+				<small>Log in</small>
+			</a>
+		{% endif %}
+	</div>
+</nav>
+{% endblock %}
+
+
+{% block wrapper %}
+	{% include 'controlpanel/dashboard/settings.html' %}
+
+	{% block messages %}
+		<div class="message wrapper">
+			{% if messages %}
+				{% for message in messages %}
+					<div class="ui message {% if message.tags %}{{ message.tags }}{% endif %}">
+						<i class="close icon"></i>
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
+
+			{% block extramessage %}{% endblock %}
+		</div>
+	{% endblock %}
+
+	<div class="wrapper">
+		{% block contentwrapper %}
+			{% block content %}{% endblock %}
+		{% endblock %}
+	</div>
+{% endblock %}
+
+
+{% block sidemenu %} default{% endblock %}
+
+
+{% block footer %}{% endblock %}
