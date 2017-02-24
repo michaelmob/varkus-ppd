@@ -1,5 +1,5 @@
 """
-Viking 0.9.10
+Viking 0.9.11
 """
 
 # Override any setting in ./private/settings_production.py for production servers
