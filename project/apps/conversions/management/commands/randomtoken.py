@@ -15,7 +15,7 @@ class Command(BaseCommand):
 	Create randomized token.
 
 	Example usage:
-		./viking manage randomtoken 
+		./viking manage randomtoken LOCKER ID [--chance=0.25] [--count=1]
 	"""
 
 	help = "Creates randomized token(s)."

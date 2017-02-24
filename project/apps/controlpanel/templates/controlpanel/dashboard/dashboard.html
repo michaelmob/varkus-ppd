@@ -29,7 +29,7 @@
 	</div>
 
 	<div class="column">
-		{% data_block_content e.epc|currency 'Earnings Per Click' 'user epc today' as content_1 %}
+		{% data_block_content e.earnings_per_click|currency 'Earnings Per Click' 'user epc today' as content_1 %}
 		{% data_block 'orange' 'bullseye' content_1 %}
 	</div>
 	{% endwith %}

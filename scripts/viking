@@ -1,5 +1,11 @@
 #!/bin/bash
-cd "$(dirname $0)/.."
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+cd "$( cd -P "$( dirname "$SOURCE" )" && pwd )/.."
 
 # Check that 'environment' file exists or create it
 if [ ! -e ./scripts/env_type ]; then
