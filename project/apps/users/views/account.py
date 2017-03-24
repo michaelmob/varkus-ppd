@@ -15,7 +15,7 @@ class AccountDetailView(braces.LoginRequiredMixin, SingleTableView, DetailView):
 	"""
 	Detail view for the current user.
 	"""
-	template_name_suffix = "_detail"
+	template_name = "users/user_detail.html"
 	table_class = ReferralTable
 
 

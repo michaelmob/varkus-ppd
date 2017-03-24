@@ -1,0 +1,9 @@
+{% load static %}
+
+<iframe url="https://my-website.com/visitor/?id={id}" code="{{ code }}" width="100%" frameborder="0"></iframe>
+<script src="{% base_url %}{% static 'widgets/external.min.js' %}"></script>
+
+<!-- For PHP -->
+<script>
+	var id_{{ code }} = "<?php echo $_GET['id'] ?>";
+</script>

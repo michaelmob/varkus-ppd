@@ -1,6 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 from ..constants import CATEGORY_TYPES_ICONS
+from ..utils.offers import mock_offer
 
 register = template.Library()
 
@@ -23,7 +24,10 @@ def redirect_url(offer, object_):
 	"""
 	Returns Offer redirect based on the object.
 	"""
-	return offer.get_redirect_url(object_)
+	try:
+		return offer.get_redirect_url(object_)
+	except AttributeError:
+		return "#"
 
 
 @register.filter
@@ -45,3 +49,17 @@ def render_category_icon(category):
 		icon = "tag"
 
 	return render_icon(icon)
+
+
+@register.simple_tag
+def mock_offers():
+	"""
+	Returns list of mock offers.
+	"""
+	return [
+		mock_offer("Downloads", "Offer 1", priority=True),
+		mock_offer("Free", "Offer 2"),
+		mock_offer("iPad", "Offer 3"),
+		mock_offer("iPhone", "Offer 4"),
+		mock_offer("Conversion Gen", "Offer 5")
+	]

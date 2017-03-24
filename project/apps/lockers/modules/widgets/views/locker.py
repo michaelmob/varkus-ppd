@@ -1,6 +1,7 @@
 import re
 from django.conf import settings
 from django.shortcuts import render, redirect, reverse
+from django.views.generic import TemplateView
 from viking.utils import urls
 from lockers.views import generic
 from lockers.utils import view_classes
@@ -58,6 +59,24 @@ class WidgetLockView(generic.LockerLockView):
 		self.response.context_data["url"] = url
 		self.response.context_data["message"] = self.object.get_viral_message(visitor)
 		self.response.template_name = "widgets/locker/widget_viral.html"
+
+
+
+class WidgetExampleView(TemplateView):
+	"""
+	Example Widget with mock offers.
+	"""
+	template_name = "lockers/external.html"
+
+
+	def get_context_data(self, *args, **kwargs):
+		"""
+		Add 'preview' to template's context.
+		"""
+		context = super(__class__, self).get_context_data(*args, **kwargs)
+		context["preview"] = True
+		context["object"] = None
+		return context
 
 
 

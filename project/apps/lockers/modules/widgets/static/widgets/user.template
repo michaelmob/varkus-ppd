@@ -1,0 +1,44 @@
+/* Widget Background Color */
+.widget {
+	background: $widget-background-color;
+}
+
+/* Header Text */
+.widget .header:after {
+	content: "$header-text";
+	color: $header-text-color;
+}
+
+/* Progress Indicator */
+.widget .progress.indicator {
+	background: url($progress-indicator) no-repeat center;
+}
+
+/* Row Height */
+.widget .anchor {
+	padding: $row-padding;
+}
+
+/* Row Text & Background Color */
+.widget .item {
+	color: $row-text-color;
+	background: $row-background-color;
+}
+
+/* Odd Row Background Color */
+.widget .item:nth-child(odd) {
+	background: $odd-row-background-color;
+}
+
+/* Row Text & Background Hover Color */
+.widget .item:hover {
+	color: $row-text-hover-color;
+	background: $row-background-hover-color;
+}
+
+/* Tooltip Text & Background Color */
+[data-text]:after, [data-text]:before {
+	border: 0;
+	color: $tooltip-text-color;
+	background: $tooltip-background-color;
+}

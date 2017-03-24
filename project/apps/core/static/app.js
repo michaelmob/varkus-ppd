@@ -16,7 +16,7 @@ $(function() {
 
 	$(".ui.sidebar").sidebar({
 		scrollLock: true
-	}).sidebar("attach events", ".app.icon");
+	}).sidebar("attach events", ".app.item");
 
 });
 

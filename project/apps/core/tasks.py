@@ -9,6 +9,7 @@ def backup_database():
 	Run database backup command.
 	"""
 	call_command("dbbackup", "--clean")
+	return "Database Backup"
 
 
 @shared_task
@@ -17,3 +18,4 @@ def backup_media():
 	Run media backup command.
 	"""
 	call_command("mediabackup", "--clean")
+	return "Media Backup"

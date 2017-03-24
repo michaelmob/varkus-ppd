@@ -3,7 +3,7 @@ server {
 	listen 443 ssl http2;
 	server_name <%= domain.name %> insecure.<%= domain.name %>;
 
-	root /var/www/viking/project/;
+	root /viking;
 	index index.html;
 
 	# SSL
@@ -22,7 +22,7 @@ server {
 
 	# 500 Error Pages
 	location = /500.html {
-		root /viking/static/_errors;
+		root /viking/static/errors;
 	}
 
 	# Robots.txt
@@ -30,21 +30,18 @@ server {
 		root /viking/static;
 	}
 
-	# Static Files
+	# Static
 	location /static/ {
-		root /viking;
 		autoindex off;
 	}
 
-	# Media Files
+	# Media
 	location /media/ {
-		root /viking;
 		autoindex off;
 	}
 
 	# Protected Media Files
 	location /media/files/ {
-		root /viking;
 		internal;
 	}
 
@@ -59,7 +56,6 @@ server {
 
 	# Django Reverse Proxy
 	location / {
-		proxy_pass_header Server;
 		proxy_set_header Host $http_host;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Scheme $scheme;

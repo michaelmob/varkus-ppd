@@ -2,38 +2,44 @@
 
 
 {% block content %}
-<menu type="context" id="menu">
+{% if not preview %}
+<menu type="context" id="menu" style="display:none">
 	<menuitem label="Report This Locker" onclick="window.location='{% url 'support:report' %}?content='+window.location;"></menuitem>
 </menu>
+{% elif not offers %}
+	{% mock_offers as offers %}
+{% endif %}
 
 <!-- {{ ip_address }},{{ country_code }} -->
 {% spaceless %}
 <div class="widget" contextmenu="menu">
 	<div class="header"></div>
-	<div class="indicator"></div>
+	<div class="progress indicator"></div>
 
-	{% if token.has_access %}
+	{% if not preview and token.has_access %}
 		<a href="{{ object.get_unlock_url }}" class="url message continue">Click to Continue</a>
 	{% else %}
 		<div class="items">
 		{% for offer in offers %}
-			<a href="{{ offer|redirect_url:object }}" target="_blank" class="item" data-text="{{ offer.requirements }}">
-				<div class="icon">{{ offer.category|render_category_icon }}</div>
+			<a href="{{ offer|redirect_url:object }}" {% if not preview %}target="_blank" {% endif %}class="item" data-text="{{ offer.requirements }}">
+				<div class="icon wrapper">{{ offer.category|render_category_icon }}</div>
 				<div class="anchor">{{ offer.anchor }}</div>
 				
 				{% if offer.priority %}
-					<div class="icon">{{ 'star'|render_icon }}</div>
+					<div class="priority icon wrapper">{{ 'star'|render_icon }}</div>
 				{% endif %}
 			</a>
 		{% empty %}
-			<p>There are no offers that you can currently participate in.</p>
+			<p>There are currently no offers that you can participate in.</p>
 		{% endfor %}
 		</div>
 	{% endif %}
 </div>
 {% endspaceless %}
 
+{% if not preview %}
 <script>var obj=["{% websocket_url %}/lockers/","{{ object.type }}","{{ object.code }}"];</script>
 <script src="{% static 'socket.js' %}"></script>
 <script src="{% static 'lockers/app.js' %}"></script>
+{% endif %}
 {% endblock %}

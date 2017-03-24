@@ -1,2 +1,0 @@
-<iframe id="widget" height="500" width="800" frameborder="0"></iframe>
-<script>var id="";if(matches=document.location.href.match(/\#[0-9]+/g))id=matches[0].split("#")[1]+"/";document.querySelector("#widget").src="{{ url }}"+id+"?url="+document.location.href;</script>

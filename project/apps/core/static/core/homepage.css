@@ -1,80 +1,51 @@
-.ui.grid.container {
-	margin: 1rem 0;
+@media (max-width:1024px) {
+	.masthead .page.container {
+		padding: 3rem 0 !important;
+	}
 }
 
-.ui.grid .row {
-	padding: 2rem 0;
-}
-
-.ui.header .content {
-	font-weight: normal;
-}
-
-.ui.header .sub.header {
-	line-height: 1.5rem;
-}
-
-.stripe {
-	text-align: center;
-}
-
-.stripe p {
-	font-size: 1.25rem;
-}
-
-.stripe p:nth-child(1) {
-	margin-bottom: 0.5rem;
-}
-
-p.text {
-	font-size: 1.125rem;
-	color: rgba(0, 0, 0, .6);
-}
-
-.ui.masthead {
+.masthead {
 	position: relative;
-	text-align: center;
-	margin-bottom: 0;
 }
 
-.ui.masthead .ui.container {
-	position: relative;
-	z-index: 3;
-	padding: 10rem 0;
+.masthead .page.container {
+	padding: 20rem;
+	text-shadow: 0 0 #FFF;
+	text-align: center;
 }
 
 .masthead h1 {
-	margin: 0 !important;
-	font-size: 4.5rem !important;
-	text-shadow: 0px 0px 1.2rem rgba(0, 0, 0, 0.2);
+	font-size: 3.75em;
 }
 
-.masthead h2 {
-	margin: 0.75rem 0 1.75rem 0;
-	color: rgba(255, 255, 255, 0.8);
+.masthead p {
+	font-size: 1.75em;
+}
+
+.spacer {
+	padding: 1.5rem;
+}
+
+.following.bar {
+	padding: 1rem;
+}
+
+.vertical.segment .container {
+	padding: 4rem;
+}
+
+.gray.vertical.segment {
+	background-color: #222;
+}
+
+.dark.red.vertical.segment {
+	background-color: #5f0600;
+}
+
+.ui.header {
 	font-weight: normal;
 }
 
-.background, .dimmer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	z-index: 1;
-	background-repeat: no-repeat;
-	background-size: cover;
-}
-
-.background {
-	display: none;
-}
-
-.dimmer {
-	z-index: 2;
-	background: rgba(0, 0, 0, 0.4);
-}
-
-.background.one {
-	background-image: url(/static/images/masthead.jpg);
+.ui.footer.segment {
+	margin-top: 0 !important;
 }

@@ -1,14 +1,15 @@
-@import url(//fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
 
 /*
 * Mobile Page
 */
-@media (max-width:801px)  {
+@media (max-width:401px) {
 	.widget {
 		font-size: 0.85rem !important;
 	}
 
-	.widget div.anchor {
+	.widget .anchor {
 		padding: 0.75rem !important;
 	}
 
@@ -31,9 +32,7 @@ html, body {
 	text-align: center;
 }
 
-.widget a {
-	outline: none;
-}
+.widget a { outline: none; }
 
 /* Header */
 .widget .header:after {
@@ -45,8 +44,8 @@ html, body {
 	font-weight: bold;
 }
 
-/* Indicator */
-.widget .indicator {
+/* Progress Indicator */
+.widget .progress.indicator {
 	display: none;
 	background: url(https://i.imgur.com/4EUgkH4.gif) no-repeat;
 	background-position: center;
@@ -61,6 +60,11 @@ html, body {
 	display: flex;
 }
 
+.widget .item div {
+	align-items: center;
+	flex: 1;
+}
+
 .widget .item {
 	transition: background 50ms, color 50ms;
 	color: #222;
@@ -73,31 +77,26 @@ html, body {
 }
 
 .widget .item:hover {
-	color: white;
+	color: #FFF;
 	background: #F44336;
 }
 
-.widget .item div {
-	align-items: center;
-	flex: 1;
-}
-
 /* Anchor */
-.widget div.anchor {
+.widget .anchor {
 	display: inline-block;
 	text-align: left;
 	padding: 1rem;
 }
 
-/* Icon */
-.widget div.icon {
-	-webkit-flex: 0 0 4rem;
-	-ms-flex: 0 0 4rem;
-	flex: 0 0 4rem;
+/* Icons */
+.widget .icon.wrapper {
+	-webkit-flex: 0 0 3.5rem;
+	-ms-flex: 0 0 3.5rem;
+	flex: 0 0 3.5rem;
 	background: rgba(0, 0, 0, 0.05);
 }
 
-.widget i.icon {
+.widget .icon:not(.wrapper) {
 	display: block;
 	margin: 0;
 	font-size: 1.75rem;
@@ -106,7 +105,7 @@ html, body {
 	width: 100%;
 }
 
-.widget i.icon.star {
+.widget .icon.star {
 	color: #FFFF00 !important;
 	text-shadow: 0 0 1px #000;
 }
@@ -127,6 +126,7 @@ html, body {
 }
 
 .widget .url {
+	display: block;
 	text-decoration: none;
 	color: #F44336;
 }

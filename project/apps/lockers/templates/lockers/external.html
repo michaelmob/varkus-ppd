@@ -3,7 +3,7 @@
 <head>
 	<title>Locked</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/components/icon.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/components/icon.min.css">
 	<link rel="stylesheet" href="{% static 'widgets/tooltip.min.css' %}" />
 	<link rel="stylesheet" href="{% static 'widgets/themes/base.css' %}" />
 
@@ -15,11 +15,11 @@
 	<link rel="stylesheet" href="{{ object.css_file.url }}" />
 	{% endif %}
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.11/iframeResizer.contentWindow.min.js"></script>
 </head>
 <body>
-	{% block content %}
-
-	{% endblock %}
+{% block content %}
+	{% include 'lockers/widget.html' %}
+{% endblock %}
 </body>
 </html>

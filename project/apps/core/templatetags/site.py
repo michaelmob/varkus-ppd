@@ -23,9 +23,17 @@ def site_domain():
 @register.simple_tag(takes_context=True)
 def websocket_url(context):
 	"""
-	Returns full websocket url.
+	Returns full websocket URL.
 	"""
 	return "%s://%s/ws" % (
 		"wss" if context["request"].is_secure() else "ws",
 		context["request"].get_host()
 	)
+
+
+@register.simple_tag(takes_context=True)
+def base_url(context):
+	"""
+	Returns base URL.
+	"""
+	return context["request"].build_absolute_uri("/")[:-1]

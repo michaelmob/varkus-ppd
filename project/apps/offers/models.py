@@ -161,6 +161,8 @@ class Offer(models.Model):
 		locker_object (object) -> Locker object.
 		Returns redrect view for Offer object.
 		"""
+		if not locker_object:
+			return "#"
 		return reverse(locker_object.type + ":redirect", args=(locker_object.code, self.pk))
 
 

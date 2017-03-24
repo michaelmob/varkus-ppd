@@ -1,0 +1,123 @@
+{% load static %}
+
+<div class="ui form">
+	<div class="field">
+		<label>Widget Background Color</label>
+		<div class="ui input">
+			<input type="color" id="widget-background-color" value="#FFFFFF" style="height:2.5rem" />
+		</div>
+	</div>
+
+	<div class="two fields">
+		<div class="field" style="width:75%">
+			<label>Header Text</label>
+			<div class="ui input">
+				<input type="text" id="header-text" placeholder="Complete one of the offers below to continue" />
+			</div>
+		</div>
+		<div class="field" style="width:25%">
+			<label>Header Text Color</label>
+			<div class="ui input">
+				<input type="color" id="header-text-color" value="#000000" style="height:2.5rem" />
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<label>Progress Indicator</label>
+		<div class="ui input">
+			<div class="ui fluid selection dropdown" tabindex="0">
+				<input type="hidden" id="progress-indicator" value="{% static 'widgets/progress/1.gif' %}">
+				<i class="dropdown icon"></i>
+				<div class="default text">Select</div>
+				<div class="menu transition hidden" tabindex="-1">
+					{% for x in "12345" %}
+					{% static 'widgets/progress/'|add:x|add:'.gif' as url %}
+					<div class="item" data-value="{{ url }}">
+						<img src="{{ url }}" />
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="two inline fields">
+		<div class="field">
+			<div class="ui checkbox">
+				<input type="checkbox" id="category-icons" checked>
+				<label>Show Category Icons</label>
+			</div>
+		</div>
+
+		<div class="field">
+			<div class="ui checkbox">
+				<input type="checkbox" id="priority-icons" checked>
+				<label>Show Priority Icons</label>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<label>Row Padding</label>
+		<div class="ui input">
+			<input type="numeric" id="row-padding" placeholder="1rem" />
+		</div>
+	</div>
+
+	<div class="three fields">
+		<div class="field">
+			<label>Row Text Color</label>
+			<div class="ui input">
+				<input type="color" id="row-text-color" value="#222222" style="height:2.5rem" />
+			</div>
+		</div>
+		<div class="field">
+			<label>Row Background Color</label>
+			<div class="ui input">
+				<input type="color" id="row-background-color" value="#F0F0F0" style="height:2.5rem" />
+			</div>
+		</div>
+		<div class="field">
+			<label>Odd Row Background Color</label>
+			<div class="ui input">
+				<input type="color" id="odd-row-background-color" value="#F9F9F9" style="height:2.5rem" />
+			</div>
+		</div>
+	</div>
+
+	<div class="two fields">
+		<div class="field">
+			<label>Row Text Hover Color</label>
+			<div class="ui input">
+				<input type="color" id="row-text-hover-color" value="#FFFFFF" style="height:2.5rem" />
+			</div>
+		</div>
+		<div class="field">
+			<label>Row Background Hover Color</label>
+			<div class="ui input">
+				<input type="color" id="row-background-hover-color" value="#F44336" style="height:2.5rem" />
+			</div>
+		</div>
+	</div>
+
+	<div class="two fields">
+		<div class="field">
+			<label>Tooltip Text Color</label>
+			<div class="ui input">
+				<input type="color" id="tooltip-text-color" value="#FFFFFF" style="height:2.5rem" />
+			</div>
+		</div>
+		<div class="field">
+			<label>Tooltip Background Color</label>
+			<div class="ui input">
+				<input type="color" id="tooltip-background-color" value="#1B1C1D" style="height:2.5rem" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="ui yellow overwrite message">
+	<i class="warning icon"></i>
+	Any CSS in the next tab will be overwriten when clicking "Continue" in this tab.
+</div>

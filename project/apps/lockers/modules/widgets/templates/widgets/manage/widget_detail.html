@@ -2,16 +2,16 @@
 
 
 {% block actions_menu %}
+<a href="{% url model_name|add:'s:update-embed' object.code %}" class="ui item">
+	<i class="code icon"></i> Embed
+</a>
+
 <a href="{% url model_name|add:'s:update-css' object.code %}" class="ui item">
-	<i class="code icon"></i> Custom CSS
+	<i class="css3 icon"></i> CSS Styler
 </a>
 
 <a href="{% url model_name|add:'s:update-locker' object.code %}" class="ui item">
 	<i class="anchor icon"></i> Pair Locker
-</a>
-
-<a href="{% url model_name|add:'s:update-embed' object.code %}" class="ui item">
-	<i class="code icon"></i> Embed
 </a>
 {% endblock %}
 

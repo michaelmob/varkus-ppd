@@ -1,6 +1,5 @@
 {% extends 'lockers/generic/manage/base_manage.html' %}
-{% load static %}
-{% load semanticui %}
+{% load static semanticui %}
 
 
 {% block breadcrumbs_active %}
@@ -13,8 +12,9 @@
 {% block content %}
 <div class="ui grid stackable">
 
+	{% block columns %}
 	<div class="ten wide column">
-		<form class="box" method="POST">
+		<form class="update box" method="POST">
 		{% block form %}
 			{% block form_header %}
 			<div class="ui top attached inverted red menu">
@@ -32,13 +32,16 @@
 
 			{% block form_submit %}
 			<div class="ui bottom attached fluid buttons">
+				{% block form_submit_button %}
 				<button class="ui left labeled red submit icon button">
-					<i class="checkmark icon"></i>
-					Save
+					<i class="checkmark icon"></i> Save
 				</button>
+				{% endblock form_submit_button %}
+				{% block form_cancel_button %}
 				<a href="{% url model_name|add:'s:detail' object.code %}" class="ui button" style="max-width:20rem">
 					Cancel
 				</a>
+				{% endblock form_cancel_button %}
 			</div>
 			{% endblock form_submit %}
 		{% endblock form %}
@@ -64,6 +67,7 @@
 		{% endblock information %}
 		</div>
 	</div>
+	{% endblock columns %}
 
 </div>
 {% endblock %}

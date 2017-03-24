@@ -4,15 +4,17 @@
 
 {% block content %}
 <div class="widget viral">
-	{% if unlocked %}
+	{% if not preview and unlocked %}
 		<a href="{{ object.get_unlock_url }}" class="center continue">Click to Continue</a>
 	{% else %}
 		<p class="message">{{ message|safe }}</p>
-		<a href="{{ url }}" class="url ignore" onclick="return false;">{{ url }}</a>
+		<div><a href="{{ url }}" class="url ignore" onclick="return false;">{{ url }}</a></div>
   {% endif %}
 </div>
 
+{% if not preview %}
 <script>var obj=["{% websocket_url %}/lockers/","{{ object.type }}","{{ object.code }}"];var immediateOpen=true;</script>
 <script src="{% static 'socket.js' %}"></script>
 <script src="{% static 'lockers/app.js' %}"></script>
+{% endif %}
 {% endblock %}
