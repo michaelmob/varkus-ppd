@@ -6,9 +6,10 @@
 <link rel="stylesheet" type="text/css" href="{% static 'core/homepage_bg.css' %}">
 {% endblock %}
 
-{% block headjs %}
+{% block footerjs %}
 <script type="text/javascript" src="{% static 'core/homepage.js' %}"></script>
 {% endblock %}
+
 
 {% block titlefull %}{% site_name %}{% endblock %}
 
@@ -17,34 +18,34 @@
 
 
 {% block wrapper %}
+<div class="following bar">
+	<div class="ui container">
+		<div class="ui massive inverted secondary menu">
+			<a class="app item icon"><i class="content icon"></i></a>
+			<div class="header item">{% site_name %}</div>
+			<div class="right menu">
+				{% if user.is_authenticated %}
+				<a href="{% url 'dashboard' %}" class="item">Dashboard</a>
+				<a href="{% url 'logout' %}" class="item">Logout</a>
+				{% else %}
+				<a href="{% url 'login' %}" class="item">Login</a>
+				<a href="{% url 'signup' %}" class="item">Sign Up</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="masthead segment">
 	<div class="animation">
 		<ul class="bubbles">
 			<li/><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/><li/>
 		</ul>
-	</div> 
-
-	<div class="following bar">
-		<div class="ui container">
-			<div class="ui large secondary menu">
-				<a class="app item icon"><i class="content icon"></i></a>
-				<div class="header item">{% site_name %}</div>
-				<div class="right menu">
-					{% if user.is_authenticated %}
-					<a href="{% url 'dashboard' %}" class="item">Dashboard</a>
-					<a href="{% url 'logout' %}" class="item">Logout</a>
-					{% else %}
-					<a href="{% url 'login' %}" class="item">Login</a>
-					<a href="{% url 'signup' %}" class="item">Sign Up</a>
-					{% endif %}
-				</div>
-			</div>
-		</div>
 	</div>
 
 	<div class="ui page container">
 		<h1>{% site_name %}</h1>
-		<p>Profit from your digital content</p>
+		<p>Profit from your Digital Content.</p>
 
 		<div class="ui buttons">
 			{% if user.is_authenticated %}
@@ -57,7 +58,8 @@
 	</div>
 </div>
 
-<div id="learn-more" class="ui gray vertical segment">
+
+<div id="learn-more" class="ui inverted vertical segment">
 	<div class="ui container">
 		<h2 class="ui inverted header">
 			<strong>Earn</strong> from your digital content
@@ -68,70 +70,100 @@
 	</div>
 </div>
 
-<div class="ui vertical segment">
+
+<div class="ui vertical centered segment">
 	<div class="ui container">
 		<h2 class="ui header">
 			Secure <strong>Lockers</strong>
 			<div class="sub header">
-				Straightforward and painless locker setup means your content is locked
+				Quick and easy locker setup means your content is locked
 				and is ready to be <strong>monetized</strong> immediately.
 			</div>
 		</h2>
 
 		<div class="spacer"></div>
 
-		<div class="ui four column stackable grid">
+		<div class="ui equal width stackable grid">
 			<div class="column">
-				<h3 class="ui icon header">
-					<i class="file image outline icon"></i>
+				<h3 class="ui header">
+					<i class="file text outline icon"></i>
 					<div class="content">
-						Widgets
+						<strong>Files</strong>
 						<div class="sub header">
-							Lock any sort of content with Widgets.  Theme it to your heart's
-							content with our CSS editor.
+							Upload your files for others to unlock and download.  On each
+							unlock, you profit.
 						</div>
 					</div>
 				</h3>
 			</div>
-
 			<div class="column">
-				<h3 class="ui icon header">
-					<i class="file image outline icon"></i>
-					<div class="content">
-						Files
-						<div class="sub header">
-							Earn by uploading the files that people want, like your new song
-							or the application you created.
-						</div>
-					</div>
-				</h3>
-			</div>
-
-			<div class="column">
-				<h3 class="ui icon header">
+				<h3 class="ui header">
 					<i class="linkify icon"></i>
 					<div class="content">
-						Links
+						<strong>Links</strong>
 						<div class="sub header">
-							Lock links to private websites that you know people would like to
-							have access to.
+							Protect precious links by giving, users who unlock, an unshareable
+							link with an optional limit on viewing duration.
 						</div>
 					</div>
 				</h3>
 			</div>
-
 			<div class="column">
-				<h3 class="ui icon header">
-					<i class="list layout icon"></i>
+				<h3 class="ui header">
+					<i class="list icon"></i>
 					<div class="content">
-						Lists
+						<strong>Lists</strong>
 						<div class="sub header">
-							Lock lists of items, such as a list of keys to your new game.
-							Earn from your non-paying players.
+							Lock individual list items to be distributed one at a time on
+							each unlock.
 						</div>
 					</div>
 				</h3>
 			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="ui stripe-1 vertical centered segment">
+	<div class="ui equal width doubling very relaxed middle aligned grid container">
+		<div class="column">
+			<div class="ui raised segment">
+				<img class="ui centered large image" src="{% static 'images/widget.png' %}" />
+			</div>
+		</div>
+
+		<div class="column">
+			<h2 class="ui icon center aligned header">
+				<i class="file image outline icon"></i>
+				<div class="content">
+					<strong>Widgets</strong>
+					<div class="sub header">
+						Lock any of your content with a Widget.  Pair one with any of
+						{% site_name %}'s lockers and unlock many more options.
+					</div>
+				</div>
+			</h2>
+		</div>
+	</div>
+</div>
+
+
+<div class="ui vertical centered segment">
+	<div class="ui equal width doubling very relaxed middle aligned grid container">
+		<div class="column">
+			<h2 class="ui icon center aligned header">
+				<i class="css3 icon"></i>
+				<div class="content">
+					Your Own <strong>Theme</strong>
+					<div class="sub header">
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, incidunt quos magni hic reiciendis atque a. Velit ab pariatur, distinctio! Deserunt nostrum facilis, suscipit expedita dolores. Accusantium aut odit accusamus!
+					</div>
+				</div>
+			</h2>
+		</div>
+		<div class="column">
+				<img class="ui centered bordered large image" src="{% static 'images/css.png' %}" />
 		</div>
 	</div>
 </div>

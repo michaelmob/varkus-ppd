@@ -190,9 +190,10 @@ class LockerUnlockView(LockerMixin, DetailView):
 		self.request = request
 		self.object = kwargs.get("object") or self.get_object()
 		self.token = kwargs.get("token") or self.get_token()
+		self.action = kwargs.get("action")
 
 		# User has access
-		if self.token and self.token.has_access:
+		if self.token and self.token.has_access():
 			response = self.access()
 			return response or super(__class__, self).get(self.request)
 

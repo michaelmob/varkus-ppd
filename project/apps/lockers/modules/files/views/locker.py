@@ -12,7 +12,7 @@ class FileUnlockView(LockerUnlockView):
 		Returns unlocked view. When 'download' GET argument is present then
 		return the download view.
 		"""
-		if self.request.GET.get("download"):
+		if self.action == "download":
 			response = self.download()
 			if response:
 				return response

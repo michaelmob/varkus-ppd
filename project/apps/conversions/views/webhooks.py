@@ -60,7 +60,7 @@ def receive_payload(request, password):
 
 	# Modify token
 	if token:
-		token.conversion = True
+		token.unlocked = True
 		token.save()
 
 	# Conversion Block

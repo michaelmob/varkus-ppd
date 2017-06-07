@@ -16,9 +16,9 @@ class InvoiceTest(TestCase):
 		"""
 		Helper function to create random tokens for a widget.
 		"""
-		call_command("randomtoken", widget.type, widget.id, chance=1, ip="74.125.157.99")
-		call_command("randomtoken", widget.type, widget.id, chance=1, ip="74.125.65.91")
-		call_command("randomtoken", widget.type, widget.id, chance=1, ip="173.231.140.219")
+		call_command("randomtoken", widget.type, widget.id, chance=1, ip="74.125.157.99", quiet=True)
+		call_command("randomtoken", widget.type, widget.id, chance=1, ip="74.125.65.91", quiet=True)
+		call_command("randomtoken", widget.type, widget.id, chance=1, ip="173.231.140.219", quiet=True)
 
 
 	def setUp(self):

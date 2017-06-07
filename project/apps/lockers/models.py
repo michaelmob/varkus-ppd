@@ -12,6 +12,16 @@ from viking.utils import strings
 from viking.utils.constants import DEFAULT_BLANK_NULL, BLANK_NULL
 
 
+ACCESS_TIME_LIMITS = (
+	(0, "No Time Limit"),
+	(2, "2 Hours"),
+	(6, "6 Hours"),
+	(12, "12 Hours"),
+	(24, "24 Hours"),
+	(48, "48 Hours"),
+)
+
+
 
 class LockerBase(models.Model):
 	"""
@@ -24,6 +34,7 @@ class LockerBase(models.Model):
 	datetime 		= models.DateTimeField(auto_now_add=True, verbose_name="Date")
 	theme			= models.CharField(max_length=64, default="DEFAULT", choices=settings.LOCKER_THEMES)
 	offer_count		= models.IntegerField(default=8)
+	access_time_limit = models.IntegerField(default=0, choices=ACCESS_TIME_LIMITS)
 	conversion_block = models.DecimalField(
 		validators 	 	= [MinValueValidator(0), MaxValueValidator(1)],
 		max_digits 		= 5,
@@ -32,7 +43,7 @@ class LockerBase(models.Model):
 		help_text 		= (
 			"Chance of a conversion block happening.<br/>"
 			"Divide by 100 (example: 0.30 == 30%)<br/>"
-			"0 for guaranteed conversion block.<br/>"
+			"1 for guaranteed conversion block.<br/>"
 			"0 for no conversion block."
 		)
 	)

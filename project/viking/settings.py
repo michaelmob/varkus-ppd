@@ -233,12 +233,13 @@ GRAVATAR_DEFAULT_IMAGE = "identicon"
 GEOIP_PATH = BASE_DIR
 
 
-# HTTP Notification Proxy
-HTTP_NOTIFICATION_USE_PROXY = False
-SOCKS5_SERVER = ""
-SOCKS5_PORT = 1080
-SOCKS5_USERNAME = None
-SOCKS5_PASSWORD = None
+# Proxies
+USE_PROXY = True
+PROXY_SERVER = ("proxy-nl.privateinternetaccess.com", 1080)
+PROXY_CREDENTIALS = {
+	"username": "x2927670",
+	"password": "pWCSn2ep4H"
+}
 
 
 # E-mailing
@@ -264,6 +265,13 @@ LOCKERS = (
 	("LINK", "Link"),
 	("LIST", "List"),
 )
+
+LOCKER_ICONS = {
+	"WIDGET": "file image outline",
+	"FILE": "file text",
+	"LINK": "linkify",
+	"LIST": "list layout",
+}
 
 LOCKER_THEMES = (
 	("DEFAULT", "Default"),

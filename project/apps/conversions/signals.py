@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 from channels import Group
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
@@ -63,6 +64,21 @@ def notify_conversion_signal(sender, instance, created, **kwargs):
 	})
 
 
+@receiver(pre_save, sender=Token)
+def unlock_pre_signal(sender, instance, *args, **kwargs):
+	"""
+	Pre-save signal to set `unlocked_until` field when required.
+	"""
+	if not (instance.locker and instance.session and instance.has_access()):
+		return
+
+	if not instance.locker.access_time_limit:
+		return
+
+	hours = instance.locker.access_time_limit
+	instance.unlocked_until = datetime.now() + timedelta(hours=hours)
+
+
 @receiver(post_save, sender=Token)
 def unlock_signal(sender, instance, created, **kwargs):
 	"""
@@ -71,7 +87,7 @@ def unlock_signal(sender, instance, created, **kwargs):
 	the token is marked as accessible (meaning the user has access to the
 	locker that is attached)
 	"""
-	if not (instance.locker and instance.session and instance.has_access):
+	if not (instance.locker and instance.session and instance.has_access()):
 		return
 
 	# Send response to Locker

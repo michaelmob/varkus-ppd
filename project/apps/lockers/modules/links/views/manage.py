@@ -19,7 +19,7 @@ class LinkCreateView(LinkFormMixin, generic.ManageCreateView):
 	"""
 	Creation view to create a link.
 	"""
-	fields = ["name", "url", "description"]
+	fields = ["name", "url", "proxy", "access_time_limit", "description"]
 	
 
 
@@ -27,4 +27,4 @@ class LinkUpdateView(LinkFormMixin, generic.ManageUpdateView):
 	"""
 	Update view for editing links.
 	"""
-	fields = ["name", "url", "description"]
+	fields = ["name", "url", "proxy", "access_time_limit", "description"]

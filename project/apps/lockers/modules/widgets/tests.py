@@ -43,7 +43,7 @@ class WidgetTest(TestCase):
 		self.widget.redirect_url = "http://google.com/"
 		self.widget.save()
 
-		self.token.conversion = True
+		self.token.unlocked = True
 		self.token.save()
 
 		response = self.client.get(self.widget.get_unlock_url())
@@ -59,7 +59,7 @@ class WidgetTest(TestCase):
 		self.widget.locker = self.link
 		self.widget.save()
 
-		self.token.conversion = True
+		self.token.unlocked = True
 		self.token.save()
 
 		response = self.client.get(self.widget.get_unlock_url())

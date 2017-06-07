@@ -1,7 +1,5 @@
 {% extends 'lockers/generic/manage/base_detail_base.html' %}
-{% load molds %}
-{% load currency %}
-{% load share %}
+{% load molds lockers currency share %}
 
 
 {# Data Blocks #}
@@ -74,7 +72,7 @@
 {# Object Details #}
 {% block details_wrapper %}
 <div class="ui top attached inverted red menu">
-	<div class="icon header item"><i class="tag icon"></i></div>
+	<div class="icon header item"><i class="{{ model_name|locker_icon }} icon"></i></div>
 	<div class="header item">
 		{{ model_name|title }}:&nbsp;<strong>{{ object.name }}</strong>
 	</div>
@@ -119,7 +117,7 @@
 			<i class="ellipsis horizontal icon"></i>
 			<div class="content">
 				<div class="header">Description</div>
-				{{ object.description|default:'<i>No description set</i>' }}
+				{{ object.description|default:'<i>No description set</i>'|linebreaksbr }}
 			</div>
 		</div>
 

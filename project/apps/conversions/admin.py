@@ -32,7 +32,7 @@ class TokenAdmin(admin.ModelAdmin):
 	"""
 	Model Admin for Tokens.
 	"""
-	list_display = ("unique", "locker", "ip_address", "user_agent", "datetime", "conversion")
+	list_display = ("unique", "locker", "ip_address", "user_agent", "datetime", "unlocked")
 	search_fields = ("unique", "locker", "ip_address", "user_agent")
 	filter_horizontal = ("offers",)
 	show_full_result_count = False

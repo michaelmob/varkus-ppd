@@ -78,5 +78,6 @@ def locker_url_patterns(model):
 			url(r"^$", views["lock"], name="lock"),
 			url(r"^redirect/(?P<offer_id>[0-9]+)/$", views["redirect"], name="redirect"),
 			url(r"^unlock/$", views["unlock"], name="unlock"),
+			url(r"^unlock/(?P<action>[A-z]+)/$", views["unlock"], name="unlock-action"),
 		]))
 	]

@@ -68,9 +68,7 @@ class ManageFormMixin(ManageMixin):
 		if hasattr(self, "placeholders"):
 			return self.placeholders
 
-		return {
-
-		}
+		return {}
 
 
 	def get_form_class(self):
@@ -83,6 +81,15 @@ class ManageFormMixin(ManageMixin):
 				continue
 			form.base_fields[key].widget.attrs["placeholder"] = value
 		return form
+
+
+	def get_initial(self):
+		"""
+		Return the initial data to use for forms on this view.
+		"""
+		data = super(__class__, self).get_initial()
+		data["access_time_limit"] = str(getattr(self.object, "access_time_limit", "0"))
+		return data
 
 
 
@@ -170,7 +177,7 @@ class ManageDetailView(ManageMixin, MultiTableMixin, DetailView):
 
 
 
-class ManageCreateView(ManageMixin, SuccessMessageMixin, CreateView):
+class ManageCreateView(ManageFormMixin, SuccessMessageMixin, CreateView):
 	"""
 	Base create view for locker objects.
 	"""

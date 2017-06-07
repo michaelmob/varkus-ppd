@@ -64,7 +64,7 @@ class LockerIntegrationTest(TestCase):
 
 		# Create Conversion
 		token = Token.objects.filter(locker_id=self.widget.id).first()
-		token.conversion = True
+		token.unlocked = True
 		token.save()
 
 		# Create Token

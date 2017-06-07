@@ -98,7 +98,7 @@ class TokenTest(test.TestCase):
 		Test that token does not have 'access' to the locker object.
 		"""
 		token = __class__.create_token(*self.create_args)
-		self.assertFalse(token.has_access)
+		self.assertFalse(token.has_access())
 
 
 	def test_create_random(self):
@@ -113,7 +113,7 @@ class TokenTest(test.TestCase):
 		widget = LockerTest.create_widget(self.user)
 		offer = OfferTest.create_offer()
 		
-		call_command("randomtoken", widget.type, widget.id, chance=1, ip="173.1.1.1")
+		call_command("randomtoken", widget.type, widget.id, chance=1, ip="173.1.1.1", quiet=True)
 
 		token = Token.objects.first()
 		self.assertIsNotNone(token)

@@ -2,6 +2,7 @@ from django_tables2.utils import A
 
 from django.conf import settings
 from django.utils.html import format_html
+from django.core.urlresolvers import reverse
 
 from .models import Offer
 from conversions.models import Conversion
@@ -92,7 +93,7 @@ class OfferTable(OfferTableBase):
 	Table that displays offers
 	"""
 	name = tables.LinkColumn("offers:detail", verbose_name="Offer", args=(A("pk"),))
-	boost = tables.Column(empty_values=(), verbose_name="Boost")
+	boost = tables.Column(empty_values=(), verbose_name="")
 
 
 	class Meta(OfferTableBase.Meta):
@@ -100,18 +101,22 @@ class OfferTable(OfferTableBase):
 		empty_text = "No offers matching your search exist."
 		fields = (
 			"name", "category", "country", "user_agent", "earnings_per_click",
-			"payout", "boost"
+			"payout", 
 		)
 
 
-	def render_boost(self, value, record):
+	def render_name(self, value, record):
 		"""
 		Returns boost button.
 		"""
 		return format_html(
-			"<a data-id='{}' class='ui fluid icon compact orange boost offer button'>"
+			"<a data-id='{}' class='ui horizontal orange label boost'>"
 				"<i class='rocket icon'></i>"
-			"</a>", record.pk
+			"</a>"
+
+			"<a href='{}'>{}</a>",
+			
+			record.pk, reverse("offers:detail", args=(record.pk,)), record.name
 		)
 
 

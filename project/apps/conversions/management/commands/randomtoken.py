@@ -30,29 +30,43 @@ class Command(BaseCommand):
 		parser.add_argument("--chance", default=0.25, type=float, help="conversion chance")
 		parser.add_argument("--count", default=1, type=int)
 		parser.add_argument("--ip", default=1, type=str)
+		parser.add_argument("--quiet", default=False, type=bool)
+
+
+	def write(self, value):
+		"""
+		Write to std out.
+		"""
+		if not self.quiet:
+			self.stdout.write(value)
 
 
 	def handle(self, *args, **options):
 		"""
 		Handle command to create the token.
 		"""
+		self.quiet = options["quiet"]
+
 		# Get model
 		name = options["locker"].title()
 		if not self.get_model(name):
-			self.stdout.write(self.style.ERROR("Invalid locker '%s'." % name))
+			self.write(self.style.ERROR("Invalid locker '%s'." % name))
 			return
 
 		# Get locker object
 		id = options["id"]
 		if not self.get_object(id):
-			self.stdout.write(self.style.ERROR("%s does not exist." % name))
+			self.write(self.style.ERROR("%s does not exist." % name))
 			return
 
 		self.user_ip_address = options.get("ip", None)
 
-		print()
+		if not self.quiet:
+			print()
+		
 		for x in range(options.get("count", 1)):
-			print("%d/%d:" % (x+1, options.get("count", 1)))
+			if not self.quiet:
+				print("%d/%d:" % (x+1, options.get("count", 1)))
 			self.run(*args, **options)
 
 
@@ -64,11 +78,11 @@ class Command(BaseCommand):
 		self.token = self.create_token()
 
 		if not self.token:
-			self.stdout.write(self.style.ERROR("Token was not created."))
+			self.write(self.style.ERROR("Token was not created."))
 		else:
-			self.stdout.write(self.style.SUCCESS("Token has been created."))
+			self.write(self.style.SUCCESS("Token has been created."))
 
-		self.stdout.write("\tIP Address: %s (%s)" % (self.ip_address, self.country_code))
+		self.write("\tIP Address: %s (%s)" % (self.ip_address, self.country_code))
 
 		if not self.token:
 			return print()
@@ -77,17 +91,18 @@ class Command(BaseCommand):
 		roll = uniform(0, 0.9)
 		chance = options.get("chance", 0.25)
 		if roll > chance:
-			self.stdout.write(
+			self.write(
 				"\tUnsuccessful conversion roll. (%.2f > %.2f)" % (roll, chance)
 			)
 		else:
 			self.create_conversion(self.token)
 			if self.conversion:
-				self.stdout.write(
+				self.write(
 					"\tConversion has been created. ($%.2f)" % (self.conversion.payout,)
 				)
 
-		print()  # New line
+		if not self.quiet:
+			print()  # New line
 
 
 	def create_token(self):

@@ -34,19 +34,27 @@ class Token(models.Model):
 	datetime	= models.DateTimeField(auto_now_add=True)
 	last_access	= models.DateTimeField(auto_now_add=True, verbose_name="Last Access")
 
-	conversion 	= models.BooleanField(default=False, verbose_name="Conversion")
+	unlocked 		= models.BooleanField(default=False, verbose_name="Unlocked")
+	unlocked_until 	= models.DateTimeField(verbose_name="Unlocked Until", **BLANK_NULL)
+	unlocks 		= models.IntegerField(default=0, verbose_name="Unlock Count")
 
 
 	def __str__(self):
 		return "%s: %s" % (self.pk, self.unique)
 
 
-	@property
 	def has_access(self):
 		"""
 		Token has access to the locker object's result.
+		Unlocked status should be reset when the `unlocked_until` is overdue.
 		"""
-		return self.conversion
+		if self.unlocked_until and datetime.now() > self.unlocked_until:
+			self.unlocked = False
+			self.unlocked_until = None
+			self.unlocks += 1
+			self.save()
+
+		return self.unlocked
 
 
 

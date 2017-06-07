@@ -45,15 +45,11 @@ def send_payload(object_, test=False):
 	)
 
 	# Use Proxy
-	if settings.HTTP_NOTIFICATION_USE_PROXY:
+	if settings.USE_PROXY:
 		try:
-			proxy = SocksiPyHandler(
-				socks.SOCKS5, settings.SOCKS5_SERVER, settings.SOCKS5_PORT,
-				username=settings.SOCKS5_USERNAME,
-				password=settings.SOCKS5_PASSWORD
-			)
-
-			opener = urllib.request.build_opener(proxy)
+			opener = urllib.request.build_opener(SocksiPyHandler(
+				socks.SOCKS5, *settings.PROXY_SERVER, **settings.PROXY_CREDENTIALS
+			))
 			urllib.request.install_opener(opener)
 		except:
 			return False

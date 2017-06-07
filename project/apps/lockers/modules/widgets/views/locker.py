@@ -116,7 +116,7 @@ class WidgetUnlockView(generic.LockerUnlockView):
 		response = super(__class__, self).get(request, *args, **kwargs)
 
 		# User must have access to continue
-		if not (self.token and self.token.has_access):
+		if not (self.token and self.token.has_access()):
 			return response
 
 		# Paired locker
@@ -135,8 +135,11 @@ class WidgetUnlockView(generic.LockerUnlockView):
 		Returns the unlock view for the paired locker.
 		"""
 		locker = self.object.locker
-		klass = view_classes(locker.__class__, "Locker", "Unlock")
-		return klass(self.request, pk=locker.pk, token=self.token, object=locker)
+		action = self.kwargs.get("action")
+
+		# the `get` method of LockerUnlockView of specified locker type
+		get = view_classes(locker.__class__, "Locker", "Unlock")
+		return get(self.request, pk=locker.pk, token=self.token, object=locker, action=action)
 
 
 	def standalone(self):

@@ -31,15 +31,15 @@ $(".remove.offer.button").api({
 /*
 * Offer Boost Button
 */
-$(".boost.offer.button").api({
+$(".boost.label").api({
 	method: "POST",
 	action: "offer boost",
 	onSuccess: function(response) {
-		$(this).transition("tada");
+		$(this).state('flash text', '+10').transition("pulse");
 	}
 }).popup({
-	title: "Boost",
-	content: "Boosting this offer will ensure that it gets 10 clicks."
+	title: "Boost Offer",
+	content: "Boost this offer to the top of the offer wall for 10 clicks"
 });
 
 

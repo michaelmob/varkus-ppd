@@ -88,6 +88,15 @@ case "$1" in
 		;;
 
 
+	# Django debug runserver
+	# Usage: ./viking debug
+	d) ;&
+	debug)
+		compose stop django
+		compose run --service-ports --rm django python manage.py runserver 0.0.0.0:8000
+		;;
+
+
 	# Django shortcut command for pip
 	# Usage: ./viking pip {command}
 	p) ;&

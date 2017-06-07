@@ -23,7 +23,7 @@
 			</div>
 
 			{% render_field form.phone_number placeholder='+1 555-555-5555' %}
-			{% render_field form.country _override='CountryField' _style='search' %}
+			{% render_field form.country _style='search' _override='CountrySelect' %}
 			{% render_field form.state placeholder='Virginia' %}
 			{% render_field form.city placeholder='Jamestown' %}
 			{% render_field form.postal_code placeholder='23081' %}

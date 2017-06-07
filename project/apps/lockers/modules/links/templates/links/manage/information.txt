@@ -7,3 +7,16 @@
 	Common usage for this locker would be to lock an uncommon link,
 	that you would not like others to know for free.
 </p>
+
+<div class="ui header">Hide Your Link</div>
+<p>
+	Tick the "Proxy" checkbox on to hide your link from the unlocker.  Instead
+	of being able to see the link after unlocking it, {% site_name %} will proxy
+	the link to hide it.
+</p>
+
+<p>
+	Be aware, however, that the static content (images, stylesheets, etc.) will be
+	served from the original source and that only the original link will be hidden.
+	{% site_name %} can only proxy up to 10Mb of content.
+</p>
