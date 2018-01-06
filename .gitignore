@@ -26,8 +26,8 @@ backups/
 migrations/
 
 # Docker
-nginx/certs
-postgres/backup
-postgres/data
-postgres/localdata
+docker/nginx/certs
+docker/postgres/backup
+docker/postgres/data
+docker/postgres/localdata
 docker-compose.production.yml
