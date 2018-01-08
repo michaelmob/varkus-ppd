@@ -6,5 +6,5 @@
     - postgres
     - python36
     - maxmind
-    - nginx
+    #- nginx
     - viking

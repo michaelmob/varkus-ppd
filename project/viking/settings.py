@@ -67,7 +67,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = (
-	#"viking.middleware.cloudflare.CFMiddleware",
+	"viking.middleware.cloudflare.CFMiddleware",
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
 	"django.middleware.cache.UpdateCacheMiddleware",
 	"django.middleware.common.CommonMiddleware",

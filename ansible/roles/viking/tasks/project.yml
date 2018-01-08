@@ -17,3 +17,9 @@
     - restart worker
     - restart celery
     - restart beat
+
+- name: create migrations
+  command: /home/viking/scripts/viking manage makemigrations --no-input
+
+- name: make migrations
+  command: /home/viking/scripts/viking manage migrate --no-input

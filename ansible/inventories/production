@@ -1,0 +1,23 @@
+[viking]
+107.191.96.132 ansible_user=norse ansible_port=39589 ansible_ssh_pass=GcwQxY6gr7X5WaonU8wXSBB1m1WAy9YYs4vI4hSn3JaWEJFxdP3nslNnxiBnLvPt ansible_sudo_pass=GcwQxY6gr7X5WaonU8wXSBB1m1WAy9YYs4vI4hSn3JaWEJFxdP3nslNnxiBnLvPt
+
+
+[viking:vars]
+# Server
+DJANGO_WORKERS=4
+CELERY_WORKERS=1
+
+# Django
+DEBUG=false
+SECRET_KEY="S7EG-)z$w~]T]q&ZhEw+vHf.AZX-N@Mj7e}SRa-ya6bU~<M@W_sR/M6}<>XTG8"
+
+# Site
+SITE_NAME="Varkus"
+SITE_DOMAIN="varkus.com"
+
+# Postgres
+POSTGRES_HOST="127.0.0.1"
+POSTGRES_PORT="5432"
+POSTGRES_DB="viking"
+POSTGRES_USER="viking_user"
+POSTGRES_PASSWORD="emzLnHFq36jezMHRb68QCHBVoTNNBFyAZTmdGkLWfKV3zc9fqfXUJpfaz7PD"

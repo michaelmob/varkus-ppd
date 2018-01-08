@@ -10,10 +10,11 @@ class CFMiddleware(object):
 	"""
 	Updates REMOTE_ADDR for requests proxied through CloudFlare.
 	"""
-	def __init__(self):
+	def __init__(self, get_response):
 		"""
 		Constructor.
 		"""
+		self.get_response = get_response
 		self.cloudflare_ip_header = "HTTP_CF_CONNECTING_IP"
 		self.x_real_ip_header = "HTTP_X_REAL_IP"
 

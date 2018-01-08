@@ -2,6 +2,7 @@
 - name: add postgres apt key
   apt_key:
     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    validate_certs: False
 
 - name: add postgres repository for Ubuntu 16.04 (Xenial)
   apt_repository:

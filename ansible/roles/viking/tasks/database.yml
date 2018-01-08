@@ -10,9 +10,3 @@
     db: "{{ POSTGRES_DB }}"
     name: "{{ POSTGRES_USER }}"
     password: "{{ POSTGRES_PASSWORD }}"
-
-- name: create migrations
-  command: /home/viking/scripts/viking manage makemigrations --no-input
-
-- name: make migrations
-  command: /home/viking/scripts/viking manage migrate --no-input

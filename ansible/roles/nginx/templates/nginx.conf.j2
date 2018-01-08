@@ -2,7 +2,7 @@ server {
 	listen 80;
 	server_name {{ SITE_DOMAIN }} insecure.{{ SITE_DOMAIN }};
 
-	root /home/viking;
+	root /home/viking/project;
 	index index.html;
 
 	client_max_body_size 500m;
@@ -10,12 +10,12 @@ server {
 
 	# 500 Error Pages
 	location = /500.html {
-		root /home/viking/static/errors;
+		root /home/viking/project/static/errors;
 	}
 
 	# Robots.txt
 	location /robots.txt {
-		root /home/viking/static;
+		root /home/viking/project/static;
 	}
 
 	# Static
