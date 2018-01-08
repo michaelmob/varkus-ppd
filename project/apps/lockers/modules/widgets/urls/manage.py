@@ -4,6 +4,7 @@ from ..views import manage
 from ..models import Widget
 
 
+app_name = "widgets"
 urlpatterns = manage_url_patterns(Widget)
 
 urlpatterns += [

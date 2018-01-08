@@ -19,7 +19,7 @@ app.conf.update(
     accept_content=["json"],
     result_serializer="json",
 	result_backend="django-db",
-	broker_url="amqp://guest:guest@rabbitmq:5672//"
+	broker_url="amqp://guest:guest@127.0.0.1:5672//"
 )
 
 app.autodiscover_tasks(lambda: INSTALLED_APPS)

@@ -24,7 +24,6 @@ sys.path.insert(0, os.path.join(BASE_DIR, "apps/lockers"))
 
 # Application definition
 INSTALLED_APPS = (
-
 	# Django contributions
 	"django.contrib.admin",
 	"django.contrib.auth",
@@ -34,7 +33,7 @@ INSTALLED_APPS = (
 	"django.contrib.staticfiles",
 	"django.contrib.postgres",
 
-	# External Modules
+	# External modules
 	"dbbackup",					# django-dbbackup
 	"debug_toolbar",			# django-debug-toolbar
 	"captcha",					# django-recaptcha
@@ -60,25 +59,23 @@ INSTALLED_APPS = (
 	"conversions",
 	"lockers",
 
-	# Locker Modules
+	# Locker modules
 	"modules.widgets",
 	"modules.lists",
 	"modules.files",
 	"modules.links",
-
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+	#"viking.middleware.cloudflare.CFMiddleware",
+	"debug_toolbar.middleware.DebugToolbarMiddleware",
 	"django.middleware.cache.UpdateCacheMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.contrib.sessions.middleware.SessionMiddleware",
-	"viking.middleware.cloudflare.CFMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
 	"django.contrib.auth.middleware.AuthenticationMiddleware",
-	"django.contrib.auth.middleware.SessionAuthenticationMiddleware",
 	"django.contrib.messages.middleware.MessageMiddleware",
-	"debug_toolbar.middleware.DebugToolbarMiddleware",
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -109,6 +106,8 @@ DATETIME_FORMAT = "N j, Y, P"
 SHORT_DATE_FORMAT = "N j, Y"
 DATE_FORMAT = "N j, Y"
 
+
+# Templates
 TEMPLATES = [{
 	"BACKEND": "django.template.backends.django.DjangoTemplates",
 	"DIRS": [
@@ -143,7 +142,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_SCHEME", "https")
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "D33I>9XSio|zd4-wMy8S*TG0-3#8jgF,UEh47:a+4>_G3.+bv/{3Mb+0X<f}eEZz"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 # Database
@@ -151,11 +150,11 @@ SECRET_KEY = "D33I>9XSio|zd4-wMy8S*TG0-3#8jgF,UEh47:a+4>_G3.+bv/{3Mb+0X<f}eEZz"
 DATABASES = {
 	"default": {
 		"ENGINE": "django.db.backends.postgresql_psycopg2",
-		"HOST": os.environ.get("POSTGRES_HOST", "postgres"),
+		"HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
 		"PORT": int(os.environ.get("POSTGRES_PORT", 5432)),
-		"NAME": os.environ.get("POSTGRES_DB", "postgres"),
-		"USER": os.environ.get("POSTGRES_USER", "postgres"),
-		"PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres")
+		"NAME": os.environ.get("POSTGRES_DB"),
+		"USER": os.environ.get("POSTGRES_USER"),
+		"PASSWORD": os.environ.get("POSTGRES_PASSWORD")
 	}
 }
 
@@ -165,19 +164,12 @@ DBBACKUP_CLEANUP_KEEP = 5
 DBBACKUP_CLEANUP_KEEP_MEDIA = 2
 
 
-# Redis
-REDIS_HOST = "redis://%s:%s/1" % (
-	os.environ.get("REDIS_HOST", "redis"),
-	os.environ.get("REDIS_PORT", "6379")
-)
-
-
 # Cache
 # https://docs.djangoproject.com/en/dev/ref/settings/#cache
 CACHES = {
 	"default": {
 		"BACKEND": "django_redis.cache.RedisCache",
-		"LOCATION": REDIS_HOST,
+		"LOCATION": "redis://127.0.0.1:6379/1",
 		"OPTIONS": {
 			"CLIENT_CLASS": "django_redis.client.DefaultClient",
 		}
@@ -185,19 +177,11 @@ CACHES = {
 }
 
 
-# Session
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-
-
 # Channels
 CHANNEL_LAYERS = {
 	"default": {
 		"BACKEND": "asgi_redis.RedisChannelLayer",
 		"ROUTING": "viking.routing.channel_routing",
-        "CONFIG": {
-            "hosts": [REDIS_HOST],
-            "symmetric_encryption_keys": [SECRET_KEY],
-        },
 	},
 }
 
@@ -217,7 +201,7 @@ STATICFILES_DIRS = ()
 
 # Site Settings
 SITE_NAME = os.environ.get("SITE_NAME", "Viking")
-SITE_DOMAIN = os.environ.get("DOMAIN", "viking.com")
+SITE_DOMAIN = os.environ.get("SITE_DOMAIN", "viking.com")
 SITE_URL = "https://" + SITE_DOMAIN
 
 MESSAGE_TAGS = {
@@ -230,7 +214,7 @@ GRAVATAR_DEFAULT_IMAGE = "identicon"
 
 
 # GeoIP
-GEOIP_PATH = BASE_DIR
+GEOIP_PATH = "/var/"
 
 
 # Proxies

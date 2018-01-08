@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from viking.utils.constants import DEFAULT_BLANK_NULL
 
@@ -72,7 +72,7 @@ class Post(models.Model):
 	"""
 	Model for Ticket Post.
 	"""
-	thread 		= models.ForeignKey(Thread, null=True)
+	thread 		= models.ForeignKey(Thread, null=True, on_delete=models.CASCADE)
 	original	= models.BooleanField(default=False)
 	user 		= models.ForeignKey(User, on_delete=models.CASCADE)
 	message 	= models.TextField(max_length=5000, verbose_name="Message")

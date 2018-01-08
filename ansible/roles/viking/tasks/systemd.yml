@@ -1,0 +1,28 @@
+---
+- name: copy daphne service over
+  copy:
+    src: viking-daphne.service
+    dest: /etc/systemd/system/viking-daphne.service
+  notify:
+    - restart daphne
+
+- name: copy worker service over
+  copy:
+    src: viking-worker.service
+    dest: /etc/systemd/system/viking-worker.service
+  notify:
+    - restart worker
+
+- name: copy celery service over
+  copy:
+    src: viking-celery.service
+    dest: /etc/systemd/system/viking-celery.service
+  notify:
+    - restart celery
+
+- name: copy beat service over
+  copy:
+    src: viking-beat.service
+    dest: /etc/systemd/system/viking-beat.service
+  notify:
+    - restart beat

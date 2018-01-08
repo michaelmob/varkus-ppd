@@ -2,6 +2,8 @@ from django.conf.urls import url
 from .views import TicketListView, TicketCreateView, TicketDetailView
 
 
+app_name = "tickets"
+
 urlpatterns = [
 	url(r"^$", TicketListView.as_view(), name="list"),
 	url(r"^create/$", TicketCreateView.as_view(), name="create"),

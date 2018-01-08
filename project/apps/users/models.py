@@ -68,9 +68,9 @@ class Profile(models.Model):
 	"""
 	Model for User's profile table.
 	"""
-	user 			= models.OneToOneField(User, primary_key=True)
-	party 			= models.ForeignKey(Party, related_name="party_id", blank=True, null=True, default=None)
-	referrer 		= models.ForeignKey(User, related_name="referrer_id", blank=True, null=True, default=None)
+	user 			= models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+	party 			= models.ForeignKey(Party, related_name="party_id", blank=True, null=True, default=None, on_delete=models.SET_NULL)
+	referrer 		= models.ForeignKey(User, related_name="referrer_id", blank=True, null=True, default=None, on_delete=models.SET_NULL)
 
 	phone_number	= models.CharField(max_length=100, blank=True, null=True)
 	address			= models.TextField(max_length=200, blank=True, null=True)
@@ -108,7 +108,7 @@ class Earnings(EarningsBase):
 	"""
 	Earnings model for User's earnings.
 	"""
-	parent = models.OneToOneField(User, primary_key=True)
+	parent = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 
 
 	class Meta:
@@ -120,7 +120,7 @@ class ReferralEarnings(EarningsBase):
 	"""
 	Earnings model for User's referred earnings.
 	"""
-	parent = models.OneToOneField(User, primary_key=True)
+	parent = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 
 
 	class Meta:

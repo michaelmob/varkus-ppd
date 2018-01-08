@@ -45,7 +45,7 @@ urlpatterns = [
 	url(r"^staff/", include("staff.urls", namespace="staff")),
 
 	# Admin
-	url(r"^admin/", include(admin.site.urls)),
+	url(r"^admin/", admin.site.urls),
 ]
 
 

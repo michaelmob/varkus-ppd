@@ -2,7 +2,7 @@ import django_tables2 as tables
 
 from django.utils.timesince import timesince
 from django.utils.safestring import mark_safe
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from conversions.models import Conversion
 from core.tables import TableBase

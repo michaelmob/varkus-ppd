@@ -113,8 +113,8 @@ class Boost(models.Model):
 	"""
 	objects 	= managers.BoostManager()
 
-	user 	= models.ForeignKey(User, verbose_name="User")
-	offer 	= models.ForeignKey("offers.Offer", verbose_name="Offer")
+	user 	= models.ForeignKey(User, verbose_name="User", on_delete=models.CASCADE)
+	offer 	= models.ForeignKey("offers.Offer", verbose_name="Offer", on_delete=models.CASCADE)
 	count 	= models.PositiveIntegerField(default=0)
 
 

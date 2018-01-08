@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
 
 
+
 urlpatterns = [
 	# Management Views
 	url(r"^widgets/", include("modules.widgets.urls.manage", namespace="widgets")),

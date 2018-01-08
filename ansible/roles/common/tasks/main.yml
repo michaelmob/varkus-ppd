@@ -1,0 +1,8 @@
+- name: installing build essentials
+  apt: name=build-essential
+
+- name: installing postfix mailer
+  apt: name=postfix
+
+- name: installing redis server
+  apt: name=redis-server

@@ -2,7 +2,7 @@ import django_tables2 as tables
 
 from django.utils.html import format_html
 from django.db.models import Count, Sum, Case, When, IntegerField
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from viking.utils.country import COUNTRIES
 from offers.tables import OfferTableBase

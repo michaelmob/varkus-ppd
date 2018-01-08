@@ -24,7 +24,7 @@ class LinkEarnings(EarningsBase):
 	"""
 	Model for Link's earnings.
 	"""
-	parent = models.OneToOneField(Link, primary_key=True)
+	parent = models.OneToOneField(Link, primary_key=True, on_delete=models.CASCADE)
 
 
 	class Meta:

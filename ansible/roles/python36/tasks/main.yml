@@ -1,0 +1,18 @@
+---    
+- name: add python 3.6 repository
+  apt_repository:
+    repo: ppa:deadsnakes/ppa
+
+- name: install python 3.6 dev
+  apt:
+    name: python3.6-dev
+
+- name: install python 3 pip
+  apt:
+    name: python3-pip
+
+- name: copy pip3.6 shell command
+  copy:
+    src: pip3.6
+    dest: /usr/local/bin/pip3.6
+    mode: 0755

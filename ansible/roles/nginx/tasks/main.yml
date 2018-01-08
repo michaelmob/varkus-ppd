@@ -1,0 +1,31 @@
+---
+- name: add nginx repository
+  apt_repository:
+    repo: ppa:nginx/stable
+
+- name: install stable nginx
+  apt:
+    name: nginx
+
+- name: add certbot repository
+  apt_repository:
+    repo: ppa:certbot/certbot
+
+- name: install certbot
+  apt:
+    name: python-certbot-nginx
+
+- name: copy over viking nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/viking
+  notify:
+    - reload nginx
+
+- name: enable viking nginx config
+  file:
+    src: /etc/nginx/sites-available/viking
+    dest: /etc/nginx/sites-enabled/viking
+    state: link
+  notify:
+    - reload nginx

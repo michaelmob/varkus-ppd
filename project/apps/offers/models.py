@@ -3,7 +3,7 @@ from collections import OrderedDict
 
 from django.conf import settings
 from django.db import models
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django_countries import countries
 
 from viking.utils.user_agent import format_user_agent
@@ -241,7 +241,7 @@ class Earnings(EarningsBase):
 	Earnings model for Offers.
 	"""
 
-	parent = models.OneToOneField(Offer, primary_key=True)
+	parent = models.OneToOneField(Offer, primary_key=True, on_delete=models.CASCADE)
 
 	class Meta:
 		verbose_name_plural = "Earnings"

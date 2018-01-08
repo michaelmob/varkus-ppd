@@ -60,7 +60,7 @@ class FileEarnings(EarningsBase):
 	"""
 	Model for File's earnings.
 	"""
-	parent = models.OneToOneField(File, primary_key=True)
+	parent = models.OneToOneField(File, primary_key=True, on_delete=models.CASCADE)
 
 	class Meta:
 		default_related_name = "earnings"

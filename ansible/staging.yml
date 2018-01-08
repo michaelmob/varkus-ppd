@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - common
+    - postgres
+    - python36
+    - maxmind
+    - nginx
+    - viking

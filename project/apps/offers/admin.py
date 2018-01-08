@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Offer, Earnings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 
 

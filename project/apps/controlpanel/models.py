@@ -87,7 +87,7 @@ class Notification(models.Model):
 	"""
 	objects 	= managers.NotificationManager()
 
-	recipient 	= models.ForeignKey(User, **BLANK_NULL)
+	recipient 	= models.ForeignKey(User, on_delete=models.CASCADE, **BLANK_NULL)
 	unread 		= models.BooleanField(default=True)
 	content 	= models.CharField(max_length=250)
 	icon 		= models.CharField(max_length=20, choices=ICON_CHOICES)

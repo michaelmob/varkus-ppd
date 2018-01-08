@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from core.models import EarningsBase
 from viking.utils import strings
@@ -27,7 +27,7 @@ class LockerBase(models.Model):
 	"""
 	Base abstract model for Lockers.
 	"""
-	user 			= models.ForeignKey(User)
+	user 			= models.ForeignKey(User, on_delete=models.CASCADE)
 	code 			= models.SlugField(max_length=10, verbose_name="Code")
 	name 			= models.CharField(max_length=100, verbose_name="Name")
 	description 	= models.TextField(max_length=500, verbose_name="Description", **DEFAULT_BLANK_NULL)
@@ -140,21 +140,21 @@ class LockerBase(models.Model):
 		"""
 		Return absolute URL for locker object.
 		"""
-		return reverse(self.type + "s:detail", args=(self.code,))
+		return reverse(f"{self.type}s:detail", args=(self.code,))
 
 
 	def get_locker_url(self):
 		"""
 		Return locker URL for locker object.
 		"""
-		return reverse(self.type + ":lock", args=(self.code,))
+		return reverse(f"{self.type}:lock", args=(self.code,))
 
 
 	def get_unlock_url(self):
 		"""
 		Return unlock URL for locker object.
 		"""
-		return reverse(self.type + ":unlock", args=(self.code,))
+		return reverse(f"{self.type}:unlock", args=(self.code,))
 
 
 	def has_css_file(self):

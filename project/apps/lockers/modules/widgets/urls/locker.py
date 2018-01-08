@@ -4,7 +4,10 @@ from ..views import locker
 from ..models import Widget
 
 
-urlpatterns = [
+app_name = "widget"
+urlpatterns = locker_url_patterns(Widget)
+
+urlpatterns += [
 	url(r"^example/", locker.WidgetExampleView.as_view(), name="example"),
 
 	url(r"^(?P<slug>[A-z0-9]+)/", include([
@@ -12,6 +15,3 @@ urlpatterns = [
 		url(r"^redirect/(?P<offer_id>[0-9]+)/(?P<visitor>[0-9]+)$", locker.WidgetRedirectView.as_view(model=Widget), name="redirect-visitor"),
 	]))
 ]
-
-
-urlpatterns += locker_url_patterns(Widget)

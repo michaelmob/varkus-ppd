@@ -18,7 +18,7 @@ class Billing(models.Model):
 	"""
 	Billing profile for a User.
 	"""
-	user = models.OneToOneField(User, primary_key=True)
+	user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 	choice = models.CharField(
 		max_length=15, default="NONE", choices=PAYMENT_CHOICES
 	)
@@ -82,7 +82,7 @@ class Invoice(models.Model):
 	"""
 	objects = managers.InvoiceManager()
 
-	user = models.ForeignKey(User)
+	user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 	creation_date = models.DateField(verbose_name="Creation Date")
 	due_date = models.DateField(verbose_name="Due Date")
 	period_start_date = models.DateField()

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.generic.edit import FormView
 from .. import forms
 from ..models import Invoice, Billing

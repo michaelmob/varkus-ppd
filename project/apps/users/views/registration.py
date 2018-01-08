@@ -20,7 +20,7 @@ class AuthenticatedMixin(View):
 		"""
 		Redirect logged in users to the success_url.
 		"""
-		if self.request.user.is_authenticated():
+		if self.request.user.is_authenticated:
 			return redirect(self.success_url)
 		return super(__class__, self).dispatch(*args, **kwargs)
 

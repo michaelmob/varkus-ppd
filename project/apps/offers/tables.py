@@ -2,7 +2,7 @@ from django_tables2.utils import A
 
 from django.conf import settings
 from django.utils.html import format_html
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .models import Offer
 from conversions.models import Conversion

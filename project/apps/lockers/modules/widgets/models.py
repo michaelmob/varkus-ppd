@@ -180,7 +180,7 @@ class WidgetEarnings(EarningsBase):
 	"""
 	Model for Widget's earnings.
 	"""
-	parent = models.OneToOneField(Widget, primary_key=True)
+	parent = models.OneToOneField(Widget, primary_key=True, on_delete=models.CASCADE)
 
 
 	class Meta:

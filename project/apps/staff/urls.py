@@ -2,6 +2,8 @@ from django.conf.urls import url, include
 from .views import invoices, users, tickets, system
 
 
+app_name = "staff"
+
 urlpatterns = [
 	url(r"^invoices/", include([
 		url(r"^$", invoices.InvoiceStaffListView.as_view(), name="invoice-list"),

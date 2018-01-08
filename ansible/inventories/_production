@@ -1,0 +1,23 @@
+[viking]
+host
+
+
+[viking:vars]
+# Server
+DJANGO_WORKERS=4
+CELERY_WORKERS=1
+
+# Django
+DEBUG=true
+SECRET_KEY="################################################################"
+
+# Site
+SITE_NAME="########"
+SITE_DOMAIN="########"
+
+# Postgres
+POSTGRES_HOST="127.0.0.1"
+POSTGRES_PORT="5432"
+POSTGRES_DB="########"
+POSTGRES_USER="########"
+POSTGRES_PASSWORD="########"

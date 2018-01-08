@@ -1,7 +1,7 @@
 from datetime import date
 from django.conf import settings
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from .models import User, Party
 
 

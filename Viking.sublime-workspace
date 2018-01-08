@@ -48,11 +48,22 @@
 	"buffers":
 	[
 		{
-			"file": "_docker-compose.production.yml",
+			"file": "project/viking/settings.py",
 			"settings":
 			{
-				"buffer_size": 1263,
+				"buffer_size": 7550,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "michael@pc:~/Sync/Workspace/Python/Viking$                                    \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n                                                                              \n",
+			"settings":
+			{
+				"buffer_size": 3950,
+				"line_ending": "Unix",
+				"name": "Terminal (bash)",
+				"read_only": true,
+				"scratch": true
 			}
 		}
 	],
@@ -83,10 +94,70 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 283.0,
-		"last_filter": "project",
+		"height": 66.0,
+		"last_filter": "save all",
 		"selected_items":
 		[
+			[
+				"save all",
+				"File: Save All"
+			],
+			[
+				"bash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"ini",
+				"Set Syntax: INI"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"javascr",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"word",
+				"Word Wrap: Toggle"
+			],
+			[
+				"syntax make",
+				"Set Syntax: Makefile"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"markdown",
+				"Set Syntax: Markdown"
+			],
+			[
+				"word wra",
+				"Word Wrap: Toggle"
+			],
+			[
+				"yaml",
+				"Set Syntax: YAML"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"terminalview",
+				"Terminal View: Open Bash Terminal"
+			],
+			[
+				"terminal view",
+				"Terminal View: Open Bash Terminal"
+			],
+			[
+				"ter",
+				"Terminal: Open"
+			],
 			[
 				"project",
 				"Project: Save As"
@@ -116,24 +187,12 @@
 				"Set Syntax: JSON"
 			],
 			[
-				"ini",
-				"Vagrant: Init"
-			],
-			[
 				"change",
 				"ChangeQuotes"
 			],
 			[
-				"install",
-				"Package Control: Install Package"
-			],
-			[
 				"sidebar",
 				"Side Bar: Refresh"
-			],
-			[
-				"word",
-				"Word Wrap: Toggle"
 			],
 			[
 				"preferences",
@@ -160,10 +219,6 @@
 				"Package Control: Install Package"
 			],
 			[
-				"save all",
-				"File: Save All"
-			],
-			[
 				"json",
 				"Set Syntax: JSON"
 			],
@@ -172,20 +227,8 @@
 				"Set Syntax: Python"
 			],
 			[
-				"bash",
-				"Set Syntax: Shell Script (Bash)"
-			],
-			[
-				"markdown",
-				"Set Syntax: Markdown"
-			],
-			[
 				"color",
 				"Color Picker"
-			],
-			[
-				"remove",
-				"Package Control: Remove Package"
 			],
 			[
 				"alignment",
@@ -228,7 +271,7 @@
 				"View: Toggle Menu"
 			]
 		],
-		"width": 461.0
+		"width": 497.0
 	},
 	"console":
 	{
@@ -248,10 +291,73 @@
 	},
 	"expanded_folders":
 	[
-		"/home/michael/Sync/Workspace/Python/Viking"
+		"/home/michael/Sync/Workspace/Python/Viking",
+		"/home/michael/Sync/Workspace/Python/Viking/project",
+		"/home/michael/Sync/Workspace/Python/Viking/project/viking",
+		"/home/michael/Sync/Workspace/Python/Viking/scripts"
 	],
 	"file_history":
 	[
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/modules/links/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/modules/files/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/modules/lists/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/modules/widgets/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/scripts/viking",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/viking/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/conversions/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/users/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/controlpanel/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/billing/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/tickets/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/offers/models.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/billing/views/billing.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/controlpanel/tables.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/conversions/tables.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/tables.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/views/generic/locker.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/offers/admin.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/offers/tables.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/tickets/tables.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/users/tests.py",
+		"/home/michael/Sync/Workspace/Python/Viking/Vagrantfile",
+		"/home/michael/Sync/Workspace/Python/Viking/project/requirements.txt",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/viking/templates/environment.j2",
+		"/home/michael/Sync/Workspace/Python/Viking/project/viking/settings.py",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/inventories/staging",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/staging.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/scripts/environment",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/inventories/_production",
+		"/home/michael/Sync/Workspace/Python/Viking/.gitignore",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/viking/tasks/services.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/viking/tasks/database.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/untitled.js",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/production.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/postgres/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/postgre/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/maxmind-geoip/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/python36/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/redis/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/python36/templates/pip36.j2",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/nginx/tasks/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/python3.6",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/inventories/staging.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/hosts",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/viking.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/staging",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/_production",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/inventories/staging/group_vars/django",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/lockers/modules/widgets/views/webhooks.py",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/ansible.cfg",
+		"/home/michael/Sync/Workspace/Python/Viking/project/apps/controlpanel/views/staff.py",
+		"/home/michael/Sync/Workspace/Python/Viking/project/viking/_private/settings_common.py",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/production",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/templates/nginx.conf.j2",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/site.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/nginx/handlers/main.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/viking.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/database.yml",
+		"/home/michael/Sync/Workspace/Python/Viking/playbooks/roles/webserver.yml",
 		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/static/runners/runner_list.js",
 		"/home/michael/Sync/Workspace/Python/Autochan/project/chan/celery.py",
 		"/home/michael/Desktop/aaaa",
@@ -319,67 +425,7 @@
 		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/elements/run_button.html",
 		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/elements/progress.html",
 		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/proxy_list.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/source_list.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/utils/task_helper.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/autochan/bind.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/elements/card.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/tables.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/views.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/static/proxies/proxy_list.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/forms.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/consumers.py",
-		"/home/michael/Desktop/bacc.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/apps.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/__init__.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/urls.py",
-		"/home/michael/Sync/Personal/Config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/list_base.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/source_detail.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/progress.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/binding.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/run_button.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/detail_base.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/static/runners/runner.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/utils.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/binding.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/playbooks/roles/autochan/tasks/main.yml",
-		"/home/michael/Sync/Workspace/Python/Autochan/playbooks/requirements.yml",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/apps.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/apps.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/consumers.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/runner_detail.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/serializers.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/db.sqlite3",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/admin.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/binding.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/tests.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/chan/utils/gchord.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/static/admin/js/vendor/select2/select2.full.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/static/threads/thread_form.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/templates/table.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/base.css",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/static/admin/css/base.css",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/templatetags/pagination.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners/cards.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/chan/urls.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/threads/urls_api.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/templates/runners",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/autochan/tablecolumns.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/chan/bases/tables.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/autochan/js/table.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/templates/autochan/bomb.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/autochan/bomb.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/runners/urls_api.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/list_base.html",
-		"/home/michael/Desktop/untitled.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/serializers.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/proxy_list_footer.html",
-		"/home/michael/Sync/Workspace/Python/Autochan/scripts/celery",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/autochan/static/autochan/js/tablecolumns.js",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/manage.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/scripts/manage",
-		"/home/michael/a.py",
-		"/home/michael/Sync/Workspace/Python/Autochan/project/chan/wsgi.py"
+		"/home/michael/Sync/Workspace/Python/Autochan/project/apps/proxies/templates/proxies/source_list.html"
 	],
 	"find":
 	{
@@ -404,6 +450,34 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"asgi_",
+			"django.core.urlresolvers",
+			"compose",
+			"}}",
+			"{{",
+			"=(.*)$",
+			"environ",
+			"\"DOMAIN\"",
+			"environ",
+			"state: present",
+			"postgres_",
+			"template:",
+			"tempalte:",
+			"ppa:",
+			"=",
+			"base",
+			"Postgre",
+			"- ",
+			"environ",
+			"PROXY_CREDENTIALS",
+			"environ",
+			" ",
+			"SECURE_PROXY_SSL_HEADER",
+			"environ.get",
+			"environ[",
+			"environ.get",
+			"env",
+			"'",
 			"virtualbox",
 			"self.save",
 			"save(",
@@ -503,42 +577,15 @@
 			"manually revoked",
 			"total_count",
 			"self.total_count",
-			"total_count",
-			"self.runner",
-			"increment",
-			"in",
-			"Pending",
-			"self.runner",
-			".increment",
-			"F(\"",
-			"F(",
-			"self.completed",
-			"runner.save()",
-			"revoke",
-			"task_id =",
-			"task_id",
-			".task_id",
-			"Runner already running",
-			"uuid",
-			"result = \"COMPLETED\"",
-			"COMPLETED",
-			".task_id",
-			"task_id",
-			"Completed all tasks",
-			"\"CreateD\"",
-			"result_count",
-			"Runner does not exist",
-			"get_runner",
-			"serialize",
-			"runner__",
-			"\"c"
+			"total_count"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"django.urls",
 			"runner",
 			"runner_list",
 			"message",
@@ -561,33 +608,95 @@
 			[
 				{
 					"buffer": 0,
-					"file": "_docker-compose.production.yml",
-					"semi_transient": true,
+					"file": "project/viking/settings.py",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1263,
+						"buffer_size": 7550,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								792,
-								792
+								4675,
+								4675
 							]
 						],
 						"settings":
 						{
-							"markdonw_live_preview_last_run": 1515196874.88,
-							"syntax": "Packages/YAML/YAML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"markdonw_live_preview_last_run": 1515283594.65,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4018.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3950,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								43,
+								43
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"auto_complete_commit_on_tab": false,
+							"caret_style": "blink",
+							"color_scheme": "Packages/TerminalView/TerminalView.hidden-tmTheme",
+							"default_dir": "/home/michael/Sync/Workspace/Python/Viking",
+							"draw_centered": false,
+							"draw_indent_guides": false,
+							"draw_white_space": "none",
+							"gutter": false,
+							"highlight_line": false,
+							"markdonw_live_preview_last_run": 1515283594.63,
+							"scroll_past_end": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"terminal_view": true,
+							"terminal_view_activate_args":
+							{
+								"cmd": "/bin/bash -l",
+								"cwd": "/home/michael/Sync/Workspace/Python/Viking",
+								"keep_open": false,
+								"syntax": null,
+								"title": "Terminal (bash)"
+							},
+							"terminal_view_last_cursor_pos":
+							[
+								0,
+								43
+							],
+							"terminal_view_scroll": null,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -599,7 +708,7 @@
 	},
 	"input":
 	{
-		"height": 47.0
+		"height": 49.0
 	},
 	"layout":
 	{
@@ -610,11 +719,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":
@@ -650,6 +766,74 @@
 		"selected_items":
 		[
 			[
+				"setting",
+				"project/viking/settings.py"
+			],
+			[
+				"link/model",
+				"project/apps/lockers/modules/links/models.py"
+			],
+			[
+				"files/model",
+				"project/apps/lockers/modules/files/models.py"
+			],
+			[
+				"list/model",
+				"project/apps/lockers/modules/lists/models.py"
+			],
+			[
+				"widget/model",
+				"project/apps/lockers/modules/widgets/models.py"
+			],
+			[
+				"locker/model",
+				"project/apps/lockers/models.py"
+			],
+			[
+				"ticket/model",
+				"project/apps/tickets/models.py"
+			],
+			[
+				"billing/model",
+				"project/apps/billing/models.py"
+			],
+			[
+				"controlpanel/model",
+				"project/apps/controlpanel/models.py"
+			],
+			[
+				"users/model",
+				"project/apps/users/models.py"
+			],
+			[
+				"offers/model",
+				"project/apps/offers/models.py"
+			],
+			[
+				"conversions/model",
+				"project/apps/conversions/models.py"
+			],
+			[
+				"conversion/model",
+				"project/apps/conversions/models.py"
+			],
+			[
+				"reu",
+				"project/requirements.txt"
+			],
+			[
+				"settings",
+				"project/viking/settings.py"
+			],
+			[
+				"settings_common",
+				"project/viking/_private/settings_common.py"
+			],
+			[
+				"settings_comm",
+				"project/viking/_private/settings_common.py"
+			],
+			[
 				"celery.",
 				"project/chan/celery.py"
 			],
@@ -660,10 +844,6 @@
 			[
 				"vagrant",
 				"Vagrantfile"
-			],
-			[
-				"setting",
-				"project/chan/settings.py"
 			],
 			[
 				"celery",
@@ -998,10 +1178,6 @@
 				"project/templates/base.html"
 			],
 			[
-				"settings",
-				"project/chan/settings.py"
-			],
-			[
 				"table.py",
 				"project/apps/proxies/tables.py"
 			],
@@ -1100,66 +1276,6 @@
 			[
 				"manage.py",
 				"project/manage.py"
-			],
-			[
-				"wsgi",
-				"project/chan/wsgi.py"
-			],
-			[
-				"runnerurls",
-				"project/apps/runners/urls.py"
-			],
-			[
-				"list",
-				"project/apps/proxies/templates/proxies/proxy_list.html"
-			],
-			[
-				"proxy.",
-				"project/apps/proxies/templates/proxies/proxy_list.html"
-			],
-			[
-				"proxies/bind",
-				"project/apps/proxies/binding.py"
-			],
-			[
-				"proxyli",
-				"project/apps/proxies/templates/proxies/proxy_list.html"
-			],
-			[
-				"chanurls",
-				"project/chan/urls.py"
-			],
-			[
-				"chan/url",
-				"project/chan/urls.py"
-			],
-			[
-				"apps/consum",
-				"project/apps/proxies/consumers.py"
-			],
-			[
-				"values/consu",
-				"project/apps/values/consumers.py"
-			],
-			[
-				"routin",
-				"project/chan/routing.py"
-			],
-			[
-				"rou",
-				"project/chan/routing.py"
-			],
-			[
-				"consumer",
-				"project/apps/runners/consumers.py"
-			],
-			[
-				"proxies/table",
-				"project/apps/proxies/tables.py"
-			],
-			[
-				"index.html",
-				"project/templates/index.html"
 			]
 		],
 		"width": 0.0

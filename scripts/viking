@@ -1,90 +1,40 @@
 #!/bin/bash
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do
-  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-cd "$( cd -P "$( dirname "$SOURCE" )" && pwd )/.."
+# Set current directory to script's directory
+cd "${0%/*}/"
 
-# Check that 'environment' file exists or create it
-if [ ! -e ./scripts/env_type ]; then
-	echo "local" > ./scripts/env_type
+# Verify env_vars file exists
+if [ ! -f "./env_vars" ]; then
+	echo "\"env_vars\" file not found"
+	exit 1
 fi
 
-# Set environment 
-ENVIRONMENT=$(cat ./scripts/env_type | xargs)
+# Source env_vars variables
+source ./env_vars
 
-
-#
-# shortcut function for docker-compose as superuser 
-#
-function compose() {
-	if [ "$ENVIRONMENT" == "production" ]; then
-		if [ ! -e ./docker-compose.production.yml ]; then
-			echo "docker-compose.production.yml not found"
-			exit 1
-		fi
-
-		EXTRA="-f docker-compose.production.yml"
-	fi
-
-	sudo docker-compose -f docker-compose.yml $EXTRA $@
-}
-
+# Source custom_env_vars if file exists
+if [ -f "./extra_env_vars" ]; then
+	source ./extra_env_vars
+fi
 
 #
 # helper function to display options
 #
 function add_help() {
 	echo "  $1 ($2)"
-	echo "    usage: ./viking $3"
+	echo "    usage: viking $3"
 	echo ""
 }
 
+# Set current directory to project directory
+cd ../project
 
 case "$1" in
-
-	# List commands and helpful text
-	h) ;&
-	help)
-		echo -e "\nViking Application\n"
-		add_help "* / c / compose" "run compose command" "[compose] {command}"
-		add_help "r / run" "run command in container" "run {container} {command}"
-		add_help "m / manage" "django's management in django container" "manage {command}"
-		add_help "p / pip" "pip in django container" "pip {command}"
-		add_help "clean" "create migration directories" "clean [--remove-migrations]"
-		add_help "update-geoip-db" "update geoip database from maxmind" "update-geoip-db"
-		add_help "create-migration-dirs" "create migration directories" "create-migration-dirs"
-		;;
-
-
-	# For any command that is overriden by script's options
-	# Usage: ./viking compose {command}
-	c) ;&
-	compose)
-		compose ${@:2}
-		;;
-
-
-	# Run command inside of container
-	# Usage: ./viking run {container} {command}
-	r) ;&
-	run)
-		if [ "$#" -lt "3" ]; then
-			echo "Not enough arguments"
-			exit 1
-		fi
-
-		compose run --rm ${@:2}
-		;;
-
 
 	# Django shortcut command for management
 	# Usage: ./viking manage {command}
 	m) ;&
 	manage)
-		compose run --rm django python manage.py ${@:2}
+		python3.6 manage.py ${@:2}
 		;;
 
 
@@ -92,16 +42,41 @@ case "$1" in
 	# Usage: ./viking debug
 	d) ;&
 	debug)
-		compose stop django
-		compose run --service-ports --rm django python manage.py runserver 0.0.0.0:8000
+		python3.6 manage.py runserver 0.0.0.0:9000
 		;;
 
 
-	# Django shortcut command for pip
-	# Usage: ./viking pip {command}
-	p) ;&
-	pip)
-		compose run --rm django pip ${@:2}
+	# Run daphne server in a production environment.
+	# Usage: ./viking run
+	daphne)
+		daphne -b 0.0.0.0 -p 9000 viking.asgi:channel_layer &
+		;;
+
+
+	# Run worker in a production environment.
+	# Set environment variable DJANGO_WORKERS for worker count.
+	# Usage: ./viking worker
+	worker)
+		for i in $(seq 1 ${DJANGO_WORKERS:-1}); do
+			python3.6 manage.py runworker &
+		done
+		;;
+
+
+	# Run celery worker.
+	# Set environment variable CELERY_WORKERS for worker count.
+	# Usage: ./viking celery [-l info]
+	celery)
+		for i in $(seq 1 ${CELERY_WORKERS:-1}); do
+			celery -A viking worker ${@:2} &
+		done
+		;;
+
+
+	# Run celery beat scheduler.
+	# Usage: ./viking beat [-l info]
+	beat)
+		celery -A viking beat ${@:2} &
 		;;
 
 
@@ -120,7 +95,6 @@ case "$1" in
 	# Clean cache files and optionally migrations directories
 	# Usage: ./viking clean
 	clean)
-		cd ./project
 		sudo find . -regex "\(.*__pycache__.*\|*.py[co]\)" -delete &&
 			echo "Deleted cached and compiled python files and directories"
 			
@@ -131,31 +105,24 @@ case "$1" in
 		;;
 
 
-	# Update geoip database from maxmind
-	# Usage: ./viking update-geoip-db
-	update-geoip-db)
-		URL="https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz"
-		cd ./project && rm GeoLite2-City.mmdb
-		wget -q $URL && gunzip -f GeoLite2-City.mmdb.gz && echo "Updated GeoIP Database"
-		;;
-
-
 	# Create migration directories
 	# Usage: ./viking create-migration-dirs
 	create-migration-dirs)
-		cd ./project
 		find apps/ -name "models.py" | xargs -L1 dirname \
 			| xargs -I % mkdir %/migrations/ && touch %/migrations/__init__.py
 		echo "Created migration directories"
 		;;
 
 
-	# Any unrecognized command will be ran in the a container
-	# Usage: ./viking {command}
+	# List commands and helpful text
 	*)
-		compose $@
+		echo -e "\nViking Application\n"
+		add_help "m / manage" "django's management command" "manage {command}"
+		add_help "d / debug" "django runserver for debugging" "debug {command}"
+		add_help "clean" "create migration directories" "clean [--remove-migrations]"
+		add_help "create-migration-dirs" "create migration directories" "create-migration-dirs"
+		exit 1
 		;;
-
 esac
 
 exit 0

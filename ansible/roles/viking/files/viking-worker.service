@@ -1,0 +1,14 @@
+[Unit]
+Description=Viking workers for daphne web server.
+After=network.target
+
+[Service]
+Type=forking
+User=viking
+Group=viking
+WorkingDirectory=/home/viking/project/
+ExecStart=/home/viking/scripts/viking worker
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,24 @@
+---
+- name: add postgres apt key
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+- name: add postgres repository for Ubuntu 16.04 (Xenial)
+  apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
+
+- name: install postgres 9.6
+  apt:
+    name: postgresql-9.6
+
+- name: install postgres contrib
+  apt:
+    name: postgresql-contrib
+
+- name: install postgres headers
+  apt:
+    name: libpq-dev
+
+- name: install postgres adapter for python
+  apt:
+    name: python-psycopg2

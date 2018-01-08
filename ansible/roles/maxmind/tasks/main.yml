@@ -1,0 +1,32 @@
+---
+- name: add maxmind repository
+  apt_repository:
+    repo: ppa:maxmind/ppa
+
+- name: install maxmind database library
+  apt:
+    name: libmaxminddb0
+
+- name: install maxmind database library dev
+  apt:
+    name: libmaxminddb-dev
+
+- name: install binary maxmind database
+  apt:
+    name: mmdb-bin
+
+- name: download maxmind database
+  get_url:
+    url: https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
+    dest: /tmp/GeoLite2-City.mmdb.gz
+    mode: 0755
+
+- name: unarchive maxmind database
+  command: gunzip -f /tmp/GeoLite2-City.mmdb.gz
+
+- name: move maxmind database
+  copy:
+    src: /tmp/GeoLite2-City.mmdb
+    dest: /var/GeoLite2-City.mmdb
+    mode: 0755
+    remote_src: yes

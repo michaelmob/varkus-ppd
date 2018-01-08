@@ -1,0 +1,19 @@
+- name: creating viking user
+  user:
+    name: viking
+
+- name: install requirements
+  pip:
+    executable: pip3.6
+    requirements: /home/viking/project/requirements.txt
+    state: latest
+
+- name: create env_vars file
+  template:
+    src: env_vars.j2
+    dest: /home/viking/scripts/env_vars
+  notify:
+    - restart daphne
+    - restart worker
+    - restart celery
+    - restart beat

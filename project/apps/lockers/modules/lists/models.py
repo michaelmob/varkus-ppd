@@ -129,7 +129,7 @@ class ListEarnings(EarningsBase):
 	"""
 	Model for List's earnings.
 	"""
-	parent = models.OneToOneField(List, primary_key=True)
+	parent = models.OneToOneField(List, primary_key=True, on_delete=models.CASCADE)
 	
 	
 	class Meta:

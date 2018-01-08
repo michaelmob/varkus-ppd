@@ -1,0 +1,23 @@
+- name: restart daphne
+  systemd:
+    name: viking-daphne
+    daemon_reload: yes
+    state: restarted
+
+- name: restart worker
+  systemd:
+    name: viking-worker
+    daemon_reload: yes
+    state: restarted
+
+- name: restart celery
+  systemd:
+    name: viking-celery
+    daemon_reload: yes
+    state: restarted
+
+- name: restart beat
+  systemd:
+    name: viking-beat
+    daemon_reload: yes
+    state: restarted

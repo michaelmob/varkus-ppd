@@ -1,0 +1,55 @@
+server {
+	listen 80;
+	server_name {{ SITE_DOMAIN }} insecure.{{ SITE_DOMAIN }};
+
+	root /home/viking;
+	index index.html;
+
+	client_max_body_size 500m;
+	error_page 500 502 503 504 = /500.html;
+
+	# 500 Error Pages
+	location = /500.html {
+		root /home/viking/static/errors;
+	}
+
+	# Robots.txt
+	location /robots.txt {
+		root /home/viking/static;
+	}
+
+	# Static
+	location /static/ {
+		autoindex off;
+	}
+
+	# Media
+	location /media/ {
+		autoindex off;
+	}
+
+	# Protected Media Files
+	location /media/files/ {
+		internal;
+	}
+
+	# Websocket Reverse Proxy
+	location /ws/ {
+		proxy_http_version 1.1;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_pass http://127.0.0.1:9000;
+	}
+
+	# Django Reverse Proxy
+	location / {
+		proxy_set_header Host $http_host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Scheme $scheme;
+		proxy_redirect off;
+		proxy_connect_timeout 60;
+		proxy_read_timeout 60;
+		proxy_pass http://127.0.0.1:9000;
+	}
+}

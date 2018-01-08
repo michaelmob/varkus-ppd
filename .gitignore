@@ -25,9 +25,20 @@ backups/
 # Migrations
 migrations/
 
+# User Scripts
+/scripts/env_vars
+/scripts/extra_env_vars
+
 # Docker
 docker/nginx/certs
 docker/postgres/backup
 docker/postgres/data
 docker/postgres/localdata
 docker-compose.production.yml
+
+# Vagrant
+.vagrant
+
+# Ansible
+/ansible/*.retry
+/ansible/production

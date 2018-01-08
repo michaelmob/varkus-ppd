@@ -1,7 +1,6 @@
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
 from django.views.generic.detail import DetailView
 from offers.models import Offer
@@ -10,7 +9,7 @@ from viking.utils import geoip
 
 
 
-class LockerMixin():
+class LockerMixin:
 	"""
 	External content-locking views for all locker-based views.
 	"""
